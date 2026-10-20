@@ -23,6 +23,10 @@ Il playground apre un server su <http://127.0.0.1:8092>. JavaScript, worker e WA
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
+Il model supporta [contributi ordinati e composizione di modelli indipendenti](docs/composition.md)
+con `model.contribution(...)`, `composeModels(...)` e `model.clone()`. Sorgente
+composto e JSON migrate sono confrontati con Python prima di espandere la copertura.
+
 ## API iniziale
 
 Dal checkout, gli import seguenti usano gli entry point del package:

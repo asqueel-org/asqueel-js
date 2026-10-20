@@ -6,7 +6,8 @@ monorepo di package interdipendenti: i confini sono nei moduli e nei contratti.
 ## Percorso dei dati
 
 1. `SqlBuilder` carica `src/generated/grammar.json` tramite Builders JS.
-2. `application.js` risolve package, opzioni, tipi, riferimenti e nomi fisici.
+2. `composition.js` compone dichiarazioni e contributi conservando il sorgente esplicito;
+   `application.js` risolve poi package, opzioni, tipi, riferimenti e nomi fisici.
 3. `index.js` / `structures.js` producono `structure-1.0` per le migrazioni;
    `queries.js` compila richieste con i nomi logici dello stesso modello.
 4. `sqlite.js` legge il catalogo reale e pianifica/applica le differenze supportate.

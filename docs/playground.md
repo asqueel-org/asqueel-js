@@ -176,14 +176,13 @@ console.log(JSON.stringify(migration, null, 2));
 
 È disponibile anche `class Shop extends SqlBuilder { main(root) { ... } }`:
 creare l'istanza, chiamare `model.create()` e poi `model.toMigration()`.
-Le dichiarazioni sono sincrone e usano gli attributi in un oggetto JS. Conservare
-i riferimenti ai contenitori (`columns`, `indexes`, ecc.) per aggiungervi più
-elementi; il PoC non replica la composizione/ripetizione delle dichiarazioni del
-builder Python né le sue scorciatoie di instradamento.
+Le dichiarazioni sono sincrone e usano gli attributi in un oggetto JS. I contenitori sono idempotenti e sono disponibili le scorciatoie
+`package.table()` e `table.column()`. Contributi, ripetizioni e reset sono descritti
+in [composizione](composition.md).
 
 Gli esempi indipendenti in JS e Python sono
-[application.js](examples/application.js) / [application.py](examples/application.py)
-per package e opzioni, e [shop.js](examples/shop.js) / [shop.py](examples/shop.py)
+[application.js](../examples/application.js) / [application.py](../examples/application.py)
+per package e opzioni, e [shop.js](../examples/shop.js) / [shop.py](../examples/shop.py)
 per il modello fisico.
 
 ## Confine del PoC
@@ -219,8 +218,7 @@ La grammatica JSON fornisce dichiarazioni, firme, default e vincoli; le
 trasformazioni applicative sono implementate in `src/application.js` e
 `src/options.js`. Caricare la grammatica, da solo, non esegue gli hook Python.
 
-Restano fuori perimetro la composizione di contributi/ripetizioni/reset del
-builder Python, subtables/colgroups, policy runtime `x_`, foreign key fisiche
+Restano fuori perimetro subtables/colgroups, policy runtime `x_`, foreign key fisiche
 su colonne virtuali e riscrittura SQL di CHECK/indici parziali su colonne
 rimappate. Sul percorso fisico senza package/opzioni restano richiesti nomi
 dichiarati coincidenti con quelli SQL. Non sono implementati il
@@ -239,7 +237,7 @@ npm test
 npm run test:bun
 ```
 
-I 98 test verificano l'uguaglianza completa con gli oracoli Python, gli hash anche
+I 135 test verificano l'uguaglianza completa con gli oracoli Python, gli hash anche
 con Unicode e ordine diverso delle colonne, la ripetibilità, la validazione e
 il rifiuto delle funzionalità fuori perimetro. Il corpus include 53 casi
 applicativi e due esempi scritti indipendentemente nei due linguaggi. Copre

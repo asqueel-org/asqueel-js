@@ -21,10 +21,16 @@ for name, model in cases():
     expected[name] = SqlMigrationRenderer(model).render()
 from sqlite_oracle import sqlite_oracle
 from query_oracle import query_oracle
+from composition_oracle import composition_oracle
+composition_expected = [dict(name=case['name'], result=case['expected']) for case in composition_oracle()]
 queries_expected = query_oracle()
 sqlite_expected = {name: {key: stage[key] for key in ("desired", "actual")}
                    for name, stage in sqlite_oracle().items()}
 for runtime in ("node", "bun"):
+    composed = json.loads(subprocess.check_output(
+        [runtime, str(ROOT / "scripts/render_composition.js")], cwd=ROOT, text=True))
+    assert composed == composition_expected, f"{runtime}: composition source or migration differs from live Python"
+    print(f"{runtime}: {len(composed)} composition cases match Python source, conflicts and migration")
     rendered = json.loads(subprocess.check_output(
         [runtime, str(ROOT / "scripts/render_cases.js")], cwd=ROOT, text=True))
     assert rendered == expected, f"{runtime}: output differs from the current Python renderer"

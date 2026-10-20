@@ -15,7 +15,23 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
       Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
 
-## 1. CRUD per piccole applicazioni — prossimo incremento
+## 1. Completare il model — priorità corrente
+
+- [x] Contributi ordinati, dichiarazioni ripetute, conflitti e override espliciti.
+- [x] Composizione di modelli indipendenti, copia e isolamento degli input.
+- [x] Fusione delle opzioni, reset e disattivazione/riattivazione dei campi.
+- [x] Confronto Python del sorgente composto e del JSON migrate, anche nel browser.
+- [ ] Colgroups e composizione dei loro default/ordinamenti.
+- [ ] Subtables e altre dichiarazioni del modello ancora non proiettate.
+- [ ] Validazioni di dominio equivalenti a SqlModelValidator.
+- [ ] Casi mancanti di relazioni e rimappatura SQL del modello fisico.
+- [ ] Inventario completo grammatica → composizione → risoluzione → migrate.
+
+Accettazione: per ogni capacità, sorgente e risultato migrate confrontati con
+Python, errori espliciti per casi non supportati e input invariati dal rendering.
+Il runtime di query e hook resta distinto dalla completezza del modello.
+
+## 2. CRUD per piccole applicazioni
 
 - [ ] UPDATE e DELETE con parametri, RETURNING e selezione per chiave primaria.
 - [ ] Lettura di un singolo record, count ed exists con semantica definita.
@@ -28,7 +44,7 @@ Accettazione: creare, leggere, modificare ed eliminare record e relazioni;
 confrontare SQL, parametri e risultati con Python; provocare un errore a metà
 di una transazione e verificare che nessuna scrittura resti; rileggere dopo reload.
 
-## 2. Avvio e utilizzo offline
+## 3. Avvio e utilizzo offline
 
 - [ ] Cache versionata di HTML, JavaScript, worker e WASM con service worker.
 - [ ] Primo avvio online, chiusura, riapertura senza rete e CRUD completo.
@@ -42,7 +58,7 @@ persistenza dopo chiusura e riapertura del browser con lo stesso profilo;
 aggiornamento di versione senza perdita dei dati. La persistenza IndexedDB da
 sola non soddisfa questo traguardo.
 
-## 3. Comportamenti applicativi utili
+## 4. Comportamenti applicativi utili
 
 - [ ] Codec con semantica dichiarata per date, timestamp, decimali e JSON/Bag.
 - [ ] Default e validazioni basilari, rispettando campi mancanti e NULL.
@@ -54,7 +70,7 @@ Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python
 scelto; orologio, identità e generatore ID controllabili. Controllare il Python
 attuale prima di assumere ancora validi i limiti riportati dal PoC.
 
-## 4. Evoluzione del modello
+## 5. Evoluzione dello schema SQLite
 
 - [ ] Pianificare ricostruzioni di tabelle SQLite con copia e verifica dei dati.
 - [ ] Supportare modifiche di default, tipi, vincoli e indici con precondizioni chiare.
@@ -64,7 +80,7 @@ attuale prima di assumere ancora validi i limiti riportati dal PoC.
 Accettazione: confronti dei cataloghi con Python, prove con dati reali, rollback
 simulato durante la copia e migrazione idempotente dopo riapertura.
 
-## 5. Estensione verso la copertura completa
+## 6. Estensione verso la copertura completa
 
 - [ ] Inventario di ogni capacità Python con stato JS: supportata, da portare,
       non applicabile a SQLite o dipendente da servizi esterni.

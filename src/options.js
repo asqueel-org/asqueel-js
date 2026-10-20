@@ -21,7 +21,7 @@ function sourceData(value, path) {
     error(path, 'options require source data, not callbacks or live objects');
 }
 
-export function readOptions(node) {
+export function readOptions(node, {allowDeferred = false} = {}) {
     const result = new Map();
     const container = node.children.find(n => n.tag === 'options');
     for (const option of container?.children || []) {
@@ -40,7 +40,7 @@ export function readOptions(node) {
                     error(path, `${key} is required when enabled`);
                 }
             }
-            if (['system_records', 'release'].includes(tag)) error(path, `${tag} is deferred in Python`);
+            if (!allowDeferred && ['system_records', 'release'].includes(tag)) error(path, `${tag} is deferred in Python`);
         }
         for (const key of ['master', 'linked_to', 'preference', 'field', 'parent', 'version_field',
             'relation', 'source', 'caption_field', 'masterfield']) {

@@ -1,4 +1,5 @@
-import {BuilderBase, SourceBag} from '@genrojs/builders';
+import {SourceBag} from '@genrojs/builders';
+import {CompositionBuilder} from './composition.js';
 import grammar from './generated/grammar.json' with {type: 'json'};
 import contract from './generated/contract.json' with {type: 'json'};
 import {names, clean, entity, indexItem, constraintItem, relationItem, put} from './structures.js';
@@ -19,7 +20,7 @@ const same = (a, b) => a.length === b.length && a.every((v, i) => v === b[i]);
 const membersKey = columns => JSON.stringify(columns);
 
 /** The vocabulary comes entirely from Python's canonical JSON export. */
-export class SqlBuilder extends BuilderBase {
+export class SqlBuilder extends CompositionBuilder {
     static _name = 'sql';
     static { this.defineGrammar(grammar); }
 
@@ -33,9 +34,11 @@ export class SqlBuilder extends BuilderBase {
 
 export function defineModel(populate) {
     const builder = new SqlBuilder();
-    populate(builder.root);
+    populate(builder.root, builder);
     return builder;
 }
+
+export function composeModels(...models) { return SqlBuilder.compose(...models); }
 
 /** Physical projection, with package/option preparation matching Python. */
 export class SqlMigrationRenderer {
@@ -79,7 +82,8 @@ export class SqlMigrationRenderer {
         if (!SUPPORTED.has(tag)) fail(node, `<${tag}> is outside the physical-model PoC`);
         const attributes = attr(node);
         this.builder.validateNodeValues(tag, node.value, attributes);
-        const declared = new Set(this.builder.schema[tag].attributes?.parameters?.map(p => p.name));
+        const declared = new Set([...this.builder.schema[tag].attributes?.parameters?.map(p => p.name),
+            ...(attributes._meta?.inherited_attributes || [])]);
         for (const key of Object.keys(attributes)) {
             if (key === '_meta') continue;
             if (key === 'sql_type' || (!declared.has(key) && !(key.includes('_') && !key.startsWith('_')))) {

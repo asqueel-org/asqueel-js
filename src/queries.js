@@ -197,10 +197,7 @@ class Context {
 
 /** Data-only source for worker-side compilation; no user code crosses the worker. */
 export function querySource(builder) {
-    const visit = bag => bag.getNodes().map(n => ({tag: n.nodeTag,
-        attributes: Object.fromEntries(Object.entries(n.getAttr()).filter(([k]) => k !== '_meta')),
-        children: n.value?.getNodes ? visit(n.value) : []}));
-    return structuredClone(visit(builder.source));
+    return builder.toSource();
 }
 export function modelFromQuerySource(source, Builder) {
     const model = new Builder();

@@ -25,7 +25,8 @@ function snapshot(builder, node) {
     const tag = node.nodeTag, attrs = node.getAttr();
     if (!ALLOWED.has(tag)) fail(node.fullpath, `<${tag}> is outside the migration PoC`);
     builder.validateNodeValues(tag, node.value, attrs);
-    const declared = new Set(builder.schema[tag].attributes?.parameters?.map(p => p.name));
+    const declared = new Set([...builder.schema[tag].attributes?.parameters?.map(p => p.name),
+        ...(attrs._meta?.inherited_attributes || [])]);
     for (const key of Object.keys(attrs)) {
         if (key === '_meta') continue;
         if (key === 'sql_type' || (!declared.has(key) && !(key.includes('_') && !key.startsWith('_')) && tag !== 'validation')) {

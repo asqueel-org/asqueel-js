@@ -45,11 +45,11 @@ export function sqlitePanel(getDesired, getExample) {
         buttons.forEach(b => { b.disabled = true; });
         authoring.forEach(b => { b.disabled = true; });
         status.className = '';
-        status.textContent = type === 'checks' ? 'Verifica in un database di test separato…' : 'Operazione SQLite in corso…';
+        status.textContent = type.endsWith('checks') ? 'Verifica in un database di test separato…' : 'Operazione SQLite in corso…';
         try {
             const desired = ['plan', 'apply'].includes(type) ? getDesired() : undefined;
             const result = await request(type, desired);
-            if (type === 'checks') {
+            if (type.endsWith('checks')) {
                 checks.textContent = result.map(s => `✓ ${s}`).join('\n');
                 status.textContent = `${result.length} verifiche browser superate · SQLite WASM + IndexedDB`;
             } else {

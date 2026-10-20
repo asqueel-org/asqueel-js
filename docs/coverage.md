@@ -7,6 +7,7 @@ e funzionalità avanzate fino a quando un'app ne abbia bisogno.
 | Area | Già disponibile | Da completare |
 | --- | --- | --- |
 | Modello | Grammatica JSON, Bag/Builders JS, package, nomi logici/fisici, espansione opzioni nel JSON migrate | Runtime completo delle opzioni |
+| Composizione | Contributi ordinati, ripetizioni, override, reset, copie e modelli indipendenti | Colgroups, subtables e validazione completa del modello |
 | Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, colonne nullable e indici non univoci aggiunti | Ricostruzioni, alter/drop, CHECK e altri oggetti |
 | Scritture | INSERT parametrizzato e RETURNING, rollback | UPDATE/DELETE, unità di lavoro, trigger e default applicativi |
 | Letture | Campi, espressioni con alias, filtri, relazioni dirette, IN, ordine, paginazione | Colonne virtuali, GROUP BY/HAVING/DISTINCT, sottoquery e macro |
@@ -15,7 +16,9 @@ e funzionalità avanzate fino a quando un'app ne abbia bisogno.
 | Node/Bun | Adapter esportati e stessi test SQLite | API applicativa stabile e codec |
 | Parità | Modelli, cataloghi, SQL, parametri e risultati su casi espliciti | Inventario esaustivo e comportamenti applicativi |
 
-Le opportunità più immediate sono UPDATE/DELETE sulle tabelle semplici, lookup
+La priorità corrente è completare il model, a partire dalla composizione;
+si veda [la copertura dei contributi](composition.md). Successivamente,
+le opportunità più immediate sono UPDATE/DELETE sulle tabelle semplici, lookup
 per chiave primaria e transazioni di più operazioni: possono riusare nomi,
 parametri, espressioni e adapter già presenti. Richiedono comunque di distinguere
 compilazione SQL da lifecycle applicativo delle scritture Python.

@@ -45,6 +45,9 @@ L'export completo registra gli hash dei checkout Git. Le fixture migrate dal PoC
 mantengono la provenienza originale; lo spostamento in questo repo non le rigenera.
 
 La parità iniziale copre 55 modelli, due stadi di migrazione e 18 richieste query.
+Si aggiungono 35 casi di composizione confrontati sul sorgente e sul risultato
+migrate; la differenza nota sul rifiuto di una prima validazione è descritta in
+[composizione](composition.md).
 È un insieme esplicito di casi, non una certificazione dell'intera API Python.
 Per comportamenti non deterministici servono clock, utente e generatore ID
 controllabili: non basta confrontare il solo testo SQL.

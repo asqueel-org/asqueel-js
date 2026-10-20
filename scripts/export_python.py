@@ -51,6 +51,8 @@ def main():
     write("test/fixtures/sqlite.json", sqlite_oracle())
     from query_oracle import query_oracle
     write("test/fixtures/queries.json", query_oracle())
+    from composition_oracle import composition_oracle
+    write("test/fixtures/composition.json", composition_oracle())
     write("test/fixtures/hashes.json", [
         {"schema": s, "table": t, "columns": c, "kind": k,
          "expected": hashed_name(s, t, c, k)}
