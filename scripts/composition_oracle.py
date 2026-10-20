@@ -160,10 +160,11 @@ def definitions():
             skeleton() + [call(TABLE, 'column', name='third', dtype='I'), call(TABLE, 'column', name='name', comment='final')]]),
     ])
     from group_cases import definitions as group_definitions
-    return result + group_definitions(call, base, skeleton, TABLE, PACKAGE)
+    from virtual_relation_cases import definitions as virtual_definitions
+    return result + group_definitions(call, base, skeleton, TABLE, PACKAGE) + virtual_definitions(call, base, skeleton, TABLE, PACKAGE)
 
 
-def model_document(builder):
+def model_document(builder, inspect_relations=False):
     """Feature projection of the resolved model, not a substitute for full parity."""
     from asqueel.model import resolve_model
     from asqueel.model_sections import thaw
@@ -175,12 +176,20 @@ def model_document(builder):
         return dict(kind=d.kind, name=d.name, attributes=thaw(d.attributes),
                     children=[declaration(c) for c in d.children])
 
-    return {key: dict(declarations=[declaration(d) for d in table.declarations],
+    result = {key: dict(declarations=[declaration(d) for d in table.declarations],
                       attributes={k: thaw(v) for k, v in table.attributes.items() if k == 'group_subtables'},
                       columns={name: dict(kind=c.kind, dtype=c.dtype, attributes={k: thaw(v)
                                for k, v in c.attributes.items() if k in keys or k.startswith('var_')})
                                for name, c in table.columns.items()})
             for key, table in model.tables.items()}
+    if inspect_relations:
+        for key, table in model.tables.items():
+            result[key]['relations'] = {name: dict(name=r.name, target=r.target, kind=r.kind,
+                columns=list(r.columns), target_columns=list(r.target_columns), attributes=thaw(r.attributes))
+                for name, r in table.relations.items()}
+            for name, column in table.columns.items():
+                result[key]['columns'][name]['alias_target'] = list(column.alias_target) if column.alias_target else None
+    return result
 
 
 def source_document(builder):
@@ -248,7 +257,7 @@ def evaluate(case):
         answer['inputsUnchanged'] = snapshots == [source_document(layer) for layer in layers]
         assert answer['inputsUnchanged']
     for key, render in [('migration', lambda: SqlMigrationRenderer(result).render()),
-                        ('model', lambda: model_document(result))]:
+                        ('model', lambda: model_document(result, case.get('inspectRelations', False)))]:
         if not (case.get('render', True) if key == 'migration' else case.get('inspectModel')):
             continue
         try:

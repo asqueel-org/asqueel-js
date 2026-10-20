@@ -4,12 +4,13 @@ import {SourceBag} from '@genrojs/builders';
 import contract from './generated/contract.json' with {type: 'json'};
 import {names, hashName} from './structures.js';
 import {defaults, readOptions, expandOptions} from './options.js';
+import {resolveModelRelations, relationAttributes} from './model-relations.js';
 
 const VIRTUAL = new Set(['formulaColumn', 'aliasColumn', 'subQueryColumn', 'pyColumn', 'bagItemColumn']);
 const ALLOWED = new Set(['db', 'schemas', 'schema', 'packages', 'package', 'tables', 'table',
     'columns', 'column', 'composites', 'compositeColumn', 'virtual_columns', ...VIRTUAL,
     'indexes', 'index', 'constraints', 'constraint', 'extensions', 'extension',
-    'relation', 'weak_relation', 'options', 'reset', ...Object.keys(contract.optionLevels), 'validation', 'colgroup', 'subtable']);
+    'relation', 'weak_relation', 'options', 'reset', ...Object.keys(contract.optionLevels), 'validation', 'colgroup', 'subtable', 'virtualRelation']);
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
 const own = (o, key) => Object.hasOwn(o, key);
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -17,7 +18,7 @@ const clone = value => structuredClone(value);
 const collection = (node, tag) => node.children.find(n => n.tag === tag)?.children || [];
 
 export function isApplicationSource(node) {
-    return ['packages', 'options', 'colgroup', 'subtable'].includes(node.nodeTag)
+    return ['packages', 'options', 'colgroup', 'subtable', 'virtualRelation'].includes(node.nodeTag)
         || node.value instanceof SourceBag && node.value.getNodes().some(isApplicationSource);
 }
 
@@ -36,7 +37,7 @@ function snapshot(builder, node) {
             fail(node.fullpath, `runtime row policy ${key} is outside this projection`);
         }
     }
-    return {tag, a: clone(Object.fromEntries(Object.entries(attrs).filter(([k]) => k !== '_meta'))),
+    return {tag, label: node.label, a: clone(Object.fromEntries(Object.entries(attrs).filter(([k]) => k !== '_meta'))),
         children: node.value instanceof SourceBag ? node.value.getNodes().map(n => snapshot(builder, n)) : []};
 }
 
@@ -223,8 +224,8 @@ export function projectApplication(builder, Builder, {withModel = false} = {}) {
             const t = {key, namespace: namespace.a.name, a: node.a, package: pkg, options: readOptions(node),
                 columns: new Map(), virtual: new Map(), composites: new Map(), constraints: collection(node, 'constraints'),
                 indexes: collection(node, 'indexes'), declarations: node.children
-                    .filter(n => ['colgroup', 'subtable', 'composites'].includes(n.tag))
-                    .map(function declaration(n) { return {kind: n.tag, name: n.a.name || n.tag,
+                    .filter(n => ['colgroup', 'subtable', 'composites', 'virtualRelation'].includes(n.tag))
+                    .map(function declaration(n) { return {kind: n.tag, name: n.a.name || n.label || n.tag,
                         attributes: clone(n.a), children: n.children.map(declaration)}; })};
             for (const collectionNode of node.children) for (const child of collectionNode.children) {
                 if (collectionNode.tag === 'options') continue;
@@ -260,6 +261,15 @@ export function projectApplication(builder, Builder, {withModel = false} = {}) {
         }
     }
     resolveReferences(tables, packages);
+    for (const table of tables.values()) for (const declaration of table.declarations) {
+        if (declaration.kind !== 'composites') continue;
+        declaration.children = [...table.composites.values()].map(function resolved(n) {
+            const attributes = n.tag === 'relation' ? relationAttributes(n.a)
+                : {...Object.fromEntries(Object.entries(defaults(n.tag)).filter(([, v]) => v != null)), ...clone(n.a)};
+            return {kind: n.tag, name: n.a.name || n.label || n.tag, attributes, children: n.children.map(resolved)};
+        });
+    }
+    resolveModelRelations(tables, relations, target);
     const physical = new Builder(), root = physical.root.db({name: db.a.name});
     const schemaNodes = new Map(), tableNodes = new Map(), columnNodes = new Map();
     const schemaContainer = root.schemas();

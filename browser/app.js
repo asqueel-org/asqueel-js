@@ -11,6 +11,7 @@ import {browserQueries} from '../examples/browser-queries.js';
 import queriesExpected from '../test/fixtures/queries.json' with {type: 'json'};
 import {groupedItems} from '../examples/groups.js';
 import compositionExpected from '../test/fixtures/composition.json' with {type: 'json'};
+import {virtualRelations} from '../examples/virtual-relations.js';
 
 const editor = document.querySelector('#model');
 const result = document.querySelector('#result');
@@ -21,6 +22,7 @@ const output = document.querySelector('#output');
 const comparison = document.querySelector('#comparison');
 const differences = document.querySelector('#differences');
 const examples = {
+    'virtual-relations': {recipe: virtualRelations, expected: compositionExpected.find(c => c.name === 'virtual_relation_conditional').expected.migration},
     groups: {recipe: groupedItems, expected: compositionExpected.find(c => c.name === 'colgroup_and_subtable_together').expected.migration},
     queries: {recipe: browserQueries, expected: queriesExpected.desired},
     sqlite: {recipe: browserSqlite, expected: sqliteExpected.v1.desired},

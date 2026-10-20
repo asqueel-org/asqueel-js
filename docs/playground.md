@@ -224,6 +224,9 @@ mostrano il confronto. La verifica usa database temporanei separati da quello
 del playground e prova anche migrazione, INSERT/SELECT e riapertura IndexedDB.
 Le subtables producono colonne virtuali booleane nel modello, senza tabelle o
 colonne fisiche aggiuntive. I loro filtri non sono ancora eseguiti dalle query.
+L'esempio **VirtualRelation** verifica anche relazioni virtuali, binding e target
+degli alias nel modello. Queste relazioni non aggiungono FK al database; il loro
+uso nelle query è rifiutato esplicitamente. Vedi [VirtualRelation](virtual-relations.md).
 
 Restano fuori perimetro policy runtime `x_`, foreign key fisiche
 su colonne virtuali e riscrittura SQL di CHECK/indici parziali su colonne
@@ -244,7 +247,7 @@ npm test
 npm run test:bun
 ```
 
-I 159 test verificano l'uguaglianza completa con gli oracoli Python dichiarati, gli hash anche
+I 195 test verificano l'uguaglianza completa con gli oracoli Python dichiarati, gli hash anche
 con Unicode e ordine diverso delle colonne, la ripetibilità, la validazione e
 il rifiuto delle funzionalità fuori perimetro. Il corpus include 53 casi
 applicativi e due esempi scritti indipendentemente nei due linguaggi. Copre

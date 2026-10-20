@@ -29,6 +29,10 @@ composto e JSON migrate sono confrontati con Python prima di espandere la copert
 Sono inclusi `colgroup()` con default e ordinamento, e `subtable()` con parametri
 e colonna virtuale nel modello. Nel playground è disponibile l'esempio
 **Colgroups e subtables**; l'esecuzione dei filtri subtable nelle query è ancora da portare.
+Sono disponibili anche [VirtualRelation](docs/virtual-relations.md), con percorsi,
+condizioni, binding e alias risolti nel modello e confrontati con Python.
+L'esempio **VirtualRelation** mostra il JSON migrate; l'esecuzione delle
+navigazioni virtuali nelle query rimane da implementare.
 
 ## API iniziale
 

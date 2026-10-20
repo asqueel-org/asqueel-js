@@ -23,7 +23,8 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Confronto Python del sorgente composto e del JSON migrate, anche nel browser.
 - [x] Colgroups e composizione dei loro default/ordinamenti, come nel riferimento Python.
 - [x] Subtables: dichiarazioni, parametri, composizione e colonne virtuali del modello.
-- [ ] Altre dichiarazioni del modello ancora non proiettate, incluse virtualRelation.
+- [x] VirtualRelation: composizione, percorsi diretti/inversi/virtuali, binding e alias nel modello.
+- [ ] Altre dichiarazioni del modello ancora non proiettate.
 - [ ] Validazioni di dominio equivalenti a SqlModelValidator.
 - [ ] Casi mancanti di relazioni e rimappatura SQL del modello fisico.
 - [ ] Inventario completo grammatica → composizione → risoluzione → migrate.

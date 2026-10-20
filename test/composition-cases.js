@@ -2,16 +2,18 @@ import {SqlBuilder, composeModels} from '../src/index.js';
 import {equal} from '../src/sqlite.js';
 import {projectApplication} from '../src/application.js';
 
-function modelDocument(builder) {
+function modelDocument(builder, inspectRelations) {
     const {tables} = projectApplication(builder, SqlBuilder, {withModel: true});
     const keys = new Set(['name', 'size', 'group', 'name_long', 'name_short', 'comment', 'sql_formula',
         'x_legacy__addClass', 'x_requires_compilation']);
     return Object.fromEntries([...tables].map(([key, table]) => [key, {
         declarations: table.declarations,
         attributes: Object.fromEntries(Object.entries(table.a).filter(([k]) => k === 'group_subtables')),
+        ...(inspectRelations ? {relations: Object.fromEntries(table.relations)} : {}),
         columns: Object.fromEntries([...table.columns, ...table.virtual].map(([name, c]) => [name, {
             kind: c.tag, dtype: c.a.dtype || (c.a.size ? 'A' : 'T'),
             attributes: Object.fromEntries(Object.entries(c.a).filter(([k]) => keys.has(k) || k.startsWith('var_'))),
+            ...(inspectRelations ? {alias_target: c.alias_target || null} : {}),
         }])),
     }]));
 }
@@ -68,7 +70,7 @@ export function evaluateComposition(entry) {
         answer.inputsUnchanged = equal(snapshots, layers.map(m => m.toSource()));
         check(answer.inputsUnchanged, 'Composition changed input models');
     }
-    for (const [key, render] of [['migration', () => result.toMigration()], ['model', () => modelDocument(result)]]) {
+    for (const [key, render] of [['migration', () => result.toMigration()], ['model', () => modelDocument(result, entry.inspectRelations)]]) {
         if (!(key === 'migration' ? entry.render !== false : entry.inspectModel)) continue;
         let value, rejected = false;
         try { value = render(); } catch (error) {

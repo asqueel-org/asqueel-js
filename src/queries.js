@@ -105,6 +105,7 @@ class Context {
         const parts = path.replaceAll('@', '').split('.');
         let table = this.table, alias = 't0';
         for (const name of parts.slice(0, -1)) {
+            if (table.relations.get(name)?.kind === 'virtual') throw new Error('Navigazione virtualRelation fuori perimetro query');
             const owner = table.columns.get(name) || table.composites.get(name);
             const relation = owner?.children.find(n => n.tag === 'relation');
             if (!relation || relation.a.x_weak) throw new Error(`Relazione diretta non supportata: ${table.key}.${name}`);

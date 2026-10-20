@@ -131,7 +131,7 @@ Due comportamenti del riferimento Python sono mantenuti e verificati:
 
 ## Verifica e differenza nota
 
-58 casi eseguono le chiamate nel Python reale e separatamente in JavaScript.
+90 casi eseguono le chiamate nel Python reale e separatamente in JavaScript.
 Confrontano l'accettazione/rifiuto delle dichiarazioni, il sorgente finale
 (inclusi metadati di reset e disattivazione), l'isolamento degli input e il JSON
 migrate quando il modello è renderizzabile. Un caso riguarda solo la composizione
@@ -140,6 +140,8 @@ I 23 casi dedicati a colgroups/subtables confrontano anche le dichiarazioni e
 gli attributi pertinenti delle colonne nel modello risolto, oppure il rifiuto
 dei conflitti. È una proiezione esplicita delle nuove capacità, non un confronto
 completo di tutte le proprietà di `ResolvedModel`.
+Altri 32 casi coprono [virtualRelation](virtual-relations.md), con relazioni
+dirette, inverse e virtuali risolte, target degli alias e casi invalidi.
 
 Nel Python di riferimento, la prima `column.validation(len=...)` che confligge
 con un `validate_len` esplicito solleva errore dopo aver inserito il nodo
@@ -156,6 +158,8 @@ reale su WASM/IndexedDB, con dati persistiti e diff vuoto dopo riapertura.
 Un secondo database temporaneo verifica lo stesso ciclo con colgroups/subtables,
 includendo serializzazione, inserimento e lettura tramite modello. L'esempio
 `examples/groups.js` è selezionabile e modificabile nel playground.
+Un terzo database verifica il modello con virtualRelation, mantenendo soltanto
+le FK fisiche e controllando vincoli, persistenza e idempotenza.
 
-La composizione non completa da sola il model: virtualRelation, tutte le
-validazioni di dominio e alcuni casi di rimappatura rimangono nella roadmap.
+La composizione non completa da sola il model: le restanti dichiarazioni,
+le validazioni di dominio e alcuni casi di rimappatura rimangono nella roadmap.

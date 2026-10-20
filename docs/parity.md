@@ -45,10 +45,12 @@ L'export completo registra gli hash dei checkout Git. Le fixture migrate dal PoC
 mantengono la provenienza originale; lo spostamento in questo repo non le rigenera.
 
 La parità iniziale copre 55 modelli, due stadi di migrazione e 18 richieste query.
-Si aggiungono 58 casi di composizione confrontati sul sorgente e sul risultato
+Si aggiungono 90 casi di composizione confrontati sul sorgente e sul risultato
 migrate. I 23 casi di colgroups/subtables confrontano anche dichiarazioni,
 attributi rilevanti delle colonne e tipi nel modello risolto, oppure il rifiuto
-della risoluzione; non confrontano l'intero runtime `ResolvedModel`.
+della risoluzione. Altri 32 casi verificano virtualRelation, relazioni risolte
+con attributi e chiavi, target degli alias, contributi, cicli e nomi SQL rimappati.
+Non confrontano l'intero runtime `ResolvedModel`.
 La differenza nota sul rifiuto di una prima validazione è descritta in
 [composizione](composition.md).
 È un insieme esplicito di casi, non una certificazione dell'intera API Python.

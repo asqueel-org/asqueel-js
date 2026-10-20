@@ -73,6 +73,7 @@ export class CompositionBuilder extends BuilderBase {
         const walk = bag => {
             for (const node of bag.getNodes()) {
                 this.validateNodeValues(node.nodeTag, node.value, node.getAttr());
+                if (node.nodeTag === 'virtualRelation') this._validateVirtualRelation(node.getAttr());
                 if (node.nodeTag === 'table') {
                     const names = new Map();
                     for (const container of children(node)) if (['columns', 'virtual_columns', 'composites'].includes(container.nodeTag)) {
@@ -237,6 +238,7 @@ export class CompositionBuilder extends BuilderBase {
             if (typeof attributes[key] !== 'string' || !attributes[key].trim() || /[.@$/\\]/.test(attributes[key])) throw new Error(`${tag}.${key}: invalid name or path separator`);
         }
         if (tag !== 'validation' && (own(attributes, 'metadata') || own(attributes, 'x_ui'))) throw new Error(`${tag}: use flat namespaced attributes`);
+        if (tag === 'virtualRelation') this._validateVirtualRelation(attributes);
         if (tag === 'subtable') {
             const declared = new Set(this.schema[tag].attributes.parameters.map(p => p.name));
             for (const key of Object.keys(attributes)) if (!declared.has(key) && !key.includes('_')) throw new Error(`subtable: unknown attribute ${key}`);
@@ -251,6 +253,15 @@ export class CompositionBuilder extends BuilderBase {
                 Object.entries(attributes).filter(([k]) => k.startsWith('col_')).map(([k, v]) => [k.slice(4), v]))});
         }
         return attributes;
+    }
+
+    _validateVirtualRelation(attributes) {
+        const declared = new Set(this.schema.virtualRelation.attributes.parameters.map(p => p.name));
+        for (const key of Object.keys(attributes)) {
+            if (declared.has(key) || ['_meta', '_tag', 'node_label', 'node_position'].includes(key)
+                || key.startsWith('x_') || /^var_[A-Za-z_][A-Za-z0-9_]*$/.test(key) && key.trim() === key) continue;
+            throw new Error(`virtualRelation: unsupported attribute ${key}`);
+        }
     }
 
     setChild(bag, tag, value, attrs = {}, parentOverride = null) {
@@ -277,7 +288,7 @@ export class CompositionBuilder extends BuilderBase {
             return parent;
         }
         let label;
-        if (['colgroup', 'subtable'].includes(tag)) label = `${tag}_${attributes.name}`;
+        if (['colgroup', 'subtable', 'virtualRelation'].includes(tag)) label = `${tag}_${attributes.name}`;
         if (SINGLETONS.has(tag)) label = tag;
         if (NAMED.has(tag)) {
             if (attributes.node_label != null) throw new Error(`${tag}: node_label is fixed by its SQL name`);
@@ -307,12 +318,12 @@ export class CompositionBuilder extends BuilderBase {
                 if (existing.nodeTag !== tag) throw new Error(`conflicting element kind for ${tag}`);
                 return existing;
             }
-            if (['schema', 'package', 'validation', 'encryption', 'subtable'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
+            if (['schema', 'package', 'validation', 'encryption', 'subtable', 'virtualRelation'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
                 return this._composeAttributes(existing, attributes, tag);
             }
         }
         if (own(contract.optionLevels, tag) && !this.schema[tag].node_label) attributes.node_label = label;
-        if (['colgroup', 'subtable'].includes(tag)) attributes.node_label = label;
+        if (['colgroup', 'subtable', 'virtualRelation'].includes(tag)) attributes.node_label = label;
         // Check cross-spelling validation conflicts before publishing a new child.
         if (tag === 'validation') this._validationOverrides({nodeTag: tag, parentBag: bag, fullpath: `${parent?.fullpath}.validation`}, attributes, parent);
         const child = super.setChild(bag, tag, value, attributes, parentOverride);
