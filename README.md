@@ -26,6 +26,9 @@ sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 Il model supporta [contributi ordinati e composizione di modelli indipendenti](docs/composition.md)
 con `model.contribution(...)`, `composeModels(...)` e `model.clone()`. Sorgente
 composto e JSON migrate sono confrontati con Python prima di espandere la copertura.
+Sono inclusi `colgroup()` con default e ordinamento, e `subtable()` con parametri
+e colonna virtuale nel modello. Nel playground è disponibile l'esempio
+**Colgroups e subtables**; l'esecuzione dei filtri subtable nelle query è ancora da portare.
 
 ## API iniziale
 

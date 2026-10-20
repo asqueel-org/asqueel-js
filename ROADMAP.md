@@ -21,8 +21,9 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Composizione di modelli indipendenti, copia e isolamento degli input.
 - [x] Fusione delle opzioni, reset e disattivazione/riattivazione dei campi.
 - [x] Confronto Python del sorgente composto e del JSON migrate, anche nel browser.
-- [ ] Colgroups e composizione dei loro default/ordinamenti.
-- [ ] Subtables e altre dichiarazioni del modello ancora non proiettate.
+- [x] Colgroups e composizione dei loro default/ordinamenti, come nel riferimento Python.
+- [x] Subtables: dichiarazioni, parametri, composizione e colonne virtuali del modello.
+- [ ] Altre dichiarazioni del modello ancora non proiettate, incluse virtualRelation.
 - [ ] Validazioni di dominio equivalenti a SqlModelValidator.
 - [ ] Casi mancanti di relazioni e rimappatura SQL del modello fisico.
 - [ ] Inventario completo grammatica → composizione → risoluzione → migrate.

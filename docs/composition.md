@@ -90,13 +90,56 @@ comuni, eliminando la definizione specifica del vecchio tipo. Non consente di
 trasformare una colonna fisica in virtuale. Questo riguarda il model: l'esecuzione
 delle colonne virtuali nelle query rimane fuori dalla copertura attuale.
 
+## Colgroups e subtables
+
+```js
+const details = table.colgroup({
+    name: 'details', name_long: 'Dettagli', col_dtype: 'T', col_size: ':80',
+});
+details.column({name: 'city'});                 // details.001, size :80
+details.column({name: 'street', size: ':120'}); // details.002, size :120
+table.subtable({
+    name: 'active', condition: '$id > :minimum', parameters: {minimum: 0},
+    name_long: 'Attivi',
+});
+```
+
+Il gruppo resta un nodo dichiarativo vuoto: i membri vengono inseriti nei normali
+contenitori della tabella. Sono applicati solo i default `col_*` dichiarati per
+quel tipo di elemento; gli attributi già presenti e quelli espliciti prevalgono.
+Una nuova chiamata allo stesso gruppo conserva l'identità e non può cambiarne
+la definizione, anche in un contributo successivo. La composizione di modelli
+indipendenti, invece, unisce gli attributi come Python. Le colonne virtuali
+possono cambiare tipo conservando l'ordinale del gruppo.
+
+Le subtables mantengono condizione, etichette e parametri; `parameters` si fonde
+per chiave secondo le normali regole dei contributi. La risoluzione genera una
+formula booleana `subtable_<name>`, con `var_*` derivati dai parametri e dagli
+attributi `condition_*` (questi ultimi prevalgono). Una formula già dichiarata
+può aggiungere metadati, ma non contraddire tipo o espressione generati.
+Il JSON migrate contiene solo la struttura fisica. Non viene creata una tabella
+per ogni subtable e non viene memorizzata la formula come colonna SQLite.
+Le query su questi filtri e sulle colonne virtuali sono ancora escluse e rifiutate.
+
+Due comportamenti del riferimento Python sono mantenuti e verificati:
+
+- Il merge di colonne dello **stesso tipo** da gruppi in modelli indipendenti
+  usa l'ordinale del contributo entrante; può quindi duplicare ordinali. La
+  conservazione dell'ordinale precedente vale nel merge che cambia tipo virtuale.
+- `group.index(...)` può essere dichiarato, ma il modello Python rifiuta poi
+  l'attributo `group` sull'indice. Dichiarare gli indici con `table.index(...)`.
+
 ## Verifica e differenza nota
 
-35 casi eseguono le chiamate nel Python reale e separatamente in JavaScript.
+58 casi eseguono le chiamate nel Python reale e separatamente in JavaScript.
 Confrontano l'accettazione/rifiuto delle dichiarazioni, il sorgente finale
 (inclusi metadati di reset e disattivazione), l'isolamento degli input e il JSON
 migrate quando il modello è renderizzabile. Un caso riguarda solo la composizione
 del sorgente; uno verifica il rifiuto di una collisione fisico/virtuale.
+I 23 casi dedicati a colgroups/subtables confrontano anche le dichiarazioni e
+gli attributi pertinenti delle colonne nel modello risolto, oppure il rifiuto
+dei conflitti. È una proiezione esplicita delle nuove capacità, non un confronto
+completo di tutte le proprietà di `ResolvedModel`.
 
 Nel Python di riferimento, la prima `column.validation(len=...)` che confligge
 con un `validate_len` esplicito solleva errore dopo aver inserito il nodo
@@ -110,6 +153,9 @@ intermedio errato e non modifichiamo il checkout Python per nasconderlo.
 il corpus nel worker Chromium. Il pulsante **Verifica composizione con Python**
 nel playground usa gli stessi oracoli salvati e verifica una migrazione composta
 reale su WASM/IndexedDB, con dati persistiti e diff vuoto dopo riapertura.
+Un secondo database temporaneo verifica lo stesso ciclo con colgroups/subtables,
+includendo serializzazione, inserimento e lettura tramite modello. L'esempio
+`examples/groups.js` è selezionabile e modificabile nel playground.
 
-La composizione non completa da sola il model: colgroups, subtables, tutte le
+La composizione non completa da sola il model: virtualRelation, tutte le
 validazioni di dominio e alcuni casi di rimappatura rimangono nella roadmap.

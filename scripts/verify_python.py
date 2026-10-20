@@ -30,7 +30,7 @@ for runtime in ("node", "bun"):
     composed = json.loads(subprocess.check_output(
         [runtime, str(ROOT / "scripts/render_composition.js")], cwd=ROOT, text=True))
     assert composed == composition_expected, f"{runtime}: composition source or migration differs from live Python"
-    print(f"{runtime}: {len(composed)} composition cases match Python source, conflicts and migration")
+    print(f"{runtime}: {len(composed)} composition cases match Python source, conflicts, feature model snapshots and migration")
     rendered = json.loads(subprocess.check_output(
         [runtime, str(ROOT / "scripts/render_cases.js")], cwd=ROOT, text=True))
     assert rendered == expected, f"{runtime}: output differs from the current Python renderer"

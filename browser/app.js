@@ -9,6 +9,8 @@ import {sqlitePanel} from './sqlite-panel.js';
 import {queryPanel} from './query-panel.js';
 import {browserQueries} from '../examples/browser-queries.js';
 import queriesExpected from '../test/fixtures/queries.json' with {type: 'json'};
+import {groupedItems} from '../examples/groups.js';
+import compositionExpected from '../test/fixtures/composition.json' with {type: 'json'};
 
 const editor = document.querySelector('#model');
 const result = document.querySelector('#result');
@@ -19,6 +21,7 @@ const output = document.querySelector('#output');
 const comparison = document.querySelector('#comparison');
 const differences = document.querySelector('#differences');
 const examples = {
+    groups: {recipe: groupedItems, expected: compositionExpected.find(c => c.name === 'colgroup_and_subtable_together').expected.migration},
     queries: {recipe: browserQueries, expected: queriesExpected.desired},
     sqlite: {recipe: browserSqlite, expected: sqliteExpected.v1.desired},
     'sqlite-v2': {recipe: browserSqliteV2, expected: sqliteExpected.v2.desired},

@@ -7,10 +7,10 @@ e funzionalità avanzate fino a quando un'app ne abbia bisogno.
 | Area | Già disponibile | Da completare |
 | --- | --- | --- |
 | Modello | Grammatica JSON, Bag/Builders JS, package, nomi logici/fisici, espansione opzioni nel JSON migrate | Runtime completo delle opzioni |
-| Composizione | Contributi ordinati, ripetizioni, override, reset, copie e modelli indipendenti | Colgroups, subtables e validazione completa del modello |
+| Composizione | Contributi ordinati, ripetizioni, override, reset, copie, modelli indipendenti, colgroups e subtables | Validazione completa del modello e altre dichiarazioni semantiche |
 | Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, colonne nullable e indici non univoci aggiunti | Ricostruzioni, alter/drop, CHECK e altri oggetti |
 | Scritture | INSERT parametrizzato e RETURNING, rollback | UPDATE/DELETE, unità di lavoro, trigger e default applicativi |
-| Letture | Campi, espressioni con alias, filtri, relazioni dirette, IN, ordine, paginazione | Colonne virtuali, GROUP BY/HAVING/DISTINCT, sottoquery e macro |
+| Letture | Campi, espressioni con alias, filtri, relazioni dirette, IN, ordine, paginazione | Filtri subtable, colonne virtuali, GROUP BY/HAVING/DISTINCT, sottoquery e macro |
 | Browser | SQLite WASM in worker, IndexedDB, riapertura connessione, coda e Web Locks nel playground | API worker pubblica e prove di crash/quota/concorrenza |
 | Offline | Dati locali persistiti | Riapertura dell'app senza rete, cache e aggiornamenti degli asset |
 | Node/Bun | Adapter esportati e stessi test SQLite | API applicativa stabile e codec |

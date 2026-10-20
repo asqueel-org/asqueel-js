@@ -9,7 +9,7 @@ const VIRTUAL = new Set(['formulaColumn', 'aliasColumn', 'subQueryColumn', 'pyCo
 const ALLOWED = new Set(['db', 'schemas', 'schema', 'packages', 'package', 'tables', 'table',
     'columns', 'column', 'composites', 'compositeColumn', 'virtual_columns', ...VIRTUAL,
     'indexes', 'index', 'constraints', 'constraint', 'extensions', 'extension',
-    'relation', 'weak_relation', 'options', 'reset', ...Object.keys(contract.optionLevels), 'validation']);
+    'relation', 'weak_relation', 'options', 'reset', ...Object.keys(contract.optionLevels), 'validation', 'colgroup', 'subtable']);
 const fail = (path, message) => { throw new Error(`${path}: ${message}`); };
 const own = (o, key) => Object.hasOwn(o, key);
 const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
@@ -17,7 +17,7 @@ const clone = value => structuredClone(value);
 const collection = (node, tag) => node.children.find(n => n.tag === tag)?.children || [];
 
 export function isApplicationSource(node) {
-    return node.nodeTag === 'packages' || node.nodeTag === 'options'
+    return ['packages', 'options', 'colgroup', 'subtable'].includes(node.nodeTag)
         || node.value instanceof SourceBag && node.value.getNodes().some(isApplicationSource);
 }
 
@@ -53,6 +53,28 @@ function resolveTypes(table) {
         if (!type) fail(table.key, `unknown dtype ${dtype}`);
         const {name, ...attributes} = type;
         column.a = {...attributes, ...column.a, dtype: type.dtype};
+    }
+}
+
+function expandSubtables(table) {
+    for (const declaration of table.declarations) {
+        if (declaration.kind !== 'subtable') continue;
+        const a = declaration.attributes, name = `subtable_${a.name}`;
+        const existing = table.columns.get(name) || table.composites.get(name) || table.virtual.get(name);
+        if (existing && (existing.tag !== 'formulaColumn'
+            || existing.a.dtype != null && existing.a.dtype !== 'B'
+            || own(existing.a, 'sql_formula') && existing.a.sql_formula !== a.condition)) {
+            fail(`${table.key}.${name}`, 'conflicts with subtable generated column');
+        }
+        const bindings = Object.fromEntries(Object.entries(a.parameters || {}).map(([k, v]) => [`var_${k}`, clone(v)]));
+        for (const [key, value] of Object.entries(a)) if (key.startsWith('condition_')) bindings[`var_${key.slice(10)}`] = clone(value);
+        table.virtual.set(name, {tag: 'formulaColumn', a: {
+            name, sql_formula: a.condition, name_long: a.name_long || a.name,
+            group: 'subtables', x_legacy__addClass: name, ...bindings, ...existing?.a,
+            dtype: 'B', x_requires_compilation: 'formulaColumn',
+        }, children: existing?.children || []});
+        // Python setdefault preserves an explicit null as well as a custom label.
+        if (!own(table.a, 'group_subtables')) table.a.group_subtables = '!![en]Subtables';
     }
 }
 
@@ -200,7 +222,10 @@ export function projectApplication(builder, Builder, {withModel = false} = {}) {
             const key = `${namespace.a.name}.${node.a.name}`;
             const t = {key, namespace: namespace.a.name, a: node.a, package: pkg, options: readOptions(node),
                 columns: new Map(), virtual: new Map(), composites: new Map(), constraints: collection(node, 'constraints'),
-                indexes: collection(node, 'indexes')};
+                indexes: collection(node, 'indexes'), declarations: node.children
+                    .filter(n => ['colgroup', 'subtable', 'composites'].includes(n.tag))
+                    .map(function declaration(n) { return {kind: n.tag, name: n.a.name || n.tag,
+                        attributes: clone(n.a), children: n.children.map(declaration)}; })};
             for (const collectionNode of node.children) for (const child of collectionNode.children) {
                 if (collectionNode.tag === 'options') continue;
                 const map = child.tag === 'column' ? t.columns : child.tag === 'compositeColumn' ? t.composites
@@ -228,6 +253,12 @@ export function projectApplication(builder, Builder, {withModel = false} = {}) {
         }
     }
     expandOptions(tables);
+    for (const table of tables.values()) {
+        expandSubtables(table);
+        if (table.package) for (const column of table.virtual.values()) {
+            if (column.tag !== 'aliasColumn') column.a.x_requires_compilation = column.tag;
+        }
+    }
     resolveReferences(tables, packages);
     const physical = new Builder(), root = physical.root.db({name: db.a.name});
     const schemaNodes = new Map(), tableNodes = new Map(), columnNodes = new Map();

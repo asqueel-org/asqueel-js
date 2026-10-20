@@ -218,7 +218,14 @@ La grammatica JSON fornisce dichiarazioni, firme, default e vincoli; le
 trasformazioni applicative sono implementate in `src/application.js` e
 `src/options.js`. Caricare la grammatica, da solo, non esegue gli hook Python.
 
-Restano fuori perimetro subtables/colgroups, policy runtime `x_`, foreign key fisiche
+Colgroups e subtables sono disponibili nel modello e nella proiezione migrate;
+il nuovo esempio omonimo e il pulsante **Verifica composizione con Python**
+mostrano il confronto. La verifica usa database temporanei separati da quello
+del playground e prova anche migrazione, INSERT/SELECT e riapertura IndexedDB.
+Le subtables producono colonne virtuali booleane nel modello, senza tabelle o
+colonne fisiche aggiuntive. I loro filtri non sono ancora eseguiti dalle query.
+
+Restano fuori perimetro policy runtime `x_`, foreign key fisiche
 su colonne virtuali e riscrittura SQL di CHECK/indici parziali su colonne
 rimappate. Sul percorso fisico senza package/opzioni restano richiesti nomi
 dichiarati coincidenti con quelli SQL. Non sono implementati il
@@ -237,7 +244,7 @@ npm test
 npm run test:bun
 ```
 
-I 135 test verificano l'uguaglianza completa con gli oracoli Python, gli hash anche
+I 159 test verificano l'uguaglianza completa con gli oracoli Python dichiarati, gli hash anche
 con Unicode e ordine diverso delle colonne, la ripetibilità, la validazione e
 il rifiuto delle funzionalità fuori perimetro. Il corpus include 53 casi
 applicativi e due esempi scritti indipendentemente nei due linguaggi. Copre

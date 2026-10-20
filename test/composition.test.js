@@ -4,6 +4,8 @@ import cases from './fixtures/composition.json' with {type: 'json'};
 import {evaluateComposition} from './composition-cases.js';
 import {SqlBuilder, defineModel, composeModels} from '../src/index.js';
 import {querySource, modelFromQuerySource} from '../src/queries.js';
+import {groupedItems} from '../examples/groups.js';
+import {projectApplication} from '../src/application.js';
 
 for (const entry of cases) test(`Python source + migration composition: ${entry.name}`, () => {
     assert.deepEqual(evaluateComposition(entry), entry.expected);
@@ -51,4 +53,28 @@ test('semantic reset and disabled-field metadata survive worker serialization', 
     const reset = defineModel(root => root.db({name: 'test'}).packages().package({name: 'app'}).table({name: 'item'}).options().reset({name: 'sys_fields'}));
     const serialized = modelFromQuerySource(querySource(reset), SqlBuilder);
     assert.deepEqual(composeModels(model, serialized).toSource(), composeModels(model, reset).toSource());
+});
+
+test('group handles, subtable parameters and semantic declarations survive worker serialization', () => {
+    const model = defineModel(groupedItems);
+    const expected = cases.find(c => c.name === 'colgroup_and_subtable_together').expected;
+    assert.deepEqual(model.toSource(), expected.source);
+    assert.deepEqual(model.toMigration(), expected.migration);
+    const table = model.node('db.packages.app.tables.item');
+    const group = table.colgroup('details');
+    assert.equal(table.colgroup('details'), group);
+    assert.equal(group.column('city'), model.node('db.packages.app.tables.item.columns.city'));
+    const restored = modelFromQuerySource(querySource(model), SqlBuilder);
+    assert.deepEqual(restored.toSource(), model.toSource());
+    assert.deepEqual(restored.toMigration(), model.toMigration());
+    const parameters = {minimum: 1, config: {value: 'owned'}};
+    model.contribution('custom', () => table.subtable({name: 'active', condition: '$id > :minimum', parameters}));
+    parameters.config.value = 'external';
+    assert.equal(model.node('db.packages.app.tables.item.subtable_active').getAttr('parameters').config.value, 'owned');
+    const source = model.toSource();
+    const resolved = projectApplication(model, SqlBuilder, {withModel: true}).tables.get('app.item');
+    resolved.declarations[1].attributes.parameters.config.value = 'changed after resolution';
+    assert.deepEqual(model.toSource(), source);
+    assert.throws(() => model.queries().compile({operation: 'select', table: 'app.item', columns: '$subtable_active'}), /virtual|fuori|support/i);
+    assert.throws(() => model.queries().compile({operation: 'select', table: 'app.item', subtable: 'active'}), /fuori perimetro/);
 });

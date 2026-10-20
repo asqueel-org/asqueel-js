@@ -96,8 +96,8 @@ class Context {
     }
     field(table, alias, name) {
         const column = table.columns.get(name);
-        if (!column) throw new Error(`Campo fisico sconosciuto: ${table.key}.${name}`);
         if (table.virtual.has(name)) throw new Error('Colonne virtuali fuori perimetro query');
+        if (!column) throw new Error(`Campo fisico sconosciuto: ${table.key}.${name}`);
         return `${this.insert ? '' : q(alias) + '.'}${q(columnName(column))}`;
     }
     related(path) {

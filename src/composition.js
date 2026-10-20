@@ -189,6 +189,24 @@ export class CompositionBuilder extends BuilderBase {
 
     commandOnNode(node, tag, value, attrs) {
         node = sourceTarget(node);
+        if (node.nodeTag === 'colgroup' && own(ROUTES, tag)) {
+            attrs = this._prepareCall(tag, value, attrs);
+            const table = parentOf(node), prefix = node.attr.name + '.';
+            const existing = table.value?.getNode(`${ROUTES[tag]}.${attrs.name}`);
+            let group = existing?.attr.group;
+            if (group != null && !group.startsWith(prefix)) throw new Error(`${attrs.name}: conflicting column group`);
+            const members = parent => children(parent).reduce((count, child) => count
+                + (typeof child.attr.group === 'string' && child.attr.group.startsWith(prefix) ? 1 : 0) + members(child), 0);
+            group ||= prefix + String(members(table) + 1).padStart(3, '0');
+            if (own(attrs, 'group') && attrs.group !== group) throw new Error(`${attrs.name}: conflicting column group`);
+            const declared = new Set(this.schema[tag].attributes.parameters.map(p => p.name));
+            const defaults = Object.fromEntries(Object.entries(node.attr)
+                .filter(([k]) => k.startsWith('col_') && declared.has(k.slice(4)) && !own(existing?.attr || {}, k.slice(4)))
+                .map(([k, v]) => [k.slice(4), v]));
+            const child = this.commandOnNode(table, tag, null, {...defaults, ...attrs, group});
+            child.setAttr({_meta: {...child.getAttr('_meta'), colgroup: node.attr.name}}, false, true, false);
+            return child;
+        }
         // Route before BuilderBase allocates a detached child branch; otherwise
         // the outer call would overwrite the container created by the route.
         if (node.nodeTag === 'table' && own(ROUTES, tag)) {
@@ -219,6 +237,19 @@ export class CompositionBuilder extends BuilderBase {
             if (typeof attributes[key] !== 'string' || !attributes[key].trim() || /[.@$/\\]/.test(attributes[key])) throw new Error(`${tag}.${key}: invalid name or path separator`);
         }
         if (tag !== 'validation' && (own(attributes, 'metadata') || own(attributes, 'x_ui'))) throw new Error(`${tag}: use flat namespaced attributes`);
+        if (tag === 'subtable') {
+            const declared = new Set(this.schema[tag].attributes.parameters.map(p => p.name));
+            for (const key of Object.keys(attributes)) if (!declared.has(key) && !key.includes('_')) throw new Error(`subtable: unknown attribute ${key}`);
+        }
+        if (tag === 'colgroup') {
+            const declared = new Set(this.schema.column.attributes.parameters.map(p => p.name));
+            for (const key of Object.keys(attributes)) {
+                if (['name', 'name_long', 'name_short', 'comment', '_meta'].includes(key)) continue;
+                if (!key.startsWith('col_') || key === 'col_name' || !declared.has(key.slice(4))) throw new Error(`colgroup: unknown column default ${key}`);
+            }
+            this.validateNodeValues('column', null, {name: '__group_default__', ...Object.fromEntries(
+                Object.entries(attributes).filter(([k]) => k.startsWith('col_')).map(([k, v]) => [k.slice(4), v]))});
+        }
         return attributes;
     }
 
@@ -246,6 +277,7 @@ export class CompositionBuilder extends BuilderBase {
             return parent;
         }
         let label;
+        if (['colgroup', 'subtable'].includes(tag)) label = `${tag}_${attributes.name}`;
         if (SINGLETONS.has(tag)) label = tag;
         if (NAMED.has(tag)) {
             if (attributes.node_label != null) throw new Error(`${tag}: node_label is fixed by its SQL name`);
@@ -267,15 +299,20 @@ export class CompositionBuilder extends BuilderBase {
         const existing = label ? bag.node(label) : null;
         if (existing) {
             this.validateParent(tag, parent?.nodeTag);
+            if (tag === 'colgroup') {
+                if (!equal(existing.getAttr(), {...existing.getAttr(), ...attributes})) throw new Error(`colgroup ${attributes.name}: conflicting definition`);
+                return existing;
+            }
             if (SINGLETONS.has(tag)) {
                 if (existing.nodeTag !== tag) throw new Error(`conflicting element kind for ${tag}`);
                 return existing;
             }
-            if (['schema', 'package', 'validation', 'encryption'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
+            if (['schema', 'package', 'validation', 'encryption', 'subtable'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
                 return this._composeAttributes(existing, attributes, tag);
             }
         }
         if (own(contract.optionLevels, tag) && !this.schema[tag].node_label) attributes.node_label = label;
+        if (['colgroup', 'subtable'].includes(tag)) attributes.node_label = label;
         // Check cross-spelling validation conflicts before publishing a new child.
         if (tag === 'validation') this._validationOverrides({nodeTag: tag, parentBag: bag, fullpath: `${parent?.fullpath}.validation`}, attributes, parent);
         const child = super.setChild(bag, tag, value, attributes, parentOverride);
@@ -316,7 +353,10 @@ export class CompositionBuilder extends BuilderBase {
                 this._attributeOrigins.set(pathOf(existing), new Map(Object.keys(attributes).filter(k => k !== '_meta').map(k => [k, this._contribution])));
                 for (const [other, key] of this._validationOverrides(existing, attributes)) delete other.attr[key];
             } else {
-                this._composeAttributes(existing, attributes, tag);
+                const incoming = copy(attributes);
+                const group = incoming._meta?.colgroup;
+                if (existing.nodeTag !== tag && group && existing.attr.group?.startsWith(group + '.')) delete incoming.group;
+                this._composeAttributes(existing, incoming, tag);
                 if (tag === 'options') {
                     const resets = attributes._meta?.option_resets || [];
                     for (const child of children(existing)) if (resets.includes(child.nodeTag)) existing.value.popNode(child.label);

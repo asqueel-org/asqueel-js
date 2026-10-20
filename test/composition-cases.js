@@ -1,5 +1,20 @@
 import {SqlBuilder, composeModels} from '../src/index.js';
 import {equal} from '../src/sqlite.js';
+import {projectApplication} from '../src/application.js';
+
+function modelDocument(builder) {
+    const {tables} = projectApplication(builder, SqlBuilder, {withModel: true});
+    const keys = new Set(['name', 'size', 'group', 'name_long', 'name_short', 'comment', 'sql_formula',
+        'x_legacy__addClass', 'x_requires_compilation']);
+    return Object.fromEntries([...tables].map(([key, table]) => [key, {
+        declarations: table.declarations,
+        attributes: Object.fromEntries(Object.entries(table.a).filter(([k]) => k === 'group_subtables')),
+        columns: Object.fromEntries([...table.columns, ...table.virtual].map(([name, c]) => [name, {
+            kind: c.tag, dtype: c.a.dtype || (c.a.size ? 'A' : 'T'),
+            attributes: Object.fromEntries(Object.entries(c.a).filter(([k]) => keys.has(k) || k.startsWith('var_'))),
+        }])),
+    }]));
+}
 
 const check = (condition, message) => { if (!condition) throw new Error(message); };
 function apply(model, steps) {
@@ -53,6 +68,17 @@ export function evaluateComposition(entry) {
         answer.inputsUnchanged = equal(snapshots, layers.map(m => m.toSource()));
         check(answer.inputsUnchanged, 'Composition changed input models');
     }
-    if (entry.render !== false) answer.migration = result.toMigration();
+    for (const [key, render] of [['migration', () => result.toMigration()], ['model', () => modelDocument(result)]]) {
+        if (!(key === 'migration' ? entry.render !== false : entry.inspectModel)) continue;
+        let value, rejected = false;
+        try { value = render(); } catch (error) {
+            if (!entry.rejectResolution) throw error;
+            rejected = true;
+        }
+        check(rejected === !!entry.rejectResolution, `${key}: unexpected resolution acceptance`);
+        if (rejected) answer[key + 'Accepted'] = false;
+        else answer[key] = value;
+    }
+    check(equal(answer.source, result.toSource()), 'Rendering changed source');
     return answer;
 }
