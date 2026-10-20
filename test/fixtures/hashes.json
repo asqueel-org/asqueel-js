@@ -1,0 +1,119 @@
+[
+  {
+    "schema": "public",
+    "table": "invoice",
+    "columns": [
+      "id"
+    ],
+    "kind": "idx",
+    "expected": "idx_d395aaa0"
+  },
+  {
+    "schema": "public",
+    "table": "invoice",
+    "columns": [
+      "id"
+    ],
+    "kind": "fk",
+    "expected": "fk_f5c75b1f"
+  },
+  {
+    "schema": "public",
+    "table": "invoice",
+    "columns": [
+      "id"
+    ],
+    "kind": "cst",
+    "expected": "cst_f0d27fea"
+  },
+  {
+    "schema": "città",
+    "table": "fatturazione",
+    "columns": [
+      "anno",
+      "numero"
+    ],
+    "kind": "idx",
+    "expected": "idx_8c7704c5"
+  },
+  {
+    "schema": "città",
+    "table": "fatturazione",
+    "columns": [
+      "anno",
+      "numero"
+    ],
+    "kind": "fk",
+    "expected": "fk_dc97cd83"
+  },
+  {
+    "schema": "città",
+    "table": "fatturazione",
+    "columns": [
+      "anno",
+      "numero"
+    ],
+    "kind": "cst",
+    "expected": "cst_745b99db"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "one",
+      "two"
+    ],
+    "kind": "idx",
+    "expected": "idx_be708b85"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "one",
+      "two"
+    ],
+    "kind": "fk",
+    "expected": "fk_c7ff7559"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "one",
+      "two"
+    ],
+    "kind": "cst",
+    "expected": "cst_b78c2666"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "two",
+      "one"
+    ],
+    "kind": "idx",
+    "expected": "idx_098c655c"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "two",
+      "one"
+    ],
+    "kind": "fk",
+    "expected": "fk_e0f7e165"
+  },
+  {
+    "schema": "a",
+    "table": "t",
+    "columns": [
+      "two",
+      "one"
+    ],
+    "kind": "cst",
+    "expected": "cst_c1b62826"
+  }
+]

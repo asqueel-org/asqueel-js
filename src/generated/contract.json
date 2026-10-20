@@ -1,0 +1,182 @@
+{
+  "columnKeys": [
+    "dtype",
+    "sql_type",
+    "notnull",
+    "sqldefault",
+    "size",
+    "unique",
+    "extra_sql",
+    "generated_expression",
+    "comment"
+  ],
+  "dtypeCodes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "DH",
+    "DHZ",
+    "DT",
+    "H",
+    "HZ",
+    "I",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P",
+    "R",
+    "T",
+    "TSV",
+    "VEC",
+    "X",
+    "Z",
+    "jsonb",
+    "serial",
+    "serial4"
+  ],
+  "indexOptions": [
+    "unique",
+    "method",
+    "where",
+    "tablespace",
+    "with_options"
+  ],
+  "optionLevels": {
+    "requires": [
+      "package"
+    ],
+    "type": [
+      "package"
+    ],
+    "sys_fields": [
+      "table"
+    ],
+    "driver": [
+      "connection"
+    ],
+    "hierarchical": [
+      "table"
+    ],
+    "auto_counter": [
+      "table"
+    ],
+    "relative_index": [
+      "table"
+    ],
+    "dynamic_fields": [
+      "table"
+    ],
+    "record_hash": [
+      "table"
+    ],
+    "full_update": [
+      "table"
+    ],
+    "audit": [
+      "table"
+    ],
+    "system_records": [
+      "table"
+    ],
+    "protection": [
+      "table"
+    ],
+    "release": [
+      "table"
+    ],
+    "partition": [
+      "table"
+    ],
+    "tenant": [
+      "table"
+    ],
+    "retention": [
+      "table"
+    ],
+    "broadcast": [
+      "table"
+    ],
+    "archive": [
+      "table"
+    ],
+    "enabled_when": [
+      "table"
+    ],
+    "attachments": [
+      "table"
+    ],
+    "numbering": [
+      "table"
+    ]
+  },
+  "tableOptions": [
+    "hierarchical",
+    "auto_counter",
+    "relative_index",
+    "dynamic_fields",
+    "record_hash",
+    "full_update",
+    "audit",
+    "system_records",
+    "protection",
+    "release",
+    "partition",
+    "tenant",
+    "retention",
+    "broadcast",
+    "archive",
+    "enabled_when",
+    "attachments",
+    "numbering"
+  ],
+  "namedOptions": {
+    "partition": "name",
+    "numbering": "field"
+  },
+  "requiredOptions": {
+    "relative_index": [
+      "relation"
+    ],
+    "audit": [
+      "mode"
+    ],
+    "system_records": [
+      "records"
+    ],
+    "release": [
+      "handlers"
+    ],
+    "partition": [
+      "field"
+    ],
+    "retention": [
+      "field",
+      "days"
+    ],
+    "enabled_when": [
+      "preference"
+    ],
+    "attachments": [
+      "master"
+    ]
+  },
+  "sysFields": [
+    "id",
+    "ins",
+    "upd",
+    "user_ins",
+    "user_upd",
+    "ldel",
+    "draft",
+    "syscode"
+  ],
+  "sysFieldKeys": [
+    "comment",
+    "group",
+    "indexed",
+    "name_long",
+    "name_short"
+  ]
+}

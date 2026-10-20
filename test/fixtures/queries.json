@@ -1,0 +1,963 @@
+{
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "browser",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "crm_customer": {
+              "entity": "table",
+              "entity_name": "crm_customer",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "name": {
+                  "entity": "column",
+                  "entity_name": "name",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": true
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "name"
+                },
+                "email": {
+                  "entity": "column",
+                  "entity_name": "email",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "email"
+                },
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "C",
+                    "size": "22",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "id"
+                },
+                "__ins_ts": {
+                  "entity": "column",
+                  "entity_name": "__ins_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__ins_ts"
+                },
+                "__del_ts": {
+                  "entity": "column",
+                  "entity_name": "__del_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__del_ts"
+                },
+                "__mod_ts": {
+                  "entity": "column",
+                  "entity_name": "__mod_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__mod_ts"
+                },
+                "__ins_user": {
+                  "entity": "column",
+                  "entity_name": "__ins_user",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__ins_user"
+                },
+                "__mod_user": {
+                  "entity": "column",
+                  "entity_name": "__mod_user",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__mod_user"
+                },
+                "__syscode": {
+                  "entity": "column",
+                  "entity_name": "__syscode",
+                  "attributes": {
+                    "dtype": "A",
+                    "size": "0:20",
+                    "unique": true
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "__syscode"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {
+                "idx_39aaeffd": {
+                  "entity": "index",
+                  "entity_name": "idx_39aaeffd",
+                  "attributes": {
+                    "columns": {
+                      "email": null
+                    },
+                    "index_name": "idx_39aaeffd"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer"
+                },
+                "idx_4234876c": {
+                  "entity": "index",
+                  "entity_name": "idx_4234876c",
+                  "attributes": {
+                    "columns": {
+                      "__ins_ts": null
+                    },
+                    "index_name": "idx_4234876c"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer"
+                },
+                "idx_f08d12e4": {
+                  "entity": "index",
+                  "entity_name": "idx_f08d12e4",
+                  "attributes": {
+                    "columns": {
+                      "__del_ts": null
+                    },
+                    "index_name": "idx_f08d12e4"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer"
+                },
+                "idx_c75ec01e": {
+                  "entity": "index",
+                  "entity_name": "idx_c75ec01e",
+                  "attributes": {
+                    "columns": {
+                      "__mod_ts": null
+                    },
+                    "index_name": "idx_c75ec01e"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "crm_customer"
+            },
+            "sales_invoice": {
+              "entity": "table",
+              "entity_name": "sales_invoice",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "customer_id": {
+                  "entity": "column",
+                  "entity_name": "customer_id",
+                  "attributes": {
+                    "dtype": "C",
+                    "size": "22"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "customer_id"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "N",
+                    "sqldefault": "0",
+                    "size": "12,2"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "amount"
+                },
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "C",
+                    "size": "22",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "id"
+                },
+                "__ins_ts": {
+                  "entity": "column",
+                  "entity_name": "__ins_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__ins_ts"
+                },
+                "__del_ts": {
+                  "entity": "column",
+                  "entity_name": "__del_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__del_ts"
+                },
+                "__mod_ts": {
+                  "entity": "column",
+                  "entity_name": "__mod_ts",
+                  "attributes": {
+                    "dtype": "DHZ"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__mod_ts"
+                },
+                "__ins_user": {
+                  "entity": "column",
+                  "entity_name": "__ins_user",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__ins_user"
+                },
+                "__mod_user": {
+                  "entity": "column",
+                  "entity_name": "__mod_user",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__mod_user"
+                },
+                "__is_draft": {
+                  "entity": "column",
+                  "entity_name": "__is_draft",
+                  "attributes": {
+                    "dtype": "B"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__is_draft"
+                },
+                "__version": {
+                  "entity": "column",
+                  "entity_name": "__version",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "__version"
+                }
+              },
+              "relations": {
+                "fk_6bee3e6f": {
+                  "entity": "relation",
+                  "entity_name": "fk_6bee3e6f",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "crm_customer",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_delete": "RESTRICT",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "customer_id"
+                    ],
+                    "constraint_name": "fk_6bee3e6f"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_f3729b7d": {
+                  "entity": "index",
+                  "entity_name": "idx_f3729b7d",
+                  "attributes": {
+                    "columns": {
+                      "customer_id": null
+                    },
+                    "index_name": "idx_f3729b7d"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                },
+                "idx_9ca9b146": {
+                  "entity": "index",
+                  "entity_name": "idx_9ca9b146",
+                  "attributes": {
+                    "columns": {
+                      "__ins_ts": null
+                    },
+                    "index_name": "idx_9ca9b146"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                },
+                "idx_ed7fd180": {
+                  "entity": "index",
+                  "entity_name": "idx_ed7fd180",
+                  "attributes": {
+                    "columns": {
+                      "__del_ts": null
+                    },
+                    "index_name": "idx_ed7fd180"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                },
+                "idx_e3931be6": {
+                  "entity": "index",
+                  "entity_name": "idx_e3931be6",
+                  "attributes": {
+                    "columns": {
+                      "__mod_ts": null
+                    },
+                    "index_name": "idx_e3931be6"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                },
+                "idx_28f8b110": {
+                  "entity": "index",
+                  "entity_name": "idx_28f8b110",
+                  "attributes": {
+                    "columns": {
+                      "__is_draft": null
+                    },
+                    "index_name": "idx_28f8b110"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "sales_invoice"
+            },
+            "query_people": {
+              "entity": "table",
+              "entity_name": "query_people",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "query_people",
+                  "column_name": "id"
+                },
+                "display_name": {
+                  "entity": "column",
+                  "entity_name": "display_name",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": true
+                  },
+                  "schema_name": "main",
+                  "table_name": "query_people",
+                  "column_name": "display_name"
+                },
+                "active": {
+                  "entity": "column",
+                  "entity_name": "active",
+                  "attributes": {
+                    "dtype": "B",
+                    "sqldefault": "1"
+                  },
+                  "schema_name": "main",
+                  "table_name": "query_people",
+                  "column_name": "active"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "query_people"
+            },
+            "q_memo": {
+              "entity": "table",
+              "entity_name": "q_memo",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo",
+                  "column_name": "id"
+                },
+                "person_id": {
+                  "entity": "column",
+                  "entity_name": "person_id",
+                  "attributes": {
+                    "dtype": "I"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo",
+                  "column_name": "person_id"
+                },
+                "body": {
+                  "entity": "column",
+                  "entity_name": "body",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo",
+                  "column_name": "body"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "N",
+                    "size": "12,2"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo",
+                  "column_name": "amount"
+                }
+              },
+              "relations": {
+                "fk_7bbd1b06": {
+                  "entity": "relation",
+                  "entity_name": "fk_7bbd1b06",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "query_people",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "person_id"
+                    ],
+                    "constraint_name": "fk_7bbd1b06"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_0e319a92": {
+                  "entity": "index",
+                  "entity_name": "idx_0e319a92",
+                  "attributes": {
+                    "columns": {
+                      "person_id": null
+                    },
+                    "index_name": "idx_0e319a92"
+                  },
+                  "schema_name": "main",
+                  "table_name": "q_memo"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "q_memo"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "insert_person",
+      "request": {
+        "operation": "insert",
+        "table": "notes.person",
+        "values": {
+          "id": 101,
+          "name": "Ada",
+          "active": true
+        },
+        "returning": "$id,$name,$active"
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"query_people\" AS \"t0\" (\"id\", \"display_name\", \"active\") VALUES (:__value_0, :__value_1, :__value_2)\nRETURNING \"id\" AS \"id\",\n\"display_name\" AS \"name\",\n\"active\" AS \"active\"",
+        "params": {
+          "__value_0": 101,
+          "__value_1": "Ada",
+          "__value_2": true
+        }
+      },
+      "rows": [
+        {
+          "id": 101,
+          "name": "Ada",
+          "active": 1
+        }
+      ]
+    },
+    {
+      "name": "insert_quoted",
+      "request": {
+        "operation": "insert",
+        "table": "notes.person",
+        "values": {
+          "id": 102,
+          "name": "O'Brien; -- $id :name",
+          "active": false
+        },
+        "returning": "*"
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"query_people\" AS \"t0\" (\"id\", \"display_name\", \"active\") VALUES (:__value_0, :__value_1, :__value_2)\nRETURNING \"id\" AS \"id\",\n\"display_name\" AS \"name\",\n\"active\" AS \"active\"",
+        "params": {
+          "__value_0": 102,
+          "__value_1": "O'Brien; -- $id :name",
+          "__value_2": false
+        }
+      },
+      "rows": [
+        {
+          "id": 102,
+          "name": "O'Brien; -- $id :name",
+          "active": 0
+        }
+      ]
+    },
+    {
+      "name": "insert_memo",
+      "request": {
+        "operation": "insert",
+        "table": "notes.memo",
+        "values": {
+          "id": 201,
+          "person_id": 101,
+          "body": "Prima nota",
+          "amount": 42.5
+        },
+        "returning": "*"
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)\nRETURNING \"id\" AS \"id\",\n\"person_id\" AS \"person_id\",\n\"body\" AS \"body\",\n\"amount\" AS \"amount\"",
+        "params": {
+          "__value_0": 201,
+          "__value_1": 101,
+          "__value_2": "Prima nota",
+          "__value_3": 42.5
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "person_id": 101,
+          "body": "Prima nota",
+          "amount": 42.5
+        }
+      ]
+    },
+    {
+      "name": "insert_null",
+      "request": {
+        "operation": "insert",
+        "table": "notes.memo",
+        "values": {
+          "id": 202,
+          "person_id": 102,
+          "body": null,
+          "amount": 0
+        },
+        "returning": "$id,$body"
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)\nRETURNING \"id\" AS \"id\",\n\"body\" AS \"body\"",
+        "params": {
+          "__value_0": 202,
+          "__value_1": 102,
+          "__value_2": null,
+          "__value_3": 0
+        }
+      },
+      "rows": [
+        {
+          "id": 202,
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "insert_no_return",
+      "request": {
+        "operation": "insert",
+        "table": "notes.memo",
+        "values": {
+          "id": 203,
+          "person_id": 101,
+          "body": "Seconda nota",
+          "amount": 10
+        },
+        "returning": null
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)",
+        "params": {
+          "__value_0": 203,
+          "__value_1": 101,
+          "__value_2": "Seconda nota",
+          "__value_3": 10
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "people",
+      "request": {
+        "operation": "select",
+        "table": "notes.person",
+        "columns": "*",
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"display_name\" AS \"name\",\n\"t0\".\"active\" AS \"active\"\n FROM \"main\".\"query_people\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 101,
+          "name": "Ada",
+          "active": 1
+        },
+        {
+          "id": 102,
+          "name": "O'Brien; -- $id :name",
+          "active": 0
+        }
+      ]
+    },
+    {
+      "name": "active_people",
+      "request": {
+        "operation": "select",
+        "table": "notes.person",
+        "columns": "$id,$name",
+        "where": "$active = :active AND $name LIKE :pattern",
+        "sqlparams": {
+          "active": true,
+          "pattern": "%da%"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"display_name\" AS \"name\"\n FROM \"main\".\"query_people\" AS \"t0\"\nWHERE \"t0\".\"active\" = :active AND \"t0\".\"display_name\" LIKE :pattern",
+        "params": {
+          "active": true,
+          "pattern": "%da%"
+        }
+      },
+      "rows": [
+        {
+          "id": 101,
+          "name": "Ada"
+        }
+      ]
+    },
+    {
+      "name": "related_notes",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,$body,@person_id.name AS person,$amount",
+        "where": "$amount >= :minimum",
+        "sqlparams": {
+          "minimum": 10
+        },
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"body\" AS \"body\",\n\"t1\".\"display_name\" AS \"person\",\n\"t0\".\"amount\" AS \"amount\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON \"t0\".\"person_id\" = \"t1\".\"id\"\nWHERE \"t0\".\"amount\" >= :minimum\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "minimum": 10
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "body": "Prima nota",
+          "person": "Ada",
+          "amount": 42.5
+        },
+        {
+          "id": 203,
+          "body": "Seconda nota",
+          "person": "Ada",
+          "amount": 10
+        }
+      ]
+    },
+    {
+      "name": "collection",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,@person_id.name",
+        "where": "$id IN :ids",
+        "sqlparams": {
+          "ids": [
+            201,
+            203
+          ]
+        },
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t1\".\"display_name\" AS \"person_id_name\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON \"t0\".\"person_id\" = \"t1\".\"id\"\nWHERE \"t0\".\"id\" IN (:ids_0, :ids_1)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "ids_0": 201,
+          "ids_1": 203
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "person_id_name": "Ada"
+        },
+        {
+          "id": 203,
+          "person_id_name": "Ada"
+        }
+      ]
+    },
+    {
+      "name": "empty_collection",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$id IN :ids",
+        "sqlparams": {
+          "ids": []
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" IN (SELECT 1 WHERE 0)",
+        "params": {}
+      },
+      "rows": []
+    },
+    {
+      "name": "not_in_empty",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$id NOT IN :ids",
+        "sqlparams": {
+          "ids": []
+        },
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" NOT IN (SELECT 1 WHERE 0)\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 201
+        },
+        {
+          "id": 202
+        },
+        {
+          "id": 203
+        }
+      ]
+    },
+    {
+      "name": "binding_collision",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$id IN :ids AND $id <> :ids_0",
+        "sqlparams": {
+          "ids": [
+            201,
+            202
+          ],
+          "ids_0": 202
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" IN (:ids_1, :ids_2) AND \"t0\".\"id\" <> :ids_0",
+        "params": {
+          "ids_1": 201,
+          "ids_2": 202,
+          "ids_0": 202
+        }
+      },
+      "rows": [
+        {
+          "id": 201
+        }
+      ]
+    },
+    {
+      "name": "page",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,$body",
+        "order_by": "$id",
+        "limit": 1,
+        "offset": 1
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"body\" AS \"body\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nORDER BY \"t0\".\"id\"\nLIMIT 1\nOFFSET 1",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 202,
+          "body": null
+        }
+      ]
+    },
+    {
+      "name": "offset_only",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "order_by": "$id",
+        "offset": 1
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nORDER BY \"t0\".\"id\"\nLIMIT 9223372036854775807\nOFFSET 1",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 202
+        },
+        {
+          "id": 203
+        }
+      ]
+    },
+    {
+      "name": "zero_limit",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "limit": 0
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nLIMIT 0",
+        "params": {}
+      },
+      "rows": []
+    },
+    {
+      "name": "null_filter",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$body IS NULL"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"body\" IS NULL",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 202
+        }
+      ]
+    },
+    {
+      "name": "quoted_expression",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,':literal $id; --' AS literal",
+        "where": "$id = :id",
+        "sqlparams": {
+          "id": 201
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n':literal $id; --' AS \"literal\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" = :id",
+        "params": {
+          "id": 201
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "literal": ":literal $id; --"
+        }
+      ]
+    },
+    {
+      "name": "total",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "SUM($amount) AS total"
+      },
+      "compiled": {
+        "sql": "SELECT SUM(\"t0\".\"amount\") AS \"total\"\n FROM \"main\".\"q_memo\" AS \"t0\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "total": 52.5
+        }
+      ]
+    }
+  ]
+}

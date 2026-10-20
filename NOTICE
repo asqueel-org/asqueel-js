@@ -1,0 +1,11 @@
+Asqueel JS
+Copyright 2025-2026 Softwell S.r.l.
+
+Initial source imported from the JavaScript model PoC of asqueel-org/asqueel.
+Python-derived grammar, migration structures and reference fixtures retain
+their Apache-2.0 licensing. Reference revisions are recorded in
+test/fixtures/provenance.json. This repository separates the PoC into an
+independent JavaScript project with runtime adapters and automated tests.
+
+Dependencies retain their respective licenses; see package-lock.json and the
+license files distributed with each dependency.

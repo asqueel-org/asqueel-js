@@ -1,0 +1,437 @@
+{
+  "root": {
+    "entity": "db",
+    "entity_name": "shop",
+    "schemas": {
+      "crm": {
+        "entity": "schema",
+        "entity_name": "crm",
+        "tables": {
+          "customer": {
+            "entity": "table",
+            "entity_name": "customer",
+            "attributes": {
+              "pkeys": "id",
+              "comment": "Clienti"
+            },
+            "columns": {
+              "id": {
+                "entity": "column",
+                "entity_name": "id",
+                "attributes": {
+                  "dtype": "serial",
+                  "notnull": "_auto_"
+                },
+                "schema_name": "crm",
+                "table_name": "customer",
+                "column_name": "id"
+              },
+              "code": {
+                "entity": "column",
+                "entity_name": "code",
+                "attributes": {
+                  "dtype": "A",
+                  "size": "0:20",
+                  "unique": true
+                },
+                "schema_name": "crm",
+                "table_name": "customer",
+                "column_name": "code"
+              },
+              "name": {
+                "entity": "column",
+                "entity_name": "name",
+                "attributes": {
+                  "dtype": "T",
+                  "notnull": true
+                },
+                "schema_name": "crm",
+                "table_name": "customer",
+                "column_name": "name"
+              }
+            },
+            "relations": {},
+            "constraints": {},
+            "indexes": {},
+            "schema_name": "crm",
+            "table_name": "customer"
+          },
+          "region": {
+            "entity": "table",
+            "entity_name": "region",
+            "attributes": {
+              "pkeys": "country,code"
+            },
+            "columns": {
+              "country": {
+                "entity": "column",
+                "entity_name": "country",
+                "attributes": {
+                  "dtype": "A",
+                  "size": "0:2",
+                  "notnull": "_auto_"
+                },
+                "schema_name": "crm",
+                "table_name": "region",
+                "column_name": "country"
+              },
+              "code": {
+                "entity": "column",
+                "entity_name": "code",
+                "attributes": {
+                  "dtype": "A",
+                  "size": "0:8",
+                  "notnull": "_auto_"
+                },
+                "schema_name": "crm",
+                "table_name": "region",
+                "column_name": "code"
+              }
+            },
+            "relations": {},
+            "constraints": {},
+            "indexes": {},
+            "schema_name": "crm",
+            "table_name": "region"
+          }
+        },
+        "schema_name": "crm"
+      },
+      "sales": {
+        "entity": "schema",
+        "entity_name": "sales",
+        "tables": {
+          "invoice": {
+            "entity": "table",
+            "entity_name": "invoice",
+            "attributes": {
+              "pkeys": "id"
+            },
+            "columns": {
+              "id": {
+                "entity": "column",
+                "entity_name": "id",
+                "attributes": {
+                  "dtype": "serial4",
+                  "notnull": "_auto_"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "id"
+              },
+              "customer_id": {
+                "entity": "column",
+                "entity_name": "customer_id",
+                "attributes": {
+                  "dtype": "L",
+                  "notnull": true
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "customer_id"
+              },
+              "country": {
+                "entity": "column",
+                "entity_name": "country",
+                "attributes": {
+                  "dtype": "A",
+                  "size": "0:2"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "country"
+              },
+              "region_code": {
+                "entity": "column",
+                "entity_name": "region_code",
+                "attributes": {
+                  "dtype": "A",
+                  "size": "0:8"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "region_code"
+              },
+              "year": {
+                "entity": "column",
+                "entity_name": "year",
+                "attributes": {
+                  "dtype": "I"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "year"
+              },
+              "number": {
+                "entity": "column",
+                "entity_name": "number",
+                "attributes": {
+                  "dtype": "I"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "number"
+              },
+              "issued": {
+                "entity": "column",
+                "entity_name": "issued",
+                "attributes": {
+                  "dtype": "D"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "issued"
+              },
+              "amount": {
+                "entity": "column",
+                "entity_name": "amount",
+                "attributes": {
+                  "dtype": "N",
+                  "sqldefault": "0",
+                  "size": "12,2"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice",
+                "column_name": "amount"
+              }
+            },
+            "relations": {
+              "fk_fd476b61": {
+                "entity": "relation",
+                "entity_name": "fk_fd476b61",
+                "attributes": {
+                  "related_schema": "crm",
+                  "related_table": "customer",
+                  "related_columns": [
+                    "id"
+                  ],
+                  "constraint_type": "FOREIGN KEY",
+                  "on_delete": "RESTRICT",
+                  "columns": [
+                    "customer_id"
+                  ],
+                  "constraint_name": "fk_fd476b61"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              },
+              "fk_cb75ebb5": {
+                "entity": "relation",
+                "entity_name": "fk_cb75ebb5",
+                "attributes": {
+                  "related_schema": "crm",
+                  "related_table": "region",
+                  "related_columns": [
+                    "country",
+                    "code"
+                  ],
+                  "constraint_type": "FOREIGN KEY",
+                  "deferrable": true,
+                  "initially_deferred": true,
+                  "columns": [
+                    "country",
+                    "region_code"
+                  ],
+                  "constraint_name": "fk_cb75ebb5"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              }
+            },
+            "constraints": {
+              "ck_amount": {
+                "entity": "constraint",
+                "entity_name": "ck_amount",
+                "attributes": {
+                  "constraint_name": "ck_amount",
+                  "constraint_type": "CHECK",
+                  "check_clause": "(amount >= 0)"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              },
+              "cst_20774668": {
+                "entity": "constraint",
+                "entity_name": "cst_20774668",
+                "attributes": {
+                  "columns": [
+                    "year",
+                    "number"
+                  ],
+                  "constraint_name": "cst_20774668",
+                  "constraint_type": "UNIQUE"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              }
+            },
+            "indexes": {
+              "idx_42de8ebd": {
+                "entity": "index",
+                "entity_name": "idx_42de8ebd",
+                "attributes": {
+                  "columns": {
+                    "customer_id": null
+                  },
+                  "index_name": "ix_invoice_customer"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              },
+              "idx_270c0a22": {
+                "entity": "index",
+                "entity_name": "idx_270c0a22",
+                "attributes": {
+                  "columns": {
+                    "issued": "DESC",
+                    "id": null
+                  },
+                  "index_name": "ix_invoice_date"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              },
+              "idx_2191d416": {
+                "entity": "index",
+                "entity_name": "idx_2191d416",
+                "attributes": {
+                  "columns": {
+                    "country": null,
+                    "region_code": null
+                  },
+                  "index_name": "idx_2191d416"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice"
+              }
+            },
+            "schema_name": "sales",
+            "table_name": "invoice"
+          },
+          "invoice_row": {
+            "entity": "table",
+            "entity_name": "invoice_row",
+            "attributes": {
+              "pkeys": "id"
+            },
+            "columns": {
+              "id": {
+                "entity": "column",
+                "entity_name": "id",
+                "attributes": {
+                  "dtype": "serial",
+                  "notnull": "_auto_"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row",
+                "column_name": "id"
+              },
+              "invoice_id": {
+                "entity": "column",
+                "entity_name": "invoice_id",
+                "attributes": {
+                  "dtype": "L"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row",
+                "column_name": "invoice_id"
+              },
+              "description": {
+                "entity": "column",
+                "entity_name": "description",
+                "attributes": {
+                  "size": "0:120",
+                  "comment": "Descrizione",
+                  "dtype": "A"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row",
+                "column_name": "description"
+              },
+              "sku": {
+                "entity": "column",
+                "entity_name": "sku",
+                "attributes": {
+                  "dtype": "T"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row",
+                "column_name": "sku"
+              },
+              "quantity": {
+                "entity": "column",
+                "entity_name": "quantity",
+                "attributes": {
+                  "dtype": "N",
+                  "size": "10,2"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row",
+                "column_name": "quantity"
+              }
+            },
+            "relations": {
+              "fk_6ac89bd0": {
+                "entity": "relation",
+                "entity_name": "fk_6ac89bd0",
+                "attributes": {
+                  "related_schema": "sales",
+                  "related_table": "invoice",
+                  "related_columns": [
+                    "id"
+                  ],
+                  "constraint_type": "FOREIGN KEY",
+                  "on_delete": "CASCADE",
+                  "columns": [
+                    "invoice_id"
+                  ],
+                  "constraint_name": "fk_6ac89bd0"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row"
+              }
+            },
+            "constraints": {},
+            "indexes": {
+              "idx_2fd9dec2": {
+                "entity": "index",
+                "entity_name": "idx_2fd9dec2",
+                "attributes": {
+                  "columns": {
+                    "invoice_id": null
+                  },
+                  "index_name": "idx_2fd9dec2"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row"
+              },
+              "idx_a5407373": {
+                "entity": "index",
+                "entity_name": "idx_a5407373",
+                "attributes": {
+                  "columns": {
+                    "sku": null
+                  },
+                  "index_name": "idx_a5407373"
+                },
+                "schema_name": "sales",
+                "table_name": "invoice_row"
+              }
+            },
+            "schema_name": "sales",
+            "table_name": "invoice_row"
+          }
+        },
+        "schema_name": "sales"
+      }
+    },
+    "extensions": {
+      "pg_trgm": {
+        "entity": "extension",
+        "entity_name": "pg_trgm",
+        "attributes": {}
+      }
+    },
+    "event_triggers": {}
+  }
+}

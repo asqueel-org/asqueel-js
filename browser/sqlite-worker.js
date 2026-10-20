@@ -1,0 +1,43 @@
+import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
+import {readSQLite, planSQLite, migrateSQLite, quote} from '../src/sqlite.js';
+import {seedDemo, browserChecks} from './sqlite-checks.js';
+import {queryChecks} from './query-checks.js';
+import {modelFromQuerySource} from '../src/queries.js';
+import {SqlBuilder} from '../src/index.js';
+
+const DATABASE = 'asqueel-js-playground-v1';
+let db, queue = Promise.resolve();
+async function inspect() {
+    const structure = await readSQLite(db);
+    const rows = [];
+    for (const name of Object.keys(structure.root.schemas.main.tables)) {
+        rows.push({table: name, rows: (await db.query(`SELECT COUNT(*) AS n FROM ${quote(name)}`))[0].n});
+    }
+    return {structure, rows};
+}
+async function dispatch(type, desired) {
+    if (type === 'checks') return browserChecks();
+    if (type === 'query-checks') return queryChecks();
+    return navigator.locks.request(`${DATABASE}:migration`, async () => {
+        db ??= await openBrowserSQLite(DATABASE);
+        if (type === 'query') {
+            const model = modelFromQuerySource(desired.source, SqlBuilder);
+            const compiler = model.queries(db);
+            const compiled = compiler.compile(desired.request);
+            const records = await compiler.execute(desired.request);
+            return {compiled, records, ...await inspect()};
+        }
+        if (type === 'inspect') return inspect();
+        if (type === 'plan') return planSQLite(db, desired);
+        if (type === 'apply') return {...await migrateSQLite(db, desired), ...await inspect()};
+        if (type === 'seed') { await seedDemo(db); return inspect(); }
+        if (type === 'reopen') { await db.close(); db = null; db = await openBrowserSQLite(DATABASE); return inspect(); }
+        throw new Error(`Operazione sconosciuta: ${type}`);
+    });
+}
+self.onmessage = ({data: {id, type, desired}}) => {
+    queue = queue.then(async () => {
+        try { self.postMessage({id, result: await dispatch(type, desired)}); }
+        catch (e) { self.postMessage({id, error: e.message}); }
+    });
+};

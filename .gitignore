@@ -1,0 +1,10 @@
+node_modules/
+browser/dist/
+output/
+__pycache__/
+test-results/
+playwright-report/
+.reference/
+.venv/
+*.tgz
+.DS_Store

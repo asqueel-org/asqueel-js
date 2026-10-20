@@ -1,0 +1,56 @@
+{
+  "name": "@asqueel/js",
+  "version": "0.1.0-dev.0",
+  "private": true,
+  "type": "module",
+  "description": "Model-driven SQLite for offline browser applications, Node.js and Bun",
+  "exports": {
+    ".": "./src/index.js",
+    "./sqlite": "./src/sqlite.js",
+    "./adapters/node": "./src/adapters/node-sqlite.js",
+    "./adapters/bun": "./src/adapters/bun-sqlite.js",
+    "./adapters/browser": "./src/adapters/browser-sqlite.js"
+  },
+  "scripts": {
+    "export:python": "${PYTHON:-python3} scripts/export_python.py",
+    "test": "node --test test/*.test.js",
+    "test:bun": "bun test ./test/*.test.js",
+    "example": "node examples/render.js",
+    "build": "node scripts/build.js",
+    "browser": "npm run build && npm run serve",
+    "verify:python": "${PYTHON:-python3} scripts/verify_python.py",
+    "export:sqlite": "${PYTHON:-python3} scripts/sqlite_oracle.py",
+    "export:queries": "${PYTHON:-python3} scripts/query_oracle.py",
+    "test:browser": "playwright test",
+    "serve": "node scripts/serve.js",
+    "check": "npm test && npm run build",
+    "prepack": "npm run check"
+  },
+  "dependencies": {
+    "@genrojs/builders": "0.7.0",
+    "@noble/hashes": "2.4.0",
+    "wa-sqlite": "1.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "esbuild": "^0.25.0"
+  },
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/asqueel-org/asqueel-js.git"
+  },
+  "homepage": "https://github.com/asqueel-org/asqueel-js",
+  "bugs": {
+    "url": "https://github.com/asqueel-org/asqueel-js/issues"
+  },
+  "files": [
+    "src",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ]
+}
