@@ -1,32 +1,26 @@
 # Copertura attuale
 
-Questa tabella descrive codice esistente, non obiettivi futuri. La quantità di
-righe non cambia la semantica richiesta; consente però di rimandare ottimizzazioni
-e funzionalità avanzate fino a quando un'app ne abbia bisogno.
-
-| Area | Già disponibile | Da completare |
+| Area | Disponibile | Passo successivo |
 | --- | --- | --- |
-| Modello | Grammatica JSON, Bag/Builders JS, package, nomi logici/fisici, espansione opzioni nel JSON migrate, virtualRelation e target degli alias | Runtime completo delle opzioni e validazione di dominio completa |
-| Composizione | Contributi ordinati, ripetizioni, override, reset, copie, modelli indipendenti, colgroups e subtables | Validazione completa del modello e altre dichiarazioni semantiche |
-| Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, colonne nullable e indici non univoci aggiunti | Ricostruzioni, alter/drop, CHECK e altri oggetti |
-| Scritture | INSERT parametrizzato e RETURNING, rollback | UPDATE/DELETE, unità di lavoro, trigger e default applicativi |
-| Letture | Campi, espressioni con alias SQL, filtri, relazioni dirette, IN, ordine, paginazione | Navigazioni virtualRelation, filtri subtable, colonne virtuali, GROUP BY/HAVING/DISTINCT, sottoquery e macro |
-| Browser | SQLite WASM in worker, IndexedDB, riapertura connessione, coda e Web Locks nel playground | API worker pubblica e prove di crash/quota/concorrenza |
-| Offline | Dati locali persistiti | Riapertura dell'app senza rete, cache e aggiornamenti degli asset |
-| Node/Bun | Adapter esportati e stessi test SQLite | API applicativa stabile e codec |
-| Parità | Modelli, cataloghi, SQL, parametri e risultati su casi espliciti | Inventario esaustivo e comportamenti applicativi |
+| Modello portabile 0.6.0 | Grammatica JSON, contributi, package/configurazione, opzioni complete, gerarchia, relazioni, alias, codec e confronto integrale | Equivalenti JS per classi/callback e caricamento di package Python |
+| Composizione | Contributi ordinati, ripetizioni, override, reset, copie, modelli indipendenti e colgroups | Estensioni applicative oltre il contratto JSON |
+| Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, aggiunta di colonne nullable e indici non univoci | Ricostruzioni, alter/drop, CHECK e altri oggetti |
+| Scritture | INSERT parametrizzato e RETURNING, rollback | Porting query 0.6.0, UPDATE/DELETE, transazioni e trigger |
+| Letture | Campi, espressioni, filtri, relazioni dirette, IN, ordine e paginazione del PoC precedente | Compilatore 0.6.0, virtuali, aggregazioni e sottoquery |
+| Browser | SQLite WASM in worker, IndexedDB, riapertura, coda e Web Locks nel playground | API worker pubblica e prove crash/quota/concorrenza |
+| Offline | Dati locali persistiti | Cache degli asset e riapertura dell'app senza rete |
+| Node/Bun | Adapter e stessa suite di contratti | API applicativa stabile e codec delle righe |
+| Parità | JSON completo del modello e migrate 0.6.0, cataloghi SQLite reali | SQL e ciclo applicativo delle query 0.6.0 |
 
-La priorità corrente è completare il model, a partire dalla composizione;
-si veda [la copertura dei contributi](composition.md). Successivamente,
-le opportunità più immediate sono UPDATE/DELETE sulle tabelle semplici, lookup
-per chiave primaria e transazioni di più operazioni: possono riusare nomi,
-parametri, espressioni e adapter già presenti. Richiedono comunque di distinguere
-compilazione SQL da lifecycle applicativo delle scritture Python.
+Il [modello dichiarativo](model.md) è distinto dall'esecuzione delle sue opzioni:
+`sys_fields` genera già colonne, virtuali, metadati e dichiarazioni di trigger,
+ma non assegna ancora identificatori o timestamp nelle scritture JS.
+Il runtime query esistente continua a rifiutare le opzioni applicative attive.
 
-`sys_fields` va affrontato come comportamento, non soltanto come colonne create
-dal migratore. Il runtime JS attualmente blocca tutte le opzioni applicative
-attive nelle query; il riferimento Python può evolvere separatamente.
+`subtable`, le opzioni `partition`/`tenant` e i vecchi attributi non ammessi sono
+ritirati come nel riferimento. `virtualRelation` viene conservata nel modello;
+non viene eseguita come JOIN dal compilatore attuale.
 
-Il VFS IndexedDB è quello distribuito come esempio da wa-sqlite 1.0.0. I test
-verificano l'esecuzione normale e il rollback, non certificano la conservazione
-dei dati sotto ogni crash o politica di eliminazione dello storage del browser.
+Il VFS IndexedDB è IDBBatchAtomicVFS di wa-sqlite 1.0.0. Le verifiche coprono
+esecuzione normale, vincoli, rollback e riapertura; cache offline degli asset e
+conservazione sotto crash o eliminazione dello storage restano lavori distinti.

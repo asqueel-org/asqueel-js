@@ -44,95 +44,86 @@
     "with_options"
   ],
   "optionLevels": {
-    "requires": [
-      "package"
-    ],
-    "type": [
-      "package"
-    ],
-    "sys_fields": [
-      "table"
-    ],
-    "driver": [
-      "connection"
-    ],
-    "hierarchical": [
-      "table"
-    ],
-    "auto_counter": [
-      "table"
-    ],
-    "relative_index": [
-      "table"
-    ],
-    "dynamic_fields": [
-      "table"
-    ],
-    "record_hash": [
-      "table"
-    ],
-    "full_update": [
-      "table"
-    ],
-    "audit": [
-      "table"
-    ],
-    "system_records": [
-      "table"
-    ],
-    "protection": [
-      "table"
-    ],
-    "release": [
-      "table"
-    ],
-    "partition": [
-      "table"
-    ],
-    "tenant": [
-      "table"
-    ],
-    "retention": [
-      "table"
-    ],
-    "broadcast": [
-      "table"
-    ],
     "archive": [
-      "table"
-    ],
-    "enabled_when": [
       "table"
     ],
     "attachments": [
       "table"
     ],
+    "audit": [
+      "table"
+    ],
+    "auto_counter": [
+      "table"
+    ],
+    "broadcast": [
+      "table"
+    ],
+    "driver": [
+      "connection"
+    ],
+    "dynamic_fields": [
+      "table"
+    ],
+    "enabled_when": [
+      "table"
+    ],
+    "full_update": [
+      "table"
+    ],
+    "hierarchical": [
+      "table"
+    ],
     "numbering": [
       "table"
+    ],
+    "protection": [
+      "table"
+    ],
+    "record_hash": [
+      "table"
+    ],
+    "relative_index": [
+      "table"
+    ],
+    "release": [
+      "table"
+    ],
+    "requires": [
+      "package"
+    ],
+    "retention": [
+      "table"
+    ],
+    "sys_fields": [
+      "table"
+    ],
+    "system_records": [
+      "table"
+    ],
+    "type": [
+      "package"
     ]
   },
   "tableOptions": [
-    "hierarchical",
-    "auto_counter",
-    "relative_index",
-    "dynamic_fields",
-    "record_hash",
-    "full_update",
-    "audit",
-    "system_records",
-    "protection",
-    "release",
-    "partition",
-    "tenant",
-    "retention",
-    "broadcast",
     "archive",
-    "enabled_when",
     "attachments",
-    "numbering"
+    "audit",
+    "auto_counter",
+    "broadcast",
+    "dynamic_fields",
+    "enabled_when",
+    "full_update",
+    "hierarchical",
+    "numbering",
+    "protection",
+    "record_hash",
+    "relative_index",
+    "release",
+    "retention",
+    "system_records"
   ],
   "namedOptions": {
-    "partition": "name",
     "numbering": "field"
   },
   "requiredOptions": {
@@ -147,9 +138,6 @@
     ],
     "release": [
       "handlers"
-    ],
-    "partition": [
-      "field"
     ],
     "retention": [
       "field",

@@ -15,23 +15,20 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
       Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
 
-## 1. Completare il model — priorità corrente
+## 1. Modello dichiarativo portabile · riferimento Python 0.6.0
 
-- [x] Contributi ordinati, dichiarazioni ripetute, conflitti e override espliciti.
-- [x] Composizione di modelli indipendenti, copia e isolamento degli input.
-- [x] Fusione delle opzioni, reset e disattivazione/riattivazione dei campi.
-- [x] Confronto Python del sorgente composto e del JSON migrate, anche nel browser.
-- [x] Colgroups e composizione dei loro default/ordinamenti, come nel riferimento Python.
-- [x] Subtables: dichiarazioni, parametri, composizione e colonne virtuali del modello.
-- [x] VirtualRelation: composizione, percorsi diretti/inversi/virtuali, binding e alias nel modello.
-- [ ] Altre dichiarazioni del modello ancora non proiettate.
-- [ ] Validazioni di dominio equivalenti a SqlModelValidator.
-- [ ] Casi mancanti di relazioni e rimappatura SQL del modello fisico.
-- [ ] Inventario completo grammatica → composizione → risoluzione → migrate.
+- [x] Riallineare grammatica, esempi e verificatore al commit pubblicato della 0.6.0.
+- [x] Contributi ordinati, conflitti, copie, reset e composizione indipendente.
+- [x] Modello gerarchico JS, colonne fisiche/virtuali e metadati completi delle opzioni.
+- [x] Colgroups, relazioni dirette/inverse, alias e dichiarazioni virtualRelation.
+- [x] Validazione strutturale, tipi, riferimenti, indici e nomi fisici.
+- [x] Esportazione/ripristino del JSON completo, con identità e navigazione.
+- [x] Confronti completi modello/migrate con Python, Node, Bun e browser.
+- [x] Ritirare `subtable`, opzioni `partition`/`tenant` e vecchi attributi come in Python.
 
-Accettazione: per ogni capacità, sorgente e risultato migrate confrontati con
-Python, errori espliciti per casi non supportati e input invariati dal rendering.
-Il runtime di query e hook resta distinto dalla completezza del modello.
+Il contratto e i limiti portabili sono in [model.md](docs/model.md). Classi Python,
+caricamento di package Python e callback richiedono equivalenti JS. L'esecuzione
+delle dichiarazioni sulle righe appartiene alla fase successiva.
 
 ## 2. CRUD per piccole applicazioni
 

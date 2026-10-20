@@ -14,17 +14,6 @@
               "pkeys": "id"
             },
             "columns": {
-              "name": {
-                "entity": "column",
-                "entity_name": "name",
-                "attributes": {
-                  "dtype": "T",
-                  "notnull": true
-                },
-                "schema_name": "registry",
-                "table_name": "customer",
-                "column_name": "name"
-              },
               "id": {
                 "entity": "column",
                 "entity_name": "id",
@@ -88,6 +77,17 @@
                 "schema_name": "registry",
                 "table_name": "customer",
                 "column_name": "__syscode"
+              },
+              "name": {
+                "entity": "column",
+                "entity_name": "name",
+                "attributes": {
+                  "dtype": "T",
+                  "notnull": true
+                },
+                "schema_name": "registry",
+                "table_name": "customer",
+                "column_name": "name"
               }
             },
             "relations": {},
@@ -140,16 +140,6 @@
               "pkeys": "id"
             },
             "columns": {
-              "description": {
-                "entity": "column",
-                "entity_name": "description",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "registry",
-                "table_name": "category",
-                "column_name": "description"
-              },
               "id": {
                 "entity": "column",
                 "entity_name": "id",
@@ -304,6 +294,16 @@
                 "schema_name": "registry",
                 "table_name": "category",
                 "column_name": "_parent_h_count"
+              },
+              "description": {
+                "entity": "column",
+                "entity_name": "description",
+                "attributes": {
+                  "dtype": "T"
+                },
+                "schema_name": "registry",
+                "table_name": "category",
+                "column_name": "description"
               }
             },
             "relations": {
@@ -352,30 +352,6 @@
             },
             "constraints": {},
             "indexes": {
-              "idx_cdd2d851": {
-                "entity": "index",
-                "entity_name": "idx_cdd2d851",
-                "attributes": {
-                  "columns": {
-                    "parent_id": null
-                  },
-                  "index_name": "idx_cdd2d851"
-                },
-                "schema_name": "registry",
-                "table_name": "category"
-              },
-              "idx_6a8108b0": {
-                "entity": "index",
-                "entity_name": "idx_6a8108b0",
-                "attributes": {
-                  "columns": {
-                    "root_id": null
-                  },
-                  "index_name": "idx_6a8108b0"
-                },
-                "schema_name": "registry",
-                "table_name": "category"
-              },
               "idx_af81f079": {
                 "entity": "index",
                 "entity_name": "idx_af81f079",
@@ -411,6 +387,30 @@
                 },
                 "schema_name": "registry",
                 "table_name": "category"
+              },
+              "idx_cdd2d851": {
+                "entity": "index",
+                "entity_name": "idx_cdd2d851",
+                "attributes": {
+                  "columns": {
+                    "parent_id": null
+                  },
+                  "index_name": "idx_cdd2d851"
+                },
+                "schema_name": "registry",
+                "table_name": "category"
+              },
+              "idx_6a8108b0": {
+                "entity": "index",
+                "entity_name": "idx_6a8108b0",
+                "attributes": {
+                  "columns": {
+                    "root_id": null
+                  },
+                  "index_name": "idx_6a8108b0"
+                },
+                "schema_name": "registry",
+                "table_name": "category"
               }
             },
             "schema_name": "registry",
@@ -430,38 +430,6 @@
               "pkeys": "id"
             },
             "columns": {
-              "customer_id": {
-                "entity": "column",
-                "entity_name": "customer_id",
-                "attributes": {
-                  "dtype": "C",
-                  "size": "22"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "customer_id"
-              },
-              "amount": {
-                "entity": "column",
-                "entity_name": "amount",
-                "attributes": {
-                  "dtype": "N",
-                  "size": "14,2"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "amount"
-              },
-              "document": {
-                "entity": "column",
-                "entity_name": "document",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "document"
-              },
               "id": {
                 "entity": "column",
                 "entity_name": "id",
@@ -613,6 +581,38 @@
                 "schema_name": "business",
                 "table_name": "invoices",
                 "column_name": "__protection_tag"
+              },
+              "customer_id": {
+                "entity": "column",
+                "entity_name": "customer_id",
+                "attributes": {
+                  "dtype": "C",
+                  "size": "22"
+                },
+                "schema_name": "business",
+                "table_name": "invoices",
+                "column_name": "customer_id"
+              },
+              "amount": {
+                "entity": "column",
+                "entity_name": "amount",
+                "attributes": {
+                  "dtype": "N",
+                  "size": "14,2"
+                },
+                "schema_name": "business",
+                "table_name": "invoices",
+                "column_name": "amount"
+              },
+              "document": {
+                "entity": "column",
+                "entity_name": "document",
+                "attributes": {
+                  "dtype": "T"
+                },
+                "schema_name": "business",
+                "table_name": "invoices",
+                "column_name": "document"
               }
             },
             "relations": {
@@ -639,18 +639,6 @@
             },
             "constraints": {},
             "indexes": {
-              "idx_83485ecd": {
-                "entity": "index",
-                "entity_name": "idx_83485ecd",
-                "attributes": {
-                  "columns": {
-                    "customer_id": null
-                  },
-                  "index_name": "idx_83485ecd"
-                },
-                "schema_name": "business",
-                "table_name": "invoices"
-              },
               "idx_61f965bc": {
                 "entity": "index",
                 "entity_name": "idx_61f965bc",
@@ -710,6 +698,18 @@
                 },
                 "schema_name": "business",
                 "table_name": "invoices"
+              },
+              "idx_83485ecd": {
+                "entity": "index",
+                "entity_name": "idx_83485ecd",
+                "attributes": {
+                  "columns": {
+                    "customer_id": null
+                  },
+                  "index_name": "idx_83485ecd"
+                },
+                "schema_name": "business",
+                "table_name": "invoices"
               }
             },
             "schema_name": "business",
@@ -722,28 +722,6 @@
               "pkeys": "id"
             },
             "columns": {
-              "invoice_id": {
-                "entity": "column",
-                "entity_name": "invoice_id",
-                "attributes": {
-                  "dtype": "C",
-                  "size": "22"
-                },
-                "schema_name": "business",
-                "table_name": "ord_invoice_row",
-                "column_name": "invoice_id"
-              },
-              "amount": {
-                "entity": "column",
-                "entity_name": "amount",
-                "attributes": {
-                  "dtype": "N",
-                  "size": "14,2"
-                },
-                "schema_name": "business",
-                "table_name": "ord_invoice_row",
-                "column_name": "amount"
-              },
               "id": {
                 "entity": "column",
                 "entity_name": "id",
@@ -765,6 +743,28 @@
                 "schema_name": "business",
                 "table_name": "ord_invoice_row",
                 "column_name": "_row_count"
+              },
+              "invoice_id": {
+                "entity": "column",
+                "entity_name": "invoice_id",
+                "attributes": {
+                  "dtype": "C",
+                  "size": "22"
+                },
+                "schema_name": "business",
+                "table_name": "ord_invoice_row",
+                "column_name": "invoice_id"
+              },
+              "amount": {
+                "entity": "column",
+                "entity_name": "amount",
+                "attributes": {
+                  "dtype": "N",
+                  "size": "14,2"
+                },
+                "schema_name": "business",
+                "table_name": "ord_invoice_row",
+                "column_name": "amount"
               }
             },
             "relations": {
@@ -1014,18 +1014,6 @@
             },
             "constraints": {},
             "indexes": {
-              "idx_30811151": {
-                "entity": "index",
-                "entity_name": "idx_30811151",
-                "attributes": {
-                  "columns": {
-                    "maintable_id": null
-                  },
-                  "index_name": "idx_30811151"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              },
               "idx_e5f21f75": {
                 "entity": "index",
                 "entity_name": "idx_e5f21f75",
@@ -1058,6 +1046,18 @@
                     "__mod_ts": null
                   },
                   "index_name": "idx_6a25f093"
+                },
+                "schema_name": "business",
+                "table_name": "docs_invoice_file"
+              },
+              "idx_30811151": {
+                "entity": "index",
+                "entity_name": "idx_30811151",
+                "attributes": {
+                  "columns": {
+                    "maintable_id": null
+                  },
+                  "index_name": "idx_30811151"
                 },
                 "schema_name": "business",
                 "table_name": "docs_invoice_file"

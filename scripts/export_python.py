@@ -1,77 +1,39 @@
-"""Generate shared grammar, physical contract and independent Python oracles."""
+"""Export the pinned 0.6.0 grammar, contract, full models and migration JSON."""
 import importlib.metadata
 import json
 import runpy
-import subprocess
-
-from python_reference import ROOT, CORE, MIGRATION
-
-from asqueel import SqlBuilder, SqlMigrationRenderer
+from python_reference import ROOT,CORE,MIGRATION
+from asqueel import SqlBuilder,SqlDatabaseConfig,SqlMigrationRenderer,resolve_model
 from asqueel.common import INDEX_OPTIONS
-from asqueel.model_elements import OPTION_LEVELS, SYS_FIELDS, SYS_FIELD_KEYS
-from asqueel.option_elements import TABLE_OPTIONS, NAMED_OPTIONS
+from asqueel.model_elements import OPTION_LEVELS,SYS_FIELDS,SYS_FIELD_KEYS
+from asqueel.option_elements import NAMED_OPTIONS
 from asqueel.option_validation import REQUIRED
-from asqueel_migration import __version__ as migration_version
-from asqueel_migration.structures import COL_JSON_KEYS, DTYPE_CODES, hashed_name
+from asqueel_migration.structures import COL_JSON_KEYS,DTYPE_CODES
+from model_oracle import document,main as export_models
 
+def write(path,value):
+    (ROOT/path).write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n')
 
-def write(relative, value):
-    path = ROOT / relative
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n")
-
+def examples():
+    result={}
+    for name,cls in [('shop','Shop'),('application','Application')]:
+        b=runpy.run_path(str(ROOT/f'examples/{name}.py'))[cls]();b.create();result[name]=b
+    features=runpy.run_path(str(ROOT/'examples/model_features.py'))
+    result['groups']=features['grouped_items']();result['virtual-relations']=features['virtual_relations']()
+    query=runpy.run_path(str(ROOT/'examples/browser_queries.py'))['query_model']();result['queries']=query
+    from sqlite_oracle import sqlite_oracle
+    return result,sqlite_oracle()
 
 def main():
-    (ROOT / "src/generated").mkdir(parents=True, exist_ok=True)
-    SqlBuilder.to_grammar(ROOT / "src/generated/grammar.json")
-    write("src/generated/contract.json", {
-        "columnKeys": COL_JSON_KEYS, "dtypeCodes": DTYPE_CODES,
-        "indexOptions": INDEX_OPTIONS,
-        "optionLevels": {name: sorted(levels) for name, levels in OPTION_LEVELS.items()},
-        "tableOptions": TABLE_OPTIONS, "namedOptions": NAMED_OPTIONS,
-        "requiredOptions": REQUIRED, "sysFields": SYS_FIELDS,
-        "sysFieldKeys": sorted(SYS_FIELD_KEYS),
-    })
-    Shop = runpy.run_path(str(ROOT / "examples/shop.py"))["Shop"]
-    model = Shop()
-    model.create()
-    write("test/fixtures/shop.json", SqlMigrationRenderer(model).render())
-    Application = runpy.run_path(str(ROOT / "examples/application.py"))["Application"]
-    application = Application()
-    application.create()
-    write("test/fixtures/application.json", SqlMigrationRenderer(application).render())
-    from application_cases import cases, source_document
-    corpus = []
-    for name, model in cases():
-        source = source_document(model)
-        expected = SqlMigrationRenderer(model).render()
-        corpus.append({"name": name, "source": source, "expected": expected})
-    write("test/fixtures/application-cases.json", corpus)
-    from sqlite_oracle import sqlite_oracle
-    write("test/fixtures/sqlite.json", sqlite_oracle())
-    from query_oracle import query_oracle
-    write("test/fixtures/queries.json", query_oracle())
-    from composition_oracle import composition_oracle
-    write("test/fixtures/composition.json", composition_oracle())
-    write("test/fixtures/hashes.json", [
-        {"schema": s, "table": t, "columns": c, "kind": k,
-         "expected": hashed_name(s, t, c, k)}
-        for s, t, c in [("public", "invoice", ["id"]),
-                         ("città", "fatturazione", ["anno", "numero"]),
-                         ("a", "t", ["one", "two"]), ("a", "t", ["two", "one"])]
-        for k in ("idx", "fk", "cst")
-    ])
-    write("test/fixtures/provenance.json", {
-        "coreCommit": subprocess.check_output(
-            ["git", "-C", str(CORE), "rev-parse", "HEAD"], text=True).strip(),
-        "migrationCommit": subprocess.check_output(
-            ["git", "-C", str(MIGRATION), "rev-parse", "HEAD"], text=True).strip(),
-        "migrationVersion": migration_version,
-        "buildersVersion": importlib.metadata.version("genro-builders"),
-        "bagVersion": importlib.metadata.version("genro-bag"),
-    })
-    print(f"Exported grammar, contract, two examples, {len(corpus)} application cases and hash vectors.")
-
-
-if __name__ == "__main__":
-    main()
+    SqlBuilder.to_grammar(ROOT/'src/generated/grammar.json');SqlDatabaseConfig.to_grammar(ROOT/'src/generated/configuration-grammar.json');b=SqlBuilder()
+    write('src/generated/contract.json',dict(columnKeys=COL_JSON_KEYS,dtypeCodes=DTYPE_CODES,indexOptions=INDEX_OPTIONS,
+        optionLevels={tag:sorted(b.option_levels(tag)) for tag in sorted(OPTION_LEVELS.keys()|b.table_options)},tableOptions=sorted(b.table_options),namedOptions=NAMED_OPTIONS,
+        requiredOptions=REQUIRED,sysFields=SYS_FIELDS,sysFieldKeys=sorted(SYS_FIELD_KEYS)))
+    models,sqlite=examples()
+    for name,b in models.items():
+        write(f'test/fixtures/{name}.json',SqlMigrationRenderer(b).render()) if name in ('shop','application') else None
+    write('test/fixtures/model-examples.json',{name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()})
+    write('test/fixtures/sqlite.json',sqlite)
+    export_models()
+    print('Exported Python 0.6.0 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
+if __name__=='__main__':main()

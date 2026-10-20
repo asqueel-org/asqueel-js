@@ -1,3 +1,3 @@
-import cases from '../test/fixtures/composition.json' with {type: 'json'};
-import {evaluateComposition} from '../test/composition-cases.js';
-process.stdout.write(JSON.stringify(cases.map(entry => ({name: entry.name, result: evaluateComposition(entry)}))));
+import inputs from '../test/model-inputs.json' with {type:'json'};
+import {evaluateModel} from '../test/model-cases.js';
+console.log(JSON.stringify(inputs.map(c=>({name:c.name,result:evaluateModel(c)}))));

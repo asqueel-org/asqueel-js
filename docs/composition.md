@@ -1,3 +1,8 @@
+> Aggiornamento 0.6.0: il confronto attivo usa l'intero `DbModel` e migrate.
+> `subtable` e le opzioni `partition`/`tenant` sono state ritirate dal riferimento;
+> le vecchie sezioni che le descrivono non costituiscono più API attiva.
+> Vedi [modello attuale](model.md) e [parità](parity.md).
+
 # Composizione dei contributi
 
 La composizione avviene sul sorgente dichiarativo, prima di applicare default,
@@ -90,76 +95,19 @@ comuni, eliminando la definizione specifica del vecchio tipo. Non consente di
 trasformare una colonna fisica in virtuale. Questo riguarda il model: l'esecuzione
 delle colonne virtuali nelle query rimane fuori dalla copertura attuale.
 
-## Colgroups e subtables
+## Verifica con la 0.6.0
 
-```js
-const details = table.colgroup({
-    name: 'details', name_long: 'Dettagli', col_dtype: 'T', col_size: ':80',
-});
-details.column({name: 'city'});                 // details.001, size :80
-details.column({name: 'street', size: ':120'}); // details.002, size :120
-table.subtable({
-    name: 'active', condition: '$id > :minimum', parameters: {minimum: 0},
-    name_long: 'Attivi',
-});
-```
+Il corpus di [parità](parity.md) esegue le stesse chiamate in Python e in JS e
+confronta l'accettazione dei contributi, il modello gerarchico completo e migrate.
+I vecchi confronti parziali di `ResolvedModel` sono stati sostituiti.
 
-Il gruppo resta un nodo dichiarativo vuoto: i membri vengono inseriti nei normali
-contenitori della tabella. Sono applicati solo i default `col_*` dichiarati per
-quel tipo di elemento; gli attributi già presenti e quelli espliciti prevalgono.
-Una nuova chiamata allo stesso gruppo conserva l'identità e non può cambiarne
-la definizione, anche in un contributo successivo. La composizione di modelli
-indipendenti, invece, unisce gli attributi come Python. Le colonne virtuali
-possono cambiare tipo conservando l'ordinale del gruppo.
+Rimane una differenza documentata sullo stato intermedio di un errore: Python
+può inserire il primo nodo `validation` prima di rilevare un conflitto con
+`validate_len`; JS controlla prima dell'inserimento. Dopo il successivo override
+valido il modello finale coincide. I test non dichiarano equivalenti quegli
+stati intermedi falliti e non modificano Python per nasconderli.
 
-Le subtables mantengono condizione, etichette e parametri; `parameters` si fonde
-per chiave secondo le normali regole dei contributi. La risoluzione genera una
-formula booleana `subtable_<name>`, con `var_*` derivati dai parametri e dagli
-attributi `condition_*` (questi ultimi prevalgono). Una formula già dichiarata
-può aggiungere metadati, ma non contraddire tipo o espressione generati.
-Il JSON migrate contiene solo la struttura fisica. Non viene creata una tabella
-per ogni subtable e non viene memorizzata la formula come colonna SQLite.
-Le query su questi filtri e sulle colonne virtuali sono ancora escluse e rifiutate.
-
-Due comportamenti del riferimento Python sono mantenuti e verificati:
-
-- Il merge di colonne dello **stesso tipo** da gruppi in modelli indipendenti
-  usa l'ordinale del contributo entrante; può quindi duplicare ordinali. La
-  conservazione dell'ordinale precedente vale nel merge che cambia tipo virtuale.
-- `group.index(...)` può essere dichiarato, ma il modello Python rifiuta poi
-  l'attributo `group` sull'indice. Dichiarare gli indici con `table.index(...)`.
-
-## Verifica e differenza nota
-
-90 casi eseguono le chiamate nel Python reale e separatamente in JavaScript.
-Confrontano l'accettazione/rifiuto delle dichiarazioni, il sorgente finale
-(inclusi metadati di reset e disattivazione), l'isolamento degli input e il JSON
-migrate quando il modello è renderizzabile. Un caso riguarda solo la composizione
-del sorgente; uno verifica il rifiuto di una collisione fisico/virtuale.
-I 23 casi dedicati a colgroups/subtables confrontano anche le dichiarazioni e
-gli attributi pertinenti delle colonne nel modello risolto, oppure il rifiuto
-dei conflitti. È una proiezione esplicita delle nuove capacità, non un confronto
-completo di tutte le proprietà di `ResolvedModel`.
-Altri 32 casi coprono [virtualRelation](virtual-relations.md), con relazioni
-dirette, inverse e virtuali risolte, target degli alias e casi invalidi.
-
-Nel Python di riferimento, la prima `column.validation(len=...)` che confligge
-con un `validate_len` esplicito solleva errore dopo aver inserito il nodo
-`validation`. JS controlla prima dell'inserimento e lascia il sorgente invariato.
-Il caso `validation_flat_then_node` registra questa differenza tramite
-`knownPythonMutation`: dopo il successivo override valido, il sorgente finale e
-il JSON migrate devono essere uguali. Non dichiaramo parità di quello stato
-intermedio errato e non modifichiamo il checkout Python per nasconderlo.
-
-`npm run verify:python` verifica dal vivo i casi su Node e Bun; la CI esegue anche
-il corpus nel worker Chromium. Il pulsante **Verifica composizione con Python**
-nel playground usa gli stessi oracoli salvati e verifica una migrazione composta
-reale su WASM/IndexedDB, con dati persistiti e diff vuoto dopo riapertura.
-Un secondo database temporaneo verifica lo stesso ciclo con colgroups/subtables,
-includendo serializzazione, inserimento e lettura tramite modello. L'esempio
-`examples/groups.js` è selezionabile e modificabile nel playground.
-Un terzo database verifica il modello con virtualRelation, mantenendo soltanto
-le FK fisiche e controllando vincoli, persistenza e idempotenza.
-
-La composizione non completa da sola il model: le restanti dichiarazioni,
-le validazioni di dominio e alcuni casi di rimappatura rimangono nella roadmap.
+Node, Bun e il worker Chromium eseguono gli stessi casi. Il browser verifica
+anche migrazioni reali, vincoli e persistenza dopo riapertura su database
+IndexedDB temporanei. Gli esempi gruppi/formule e virtualRelation sono modificabili
+nel playground e mostrano separatamente il JSON completo e il JSON migrate.

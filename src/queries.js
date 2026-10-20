@@ -231,10 +231,15 @@ export class SqliteQueries {
         if ([...table.options.values()].some(o => o.spec.enabled !== false)) {
             throw new Error(`${name}: hook/opzioni applicative fuori perimetro query${write ? ' (blocco anche in Python)' : ''}`);
         }
+        if (Object.entries(table.a).some(([k,v])=>v!=null && v!==false &&
+            (['draftField','logicalDeletionField','protectionColumn'].includes(k)||k.startsWith('partition_')))) {
+            throw new Error(`${name}: policy del modello 0.6.0 fuori perimetro query`);
+        }
         for (const c of table.columns.values()) {
             if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');
             if (write && (c.children.some(n => n.tag !== 'relation') ||
-                ['default', 'default_from', 'sql_value', 'x_generation', 'read_only', 'unmodifiable']
+                ['default', 'default_from', 'sql_value', 'x_generation', 'read_only', 'unmodifiable',
+                    'onInserting','onUpdating','onDeleting','onInserted','onUpdated','onDeleted','trigger_table']
                     .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
         }
         if (write && [...table.columns.values()].some(c => c.children.some(n =>

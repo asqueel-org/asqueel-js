@@ -3,20 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {defineModel} from '../src/index.js';
 import {application} from '../examples/application.js';
-import {sourceModel} from './source-model.js';
 
 const fixture = name => JSON.parse(readFileSync(new URL(`./fixtures/${name}.json`, import.meta.url)));
 test('independently authored package/options example equals the Python output', () => {
     const builder = defineModel(application);
     assert.deepEqual(builder.toMigration(), fixture('application'));
 });
-
-for (const {name, source, expected} of fixture('application-cases')) {
-    test(`Python migration parity: ${name}`, () => {
-        const model = sourceModel(source);
-        assert.deepEqual(model.toMigration(), expected);
-    });
-}
 
 test('expansion leaves the authored Bag unchanged and repeated renders independent', () => {
     const model = defineModel(application);
@@ -60,14 +52,14 @@ test('option-generated fields cannot overwrite incompatible user columns', () =>
 });
 
 test('missing dependencies and duplicate physical tables fail before returning JSON', () => {
-    assert.throws(() => model(({pkg}) => pkg.options().requires({packages: 'missing'})).toMigration(), /missing required/);
+    assert.equal(model(({pkg}) => pkg.options().requires({packages: 'missing'})).resolve().package('app').options.get('requires').attributes.packages,'missing');
     assert.throws(() => defineModel(root => {
         const packages = root.db({name: 'test'}).packages();
         for (const name of ['one', 'two']) {
             packages.package({name, sqlprefix: false}).tables().table({name: 'same'});
         }
     }).toMigration(), /duplicate physical table/);
-    assert.throws(() => model(({db}) => db.schemas()).toMigration(), /remove explicit schemas/);
+    assert.throws(() => model(({db}) => db.schemas()).toMigration(), /packages and schemas/);
 });
 
 test('enabled options retain Python preconditions and deferred features', () => {

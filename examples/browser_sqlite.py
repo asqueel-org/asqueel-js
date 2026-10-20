@@ -18,6 +18,6 @@ def browser_model(version=1):
     options.sys_fields(draft=True)
     options.audit("lazy")
     cols = invoice.columns()
-    cols.column("customer_id").relation("crm.customer.id", on_delete_sql="restrict")
-    cols.column("amount", dtype="N", size="12,2", sqldefault="0")
+    cols.column("customer_id").relation("crm.customer.id", onDelete_sql="restrict")
+    cols.column("amount", dtype="N", size="12,2", sql_default="0")
     return model

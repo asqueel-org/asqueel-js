@@ -1,5 +1,5 @@
 # Python reference tools only; never required by the JavaScript runtime.
-genro-builders==0.28.1
+genro-builders==0.29.0
 genro-bag==0.28.0
 genro-toolbox==0.18.0
 dictdiffer==0.9.0

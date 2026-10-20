@@ -187,8 +187,8 @@
                 "entity_name": "amount",
                 "attributes": {
                   "dtype": "N",
-                  "sqldefault": "0",
-                  "size": "12,2"
+                  "size": "12,2",
+                  "sqldefault": "0"
                 },
                 "schema_name": "sales",
                 "table_name": "invoice",
@@ -207,6 +207,7 @@
                   ],
                   "constraint_type": "FOREIGN KEY",
                   "on_delete": "RESTRICT",
+                  "on_update": "CASCADE",
                   "columns": [
                     "customer_id"
                   ],
@@ -226,6 +227,7 @@
                     "code"
                   ],
                   "constraint_type": "FOREIGN KEY",
+                  "on_update": "CASCADE",
                   "deferrable": true,
                   "initially_deferred": true,
                   "columns": [
@@ -382,6 +384,7 @@
                   ],
                   "constraint_type": "FOREIGN KEY",
                   "on_delete": "CASCADE",
+                  "on_update": "CASCADE",
                   "columns": [
                     "invoice_id"
                   ],

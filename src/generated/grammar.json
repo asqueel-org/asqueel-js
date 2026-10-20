@@ -190,7 +190,7 @@
               "name": "str"
             },
             "has_default": true,
-            "default": "postgresql"
+            "default": "sqlite"
           },
           {
             "name": "name_long",
@@ -257,16 +257,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": "db",
@@ -387,16 +380,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -509,16 +495,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -541,8 +520,8 @@
       "_meta": null
     },
     "table": {
-      "doc": "A table.\n\n        Args:\n            name: the table name — physical, and this node's key.\n            pkey: comma-joined physical column names, the JSON ``pkeys``.\n                Every name must exist among the table's physical columns.\n            comment: physical; free description.\n            caption_field: semantic; the column that captions a row.\n            name_long: semantic; human label.\n            name_short: semantic; short human label.\n            name_plural: semantic; human label, plural form.\n            pkey_columns: semantic; legacy comma-separated source fields for a\n                single textual primary key; not SQL primary-key members.\n            pkey_columns_joiner: semantic; legacy separator for that textual key.\n                Absent or empty, the legacy uses underscore. Declaration only.\n        ",
-      "sub_tags": "columns[:1], virtual_columns[:1], composites[:1], constraints[:1], indexes[:1], options[:1], colgroup, subtable, virtualRelation",
+      "doc": "A table.\n\n        Args:\n            name: the table name — physical, and this node's key.\n            pkey: comma-joined physical column names, the JSON ``pkeys``.\n                Every name must exist among the table's physical columns.\n            comment: physical; free description.\n            caption_field: semantic; the column that captions a row.\n            name_long: semantic; human label.\n            name_short: semantic; short human label.\n            name_plural: semantic; human label, plural form.\n            pkey_columns: semantic; legacy comma-separated source fields for a\n                single textual primary key; not SQL primary-key members.\n            pkey_columns_joiner: semantic; legacy separator for that textual key.\n                Absent or empty, the legacy uses underscore. Declaration only.\n            deletable: False refuses every delete of the table's records, as in GenroPy.\n            lastTS: the column holding the last modification timestamp.\n            logicalDeletionField: the column marking a row as logically deleted;\n                queries exclude those rows.\n            draftField: the boolean column marking a draft row; queries exclude drafts.\n            protectionColumn: the column whose value protects a row.\n            partition_<field>: ``'<path>'`` partitions the table on ``<field>``, as in\n                GenroPy: env ``current_<path>`` filters on it, else env\n                ``allowed_<path>`` filters on its values or NULL. The first counts.\n        ",
+      "sub_tags": "columns[:1], virtual_columns[:1], composites[:1], constraints[:1], indexes[:1], options[:1], colgroup, virtualRelation",
       "parent_tags": "tables",
       "inherits_from": null,
       "ns": null,
@@ -671,6 +650,28 @@
           },
           {
             "name": "name_short",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "name_full",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -880,6 +881,172 @@
             "default": null
           },
           {
+            "name": "deletable",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "bool"
+            },
+            "has_default": true,
+            "default": true
+          },
+          {
+            "name": "lastTS",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "logicalDeletionField",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "draftField",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "protectionColumn",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_table_class",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "type"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_expanded_legacy",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_logical_pkey",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "extra",
             "kind": "var_keyword",
             "role": "attribute",
@@ -892,7 +1059,11 @@
       },
       "node_label": null,
       "collection_key": null,
-      "_meta": null
+      "_meta": {
+        "attribute_families": [
+          "partition_"
+        ]
+      }
     },
     "columns": {
       "doc": "The explicit collection of physical columns.",
@@ -970,7 +1141,7 @@
       "_meta": null
     },
     "column": {
-      "doc": "A physical column — the only element that projects as a column.\n\n        Args:\n            name: the column name — physical, and this node's key.\n            dtype: asqueel normalized type code. Absent, the renderer\n                defaults to ``'A'`` when ``size`` is given, else ``'T'``.\n            size: ``'n'`` or ``'min:max'`` character size.\n            notnull: NOT NULL. Pkey members get it from their pkey\n                membership, not from this flag.\n            unique: single-column UNIQUE. A redundant one on a\n                single-column pkey is dropped by the renderer.\n            indexed: sugar — the renderer materializes a real index item\n                (``structure-1.0`` has no ``indexed`` column attribute).\n                A column carrying a foreign key is always indexed.\n            sqldefault: SQL DEFAULT expression.\n            extra_sql: verbatim tail of the column definition.\n            generated_expression: GENERATED ALWAYS AS expression.\n            comment: physical; the column comment.\n            name_long: semantic; human label.\n            name_short: semantic; human label, short form.\n            group: semantic; field-group key.\n        ",
+      "doc": "A physical column — the only element that projects as a column.\n\n        Args:\n            name: the column name — physical, and this node's key.\n            dtype: asqueel normalized type code. Absent, the renderer\n                defaults to ``'A'`` when ``size`` is given, else ``'T'``.\n            size: ``'n'`` or ``'min:max'`` character size.\n            notnull: NOT NULL. Pkey members get it from their pkey\n                membership, not from this flag.\n            unique: single-column UNIQUE. A redundant one on a\n                single-column pkey is dropped by the renderer. A string is\n                read as in GenroPy: ``n``, ``no``, ``f``, ``false``, ``0`` are false.\n            indexed: sugar — the renderer materializes a real index item\n                (``structure-1.0`` has no ``indexed`` column attribute).\n                A column carrying a relation is always indexed. A string\n                is read as ``unique``. A dict carries the index options, as\n                legacy ``fill_json_column_index``: ``method``, ``where``,\n                ``tablespace``, ``sorting`` (comma-separated, one direction\n                per column), ``with_<name>`` (a ``WITH`` storage option) and\n                ``unique`` (without ``where`` it makes the column unique and\n                creates no index; with ``where`` a partial unique index).\n            sql_default: SQL DEFAULT expression.\n            sql_extra: verbatim tail of the column definition.\n            sql_generatedExpression: GENERATED ALWAYS AS expression.\n            sql_<dialect>_default, sql_<dialect>_generatedExpression, sql_<dialect>_extra:\n                the same for one dialect (``pg``, ``sqlite``); they win on it.\n            comment: physical; the column comment.\n            name_long: semantic; human label.\n            name_short: semantic; human label, short form.\n            name_full: semantic; human label, full form.\n            format: semantic; display format.\n            print_width: semantic; print width.\n            group: semantic; field-group key.\n            onInserting, onUpdating, onDeleting, onInserted, onUpdated, onDeleted:\n                field triggers, as in GenroPy: a method name, called as\n                ``trigger_<name>(record, fldname=, tblname=)`` on the table or\n                on ``trigger_table``, or a callable ``f(record, fldname)``.\n                They run at every write, in column declaration order.\n        ",
       "sub_tags": "relation, validation[:1], encryption[:1], dynamic_fields[:1]",
       "parent_tags": "columns",
       "inherits_from": null,
@@ -1078,9 +1249,19 @@
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                }
+              ]
             },
             "has_default": true,
             "default": false
@@ -1090,15 +1271,30 @@
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "dict"
+                }
+              ]
             },
             "has_default": true,
             "default": false
           },
           {
-            "name": "sqldefault",
+            "name": "sql_default",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -1120,7 +1316,7 @@
             "default": null
           },
           {
-            "name": "extra_sql",
+            "name": "sql_extra",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -1142,7 +1338,7 @@
             "default": null
           },
           {
-            "name": "generated_expression",
+            "name": "sql_generatedExpression",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -1218,6 +1414,72 @@
                   "kind": "type",
                   "module": "builtins",
                   "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "name_full",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "format",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "print_width",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "int"
                 },
                 {
                   "kind": "type",
@@ -1354,6 +1616,144 @@
             "default": false
           },
           {
+            "name": "onInserting",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onUpdating",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onDeleting",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onInserted",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onUpdated",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onDeleted",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "type",
+              "module": "builtins",
+              "name": "object"
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "trigger_table",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_generation",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "dict"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "extra",
             "kind": "var_keyword",
             "role": "attribute",
@@ -1368,12 +1768,17 @@
       "collection_key": null,
       "_meta": {
         "projects_column": true,
-        "projects_relation": true
+        "projects_relation": true,
+        "attribute_families": [
+          "validate_",
+          "sql_pg_",
+          "sql_sqlite_"
+        ]
       }
     },
     "aliasColumn": {
-      "doc": "A virtual column projecting a related column. Never physical.\n\n        An alias reads through a relation that already exists, so it never\n        carries one of its own.\n\n        Args:\n            name: the alias name.\n            relation_path: ``@relation.column`` path to the source column.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n            static: semantic; retain the legacy static declaration without executing it.\n        ",
-      "sub_tags": "",
+      "doc": "A virtual column projecting a related column. Never physical.\n\n        An alias inherits the target column's relation as a weak relation during\n        model rendering, unless it declares an explicit relation of its own.\n\n        Args:\n            name: the alias name.\n            relation_path: ``@relation.column`` path to the source column.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n            static: semantic; retain the legacy static declaration without executing it.\n        ",
+      "sub_tags": "relation",
       "parent_tags": "virtual_columns",
       "inherits_from": null,
       "ns": null,
@@ -1524,14 +1929,29 @@
             "default": false
           },
           {
-            "name": "extra",
-            "kind": "var_keyword",
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
             "role": "attribute",
-            "annotation": null,
-            "has_default": false
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -1539,7 +1959,7 @@
       "_meta": null
     },
     "formulaColumn": {
-      "doc": "A virtual column defined by SQL. Never physical.\n\n        Args:\n            name: the column name.\n            sql_formula: an expression over the row's own columns.\n            select: a scalar sub-select.\n            exists: an EXISTS predicate.\n            dtype: the resulting type code.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n        ",
+      "doc": "A virtual column defined by SQL. Never physical.\n\n        Args:\n            name: the column name.\n            sql_formula: an expression over the row's own columns.\n            select: a scalar sub-select.\n            exists: an EXISTS predicate.\n            dtype: the resulting type code; ``A`` when omitted.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n        ",
       "sub_tags": "relation",
       "parent_tags": "virtual_columns",
       "inherits_from": null,
@@ -1573,94 +1993,6 @@
                   "kind": "type",
                   "module": "builtins",
                   "name": "bool"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "expression",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "parameters",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "dict"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "subqueries",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "dict"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "handler",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
                 },
                 {
                   "kind": "type",
@@ -1849,6 +2181,28 @@
             "default": null
           },
           {
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "extra",
             "kind": "var_keyword",
             "role": "attribute",
@@ -1861,11 +2215,17 @@
       },
       "node_label": null,
       "collection_key": null,
-      "_meta": null
+      "_meta": {
+        "attribute_families": [
+          "var_",
+          "select_",
+          "exists_"
+        ]
+      }
     },
     "subQueryColumn": {
-      "doc": "A virtual column defined by a sub-query. Never physical.\n\n        Args:\n            name: the column name.\n            query: the sub-query declaration; may be supplied by a later contribution.\n            mode: None, ``json``, ``xml`` or a legacy aggregate name; preserved\n                without expansion or execution by the grammar.\n            dtype: the declared result type.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n        ",
-      "sub_tags": "",
+      "doc": "A virtual column defined by a sub-query. Never physical.\n\n        Args:\n            name: the column name.\n            query: the sub-query declaration; may be supplied by a later contribution.\n            aggr: one call of the ``.aggr()`` grammar (count, sum, avg, min,\n                max, join, to_json, to_xml); it replaces the query columns.\n            mode: None, ``json`` or ``xml``, as legacy; not together with ``aggr``.\n            dtype: the declared result type.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n        ",
+      "sub_tags": "relation",
       "parent_tags": "virtual_columns",
       "inherits_from": null,
       "ns": null,
@@ -1898,6 +2258,28 @@
                   "kind": "type",
                   "module": "builtins",
                   "name": "dict"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "aggr",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
                 },
                 {
                   "kind": "type",
@@ -2042,6 +2424,28 @@
             "default": null
           },
           {
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "extra",
             "kind": "var_keyword",
             "role": "attribute",
@@ -2054,11 +2458,15 @@
       },
       "node_label": null,
       "collection_key": null,
-      "_meta": null
+      "_meta": {
+        "attribute_families": [
+          "var_"
+        ]
+      }
     },
     "pyColumn": {
       "doc": "A virtual column computed in Python. Never physical.\n\n        Args:\n            name: the column name.\n            py_method: the method computing it; defaults to\n                ``pyColumn_<name>`` on the table class.\n            dtype: the resulting type code.\n            name_long: semantic; human label.\n            group: semantic; field-group key.\n        ",
-      "sub_tags": "",
+      "sub_tags": "relation",
       "parent_tags": "virtual_columns",
       "inherits_from": null,
       "ns": null,
@@ -2274,14 +2682,29 @@
             "default": null
           },
           {
-            "name": "extra",
-            "kind": "var_keyword",
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
             "role": "attribute",
-            "annotation": null,
-            "has_default": false
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -2417,16 +2840,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -2510,16 +2926,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -2527,35 +2936,13 @@
       "_meta": null
     },
     "index": {
-      "doc": "A table index.\n\n        Args:\n            name: the index name.\n            columns: comma-joined names, or a ``{name: None | 'DESC'}``\n                dict when per-column ordering matters.\n            unique: a UNIQUE index.\n            method: access method (``btree``, ``gin``, …).\n            where: partial-index predicate.\n            tablespace: target tablespace.\n            with_options: storage parameters.\n        ",
+      "doc": "A table index.\n\n        Args:\n            columns: comma-joined names, a list or tuple of names, or a\n                ``{name: None | 'DESC'}`` dict when per-column ordering matters.\n            name: the index name; ``<table>_<columns joined by _>_key``\n                when absent, as in GenroPy.\n            unique: a UNIQUE index.\n            method: access method (``btree``, ``gin``, …).\n            where: partial-index predicate.\n            tablespace: target tablespace.\n            with_options: storage parameters.\n        ",
       "sub_tags": "",
       "parent_tags": "indexes",
       "inherits_from": null,
       "ns": null,
       "attributes": {
         "parameters": [
-          {
-            "name": "name",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
           {
             "name": "columns",
             "kind": "positional_or_keyword",
@@ -2579,16 +2966,48 @@
             "default": null
           },
           {
+            "name": "name",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "unique",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
             },
             "has_default": true,
-            "default": false
+            "default": null
           },
           {
             "name": "method",
@@ -2677,16 +3096,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -2694,9 +3106,9 @@
       "_meta": null
     },
     "relation": {
-      "doc": "A relation on a column. Navigable by default, physical on demand.\n\n        At most one per local structural key: the grammar accepts the insertion\n        so the whole document can be built, and ``SqlBuilder.validate_model``\n        reports every conflicting relation together.\n\n        Args:\n            to: the target, ``schema.table.column`` or ``schema.table``\n                (target columns default to the target pkey).\n            foreign_key: emit a physical FK. Only these relations project\n                into the migration JSON.\n            on_delete: referential action on delete.\n            on_update: referential action on update.\n            deferred: compatibility sugar for DEFERRABLE INITIALLY DEFERRED.\n            deferrable: make the foreign key DEFERRABLE. Without\n                ``initially_deferred`` it is initially immediate.\n            initially_deferred: start a deferrable foreign key deferred.\n            indexed: the supporting index of the foreign key. On by\n                default (GenroPy parity, D3); ``False`` states that the\n                columns are deliberately left unindexed.\n            back_reference: semantic; navigable path of the many side.\n            one_name: semantic; human label of the one side.\n            many_name: semantic; human label of the many side.\n            one_one: semantic; the relation is 1:1.\n            case_insensitive: semantic; join case-insensitively.\n        ",
+      "doc": "A relation on a column. Navigable by default, physical on demand.\n\n        At most one per local structural key: the grammar accepts the insertion\n        so the whole document can be built, and ``SqlBuilder.validate_model``\n        reports every conflicting relation together.\n\n        Args:\n            to: the target, ``schema.table.column`` or ``schema.table``\n                (target columns default to the target pkey).\n            foreign_key: emit a physical FK. Only these relations project\n                a foreign key into the migration JSON; every relation on a\n                physical column indexes it.\n            onDelete: semantic; Python action on delete of the target row,\n                as in GenroPy: ``raise``, ``cascade``, ``setnull``, ``ignore``,\n                optionally followed by ``:message``.\n            onUpdate: semantic; Python action on update, same values.\n            onDelete_sql: SQL action of the foreign key on delete:\n                ``cascade``, ``restrict``, ``no action``, ``setnull``,\n                ``setdefault`` (any case; ``set null``/``set default`` too),\n                or the legacy abbreviations ``C``, ``R``, ``N``, ``SN``, ``SD``.\n            onUpdate_sql: SQL action of the foreign key on update, same\n                values; ``cascade`` when absent, as in GenroPy.\n            deferred: DEFERRABLE INITIALLY DEFERRED. True by default when\n                ``onDelete`` or ``onDelete_sql`` is ``setnull``, as in GenroPy.\n            deferrable: make the foreign key DEFERRABLE. Without\n                ``initially_deferred`` it is initially immediate.\n            initially_deferred: start a deferrable foreign key deferred.\n            indexed: the index of the relation columns, with or without a\n                foreign key. On by default, as legacy; ``False`` states that\n                the columns are deliberately left unindexed.\n            relation_name: semantic; name of the inverse relation on the target\n                (``@<relation_name>``), as in GenroPy.\n            one_name: semantic; human label of the one side.\n            many_name: semantic; human label of the many side.\n            one_one: semantic; the relation is 1:1. ``'*'`` without\n                ``relation_name`` names the inverse after the many table and\n                makes it public, as in GenroPy.\n            case_insensitive: semantic; join case-insensitively.\n            join_on: semantic; the ON condition in place of the key\n                equality. Wins over ``cnd``.\n            cnd: semantic; the ON condition in place of the key equality.\n                The relation projects no foreign key (GenroPy ``mode='custom'``).\n            between: semantic; ``'value;low;high'``, a range condition in\n                place of the key equality.\n        ",
       "sub_tags": "",
-      "parent_tags": "column, compositeColumn, formulaColumn",
+      "parent_tags": "column, compositeColumn, aliasColumn, formulaColumn, subQueryColumn, pyColumn, bagItemColumn",
       "inherits_from": null,
       "ns": null,
       "attributes": {
@@ -2725,21 +3137,12 @@
             "default": false
           },
           {
-            "name": "on_delete",
+            "name": "onDelete",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
               "kind": "union",
               "items": [
-                {
-                  "kind": "literal",
-                  "values": [
-                    "CASCADE",
-                    "SET NULL",
-                    "SET DEFAULT",
-                    "RESTRICT"
-                  ]
-                },
                 {
                   "kind": "type",
                   "module": "builtins",
@@ -2756,21 +3159,56 @@
             "default": null
           },
           {
-            "name": "on_update",
+            "name": "onUpdate",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
               "kind": "union",
               "items": [
                 {
-                  "kind": "literal",
-                  "values": [
-                    "CASCADE",
-                    "SET NULL",
-                    "SET DEFAULT",
-                    "RESTRICT"
-                  ]
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
                 },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onDelete_sql",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "onUpdate_sql",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
                 {
                   "kind": "type",
                   "module": "builtins",
@@ -2835,28 +3273,6 @@
             "default": true
           },
           {
-            "name": "back_reference",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
             "name": "one_name",
             "kind": "positional_or_keyword",
             "role": "attribute",
@@ -2905,9 +3321,20 @@
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "literal",
+                  "values": [
+                    "*"
+                  ]
+                }
+              ]
             },
             "has_default": true,
             "default": false
@@ -2947,7 +3374,7 @@
             "default": null
           },
           {
-            "name": "inverse",
+            "name": "relation_name",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -2969,51 +3396,7 @@
             "default": null
           },
           {
-            "name": "on_delete_sql",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "on_update_sql",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "on_duplicate",
+            "name": "onDuplicate",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -3106,14 +3489,249 @@
             "default": null
           },
           {
-            "name": "extra",
-            "kind": "var_keyword",
+            "name": "many_order_by",
+            "kind": "positional_or_keyword",
             "role": "attribute",
-            "annotation": null,
-            "has_default": false
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "eager_one",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "eager_many",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "external_relation",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "resolver_kwargs",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "dict"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "join_on",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "cnd",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "between",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_weak",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_canonical",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
+            "name": "x_name",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -3218,7 +3836,11 @@
       },
       "node_label": null,
       "collection_key": null,
-      "_meta": null
+      "_meta": {
+        "attribute_families": [
+          "col_"
+        ]
+      }
     },
     "packages": {
       "doc": "Logical packages; distinct from physical schemas.",
@@ -3236,7 +3858,7 @@
       "_meta": null
     },
     "package": {
-      "doc": "Logical table namespace with an explicit physical placement.\n\n        Args:\n            name: semantic; package identifier.\n            sqlschema: physical schema name, inferred without a schema declaration;\n                None selects the dialect default. Packages can share a schema.\n            sqlprefix: True uses the package name, False omits the prefix.\n            name_long: semantic; human label.\n            name_short: semantic; short label.\n            comment: semantic; package description.\n        ",
+      "doc": "Logical table namespace with an explicit physical placement.\n\n        Args:\n            name: semantic; package identifier.\n            sqlschema: physical schema name, inferred without a schema declaration;\n                None selects the dialect default. Packages can share a schema.\n            sqlprefix: True uses the package name, False omits the prefix.\n            name_long: semantic; human label.\n            name_short: semantic; short label.\n            comment: semantic; package description.\n            path: folder in the legacy layout (``main.py`` with class ``Package``,\n                ``model/<table>.py`` with class ``Table``) whose tables the package loads.\n        ",
       "sub_tags": "tables[:1], options[:1]",
       "parent_tags": "packages",
       "inherits_from": null,
@@ -3343,6 +3965,28 @@
             "default": null
           },
           {
+            "name": "name_full",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
+          },
+          {
             "name": "comment",
             "kind": "positional_or_keyword",
             "role": "attribute",
@@ -3365,14 +4009,29 @@
             "default": null
           },
           {
-            "name": "extra",
-            "kind": "var_keyword",
+            "name": "path",
+            "kind": "positional_or_keyword",
             "role": "attribute",
-            "annotation": null,
-            "has_default": false
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -3381,7 +4040,7 @@
     },
     "options": {
       "doc": "Singleton section of typed functions, validated for its owning level.",
-      "sub_tags": "requires[:1], type, sys_fields[:1], driver[:1], reset, hierarchical, auto_counter, relative_index, dynamic_fields, record_hash, full_update, audit, system_records, protection, release, partition, tenant, retention, broadcast, archive, enabled_when, attachments, numbering",
+      "sub_tags": "*",
       "parent_tags": "db, connection, schema, package, table",
       "inherits_from": null,
       "ns": null,
@@ -3587,6 +4246,28 @@
             },
             "has_default": true,
             "default": null
+          },
+          {
+            "name": "foreignKeys",
+            "kind": "positional_or_keyword",
+            "role": "attribute",
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "bool"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
         "accepts_var_keyword": false,
@@ -3780,16 +4461,9 @@
             },
             "has_default": true,
             "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
           }
         ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -4070,7 +4744,7 @@
     "weak_relation": {
       "doc": null,
       "sub_tags": "",
-      "parent_tags": "column, compositeColumn, formulaColumn",
+      "parent_tags": "column, compositeColumn, aliasColumn, formulaColumn, subQueryColumn, pyColumn, bagItemColumn",
       "inherits_from": null,
       "ns": null,
       "attributes": {
@@ -4109,7 +4783,7 @@
             "default": null
           },
           {
-            "name": "inverse",
+            "name": "relation_name",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -4155,7 +4829,7 @@
             "default": false
           },
           {
-            "name": "on_delete",
+            "name": "onDelete",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -4177,7 +4851,7 @@
             "default": null
           },
           {
-            "name": "on_update",
+            "name": "onUpdate",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -4199,7 +4873,7 @@
             "default": null
           },
           {
-            "name": "on_duplicate",
+            "name": "onDuplicate",
             "kind": "positional_or_keyword",
             "role": "attribute",
             "annotation": {
@@ -4323,7 +4997,7 @@
     },
     "bagItemColumn": {
       "doc": null,
-      "sub_tags": "",
+      "sub_tags": "relation",
       "parent_tags": "virtual_columns",
       "inherits_from": null,
       "ns": null,
@@ -4473,147 +5147,29 @@
             "default": null
           },
           {
-            "name": "extra",
-            "kind": "var_keyword",
+            "name": "x_identity",
+            "kind": "positional_or_keyword",
             "role": "attribute",
-            "annotation": null,
-            "has_default": false
+            "annotation": {
+              "kind": "union",
+              "items": [
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "str"
+                },
+                {
+                  "kind": "type",
+                  "module": "builtins",
+                  "name": "NoneType"
+                }
+              ]
+            },
+            "has_default": true,
+            "default": null
           }
         ],
-        "accepts_var_keyword": true,
-        "accepts_var_positional": false
-      },
-      "node_label": null,
-      "collection_key": null,
-      "_meta": null
-    },
-    "subtable": {
-      "doc": null,
-      "sub_tags": "",
-      "parent_tags": "table",
-      "inherits_from": null,
-      "ns": null,
-      "attributes": {
-        "parameters": [
-          {
-            "name": "name",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "str"
-            },
-            "has_default": false
-          },
-          {
-            "name": "condition",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "str"
-            },
-            "has_default": false
-          },
-          {
-            "name": "parameters",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "dict"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "name_long",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "name_short",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "comment",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "extra",
-            "kind": "var_keyword",
-            "role": "attribute",
-            "annotation": null,
-            "has_default": false
-          }
-        ],
-        "accepts_var_keyword": true,
+        "accepts_var_keyword": false,
         "accepts_var_positional": false
       },
       "node_label": null,
@@ -4621,7 +5177,7 @@
       "_meta": null
     },
     "virtualRelation": {
-      "doc": "GEP virtual relation; var_* binds source expressions as declaration data.\n\n        condition refers to the target. var_* expressions refer to the source\n        and are used as :var_* in condition. An ask field named <name> is\n        referenced as :ask_<name>. This namespace is provisional until compiler\n        design. ask and bindings are preserved as data, without SQL rewriting.\n        Unlike the GEP, order_by, limit and one_one are deferred, along with\n        virtual inverses.\n        ",
+      "doc": "GEP virtual relation; var_* binds source expressions as declaration data.\n\n        table names a direct target and requires a nonempty condition in the\n        completed source. condition refers to the target. var_* expressions refer to the source\n        and are used as :var_* in condition. An ask field named <name> is\n        referenced as :ask_<name>. This namespace is provisional until compiler\n        design. ask and bindings are preserved as data, without SQL rewriting.\n        Unlike the GEP, order_by, limit and one_one are deferred, along with\n        virtual inverses.\n        ",
       "sub_tags": "",
       "parent_tags": "table",
       "inherits_from": null,
@@ -4806,7 +5362,11 @@
       },
       "node_label": null,
       "collection_key": null,
-      "_meta": null
+      "_meta": {
+        "attribute_families": [
+          "var_"
+        ]
+      }
     },
     "hierarchical": {
       "doc": "Declare a hierarchy; column entries are names or {name, unique} mappings.",
@@ -5578,141 +6138,6 @@
         "accepts_var_positional": false
       },
       "node_label": "release",
-      "collection_key": null,
-      "_meta": null
-    },
-    "partition": {
-      "doc": "Declare a logical partition with a value or an existing lazy resolver.",
-      "sub_tags": "",
-      "parent_tags": "options",
-      "inherits_from": null,
-      "ns": null,
-      "attributes": {
-        "parameters": [
-          {
-            "name": "name",
-            "kind": "positional_or_keyword",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "str"
-            },
-            "has_default": false
-          },
-          {
-            "name": "field",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "value",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "object"
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "required",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
-            },
-            "has_default": true,
-            "default": false
-          },
-          {
-            "name": "enabled",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
-            },
-            "has_default": true,
-            "default": true
-          }
-        ],
-        "accepts_var_keyword": false,
-        "accepts_var_positional": false
-      },
-      "node_label": null,
-      "collection_key": null,
-      "_meta": null
-    },
-    "tenant": {
-      "doc": "Declare the legacy multi-tenant flag.",
-      "sub_tags": "",
-      "parent_tags": "options",
-      "inherits_from": null,
-      "ns": null,
-      "attributes": {
-        "parameters": [
-          {
-            "name": "field",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "union",
-              "items": [
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "str"
-                },
-                {
-                  "kind": "type",
-                  "module": "builtins",
-                  "name": "NoneType"
-                }
-              ]
-            },
-            "has_default": true,
-            "default": null
-          },
-          {
-            "name": "enabled",
-            "kind": "keyword_only",
-            "role": "attribute",
-            "annotation": {
-              "kind": "type",
-              "module": "builtins",
-              "name": "bool"
-            },
-            "has_default": true,
-            "default": true
-          }
-        ],
-        "accepts_var_keyword": false,
-        "accepts_var_positional": false
-      },
-      "node_label": "tenant",
       "collection_key": null,
       "_meta": null
     },

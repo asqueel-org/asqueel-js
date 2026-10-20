@@ -66,7 +66,7 @@ test('composite keys, deferred FKs and partial descending indexes round-trip', a
         cc.column({name: 'id', dtype: 'I'});
         cc.column({name: 'part', dtype: 'I'});
         cc.column({name: 'code', dtype: 'T'});
-        cc.column({name: 'note', dtype: 'T', sqldefault: "'NOT DEFERRABLE'"});
+        cc.column({name: 'note', dtype: 'T', sql_default: "'NOT DEFERRABLE'"});
         child.composites().compositeColumn({name: 'parent_key', columns: 'part,code'})
             .relation({to: 'main.parent', foreign_key: true, deferred: true});
         child.indexes().index({name: 'note_partial', columns: {note: 'DESC'}, where: 'note IS NOT NULL'});

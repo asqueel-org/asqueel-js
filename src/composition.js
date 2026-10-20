@@ -1,7 +1,7 @@
 // Ordered declaration semantics ported from asqueel.builder.SqlBuilder and
 // configuration._compose_source. Defaults/expansion belong to later stages.
 import {BuilderBase, SourceBag, sourceTarget} from '@genrojs/builders';
-import {sha256} from '@noble/hashes/sha2.js';
+import {names} from './structures.js';
 import contract from './generated/contract.json' with {type: 'json'};
 import {readOptions} from './options.js';
 
@@ -24,7 +24,7 @@ const NAMED = new Set(['schema', 'package', 'table', 'column', 'aliasColumn', 'f
 const ROUTES = {column: 'columns', formulaColumn: 'virtual_columns', aliasColumn: 'virtual_columns',
     subQueryColumn: 'virtual_columns', pyColumn: 'virtual_columns', compositeColumn: 'composites',
     index: 'indexes', bagItemColumn: 'virtual_columns'};
-const VIRTUAL = {aliasColumn: ['relation_path'], formulaColumn: ['sql_formula', 'expression', 'handler', 'select', 'exists'],
+const VIRTUAL = {aliasColumn: ['relation_path'], formulaColumn: ['sql_formula', 'select', 'exists'],
     subQueryColumn: ['query'], pyColumn: ['py_method', 'method'], bagItemColumn: ['bagcolumn', 'itempath']};
 const SEMANTIC_META = ['option_resets', 'disabled_fields', 'inherited_attributes', 'colgroup'];
 const POSITIONAL = {...Object.fromEntries([...NAMED, 'db', 'type', 'reset', 'colgroup', 'connection', 'subtable', 'virtualRelation'].map(k => [k, 'name'])),
@@ -34,13 +34,6 @@ function inPackage(node) {
     for (; node; node = parentOf(node)) if (node.nodeTag === 'package') return true;
     return false;
 }
-// Python json.dumps defaults are part of the anonymous-index label contract.
-function pythonJSON(value) {
-    if (Array.isArray(value)) return '[' + value.map(pythonJSON).join(', ') + ']';
-    if (dictionary(value)) return '{' + Object.entries(value).map(([k, v]) => pythonJSON(k) + ': ' + pythonJSON(v)).join(', ') + '}';
-    return JSON.stringify(value).replace(/[^\x00-\x7f]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
-}
-
 export class CompositionBuilder extends BuilderBase {
     constructor(...args) {
         super(...args);
@@ -125,7 +118,7 @@ export class CompositionBuilder extends BuilderBase {
                 for (const stored of origins.keys()) if (stored === key || stored.startsWith(key + '.')) origins.delete(stored);
             }
             const declared = new Set(this.schema[node.nodeTag].attributes.parameters.map(p => p.name));
-            for (const key of Object.keys(result)) if (declared.has(key) || node.nodeTag === 'formulaColumn' && /^select_[A-Za-z_]\w*$/.test(key)) inherited.add(key);
+            for (const key of Object.keys(result)) if (declared.has(key) || (this.schema[node.nodeTag]._meta?.attribute_families || []).some(p=>key.startsWith(p)&&/^[A-Za-z_]\w*$/.test(key.slice(p.length)))) inherited.add(key);
             const current = new Set(this.schema[tag].attributes.parameters.map(p => p.name));
             for (const key of inherited) if (!own(result, key) || current.has(key)) inherited.delete(key);
         }
@@ -182,6 +175,13 @@ export class CompositionBuilder extends BuilderBase {
             if (attributes.templates != null) throw new Error('column dynamic_fields accepts source, not templates');
             return;
         }
+        if(tag==='driver') {
+            if(owner?.attr.options!=null)throw new Error('Use driver() or legacy connection options, not both');
+            const dialect=(owner?.attr.implementation || parentOf(owner)?.attr.implementation || 'sqlite').split(':')[0];
+            const allowed=dialect==='sqlite'?['timeout','cached_statements','foreignKeys']:['connect_timeout','application_name','sslmode','sslrootcert','options'];
+            for(const k of Object.keys(attributes))if(k!=='_meta'&&!allowed.includes(k))throw new Error(`driver: unsupported ${dialect} option ${k}`);
+            for(const k of ['connect_timeout','timeout','cached_statements'])if(own(attributes,k)&&(typeof attributes[k]==='boolean'||attributes[k]!=null&&attributes[k]<0))throw new Error(`driver.${k}: expected a nonnegative number`);
+        }
         if (!contract.optionLevels[tag].includes(owner?.nodeTag)) throw new Error(`${tag}: option is not available at this level`);
         readOptions({tag: owner.nodeTag, a: owner.getAttr(), children: [{tag: 'options', children: [
             {tag, a: {...existing?.getAttr(), ...attributes}},
@@ -233,6 +233,22 @@ export class CompositionBuilder extends BuilderBase {
             attributes[POSITIONAL[tag]] = value; value = null;
         }
         if (value != null) throw new Error('Model declarations carry attributes and children, not scalar values');
+        if(this.constructor.portableModel && tag==='column') for(const k of Object.keys(attributes)) {
+            const dialect=/^sql_(pg|sqlite)_(.*)$/.exec(k);
+            if(dialect && !['default','extra','generatedExpression'].includes(dialect[2]))throw new Error(`column: unknown attribute ${k}`);
+        }
+        if (tag === 'column') for (const key of ['unique', 'indexed']) {
+            if (typeof attributes[key] === 'string') attributes[key] = !['', 'n', 'no', 'f', 'false', '0'].includes(attributes[key].toLowerCase());
+        }
+        if (this.constructor.portableModel && tag !== 'validation') {
+            const schema=this.schema[tag];
+            if(!schema) throw new Error(`Unsupported model element ${tag}`);
+            const declared=new Set(schema.attributes.parameters.map(p=>p.name));
+            const families=schema._meta?.attribute_families || [];
+            for(const k of Object.keys(attributes)) if(!declared.has(k) && !['_meta','node_label','node_position'].includes(k)
+                && !families.some(prefix=>k.startsWith(prefix)&&/^[\p{L}_][\p{L}\p{N}_]*$/u.test(k.slice(prefix.length))))
+                throw new Error(`${tag}: unknown attribute ${k}`);
+        }
         this.validateNodeValues(tag, null, attributes);
         for (const key of ['name', 'namespace']) if (attributes[key] != null && tag !== 'connection') {
             if (typeof attributes[key] !== 'string' || !attributes[key].trim() || /[.@$/\\]/.test(attributes[key])) throw new Error(`${tag}.${key}: invalid name or path separator`);
@@ -259,7 +275,7 @@ export class CompositionBuilder extends BuilderBase {
         const declared = new Set(this.schema.virtualRelation.attributes.parameters.map(p => p.name));
         for (const key of Object.keys(attributes)) {
             if (declared.has(key) || ['_meta', '_tag', 'node_label', 'node_position'].includes(key)
-                || key.startsWith('x_') || /^var_[A-Za-z_][A-Za-z0-9_]*$/.test(key) && key.trim() === key) continue;
+                || !this.constructor.portableModel && key.startsWith('x_') || /^var_[A-Za-z_][A-Za-z0-9_]*$/.test(key) && key.trim() === key) continue;
             throw new Error(`virtualRelation: unsupported attribute ${key}`);
         }
     }
@@ -269,9 +285,14 @@ export class CompositionBuilder extends BuilderBase {
         value = null;
         const parent = parentOverride || bag.parentNode;
         if (tag === 'weak_relation') return this.setChild(bag, 'relation', value, {...attributes, foreign_key: false, x_weak: true}, parentOverride);
-        if (tag === 'relation' && parent?.nodeTag === 'formulaColumn' && !attributes.x_weak) throw new Error('A scalar virtual column requires weak_relation');
+        if (tag === 'relation' && Object.hasOwn(VIRTUAL, parent?.nodeTag)) {
+            attributes.foreign_key ??= false;
+            if (attributes.foreign_key) throw new Error('foreign_key is not allowed on virtual columns');
+            attributes.x_weak = true;
+        }
         if (tag === 'relation' && inPackage(parent)) {
-            if (!own(attributes, 'foreign_key')) attributes.foreign_key = true;
+            if (attributes.cnd && attributes.foreign_key) throw new Error('relation with cnd has no foreign key');
+            if (!own(attributes, 'foreign_key')) attributes.foreign_key = !attributes.cnd;
             attributes.x_canonical = true;
         }
         if (tag === 'reset') {
@@ -292,12 +313,20 @@ export class CompositionBuilder extends BuilderBase {
         if (SINGLETONS.has(tag)) label = tag;
         if (NAMED.has(tag)) {
             if (attributes.node_label != null) throw new Error(`${tag}: node_label is fixed by its SQL name`);
-            if (tag === 'index' && attributes.name == null && inPackage(parent)) {
-                const digest = sha256(new TextEncoder().encode(pythonJSON(attributes.columns)));
-                attributes.name = 'index_' + [...digest].map(n => n.toString(16).padStart(2, '0')).join('').slice(0, 12);
-                attributes.x_auto_name = true;
+            if (tag === 'index') {
+                if (Array.isArray(attributes.columns)) attributes.columns = attributes.columns.join(',');
+                if (attributes.name == null) {
+                    const table = parent?.nodeTag === 'table' ? parent : parentOf(parent);
+                    attributes.name = `${table?.label}_${names(attributes.columns).join('_')}_key`;
+                }
             }
             label = attributes.name;
+        }
+        if (tag === 'connection') {
+            const named=own(attributes,'database')||own(attributes,'dsn'),name=attributes.name||'main';
+            if(attributes.dsn!=null&&['database','host','port','user','password'].some(k=>own(attributes,k)))throw new Error('dsn and individual connection fields cannot be combined');
+            label=named&&name!=='main'?`connection_${name}`:'connection';
+            attributes.node_label=label;
         }
         if (['validation', 'encryption'].includes(tag)) label = tag;
         if (own(contract.optionLevels, tag)) {
@@ -318,7 +347,7 @@ export class CompositionBuilder extends BuilderBase {
                 if (existing.nodeTag !== tag) throw new Error(`conflicting element kind for ${tag}`);
                 return existing;
             }
-            if (['schema', 'package', 'validation', 'encryption', 'subtable', 'virtualRelation'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
+            if (['schema', 'package', 'validation', 'encryption', 'connection', 'subtable', 'virtualRelation'].includes(tag) || own(contract.optionLevels, tag) || inPackage(parent)) {
                 return this._composeAttributes(existing, attributes, tag);
             }
         }
@@ -351,6 +380,7 @@ export class CompositionBuilder extends BuilderBase {
     clone() {
         const result = new this.constructor();
         result._mergeSource(this.toSource());
+        result.data.update(this.data.deepcopy());
         result._attributeOrigins = new Map([...this._attributeOrigins].map(([p, v]) => [p, new Map(v)]));
         result._contribution = this._contribution;
         return result;

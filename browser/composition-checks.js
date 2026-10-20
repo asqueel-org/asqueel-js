@@ -1,5 +1,7 @@
-import cases from '../test/fixtures/composition.json' with {type: 'json'};
-import {evaluateComposition} from '../test/composition-cases.js';
+import inputs from '../test/model-inputs.json' with {type:'json'};
+import cases from '../test/fixtures/resolved-model.json' with {type:'json'};
+import examples from '../test/fixtures/model-examples.json' with {type:'json'};
+import {evaluateModel} from '../test/model-cases.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {SqlBuilder, defineModel} from '../src/index.js';
@@ -9,8 +11,8 @@ import {virtualRelations} from '../examples/virtual-relations.js';
 
 async function virtualRelationPersistenceCheck() {
     const model = modelFromQuerySource(querySource(defineModel(virtualRelations)), SqlBuilder);
-    const expected = cases.find(c => c.name === 'virtual_relation_conditional').expected;
-    if (!equal(model.toSource(), expected.source) || !equal(model.toMigration(), expected.migration)) {
+    const expected = examples['virtual-relations'];
+    if (!equal(model.toJSON(), expected.model) || !equal(model.toMigration(), expected.migration)) {
         throw new Error('VirtualRelation: modello o migrate diversi da Python dopo serializzazione');
     }
     const id = `asqueel-virtual-relations-test-${crypto.randomUUID()}`;
@@ -46,9 +48,9 @@ async function virtualRelationPersistenceCheck() {
 async function groupedPersistenceCheck() {
     const original = defineModel(groupedItems);
     const model = modelFromQuerySource(querySource(original), SqlBuilder);
-    const expected = cases.find(c => c.name === 'colgroup_and_subtable_together').expected;
-    if (!equal(model.toSource(), expected.source) || !equal(model.toMigration(), expected.migration)) {
-        throw new Error('Colgroups/subtables: serializzazione diversa dal modello Python');
+    const expected = examples.groups;
+    if (!equal(model.toJSON(), expected.model) || !equal(model.toMigration(), expected.migration)) {
+        throw new Error('Colgroups/formule: serializzazione diversa dal modello Python');
     }
     const id = `asqueel-groups-test-${crypto.randomUUID()}`;
     let db = await openBrowserSQLite(id);
@@ -58,9 +60,9 @@ async function groupedPersistenceCheck() {
         await db.close();
         db = await openBrowserSQLite(id);
         const rows = await model.queries(db).execute({operation: 'select', table: 'app.item', columns: '$id,$name,$city'});
-        if (!equal(rows, [{id: 1, name: 'Locale', city: 'Roma'}])) throw new Error('Colgroups/subtables: dati non persistiti');
-        if ((await migrateSQLite(db, model.toMigration())).executed.length) throw new Error('Colgroups/subtables: migrate non idempotente');
-        return 'Colgroups e subtables: modello Python, migrazione reale, INSERT/SELECT e persistenza IndexedDB';
+        if (!equal(rows, [{id: 1, name: 'Locale', city: 'Roma'}])) throw new Error('Colgroups/formule: dati non persistiti');
+        if ((await migrateSQLite(db, model.toMigration())).executed.length) throw new Error('Colgroups/formule: migrate non idempotente');
+        return 'Colgroups e formule: modello Python, migrazione reale, INSERT/SELECT e persistenza IndexedDB';
     } finally {
         await db.close();
         await new Promise((resolve, reject) => {
@@ -74,11 +76,11 @@ async function groupedPersistenceCheck() {
 
 export async function compositionChecks() {
     const passed = [];
-    for (const entry of cases) {
-        if (!equal(evaluateComposition(entry), entry.expected)) throw new Error(`Composizione diversa da Python: ${entry.name}`);
-        passed.push(`Sorgente e migrate identici a Python: ${entry.name}`);
+    for (const [i,entry] of cases.entries()) {
+        if (!equal(evaluateModel(inputs[i]), entry.expected)) throw new Error(`Composizione diversa da Python: ${entry.name}`);
+        passed.push(`Modello completo e migrate identici a Python 0.6.0: ${entry.name}`);
     }
-    const desired = evaluateComposition(cases.find(c => c.name === 'several_layers_preserve_order')).migration;
+    const desired = evaluateModel(inputs.find(c => c.name === 'several_layers_preserve_order')).migration;
     const id = `asqueel-composition-test-${crypto.randomUUID()}`;
     let db = await openBrowserSQLite(id);
     try {

@@ -13,8 +13,8 @@ export function browserSqlite(root) {
     options.sys_fields({draft: true});
     options.audit({mode: 'lazy'});
     const invoiceColumns = invoice.columns();
-    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', on_delete_sql: 'restrict'});
-    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sqldefault: '0'});
+    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
+    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
 }
 
 // Kept self-contained so the editor can run it without external variables.
@@ -32,6 +32,6 @@ export function browserSqliteV2(root) {
     options.sys_fields({draft: true});
     options.audit({mode: 'lazy'});
     const invoiceColumns = invoice.columns();
-    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', on_delete_sql: 'restrict'});
-    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sqldefault: '0'});
+    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
+    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
 }

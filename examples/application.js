@@ -19,9 +19,9 @@ export function application(root) {
     salesOptions.requires({packages: 'crm'});
     salesOptions.type({name: 'money', dtype: 'N', size: '14,2'});
     const salesTables = sales.tables();
-    const invoice = salesTables.table({name: 'invoice', sqlname: 'invoices'});
+    const invoice = salesTables.table({name: 'invoice', sqlname: 'invoices', partition_customer_id: 'company'});
     let cols = invoice.columns();
-    cols.column({name: 'customer_id'}).relation({to: 'crm.customer.id', on_delete_sql: 'restrict'});
+    cols.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
     cols.column({name: 'amount', dtype: 'money'});
     cols.column({name: 'document', dtype: 'X'});
     const options = invoice.options();
@@ -32,11 +32,10 @@ export function application(root) {
     options.dynamic_fields();
     options.protection({tag: 'accounting'});
     options.broadcast({columns: 'amount'});
-    options.partition({name: 'company', field: 'customer_id'});
 
     const row = salesTables.table({name: 'invoice_row'});
     cols = row.columns();
-    cols.column({name: 'invoice_id'}).relation({to: 'invoice.id', on_delete_sql: 'cascade'});
+    cols.column({name: 'invoice_id'}).relation({to: 'invoice.id', onDelete_sql: 'cascade'});
     cols.column({name: 'amount', dtype: 'money'});
     const rowOptions = row.options();
     rowOptions.sys_fields({ins: false, upd: false, user_ins: false, user_upd: false, ldel: false});

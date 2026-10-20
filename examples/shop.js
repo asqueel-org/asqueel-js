@@ -20,13 +20,13 @@ export function shop(root) {
     cols = invoice.columns();
     cols.column({name: 'id', dtype: 'serial4'});
     cols.column({name: 'customer_id', dtype: 'L', notnull: true})
-        .relation({to: 'crm.customer.id', foreign_key: true, on_delete: 'RESTRICT'});
+        .relation({to: 'crm.customer.id', foreign_key: true, onDelete_sql: 'RESTRICT'});
     cols.column({name: 'country', dtype: 'A', size: '0:2'});
     cols.column({name: 'region_code', dtype: 'A', size: '0:8'});
     cols.column({name: 'year', dtype: 'I'});
     cols.column({name: 'number', dtype: 'I'});
     cols.column({name: 'issued', dtype: 'D'});
-    cols.column({name: 'amount', dtype: 'N', size: '12,2', sqldefault: '0'});
+    cols.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
     const composites = invoice.composites();
     composites.compositeColumn({name: 'region', columns: 'country,region_code'})
         .relation({to: 'crm.region.key', foreign_key: true, deferred: true});
@@ -45,7 +45,7 @@ export function shop(root) {
     cols = row.columns();
     cols.column({name: 'id', dtype: 'serial'});
     cols.column({name: 'invoice_id', dtype: 'L'})
-        .relation({to: 'sales.invoice', foreign_key: true, on_delete: 'CASCADE'});
+        .relation({to: 'sales.invoice', foreign_key: true, onDelete_sql: 'CASCADE'});
     cols.column({name: 'description', size: '0:120', comment: 'Descrizione'});
     cols.column({name: 'sku', dtype: 'T', indexed: true});
     cols.column({name: 'quantity', dtype: 'N', size: '10,2'});

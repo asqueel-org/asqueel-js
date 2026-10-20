@@ -10,7 +10,7 @@ import {queryPanel} from './query-panel.js';
 import {browserQueries} from '../examples/browser-queries.js';
 import queriesExpected from '../test/fixtures/queries.json' with {type: 'json'};
 import {groupedItems} from '../examples/groups.js';
-import compositionExpected from '../test/fixtures/composition.json' with {type: 'json'};
+import modelExamples from '../test/fixtures/model-examples.json' with {type:'json'};
 import {virtualRelations} from '../examples/virtual-relations.js';
 
 const editor = document.querySelector('#model');
@@ -19,11 +19,13 @@ const status = document.querySelector('#status');
 const download = document.querySelector('#download');
 const example = document.querySelector('#example');
 const output = document.querySelector('#output');
+const modelResult=document.querySelector('#resolved-model');
+const modelStatus=document.querySelector('#model-status');
 const comparison = document.querySelector('#comparison');
 const differences = document.querySelector('#differences');
 const examples = {
-    'virtual-relations': {recipe: virtualRelations, expected: compositionExpected.find(c => c.name === 'virtual_relation_conditional').expected.migration},
-    groups: {recipe: groupedItems, expected: compositionExpected.find(c => c.name === 'colgroup_and_subtable_together').expected.migration},
+    'virtual-relations': {recipe: virtualRelations, expected: modelExamples['virtual-relations'].migration},
+    groups: {recipe: groupedItems, expected: modelExamples.groups.migration},
     queries: {recipe: browserQueries, expected: queriesExpected.desired},
     sqlite: {recipe: browserSqlite, expected: sqliteExpected.v1.desired},
     'sqlite-v2': {recipe: browserSqliteV2, expected: sqliteExpected.v2.desired},
@@ -58,6 +60,10 @@ function render() {
         // The local recipe is application code, equivalent to editing the example.
         const model = defineModel(new Function('root', editor.value));
         const structure = model.toMigration();
+        const full=model.toJSON(),expectedModel=modelExamples[example.value]?.model;
+        modelResult.textContent=JSON.stringify(full,null,2);
+        const modelDelta=expectedModel?diff(full,expectedModel):[];
+        modelStatus.textContent=expectedModel?(modelDelta.length?`${modelDelta.length} differenze nel modello completo`:'Modello completo identico a Python 0.6.0'):'Modello completo JS · confronto migrate disponibile';
         json = JSON.stringify(structure, null, 2);
         showOutput();
         const schemas = Object.values(structure.root.schemas);

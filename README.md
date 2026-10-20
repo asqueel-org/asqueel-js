@@ -23,16 +23,16 @@ Il playground apre un server su <http://127.0.0.1:8092>. JavaScript, worker e WA
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il model supporta [contributi ordinati e composizione di modelli indipendenti](docs/composition.md)
-con `model.contribution(...)`, `composeModels(...)` e `model.clone()`. Sorgente
-composto e JSON migrate sono confrontati con Python prima di espandere la copertura.
-Sono inclusi `colgroup()` con default e ordinamento, e `subtable()` con parametri
-e colonna virtuale nel modello. Nel playground è disponibile l'esempio
-**Colgroups e subtables**; l'esecuzione dei filtri subtable nelle query è ancora da portare.
-Sono disponibili anche [VirtualRelation](docs/virtual-relations.md), con percorsi,
-condizioni, binding e alias risolti nel modello e confrontati con Python.
-L'esempio **VirtualRelation** mostra il JSON migrate; l'esecuzione delle
-navigazioni virtuali nelle query rimane da implementare.
+Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.0**:
+contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
+`recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
+i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
+sono confrontati indipendentemente con Python, anche nel playground.
+
+Le dichiarazioni ritirate in Python 0.6.0 (`subtable`, opzioni `partition` e `tenant`)
+sono ritirate anche qui. Le query e l'esecuzione dei comportamenti applicativi
+sono il prossimo incremento: le fixture SQL esistenti restano regressioni del
+precedente compilatore, non una dichiarazione di parità query con la 0.6.0.
 
 ## API iniziale
 
@@ -77,8 +77,9 @@ npx playwright install chromium
 npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
-La CI esegue Node 22/24, Bun e Chromium. I test browser verificano migrazioni,
-rollback, vincoli, persistenza e 18 query confrontate con risultati Python.
+La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
+completo, migrazioni, rollback, vincoli, persistenza e le 18 regressioni query
+confrontate con i risultati del precedente riferimento Python.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 
 ## Organizzazione

@@ -9,10 +9,10 @@ export function virtualRelations(root) {
     const customer = app.table({name: 'customer', pkey: 'id'});
     customer.column({name: 'id', dtype: 'I'});
     customer.column({name: 'name', dtype: 'T', size: ':60', name_long: 'Customer name'});
-    item.column({name: 'customer_id', dtype: 'I'}).relation({to: 'app.customer.id', inverse: 'items'});
+    item.column({name: 'customer_id', dtype: 'I'}).relation({to: 'app.customer.id', relation_name: 'items'});
     item.virtualRelation({
         name: 'selected', table: 'app.customer', condition: '$id=:var_customer', var_customer: '$customer_id',
-        name_long: 'Selected customer', name_short: 'SC', comment: 'Model only', x_ui_color: 'green',
+        name_long: 'Selected customer', name_short: 'SC', comment: 'Model only',
         ask: {title: 'Filter', fields: [{name: 'year', dtype: 'I'}]},
     });
 }

@@ -214,88 +214,20 @@ contenere contemporaneamente un contenitore `schemas` esplicito. Le opzioni
 sono utilizzabili anche sulle tabelle degli schemi espliciti. `system_records`
 e `release` abilitati restano rifiutati, come nel renderer Python corrente.
 
-La grammatica JSON fornisce dichiarazioni, firme, default e vincoli; le
-trasformazioni applicative sono implementate in `src/application.js` e
-`src/options.js`. Caricare la grammatica, da solo, non esegue gli hook Python.
+La grammatica JSON fornisce firme, default e vincoli. `model-options.js` espande
+le opzioni e `model.js` costruisce la gerarchia e la proiezione fisica. Nessun hook
+applicativo viene eseguito dalla risoluzione.
 
-Colgroups e subtables sono disponibili nel modello e nella proiezione migrate;
-il nuovo esempio omonimo e il pulsante **Verifica composizione con Python**
-mostrano il confronto. La verifica usa database temporanei separati da quello
-del playground e prova anche migrazione, INSERT/SELECT e riapertura IndexedDB.
-Le subtables producono colonne virtuali booleane nel modello, senza tabelle o
-colonne fisiche aggiuntive. I loro filtri non sono ancora eseguiti dalle query.
-L'esempio **VirtualRelation** verifica anche relazioni virtuali, binding e target
-degli alias nel modello. Queste relazioni non aggiungono FK al database; il loro
-uso nelle query è rifiutato esplicitamente. Vedi [VirtualRelation](virtual-relations.md).
+## Modello completo 0.6.0
 
-Restano fuori perimetro policy runtime `x_`, foreign key fisiche
-su colonne virtuali e riscrittura SQL di CHECK/indici parziali su colonne
-rimappate. Sul percorso fisico senza package/opzioni restano richiesti nomi
-dichiarati coincidenti con quelli SQL. Non sono implementati il
-modello operativo completo e gli hook del runtime applicativo.
-Compiler, adapter e migrazione SQLite browser hanno il perimetro descritto sopra.
+Il pannello «Modello risolto completo» mostra il JSON gerarchico. Gli esempi
+application, shop, groups, virtual-relations e queries hanno un riferimento Python
+completo; il messaggio di parità del modello è distinto da quello di migrate.
+Il pulsante di verifica della composizione esegue nel worker l'intero corpus
+modello/migrate e prove reali su database IndexedDB temporanei.
+Le 18 query del PoC restano regressioni storiche, non parità query con la 0.6.0.
 
-La grammatica resta interamente condivisa; il renderer implementa un sottoinsieme
-esplicito. I controlli di dominio JS non sostituiscono ancora l'intero
-`SqlModelValidator` Python: prima di usare un modello nuovo per una migrazione,
-passare il risultato a `StructureValidator` del migratore.
-
-## Verifiche
-
-```sh
-npm test
-npm run test:bun
-```
-
-I 195 test verificano l'uguaglianza completa con gli oracoli Python dichiarati, gli hash anche
-con Unicode e ordine diverso delle colonne, la ripetibilità, la validazione e
-il rifiuto delle funzionalità fuori perimetro. Il corpus include 53 casi
-applicativi e due esempi scritti indipendentemente nei due linguaggi. Copre
-opzioni abilitate/disabilitate, gerarchie collegate, allegati, tipi, prefissi,
-relazioni anticipate e chiavi composte. Si confrontano oggetti JSON, non l'ordine delle
-proprietà o la formattazione del testo. Cinque test usano SQLite reale via
-`node:sqlite` / `bun:sqlite` e verificano migrazione incrementale, conservazione
-dei dati, idempotenza, rollback, chiavi composte e FK differibili. I sette
-controlli browser di migrazione usano invece il vero driver WASM e IndexedDB.
-I test query confrontano 18 compilazioni ed esecuzioni con Python; il browser
-aggiunge i cinque controlli descritti sopra.
-
-Per confrontare **dal vivo** Node/Bun con il renderer Python e far validare
-55 risultati di ciascun runtime al vero migratore, più i modelli e i cataloghi
-di due migrazioni SQLite e 18 query eseguite indipendentemente in Python e JS:
-
-```sh
-PYTHON=/percorso/python-con-dipendenze-asqueel npm run verify:python
-```
-
-Gli script Python leggono i checkout fratelli `../asqueel` e
-`../asqueel-migration`, oppure i percorsi configurati con `ASQUEEL_PYTHON_ROOT`
-e `ASQUEEL_MIGRATION_ROOT` (vedi [parità](parity.md)); l'interprete deve avere le rispettive dipendenze
-Python, inclusi `genro-builders`, `genro-bag`, `genro-toolbox`, `dictdiffer` e
-`jsonschema`. Non installano né aggiornano dipendenze automaticamente.
-
-La verifica iniziale usa il migratore del checkout locale, versione 0.3.1:
-non certifica la compatibilità con tutte le versioni pubblicate del migratore.
-Versioni e commit di riferimento sono in
-[test/fixtures/provenance.json](../test/fixtures/provenance.json).
-
-Per rigenerare grammatica, costanti del contratto e oracoli dopo modifiche Python:
-
-```sh
-PYTHON=/percorso/python-con-dipendenze-asqueel npm run export:python
-npm test
-npm run test:bun
-```
-
-Per rigenerare soltanto l'oracolo SQLite:
-
-```sh
-PYTHON=/percorso/python-con-dipendenze-asqueel npm run export:sqlite
-PYTHON=/percorso/python-con-dipendenze-asqueel npm run export:queries
-```
-
-Non modificare a mano `src/generated/` o `test/fixtures/`: sono derivati dalle
-fonti Python. Il caricamento usa `BuilderBase.defineGrammar()` e il formato
-`builder_grammar` esistente, senza una seconda lista di dichiarazioni JS.
-Le costanti fisiche provengono da `asqueel-migration`; la piccola implementazione
-JS delle factory e degli hash è verificata contro quelle Python.
+L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
+0.6.0. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
+FK fisiche o eseguire JOIN. Vedi il [contratto del modello](model.md) per API,
+limiti del JSON portabile e differenze rispetto al vecchio riferimento.

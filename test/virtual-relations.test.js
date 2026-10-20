@@ -1,56 +1,33 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SqlBuilder, defineModel} from '../src/index.js';
-import {projectApplication} from '../src/application.js';
-import {querySource, modelFromQuerySource} from '../src/queries.js';
+import {SqlBuilder,defineModel} from '../src/index.js';
+import {querySource,modelFromQuerySource} from '../src/queries.js';
 import {virtualRelations} from '../examples/virtual-relations.js';
-import cases from './fixtures/composition.json' with {type: 'json'};
-
-test('virtual relation example matches Python and preserves declarations across the worker boundary', () => {
-    const model = defineModel(virtualRelations);
-    const expected = cases.find(c => c.name === 'virtual_relation_conditional').expected;
-    assert.deepEqual(model.toSource(), expected.source);
-    const restored = modelFromQuerySource(querySource(model), SqlBuilder);
-    assert.deepEqual(restored.toSource(), expected.source);
-    assert.deepEqual(restored.toMigration(), expected.migration);
-    const {tables} = projectApplication(restored, SqlBuilder, {withModel: true});
-    for (const [key, table] of tables) assert.deepEqual(Object.fromEntries(table.relations), expected.model[key].relations);
-    assert.equal(tables.get('app.customer').relations.get('items').kind, 'inverse');
-    assert.equal([...tables.get('app.customer').relations.values()].some(r => r.kind === 'virtual'), false);
+import examples from './fixtures/model-examples.json' with {type:'json'};
+test('virtualRelation declaration and complete model match Python across serialization',()=>{
+    const b=defineModel(virtualRelations),restored=modelFromQuerySource(querySource(b),SqlBuilder);
+    assert.deepEqual(restored.toSource(),b.toSource());assert.deepEqual(restored.toJSON(),examples['virtual-relations'].model);
+    assert.deepEqual(restored.toMigration(),examples['virtual-relations'].migration);
+    const m=restored.resolve();assert.equal(m.relations.get('app.customer.@items').mode,'M');
+    assert.equal(m.relations.has('app.item.@selected'),false); // 0.6.0 preserves this as declaration data.
+    assert.equal(m.table('app.item').get('virtualRelation_selected').attributes.table,'app.customer');
 });
-
-test('virtual relation identity and nested ask ownership survive composition, copying and resolution', () => {
-    const model = defineModel(virtualRelations), table = model.node('db.packages.app.tables.item');
-    const relation = table.virtualRelation('selected');
-    assert.equal(table.virtualRelation('selected'), relation);
-    const ask = {fields: [{name: 'amount', choices: [1, 2]}]};
-    model.contribution('custom', () => table.virtualRelation({name: 'selected', ask}));
-    ask.fields[0].choices.push(3);
-    assert.deepEqual(relation.getAttr('ask').fields[0].choices, [1, 2]);
-    const before = model.toSource(), cloned = model.clone();
-    cloned.contribution('other', () => cloned.node('db.packages.app.tables.item')
-        .virtualRelation({name: 'selected', condition: '1=1', ask: null}));
-    const resolved = projectApplication(model, SqlBuilder, {withModel: true}).tables.get('app.item');
-    resolved.relations.get('selected').attributes.ask.fields[0].choices.push(4);
-    resolved.declarations[0].attributes.ask.fields[0].choices.push(5);
-    assert.deepEqual(model.toSource(), before);
+test('virtual relation identity and nested ask ownership survive composition and resolution',()=>{
+    const b=defineModel(virtualRelations),t=b.node('db.packages.app.tables.item'),r=t.virtualRelation('selected');
+    assert.equal(t.virtualRelation('selected'),r);const ask={fields:[{name:'amount',choices:[1,2]}]};
+    b.contribution('custom',()=>t.virtualRelation({name:'selected',ask}));ask.fields[0].choices.push(3);
+    const before=b.toSource(),m=b.resolve();m.table('app.item').get('virtualRelation_selected').attributes.ask.fields[0].choices.push(4);
+    assert.deepEqual(b.toSource(),before);
 });
-
-test('imported unsupported virtual relation attributes are rejected during validation and rendering', () => {
-    for (const attribute of ['order_by', 'limit', 'inverse', 'var_', 'var_bad-name']) {
-        const model = defineModel(virtualRelations);
-        model.node('db.packages.app.tables.item.virtualRelation_selected').setAttr({[attribute]: null}, false, true, false);
-        assert.throws(() => model.validateSource(), /virtualRelation: unsupported/);
-        assert.throws(() => model.toMigration(), /virtualRelation: unsupported/);
+test('unsupported imported virtual relation attributes fail validation',()=>{
+    for(const attribute of ['order_by','limit','inverse','var_','var_bad-name','x_ui_color']){
+        const b=defineModel(virtualRelations);b.node('db.packages.app.tables.item.virtualRelation_selected').setAttr({[attribute]:null},false,true,false);
+        assert.throws(()=>b.validateSource(),/virtualRelation: unsupported/);assert.throws(()=>b.toMigration(),/virtualRelation: unsupported/);
     }
 });
-
-test('virtual navigation stays explicit and cannot execute an ordinary join with the same column name', () => {
-    const model = defineModel(virtualRelations), table = model.node('db.packages.app.tables.item');
-    // Rename the physical relation semantically; the raw FK column still exists.
-    model.node('db.packages.app.tables.item.columns.customer_id.relation_0').setAttr({name: 'owner'});
-    table.virtualRelation({name: 'customer_id', table: 'app.customer', condition: '$id=:var_id', var_id: '$id'});
-    const queries = model.queries();
-    assert.throws(() => queries.compile({operation: 'select', table: 'app.item', columns: '@customer_id.name'}), /virtualRelation/);
-    assert.throws(() => queries.compile({operation: 'select', table: 'app.item', columns: '@selected.name'}), /virtualRelation/);
+test('virtual navigation cannot execute an ordinary join with the same column name',()=>{
+    const b=defineModel(virtualRelations),t=b.node('db.packages.app.tables.item');
+    b.node('db.packages.app.tables.item.columns.customer_id.relation_0').setAttr({name:'owner'});
+    t.virtualRelation({name:'customer_id',table:'app.customer',condition:'$id=:var_id',var_id:'$id'});
+    const queries=b.queries();for(const p of ['@customer_id.name','@selected.name'])assert.throws(()=>queries.compile({operation:'select',table:'app.item',columns:p}),/virtualRelation/);
 });

@@ -1,5 +1,6 @@
 import {test, expect} from '@playwright/test';
-import compositionCases from '../fixtures/composition.json' with {type: 'json'};
+import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
+import examples from '../fixtures/model-examples.json' with {type:'json'};
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
 for (const [command, expected] of [['checks', 7], ['query-checks', 5], ['composition-checks', compositionCases.length + 3]]) {
@@ -24,7 +25,7 @@ test('playground exposes the Python composition checks', async ({page}) => {
     await page.getByRole('button', {name: 'Verifica composizione con Python'}).click();
     await expect(page.locator('#db-status')).toContainText('verifiche browser superate');
     await expect(page.locator('#db-checks-result')).toContainText('Modello composto migrato su WASM/IndexedDB');
-    await expect(page.locator('#db-checks-result')).toContainText('Colgroups e subtables: modello Python');
+    await expect(page.locator('#db-checks-result')).toContainText('Colgroups e formule: modello Python');
     await expect(page.locator('#db-checks-result')).toContainText('VirtualRelation: modello Python');
 });
 
@@ -33,15 +34,21 @@ test('virtual relation example renders the exact Python migration JSON', async (
     await page.locator('#example').selectOption('virtual-relations');
     await expect(page.locator('#status')).toContainText('JSON identico al riferimento Python');
     await expect(page.locator('#status')).toContainText('2 tabelle');
-    const expected = compositionCases.find(c => c.name === 'virtual_relation_conditional').expected.migration;
+    const expected = examples['virtual-relations'].migration;
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
 });
 
-test('group/subtable example renders the exact Python migration JSON', async ({page}) => {
+test('group/formula example renders the exact Python migration JSON', async ({page}) => {
     await page.goto('/');
     await page.locator('#example').selectOption('groups');
     await expect(page.locator('#status')).toContainText('JSON identico al riferimento Python');
     await expect(page.locator('#status')).toContainText('3 colonne fisiche');
-    const expected = compositionCases.find(c => c.name === 'colgroup_and_subtable_together').expected.migration;
+    const expected = examples.groups.migration;
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
+});
+
+test('browser exposes and compares the complete hierarchical model',async({page})=>{
+    await page.goto('/');await page.locator('#example').selectOption('application');
+    await expect(page.locator('#model-status')).toHaveText('Modello completo identico a Python 0.6.0');
+    expect(JSON.parse(await page.locator('#resolved-model').textContent())).toEqual(examples.application.model);
 });

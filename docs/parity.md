@@ -1,58 +1,51 @@
-# Confronto con Python
+# Confronto con Python 0.6.0
 
-Ci sono due verifiche distinte:
-
-- `npm test`, Bun e Chromium confrontano gli oracoli Python salvati nel repository.
-- `npm run verify:python` esegue Python e JavaScript sugli stessi casi e confronta
-  modello, catalogo reale, SQL, parametri e righe restituite da SQLite.
-
-Il browser non avvia Python: gli oracoli servono a verificare gli esempi originali.
-Modificare l'esempio nell'editor non produce automaticamente un nuovo riferimento.
-
-## Riferimento riproducibile
-
-Le revisioni sono in [`test/fixtures/provenance.json`](../test/fixtures/provenance.json).
-La CI le legge ed esegue checkout separati in `.reference/`, senza seguire `main`.
-Questo evita che un cambiamento Python renda instabile una revisione JS invariata.
-
-Per replicare localmente, clonare `asqueel-org/asqueel` e
-`asqueel-org/asqueel-migration`, fare checkout dei commit indicati e preparare
-un ambiente Python 3.12:
+`test/fixtures/provenance.json` fissa core **0.6.0 / 78c1dfb**, migration **0.3.1**
+e genro-builders **0.29.0**. La CI fa checkout di quei commit, senza seguire `main`.
+Il verificatore rifiuta un checkout Python di un'altra versione.
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r scripts/requirements-parity.txt
-ASQUEEL_PYTHON_ROOT=/percorso/asqueel \
+ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.6.0 \
 ASQUEEL_MIGRATION_ROOT=/percorso/asqueel-migration \
 PYTHON=.venv/bin/python npm run verify:python
 ```
 
-Servono anche Node e Bun: il verificatore confronta entrambi. I riferimenti
-Python sono caricati dai rispettivi `src/`, senza installare i package Asqueel.
-Se le variabili sono omesse, gli script cercano `../asqueel` e
-`../asqueel-migration`. Per confronti esplorativi è possibile usare working tree
-modificati, ma questi non costituiscono un riferimento riproducibile.
+Servono Node e Bun. Senza variabili, gli script cercano i checkout in `.reference/`;
+non usano più implicitamente il repository Python di sviluppo accanto al progetto.
+`npm run export:python` rigenera grammatica, costanti, modelli completi ed esempi;
+`npm run export:model` rigenera solo il corpus dei modelli. Le fixture non si correggono
+a mano. Modificare un riferimento richiede revisionare anche il codice che ne applica
+la semantica e aggiornare esplicitamente la provenienza.
 
-## Aggiornare il contratto
+## Cosa viene confrontato
 
-1. Scegliere revisioni Python pulite e leggere le modifiche di comportamento.
-2. Aggiornare le dipendenze del verificatore se richiesto da quelle revisioni.
-3. Eseguire `npm run export:python` con le variabili di riferimento sopra.
-4. Revisionare insieme grammatica, costanti, fixture e `provenance.json`.
-5. Eseguire Node, Bun, Chromium e parità dal vivo; non correggere le fixture a mano.
+`test/model-inputs.json` contiene chiamate dichiarative e contributi, non risultati
+risolti. Python e JavaScript li eseguono indipendentemente. Il confronto include
+accettazione/rifiuto delle chiamate e della composizione, **tutti** i nodi e attributi
+del modello gerarchico, registro delle relazioni completo e JSON migrate.
+I casi precedenti di contributi, gruppi, subtables e virtualRelation sono conservati
+come scenari aggiornati o verifiche dei rifiuti della 0.6.0; si aggiungono casi specifici
+del nuovo contratto. Il corpus comprende configurazione, opzioni, alias e relazioni,
+indici, metadati semantici, policy, default SQL, rimappature e casi invalidi.
 
-L'export completo registra gli hash dei checkout Git. Le fixture migrate dal PoC
-mantengono la provenienza originale; lo spostamento in questo repo non le rigenera.
+Ogni caso Python gira in un processo separato per isolare i metadati del framework.
+`model_oracle.py` attraversa direttamente il `DbModel`: non usa il vecchio codec dei
+descrittori e non ritaglia un sottoinsieme di attributi. Gli indici e le formule
+sintetizzati sono confrontati come tutti gli altri nodi. Il test di round-trip importa
+lo stesso JSON in JS e verifica che non perda informazioni.
 
-La parità iniziale copre 55 modelli, due stadi di migrazione e 18 richieste query.
-Si aggiungono 90 casi di composizione confrontati sul sorgente e sul risultato
-migrate. I 23 casi di colgroups/subtables confrontano anche dichiarazioni,
-attributi rilevanti delle colonne e tipi nel modello risolto, oppure il rifiuto
-della risoluzione. Altri 32 casi verificano virtualRelation, relazioni risolte
-con attributi e chiavi, target degli alias, contributi, cicli e nomi SQL rimappati.
-Non confrontano l'intero runtime `ResolvedModel`.
-La differenza nota sul rifiuto di una prima validazione è descritta in
-[composizione](composition.md).
-È un insieme esplicito di casi, non una certificazione dell'intera API Python.
-Per comportamenti non deterministici servono clock, utente e generatore ID
-controllabili: non basta confrontare il solo testo SQL.
+Cinque esempi hanno dichiarazioni scritte separatamente in Python e JS. Sono verificati
+anche due stadi di migrazione su SQLite reale, con lettura del catalogo e diff residuo
+vuoto. Node, Bun e Chromium eseguono gli stessi confronti; il browser usa fixture,
+non un processo Python. L'editor confronta gli esempi originali: modificarli non
+rigenera automaticamente il riferimento.
+
+## Query: provenienza distinta
+
+Le 18 fixture SQL/query restano test di regressione del compilatore precedente,
+con provenienza in `test/fixtures/query-provenance.json`. **Non attestano parità delle
+query con Python 0.6.0.** L'oracolo query storico è conservato come ricetta per il
+prossimo porting e non è chiamato dall'export o dalla CI di parità del modello.
+Le query non sono state ampliate in questa fase; usano una vista del nuovo modello.

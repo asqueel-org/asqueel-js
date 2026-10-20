@@ -24,13 +24,13 @@ class Shop(SqlBuilder):
         cols = invoice.columns()
         cols.column(name="id", dtype="serial4")
         cols.column(name="customer_id", dtype="L", notnull=True).relation(
-            to="crm.customer.id", foreign_key=True, on_delete="RESTRICT")
+            to="crm.customer.id", foreign_key=True, onDelete_sql="RESTRICT")
         cols.column(name="country", dtype="A", size="0:2")
         cols.column(name="region_code", dtype="A", size="0:8")
         cols.column(name="year", dtype="I")
         cols.column(name="number", dtype="I")
         cols.column(name="issued", dtype="D")
-        cols.column(name="amount", dtype="N", size="12,2", sqldefault="0")
+        cols.column(name="amount", dtype="N", size="12,2", sql_default="0")
         composites = invoice.composites()
         composites.compositeColumn(name="region", columns="country,region_code").relation(
             to="crm.region.key", foreign_key=True, deferred=True)
@@ -47,7 +47,7 @@ class Shop(SqlBuilder):
         cols = row.columns()
         cols.column(name="id", dtype="serial")
         cols.column(name="invoice_id", dtype="L").relation(
-            to="sales.invoice", foreign_key=True, on_delete="CASCADE")
+            to="sales.invoice", foreign_key=True, onDelete_sql="CASCADE")
         cols.column(name="description", size="0:120", comment="Descrizione")
         cols.column(name="sku", dtype="T", indexed=True)
         cols.column(name="quantity", dtype="N", size="10,2")

@@ -8,7 +8,7 @@ def query_model():
     person = tables.table("person", sqlname="query_people", pkey="id")
     person.column("id", dtype="I")
     person.column("name", dtype="T", sqlname="display_name", notnull=True)
-    person.column("active", dtype="B", sqldefault="1")
+    person.column("active", dtype="B", sql_default="1")
     memo = tables.table("memo", pkey="id")
     memo.column("id", dtype="I")
     memo.column("person_id").relation("person.id")

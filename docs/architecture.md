@@ -6,11 +6,13 @@ monorepo di package interdipendenti: i confini sono nei moduli e nei contratti.
 ## Percorso dei dati
 
 1. `SqlBuilder` carica `src/generated/grammar.json` tramite Builders JS.
-2. `composition.js` compone dichiarazioni e contributi conservando il sorgente esplicito;
-   `application.js` risolve poi package, opzioni, tipi, riferimenti e nomi fisici;
-   `model-relations.js` costruisce relazioni semantiche, inverse, virtuali e target degli alias.
-3. `index.js` / `structures.js` producono `structure-1.0` per le migrazioni;
-   `queries.js` compila richieste con i nomi logici dello stesso modello.
+2. `composition.js` conserva le dichiarazioni e compone i contributi.
+   `model-options.js` espande gli effetti strutturali delle opzioni;
+   `model.js` valida e costruisce il modello gerarchico e il registro delle relazioni.
+3. `model.js` proietta il modello sul contratto fisico interno;
+   `internal/physical-renderer.js` e `structures.js` emettono `structure-1.0`.
+   `application.js` fornisce solo una vista di compatibilità al compilatore query
+   esistente, senza duplicare la preparazione del modello.
 4. `sqlite.js` legge il catalogo reale e pianifica/applica le differenze supportate.
 5. Un adapter esegue il SQL sul motore SQLite del runtime.
 
@@ -65,3 +67,6 @@ runtime vengono rifiutate esplicitamente.
 La cache offline degli asset, i codec, i trigger applicativi e la sincronizzazione
 non sono ancora implementati. Sono responsabilità distinte, da aggiungere con
 contratti e verifiche dedicati.
+
+Il contratto fisico interno conserva il vocabolario `structure-1.0` del migratore;
+non è una seconda API pubblica del modello Python. Vedi [modello 0.6.0](model.md).

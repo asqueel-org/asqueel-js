@@ -13,8 +13,8 @@ export function browserQueries(root) {
     options.sys_fields({draft: true});
     options.audit({mode: 'lazy'});
     const invoiceColumns = invoice.columns();
-    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', on_delete_sql: 'restrict'});
-    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sqldefault: '0'});
+    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
+    invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
 
     // Explicit fields: Python currently rejects writes with active option hooks.
     const tables = packages.package({name: 'notes', sqlprefix: 'q'}).tables();
@@ -22,7 +22,7 @@ export function browserQueries(root) {
     const personColumns = person.columns();
     personColumns.column({name: 'id', dtype: 'I'});
     personColumns.column({name: 'name', dtype: 'T', sqlname: 'display_name', notnull: true});
-    personColumns.column({name: 'active', dtype: 'B', sqldefault: '1'});
+    personColumns.column({name: 'active', dtype: 'B', sql_default: '1'});
     const memo = tables.table({name: 'memo', pkey: 'id'});
     const memoColumns = memo.columns();
     memoColumns.column({name: 'id', dtype: 'I'});

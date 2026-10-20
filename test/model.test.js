@@ -51,7 +51,7 @@ test('declarations are validated using exported signatures', () => {
 test('unknown attributes and misplaced options fail explicitly', () => {
     assert.throws(() => minimal(({columns}) => columns.column({name: 'bad', typo: 'T'})).toMigration(), /typo/);
     assert.throws(() => minimal(({table}) => table.options().driver()).toMigration(), /not available/);
-    assert.throws(() => minimal(({columns}) => columns.column({name: 'bad', sqlname: 'renamed'})).toMigration(), /sqlname/);
+    assert.equal(minimal(({columns}) => columns.column({name:'logical',sqlname:'renamed'})).resolve().column('app.item.logical').sqlname,'renamed');
 });
 
 test('dangling, duplicate and mismatched structural references fail before output', () => {
@@ -88,7 +88,7 @@ test('semantic columns and UI metadata do not become physical DDL', () => {
 });
 
 test('empty/multiple roots and broken CHECK constraints fail', () => {
-    assert.throws(() => defineModel(() => {}).toMigration(), /exactly one db/);
+    assert.throws(() => defineModel(() => {}).toMigration(), /exactly one db/i);
     assert.throws(() => minimal(({table}) => table.constraints().constraint({
         name: 'bad', constraint_type: 'CHECK',
     })).toMigration(), /CHECK requires/);
