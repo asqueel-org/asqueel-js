@@ -45,7 +45,8 @@ jobs:
           ref: '${{ steps.reference.outputs.migrationCommit }}'
           path: .reference/asqueel-migration
       - run: npm ci
-      - run: python -m pip install -r scripts/requirements-parity.txt
+      - run: npm run update:tools
+      - run: python -m pip install --upgrade --upgrade-strategy eager -r scripts/requirements-parity.txt
       - run: npm run verify:python
         env:
           PYTHON: python

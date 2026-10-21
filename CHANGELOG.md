@@ -2,6 +2,9 @@
 
 ## 0.1.1 — 2026-10-21
 
+- Rimozione dei limiti superiori sui tool Genro e Gramlot; tutte le suite CI
+  aggiornano i tool interni alle ultime versioni pubblicate.
+
 - Pubblicazione npm automatica dai tag GitHub tramite Trusted Publishing OIDC,
   con verifica del tarball installato e del pacchetto scaricato dal registry.
 - Riutilizzo della CI sul commit integrato, evitando suite duplicate sui tag
