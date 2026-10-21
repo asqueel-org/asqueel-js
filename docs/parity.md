@@ -66,3 +66,24 @@ e tre gli adapter; non sono un porting completo del runtime applicativo Python.
 
 Rigenerazione degli oracoli query: `PYTHON=.reference/venv-current/bin/python`,
 quindi `$PYTHON scripts/query_oracle.py`. Le fixture non vanno modificate a mano.
+
+
+## Ciclo applicativo sys_fields e hook
+
+`scripts/hooks_oracle.py` esegue le vere API `AsqueelDb`/`SqlTable` del riferimento,
+con classi Python indipendenti dal registro di callback JS. 26 scenari confrontano
+modello completo/migrate, record mutati (anche in caso di errore), eventi ordinati,
+parent delle scritture annidate, SQL/parametri DML e righe SQLite dopo commit/rollback.
+Il programma controlla anche che ogni errore previsto si sia realmente verificato.
+La CI e `verify:python` rieseguono Python e confrontano Node e Bun; Chromium esegue
+gli stessi input e riapre IndexedDB dopo ogni scenario.
+
+Clock e generatore ID sono sostituiti con sorgenti deterministiche **solo nei test**;
+le datetime Python vengono rappresentate come stringhe ISO per il confronto con JS.
+L'algoritmo ID effettivo è inoltre confrontato con `genro_toolbox.uid.get_uuid` a
+parità di timestamp e byte casuali. Gli orologi JS ordinari hanno precisione al
+millisecondo, non al microsecondo.
+
+Gli oracoli si rigenerano con `$PYTHON scripts/hooks_oracle.py`. Non attestano
+l'esecuzione di gerarchie, contatori, audit, cascade applicative o codec completi:
+le capacità non portate sono rifiutate esplicitamente dal runtime JS.

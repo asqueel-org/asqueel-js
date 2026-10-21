@@ -61,9 +61,9 @@ sola non soddisfa questo traguardo.
 ## 4. Comportamenti applicativi utili
 
 - [ ] Codec con semantica dichiarata per date, timestamp, decimali e JSON/Bag.
-- [ ] Default e validazioni basilari, rispettando campi mancanti e NULL.
-- [ ] `sys_fields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
-- [ ] Hook before/after e rollback coerente delle scritture.
+- [x] Default e protezioni basilari, rispettando campi mancanti e NULL.
+- [x] `sys_fields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
+- [x] Hook before/after e rollback coerente delle scritture, anche annidate.
 - [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
 
 Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python

@@ -3,7 +3,7 @@ import grammar from "./generated/grammar.json" with { type: "json" };
 import configurationGrammar from "./generated/configuration-grammar.json" with { type: "json" };
 import { resolveModel, migrationForBuilder } from "./model.js";
 import { SqliteQueries } from "./queries.js";
-export {RecordNotFoundError, RecordMultipleRowsError, TransactionStateError} from './query-errors.js';
+export {RecordNotFoundError, RecordMultipleRowsError, TransactionStateError, UnsupportedFeatureError} from './query-errors.js';
 export {
   resolveModel,
   DbModel,
@@ -36,8 +36,8 @@ export class SqlBuilder extends CompositionBuilder {
   toMigration() {
     return migrationForBuilder(this);
   }
-  queries(adapter = null) {
-    return new SqliteQueries(this, adapter);
+  queries(adapter = null, runtime = {}) {
+    return new SqliteQueries(this, adapter, null, runtime);
   }
 }
 export function defineModel(populate) {

@@ -1,7 +1,8 @@
 import {projectApplication} from './application.js';
 import {own, record} from './sql-expressions.js';
 import {compileSelect} from './select-compiler.js';
-import {compileWrite, keyColumns, keyValues} from './write-compiler.js';
+import {compileWrite} from './write-compiler.js';
+import {writeRecord} from './write-runtime.js';
 import {driverParameters} from './sql-parameters.js';
 import {RecordNotFoundError, RecordMultipleRowsError, TransactionStateError} from './query-errors.js';
 
@@ -34,12 +35,33 @@ export function modelFromQuerySource(source, Builder) {
 
 
 export class SqliteQueries {
-    constructor(builder, adapter = null, scope = null) {
+    constructor(builder, adapter = null, scope = null, runtime = {}) {
         builder.toMigration();
         this.builder = builder;
         this.tables = projectApplication(builder, builder.constructor, {withModel: true}).tables;
         this.adapter = adapter;
         this.scope = scope;
+        this.runtime = runtime;
+        if (!scope) {
+            record(runtime);
+            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid'].includes(key))
+                throw new Error(`Opzione runtime sconosciuta: ${key}`);
+            for (const key of ['clock', 'uuid']) if (runtime[key] != null && typeof runtime[key] !== 'function')
+                throw new TypeError(`${key} deve essere una funzione`);
+            for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
+                if (!this.tables.has(table)) throw new Error(`Tabella degli hook sconosciuta: ${table}`);
+                for (const [name, fn] of Object.entries(record(hooks))) {
+                    if (!(name.startsWith('trigger_') || ['protect_update', 'protect_delete', 'protect_validate', 'protect_draft', 'newPkeyValue'].includes(name))
+                        || typeof fn !== 'function') throw new TypeError(`Hook non valido: ${table}.${name}`);
+                }
+            }
+        }
+    }
+    get currentTrigger() { return this.scope?.trigger ?? null; }
+    get currentUser() { return this.environment().user ?? null; }
+    environment() {
+        return structuredClone(this.scope?.environment ?? record(typeof this.runtime.environment === 'function'
+            ? this.runtime.environment() : this.runtime.environment ?? {}));
     }
     resolveTable(name, write) {
         let table = this.tables.get(name);
@@ -64,6 +86,7 @@ export class SqliteQueries {
     }
     compile(request) {
         record(request);
+        request = {...request, environment: request.environment ?? this.environment()};
         const read = ['select', 'count'].includes(request.operation);
         if (!read && !['insert', 'update', 'delete'].includes(request.operation)) throw new Error('Operazione query non supportata');
         const allowed = read ? ['operation', 'table', 'columns', 'where', 'sqlparams', 'order_by', 'limit', 'offset',
@@ -75,19 +98,17 @@ export class SqliteQueries {
     }
     async execute(request) {
         const compiled = this.compile(request);
+        return this._executeCompiled(compiled, !['select', 'count'].includes(request.operation));
+    }
+    async _executeCompiled(compiled, write = false) {
         if (!this.adapter) throw new Error('Adapter non collegato');
         const state = adapterState(this.adapter);
         if (this.scope) {
-            if (!this.scope.active) throw new TransactionStateError('La transazione è terminata');
-            return enqueue(this.scope, async () => {
-                if (this.scope.error) throw this.scope.error;
-                try { return await this.adapter.query(compiled.sql, driverParameters(compiled)); }
-                catch (error) { this.scope.error = error; throw error; }
-            });
+            return this._inScope(() => this.adapter.query(compiled.sql, driverParameters(compiled)));
         }
         if (state.transaction) throw new TransactionStateError('Usare il contesto tx per le operazioni durante una transazione');
         return enqueue(state, async () => {
-            if (['select', 'count'].includes(request.operation)) return this.adapter.query(compiled.sql, driverParameters(compiled));
+            if (!write) return this.adapter.query(compiled.sql, driverParameters(compiled));
             await this.adapter.execute('BEGIN IMMEDIATE');
             try {
                 const rows = await this.adapter.query(compiled.sql, driverParameters(compiled));
@@ -96,14 +117,41 @@ export class SqliteQueries {
             } catch (error) { await this.adapter.execute('ROLLBACK'); throw error; }
         });
     }
+    _inScope(action) {
+        const root = this.scope.root ?? this.scope;
+        if (!this.scope.active || !root.active) return Promise.reject(new TransactionStateError('La transazione è terminata'));
+        return enqueue(this.scope, async () => {
+            if (root.error) throw root.error;
+            try { return await action(); }
+            catch (error) { root.error = error; throw error; }
+        });
+    }
+    async _writeRecord(name, operation, values, options = {}) {
+        record(options);
+        for (const key of Object.keys(options)) if (!['pkey', 'old_record', 'ignore_partition', 'environment'].includes(key))
+            throw new Error(`Opzione scrittura non supportata: ${key}`);
+        if (!this.scope) return this.transaction(tx => tx._writeRecord(name, operation, values, options));
+        return this._inScope(async () => {
+            const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
+                environment: structuredClone(options.environment ?? this.environment()), trigger: this.scope.trigger};
+            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            try {
+                const result = await writeRecord(db, db.resolveTable(name, false), operation, values, options);
+                child.active = false;
+                await child.tail;
+                if (child.root.error) throw child.root.error;
+                return result;
+            } finally { child.active = false; await child.tail; }
+        });
+    }
     async transaction(callback) {
         if (typeof callback !== 'function') throw new TypeError('transaction richiede una funzione');
         if (!this.adapter) throw new Error('Adapter non collegato');
         const state = adapterState(this.adapter);
         if (this.scope || state.transaction) throw new TransactionStateError('Transazioni annidate non ancora supportate');
         return enqueue(state, async () => {
-            const scope = {active: true, tail: Promise.resolve()};
-            const tx = new SqliteQueries(this.builder, this.adapter, scope);
+            const scope = {active: true, tail: Promise.resolve(), environment: this.environment()};
+            const tx = new SqliteQueries(this.builder, this.adapter, scope, this.runtime);
             await this.adapter.execute('BEGIN IMMEDIATE');
             state.transaction = scope;
             try {
@@ -122,13 +170,7 @@ export class SqliteQueries {
         });
     }
     table(name) {
-        const table = this.resolveTable(name, false);
-        const executeWrite = async (operation, values, options = {}) => {
-            const rows = await this.execute({...options, operation, table: name, values});
-            if (operation === 'delete') return;
-            Object.assign(values, rows[0] ?? {});
-            return values;
-        };
+        this.resolveTable(name, false);
         const query = (options = {}) => {
             if (typeof options === 'string') options = {columns: options};
             const request = structuredClone({...options, operation: 'select', table: name});
@@ -149,10 +191,9 @@ export class SqliteQueries {
             };
         };
         return {
-            insert: (values, options) => executeWrite('insert', values, options),
-            update: (values, options) => executeWrite('update', values, options),
-            delete: (values, options) => executeWrite('delete', typeof values === 'object' && values !== null ? values
-                : Object.fromEntries(keyColumns(table).map((key, i) => [key, keyValues(table, values)[i]])), options),
+            insert: (values, options) => this._writeRecord(name, 'insert', values, options),
+            update: (values, options) => this._writeRecord(name, 'update', values, options),
+            delete: (values, options) => this._writeRecord(name, 'delete', values, options),
             query,
         };
     }

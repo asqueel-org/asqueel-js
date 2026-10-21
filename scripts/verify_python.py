@@ -10,6 +10,7 @@ from model_oracle import document
 from asqueel import resolve_model,SqlMigrationRenderer
 from query_oracle import query_oracle
 from query_features import feature_model
+from hooks_oracle import oracle as hooks_oracle
 
 inputs=json.loads((ROOT/'test/model-inputs.json').read_text())
 def isolated(case):
@@ -21,6 +22,8 @@ assert expected == [r['expected'] for r in fixtures], 'Checked-in full-model fix
 models,sqlite=examples()
 example_expected={name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()}
 queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'query-feature-inputs.json')}
+hooks = hooks_oracle()
+assert hooks == json.loads((ROOT / 'test/fixtures/hooks.json').read_text()), 'Hook fixtures differ from live Python'
 for name, filename in [('base', 'queries.json'), ('features', 'query-features.json')]:
     assert queries[name] == json.loads((ROOT / 'test/fixtures' / filename).read_text()), f'{filename} differs from live Python'
 for runtime in ('node','bun'):
@@ -36,3 +39,6 @@ for runtime in ('node','bun'):
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_queries.js')],cwd=ROOT,text=True))
     assert actual == queries, f'{runtime}: query model, SQL, parameters or SQLite results differ from live Python'
     print(f'{runtime}: {sum(len(q["cases"]) for q in queries.values())} query/CRUD cases match live Python SQL, parameters and SQLite results')
+    actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_hooks.js')],cwd=ROOT,text=True))
+    assert actual == hooks, f'{runtime}: application write cycle differs from live Python'
+    print(f'{runtime}: {len(hooks["cases"])} sys_fields/hook cycles match live Python records, events, DML, rollback and stored rows')

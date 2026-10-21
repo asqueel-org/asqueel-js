@@ -1,0 +1,460 @@
+[
+  {
+    "name": "sys_fields_without_custom_hooks",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first"
+        },
+        "table": "app.simple"
+      }
+    ],
+    "hooks": false,
+    "fails": false
+  },
+  {
+    "name": "anonymous_user",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first"
+        },
+        "table": "app.simple"
+      }
+    ],
+    "hooks": false,
+    "environment": {},
+    "fails": false
+  },
+  {
+    "name": "insert_order_and_nested_audit",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": " first "
+        }
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "explicit_id_and_syscode",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "manual",
+          "id": "manual"
+        }
+      },
+      {
+        "op": "insert",
+        "values": {
+          "title": "coded",
+          "__syscode": "CONFIG"
+        }
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "default_preserves_null",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "status": null
+        }
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "timestamps_override_input",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "__ins_ts": "old",
+          "__mod_ts": "old",
+          "__ins_user": "old"
+        },
+        "table": "app.simple"
+      }
+    ],
+    "hooks": false,
+    "fails": false
+  },
+  {
+    "name": "update_system_fields",
+    "steps": [
+      {
+        "op": "update",
+        "values_from": "first",
+        "changes": {
+          "title": " second "
+        },
+        "old_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "environment": {
+      "user": "bob"
+    },
+    "fails": false
+  },
+  {
+    "name": "partial_update_reads_protected_snapshot",
+    "steps": [
+      {
+        "op": "update",
+        "values": {
+          "title": "partial"
+        },
+        "pkey": "note1"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "environment": {
+      "user": "bob"
+    },
+    "fails": false
+  },
+  {
+    "name": "old_record_mutation_does_not_change_where",
+    "steps": [
+      {
+        "op": "update",
+        "values_from": "first",
+        "changes": {
+          "title": "mutate_old"
+        },
+        "old_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "protect_validate_rejects",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "invalid"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "validation failure"
+  },
+  {
+    "name": "post_insert_rolls_back_cross_table_write",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "fail_insert"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "post hook failure"
+  },
+  {
+    "name": "post_update_rolls_back_cross_table_write",
+    "steps": [
+      {
+        "op": "update",
+        "values_from": "first",
+        "changes": {
+          "title": "fail_update"
+        },
+        "old_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": true,
+    "error": "post hook failure"
+  },
+  {
+    "name": "post_delete_rolls_back_cross_table_write",
+    "steps": [
+      {
+        "op": "delete",
+        "key_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "fail_delete",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": true,
+    "error": "post hook failure"
+  },
+  {
+    "name": "delete_string_rereads_and_keeps_original_key",
+    "steps": [
+      {
+        "op": "delete",
+        "key_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "delete_record_keeps_original_key",
+    "steps": [
+      {
+        "op": "delete",
+        "values_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "delete_missing_string_is_noop",
+    "steps": [
+      {
+        "op": "delete",
+        "values": "missing"
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "delete_missing_record_fails",
+    "steps": [
+      {
+        "op": "delete",
+        "values": {
+          "id": "missing",
+          "title": "missing"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "DELETE removed 0 rows"
+  },
+  {
+    "name": "draft_hook_runs_before_sql",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "draft"
+        }
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "unmodifiable_column",
+    "steps": [
+      {
+        "op": "update",
+        "values": {
+          "id": "note1",
+          "status": "changed"
+        },
+        "old_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": true,
+    "error": "unmodifiable"
+  },
+  {
+    "name": "system_key_change_from_hook_rejected",
+    "steps": [
+      {
+        "op": "update",
+        "values_from": "first",
+        "changes": {
+          "title": "change_key"
+        },
+        "old_from": "first"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first",
+          "id": "note1"
+        },
+        "save": "first"
+      }
+    ],
+    "fails": true,
+    "error": "unmodifiable"
+  },
+  {
+    "name": "update_missing_protected_record",
+    "steps": [
+      {
+        "op": "update",
+        "values": {
+          "id": "missing",
+          "title": "missing"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "no record to update"
+  },
+  {
+    "name": "field_hook_other_table",
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.plain",
+        "values": {
+          "title": "cross table"
+        }
+      }
+    ],
+    "fails": false
+  },
+  {
+    "name": "unsupported_option_fails_explicitly",
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.unsupported",
+        "values": {
+          "title": "blocked"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "option record_hash"
+  },
+  {
+    "name": "whole_transaction_rolls_back",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first"
+        }
+      },
+      {
+        "op": "insert",
+        "values": {
+          "title": "fail_insert"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "post hook failure"
+  },
+  {
+    "name": "caught_hook_failure_still_rolls_back",
+    "fails": true,
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": "first"
+        }
+      },
+      {
+        "op": "insert",
+        "values": {
+          "title": "fail_insert"
+        },
+        "catch": true
+      }
+    ]
+  },
+  {
+    "name": "sql_notnull_failure_rolls_back",
+    "fails": true,
+    "error": "NOT NULL constraint failed",
+    "steps": [
+      {
+        "op": "insert",
+        "values": {
+          "title": null
+        }
+      }
+    ]
+  }
+]

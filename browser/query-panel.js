@@ -55,7 +55,20 @@ export function queryPanel(view, database, getModel) {
         } finally { view.set('busy', false); }
     }
     load(false);
-    return {load, preview, execute, invalidate() {
+    return {load, preview, execute, async checkHooks() {
+        if (view.get('busy')) return;
+        view.set('busy', true);
+        view.set('queryStatus', 'Verifica sys_fields e hook su SQLite/IndexedDB…');
+        view.set('hookChecks', ''); view.set('hookSample', '');
+        try {
+            const result = await database.request('hooks-checks');
+            view.set('hookChecks', result.checks.map(s => '✓ ' + s).join('\n'));
+            view.set('hookSample', JSON.stringify(result.sample, null, 2));
+            view.set('queryStatus', `${result.checks.length} cicli sys_fields e hook identici a Python; persistenza verificata dopo riapertura.`);
+            view.set('queryClass', '');
+        } catch (error) { view.set('queryStatus', error.message); view.set('queryClass', 'error'); }
+        finally { view.set('busy', false); }
+    }, invalidate() {
         view.set('queryStatus', 'Modello cambiato: ricompila la query.');
         view.set('queryRows', 'Risultati da aggiornare.'); view.set('querySQL', ''); view.set('queryParams', '');
     }};

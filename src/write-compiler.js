@@ -34,7 +34,7 @@ export function prepareRecord(table, values) {
     for (const [name, column] of table.columns) if (own(column.a, 'sql_value') && !own(data, name)) data[name] = null;
     return data;
 }
-function partition(table, snapshot, ignore) {
+export function partition(table, snapshot, ignore) {
     if (typeof ignore !== 'boolean') throw new Error('ignore_partition deve essere booleano');
     if (ignore) return null;
     const attribute = Object.keys(table.a).find(k => k.startsWith('partition_'));
@@ -45,7 +45,7 @@ function partition(table, snapshot, ignore) {
     if (!table.columns.has(field)) throw new Error('La partizione di scrittura richiede una colonna fisica');
     return {field, current, allowed};
 }
-function guardPartition(table, data, policy, insert) {
+export function guardPartition(table, data, policy, insert) {
     if (!policy) return;
     const {field, current, allowed} = policy;
     if (insert && !own(data, field) && current != null) data[field] = current;

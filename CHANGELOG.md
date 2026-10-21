@@ -2,6 +2,11 @@
 
 ## Non rilasciato
 
+- Ciclo applicativo `table.insert/update/delete`: sys_fields, ID legacy22,
+  timestamp/utente, default, campi protetti e hook JS asincroni con rollback atomico
+  anche delle scritture annidate. 26 confronti indipendenti con Python.
+- Verifica dedicata sys_fields/hook nel playground, con eventi, SQL e dati
+  persistiti controllati dopo riapertura di IndexedDB.
 - Playground allineato alla gallery Gramlot: temi Base/Compact/Index, barra compatta,
   colori e spaziature condivisi, CodeMirror coerente con il tema.
 - Compilatori SELECT/CRUD allineati a Python 0.6.1 + fix #44, con 60 confronti

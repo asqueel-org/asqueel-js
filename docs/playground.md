@@ -118,9 +118,9 @@ Il PoC non ricostruisce tabelle e non è il porting completo di `SqlMigrator`.
 
 Il controllo browser confronta sia il modello desiderato sia il **catalogo
 SQLite effettivamente riletto** con gli oracoli Python; non salva il modello
-desiderato come sostituto dell'introspezione. Gli hook applicativi delle opzioni
-(ID automatici, timestamp, audit, contatori) restano fuori perimetro: la demo
-inserisce esplicitamente gli ID dei record.
+desiderato come sostituto dell'introspezione. Questa demo di migrazione inserisce esplicitamente gli ID. Il pulsante
+«Verifica sys_fields e hook» nella pagina Query esegue invece il ciclo applicativo
+con ID automatici e timestamp; opzioni audit e contatori restano da portare.
 
 ## Inserimenti e query dal modello
 
@@ -201,9 +201,9 @@ rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
 Restano esclusi macro, sottoquery, relazioni inverse/virtualRelation, formule
 parametriche, selezioni di chiavi composte virtuali, codec applicativi, lock,
-scritture bulk/da selezione, hook e opzioni applicative attive in scrittura.
-`sys_fields` descrive correttamente il modello ma non genera ancora ID/timestamp
-nel runtime JS. La migrazione JS di colonne generate resta esclusa: i relativi
+scritture bulk/da selezione, cascade applicative e opzioni diverse da `sys_fields`.
+Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
+SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
 
 **Verifica query con Python** esegue sette gruppi di controlli in un database
@@ -211,6 +211,84 @@ IndexedDB separato: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
 helper e transazioni, 28 casi aggiuntivi e rilettura dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
+
+## sys_fields e hook applicativi
+
+`table.insert/update/delete` eseguono il ciclo di Python 0.6.1 + fix #44:
+protezioni/default, assegnazione della chiave, validazione, trigger di campo,
+hook di tabella, SQL, trigger di campo e hook successivi. L'ordine di draft e
+contatori segue quello specifico di INSERT/UPDATE/DELETE. I callback dei contatori
+sono punti di estensione; le opzioni automatiche dei contatori restano escluse.
+
+```javascript
+const model = defineModel(root => {
+    const table = root.db({name: 'local', implementation: 'sqlite'})
+        .packages().package('app').table('note');
+    table.options().sys_fields();
+    table.column({name: 'title', dtype: 'T'});
+});
+await migrateSQLite(adapter, model.toMigration());
+const db = model.queries(adapter, {
+    environment: {user: 'ada'},
+    hooks: {
+        'app.note': {
+            async trigger_onInserting(record) {
+                record.title = record.title.trim();
+            },
+            async trigger_onUpdated(record, {old_record}) {
+                // Altre scritture devono usare this.db: stessa transazione.
+                // await this.db.table('app.log').insert({...});
+            }
+        }
+    }
+});
+const note = await db.table('app.note').insert({title: ' Una nota '});
+await db.table('app.note').update({...note, title: 'Modificata'}, {old_record: {...note}});
+await db.table('app.note').delete(note.id);
+```
+
+I nomi degli hook restano quelli Python: `trigger_onInserting/Inserted`,
+`trigger_onUpdating/Updated`, `trigger_onDeleting/Deleted`, `protect_validate`,
+`protect_update`, `protect_delete`, `protect_draft`, `trigger_assignCounters`,
+`trigger_releaseCounters`, `newPkeyValue`. Sono metodi normali, non arrow function
+quando usano `this`. In JS gli argomenti nominati Python sono il secondo oggetto:
+`{old_record}` oppure `{fldname, tblname, old_record}` per i trigger di campo.
+Una dichiarazione `onInserting: 'normalize'` richiama `trigger_normalize`;
+`trigger_table` sceglie un'altra tabella registrata. Un nome senza implementazione
+produce un errore, non viene ignorato. I trigger built-in `setTSNow` e
+`setCurrentUser` sono disponibili e possono essere sovrascritti nel registro.
+
+Il contesto espone `this.db`, `this.model`, `this.fullname`, `this.currentUser`
+e `this.currentTrigger` (evento, tabella, record, vecchio record e parent).
+`this.db.currentTrigger` e `this.db.currentUser` sono disponibili anche negli hook
+annidati. Tutte le operazioni asincrone vanno attese. Una validazione, un hook o
+uno statement fallito rendono l'intera transazione rollback-only, anche se l'errore
+viene intercettato. I record JS già modificati dagli hook non vengono ripristinati
+in memoria al rollback, come in Python. I contesti scadono quando termina il ciclo.
+
+`environment` può essere un oggetto o una funzione: viene copiato all'inizio della
+transazione. Non è il contesto mutabile/thread-local Python. `clock({table, field,
+dtype})` e `uuid()` possono essere iniettati per test deterministici e devono essere
+sincroni. Il default genera ID legacy22 (Z + timestamp base62 + casualità) e usa
+l'orologio locale: timestamp UTC per DHZ, locali senza timezone per DH.
+Le date del runtime sono stringhe ISO compatibili con la memorizzazione Python,
+con microsecondi testuali e offset `+00:00` per UTC; l'orologio Date nativo ha
+precisione al millisecondo. Non è ancora un codec generale Date/Decimal/Bag.
+
+UPDATE rilegge il record quando necessario per campi protetti o partizioni,
+mantiene la chiave del vecchio snapshot anche se un hook modifica `old_record`,
+e rifiuta cambiamenti a `read_only`/`unmodifiable`. DELETE con chiave stringa
+rilegge il record completo e non fa nulla se assente; con un oggetto deve eliminare
+esattamente una riga. Anche le chiavi numeriche JS sono accettate come chiavi di
+rilettura, per compatibilità con l'API JS già introdotta.
+
+«Verifica sys_fields e hook» esegue **26 scenari reali** su database IndexedDB
+temporanei: confronta modello, JSON migrate, record restituiti/modificati, ordine
+degli eventi, SQL e parametri DML, righe persistite e rollback. Chiude e riapre il
+database dopo ciascuno scenario. Il pannello mostra anche un risultato realmente
+eseguito, inclusi gli eventi di una scrittura annidata. Gli hook dimostrativi sono
+moduli JS importati nel worker: funzioni e callback non vengono serializzati nel
+JSON del modello né trasferiti come testo da eseguire.
 
 ## Esempi da terminale
 

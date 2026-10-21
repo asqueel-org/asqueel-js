@@ -44,7 +44,9 @@ Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `te
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
 relazioni dirette anche composte, aggregazioni e policy dichiarative: **60 casi**
 confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
-Hook, codec applicativi e query avanzate restano da portare.
+`sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
+aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel browser.
+Codec completi, altre opzioni applicative e query avanzate restano da portare.
 
 ## API iniziale
 

@@ -1,6 +1,23 @@
 import {test, expect} from '@playwright/test';
 import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
 import examples from '../fixtures/model-examples.json' with {type:'json'};
+import hooksOracle from '../fixtures/hooks.json' with {type: 'json'};
+
+test('sys_fields and hooks execute like Python, roll back and survive IndexedDB reopening', async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await leaf(page, 'queries');
+    await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Verifica sys_fields e hook', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${hooksOracle.cases.length} cicli sys_fields e hook identici a Python`, {timeout: 90000});
+    await expect(page.locator('#hooks-checks')).toContainText('caught_hook_failure_still_rolls_back');
+    const actual = JSON.parse(await page.locator('#hooks-sample').textContent());
+    expect(actual).toEqual(hooksOracle.cases.find(c => c.name === 'insert_order_and_nested_audit').expected);
+    await page.getByText('Esempio verificato: record, eventi e scritture degli hook', {exact: true}).click();
+    await page.locator('#hooks-sample').scrollIntoViewIfNeeded();
+    await page.screenshot({path: 'output/gramlot-hooks.png'});
+    expect(errors).toEqual([]);
+});
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
 for (const [command, expected] of [['checks', 7], ['query-checks', 7], ['composition-checks', compositionCases.length + 3]]) {

@@ -77,8 +77,9 @@ Gli adapter JS restano un livello distinto.
 Il perimetro è il modello dichiarativo serializzabile. Classi Python `x_table_class`,
 importazione di package Python da filesystem, mixin e callback eseguibili non sono
 trasferibili tramite JSON: richiedono equivalenti JS, non fanno parte di questo codec.
-Le dichiarazioni di default, validazione, cifratura e trigger **non eseguono** tali
-comportamenti sulle righe. Questo appartiene alla successiva fase delle query/runtime.
+La risoluzione delle dichiarazioni di default, validazione, cifratura e trigger
+**non esegue** comportamenti sulle righe. Il runtime applicativo separato ora esegue
+`sys_fields`, default, protezioni e hook JS: vedi [API e limiti](playground.md#sys_fields-e-hook-applicativi).
 
 ## Differenze rispetto al precedente PoC
 
