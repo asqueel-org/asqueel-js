@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
 import examples from '../fixtures/model-examples.json' with {type:'json'};
+import behaviorsOracle from '../fixtures/behaviors.json' with {type: 'json'};
 import hooksOracle from '../fixtures/hooks.json' with {type: 'json'};
 
 test('sys_fields and hooks execute like Python, roll back and survive IndexedDB reopening', async ({page}) => {
@@ -188,4 +189,21 @@ test('CodeMirror binds edits, undo and JSON queries without external assets', as
     await page.screenshot({path: 'output/gramlot-queries.png'});
     expect(errors).toEqual([]);
     expect(external).toEqual([]);
+});
+
+test('hierarchies and counters match Python on real browser SQLite and reopen IndexedDB', async ({page}) => {
+    test.setTimeout(180000);
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await leaf(page, 'queries');
+    await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Verifica gerarchie e contatori', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${behaviorsOracle.cases.length} cicli gerarchie e contatori identici a Python`, {timeout: 150000});
+    await expect(page.locator('#behaviors-checks')).toContainText('relative_index_rollback');
+    expect(JSON.parse(await page.locator('#behaviors-sample').textContent())).toEqual(
+        behaviorsOracle.cases.find(c => c.name === 'move_subtree_last_sibling').expected);
+    await page.getByText('Spostamento verificato: sottoalbero, posizioni e SQL', {exact: true}).click();
+    await page.locator('#behaviors-sample').scrollIntoViewIfNeeded();
+    await page.screenshot({path: 'output/gramlot-behaviors.png'});
+    expect(errors).toEqual([]);
 });

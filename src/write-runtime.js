@@ -1,6 +1,8 @@
 // SQLite application write cycle, ported from Python db_write/table_crud/table_triggers.
 import {own, record as requireRecord} from './sql-expressions.js';
 import {compileWrite, keyColumns, keyValues, partition, guardPartition} from './write-compiler.js';
+import {behavior, lockBehaviors, behaviorTrigger, finishBehaviors, completeLinkedInsert} from './table-behaviors.js';
+import {checkRelatedCapabilities, deleteRelated, archiveRelated} from './related-writes.js';
 import {RecordNotFoundError, UnsupportedFeatureError} from './query-errors.js';
 
 const events = ['onInserting', 'onInserted', 'onUpdating', 'onUpdated', 'onDeleting', 'onDeleted'];
@@ -35,7 +37,7 @@ function timestamp(value, utc) {
 }
 
 function capabilities(db, table, operation) {
-    for (const [name] of table.options) if (enabled(table, name) && name !== 'sys_fields')
+    for (const [name] of table.options) if (enabled(table, name) && !['sys_fields', 'hierarchical', 'auto_counter', 'relative_index'].includes(name))
         throw new UnsupportedFeatureError(`${table.key}: option ${name} non ancora eseguita in JS`);
     if (table.a.x_expanded_legacy) throw new UnsupportedFeatureError('Espansione legacy non supportata');
     for (const [name, col] of table.columns) {
@@ -45,17 +47,7 @@ function capabilities(db, table, operation) {
         for (const event of events) if (col.a[event] && typeof col.a[event] !== 'string')
             throw new UnsupportedFeatureError('I trigger di campo devono essere nomi registrati nel runtime');
     }
-    // SQL foreign-key actions remain SQLite's responsibility. Never skip an
-    // application cascade, including one declared on an incoming relation.
-    if (operation !== 'insert') for (const other of db.tables.values()) {
-        for (const col of [...other.columns.values(), ...other.composites.values()]) for (const relation of col.children) {
-            if (relation.tag !== 'relation' || !relation.a.to?.startsWith(table.key + '.')) continue;
-            const action = relation.a[operation === 'delete' ? 'onDelete' : 'onUpdate'];
-            const archive = operation === 'update' && table.a.logicalDeletionField && relation.a.onDelete === 'cascade';
-            if (archive || action && action.toLowerCase() !== 'ignore')
-                throw new UnsupportedFeatureError('Azioni applicative delle relazioni non ancora eseguite');
-        }
-    }
+    checkRelatedCapabilities(db, table, operation);
 }
 
 function checkChanges(table, values, old = null) {
@@ -117,7 +109,8 @@ async function fieldTriggers(db, table, event, values, kwargs = {}) {
             if (!dtype) throw new Error(`Campo timestamp non trovato: ${target.key}.${name}`);
             values[name] = timestamp((db.runtime.clock ?? (() => new Date()))({table: target.key, field: name, dtype}), dtype === 'DHZ');
         } else if (trigger === 'setCurrentUser') values[name] = db.environment().user ?? null;
-        else await hook(context, method, values, {...kwargs, fldname: name, tblname: table.key}, true);
+        else if (!await behaviorTrigger(db, target, trigger, values, name, kwargs.old_record))
+            await hook(context, method, values, {...kwargs, fldname: name, tblname: table.key}, true);
     }
 }
 
@@ -145,6 +138,7 @@ export async function writeRecord(db, table, operation, input, options) {
     capabilities(db, table, operation);
     let values = input;
     if (operation === 'delete' && (typeof values === 'string' || typeof values === 'number')) {
+        await lockBehaviors(db, table);
         values = await reread(db, table, values);
         if (!values) return;
     }
@@ -154,6 +148,7 @@ export async function writeRecord(db, table, operation, input, options) {
     db.scope.trigger = {event: operation, table: table.key, record: values, old_record: operation === 'delete' ? structuredClone(values) : old,
         parent: db.scope.trigger ?? null};
     const context = hookContext(db, table);
+    await lockBehaviors(db, table);
     if (operation === 'insert') {
         checkChanges(table, values);
         guardPartition(table, values, policy, true);
@@ -161,11 +156,14 @@ export async function writeRecord(db, table, operation, input, options) {
         await checkPkey(db, table, values, context);
         await hook(context, 'protect_validate', values);
         await fieldTriggers(db, table, 'onInserting', values);
+        const prepared = structuredClone(values);
         await hook(context, 'trigger_onInserting', values);
         await hook(context, 'trigger_assignCounters', values);
         if (table.a.draftField && context.protect_draft) values[table.a.draftField] = await hook(context, 'protect_draft', values);
+        await finishBehaviors(db, table, values, prepared);
     } else if (operation === 'update') {
-        if (policy || [...table.columns.values()].some(c => c.a.read_only || c.a.unmodifiable || own(c.a, 'sql_generatedExpression'))) {
+        if (behavior(table, 'hierarchical') && !old) throw new Error('Updating a hierarchical record requires old_record');
+        if (policy || behavior(table, 'hierarchical') || [...table.columns.values()].some(c => c.a.read_only || c.a.unmodifiable || own(c.a, 'sql_generatedExpression'))) {
             const stored = await reread(db, table, old ? recordKey(table, old) : options.pkey ?? recordKey(table, values));
             if (!stored) throw new RecordNotFoundError(`${table.key}: no record to update`);
             if (old) Object.assign(old, stored); else old = stored;
@@ -177,10 +175,15 @@ export async function writeRecord(db, table, operation, input, options) {
         await hook(context, 'protect_update', values, {old_record: old});
         await hook(context, 'protect_validate', values, {old_record: old});
         await fieldTriggers(db, table, 'onUpdating', values, {old_record: old});
+        const prepared = structuredClone(values);
         await hook(context, 'trigger_onUpdating', values, {old_record: old});
         if (table.a.draftField && context.protect_draft) values[table.a.draftField] = await hook(context, 'protect_draft', values);
+        const deletion = table.a.logicalDeletionField;
+        if (deletion && old && (values[deletion] ?? null) !== (old[deletion] ?? null))
+            await archiveRelated(db, table, values, values[deletion] ?? null);
         await hook(context, 'trigger_assignCounters', values, {old_record: old});
         checkChanges(table, values, original);
+        await finishBehaviors(db, table, values, prepared, original);
         options = {...options, old_record: original};
     } else {
         let original = structuredClone(values);
@@ -194,6 +197,7 @@ export async function writeRecord(db, table, operation, input, options) {
         await hook(context, 'protect_delete', values);
         await fieldTriggers(db, table, 'onDeleting', values);
         await hook(context, 'trigger_onDeleting', values);
+        await deleteRelated(db, table, original);
         await db._executeCompiled(compileWrite(table, operation, original, {...options, environment}));
         const count = await db._executeCompiled({sql: 'SELECT changes() AS n', params: {}});
         if (count[0].n !== 1) throw new RecordNotFoundError(`${table.key}: DELETE removed ${count[0].n} rows instead of 1`);
@@ -203,8 +207,10 @@ export async function writeRecord(db, table, operation, input, options) {
         return;
     }
     const sqlRecord = operation === 'update' ? Object.fromEntries(Object.entries(values).filter(([name]) => !own(table.columns.get(name)?.a ?? {}, 'sql_generatedExpression'))) : values;
+    const beforeSql = structuredClone(values);
     const rows = await db._executeCompiled(compileWrite(table, operation, sqlRecord, {...options, environment}));
     Object.assign(values, rows[0] ?? {});
+    if (operation === 'insert') await completeLinkedInsert(db, table, values, beforeSql, options);
     await fieldTriggers(db, table, operation === 'insert' ? 'onInserted' : 'onUpdated', values, operation === 'insert' ? {} : {old_record: old});
     await hook(context, operation === 'insert' ? 'trigger_onInserted' : 'trigger_onUpdated', values, operation === 'insert' ? {} : {old_record: old});
     return values;

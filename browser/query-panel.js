@@ -68,6 +68,19 @@ export function queryPanel(view, database, getModel) {
             view.set('queryClass', '');
         } catch (error) { view.set('queryStatus', error.message); view.set('queryClass', 'error'); }
         finally { view.set('busy', false); }
+    }, async checkBehaviors() {
+        if (view.get('busy')) return;
+        view.set('busy', true);
+        view.set('queryStatus', 'Verifica gerarchie e contatori su SQLite/IndexedDB…');
+        view.set('behaviorChecks', ''); view.set('behaviorSample', '');
+        try {
+            const result = await database.request('behaviors-checks');
+            view.set('behaviorChecks', result.checks.map(s => '✓ ' + s).join('\n'));
+            view.set('behaviorSample', JSON.stringify(result.sample, null, 2));
+            view.set('queryStatus', `${result.checks.length} cicli gerarchie e contatori identici a Python; persistenza verificata dopo riapertura.`);
+            view.set('queryClass', '');
+        } catch (error) { view.set('queryStatus', error.message); view.set('queryClass', 'error'); }
+        finally { view.set('busy', false); }
     }, invalidate() {
         view.set('queryStatus', 'Modello cambiato: ricompila la query.');
         view.set('queryRows', 'Risultati da aggiornare.'); view.set('querySQL', ''); view.set('queryParams', '');

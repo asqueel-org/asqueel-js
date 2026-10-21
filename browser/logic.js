@@ -120,5 +120,6 @@ export class Logic {
     compileQuery() { this.queries.preview(); }
     executeQuery() { return this.queries.execute(false); }
     checkQueries() { return this.queries.execute(true); }
+    checkBehaviors() { return this.queries.checkBehaviors(); }
     checkHooks() { return this.queries.checkHooks(); }
 }

@@ -21,6 +21,9 @@ test('public native adapter persists, rolls back, binds values and closes safely
         await assert.rejects(db.query('SELECT 1'), /closed/);
         db = nativeSQLite(filename);
         assert.deepEqual(await db.query('SELECT * FROM data'), [{id: 1, value: "O'Brien"}]);
+        assert.deepEqual(await db.query('SELECT typeof(:n) AS kind, CAST(:n AS TEXT) AS text', {':n': 2147483648}),
+            [{kind: 'integer', text: '2147483648'}]);
+        assert.deepEqual(await db.query('SELECT typeof(?) AS kind', [1]), [{kind: 'integer'}]);
         assert.deepEqual(await db.query('PRAGMA foreign_keys'), [{foreign_keys: 1}]);
     } finally {
         if (db) await db.close();

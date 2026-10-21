@@ -2,6 +2,7 @@ import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {readSQLite, planSQLite, migrateSQLite, quote} from '../src/sqlite.js';
 import {seedDemo, browserChecks} from './sqlite-checks.js';
 import {queryChecks} from './query-checks.js';
+import {behaviorsChecks} from './behaviors-checks.js';
 import {hooksChecks} from './hooks-checks.js';
 import {compositionChecks} from './composition-checks.js';
 import {modelFromQuerySource} from '../src/queries.js';
@@ -21,6 +22,7 @@ async function dispatch(type, desired) {
     if (type === 'composition-checks') return compositionChecks();
     if (type === 'checks') return browserChecks();
     if (type === 'query-checks') return queryChecks();
+    if (type === 'behaviors-checks') return behaviorsChecks();
     if (type === 'hooks-checks') return hooksChecks();
     return navigator.locks.request(`${DATABASE}:migration`, async () => {
         db ??= await openBrowserSQLite(DATABASE);

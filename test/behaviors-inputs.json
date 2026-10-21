@@ -1,0 +1,1852 @@
+[
+  {
+    "name": "tree_paths_counters_inheritance",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ]
+  },
+  {
+    "name": "rename_rewrites_subtree",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values": {
+          "id": "a_____________________",
+          "code": "renamed",
+          "_virtual_node": false
+        }
+      }
+    ]
+  },
+  {
+    "name": "move_subtree_last_sibling",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "c",
+        "values": {
+          "id": "c_____________________",
+          "parent_id": "b_____________________"
+        }
+      }
+    ]
+  },
+  {
+    "name": "move_to_root",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "c",
+        "values": {
+          "id": "c_____________________",
+          "parent_id": null
+        }
+      }
+    ]
+  },
+  {
+    "name": "reorder_subtree",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "c",
+        "values": {
+          "id": "c_____________________",
+          "_row_count": 12
+        }
+      }
+    ]
+  },
+  {
+    "name": "delete_subtree",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "delete",
+        "table": "app.tree",
+        "key_from": "c"
+      }
+    ]
+  },
+  {
+    "name": "delete_root",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "delete",
+        "table": "app.tree",
+        "key_from": "a"
+      }
+    ]
+  },
+  {
+    "name": "archive_and_restore",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values_from": "a",
+        "changes": {
+          "__del_ts": "2026-01-02T03:04:05+00:00"
+        }
+      },
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values_from": "a",
+        "changes": {
+          "__del_ts": null
+        }
+      }
+    ]
+  },
+  {
+    "name": "cycle_descendant",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values": {
+          "id": "a_____________________",
+          "parent_id": "leaf__________________"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "cannot be moved under itself"
+  },
+  {
+    "name": "cycle_self",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values": {
+          "id": "a_____________________",
+          "parent_id": "a_____________________"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "cannot be moved under itself"
+  },
+  {
+    "name": "unknown_parent",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bad___________________",
+          "code": "bad",
+          "parent_id": "missing_______________"
+        },
+        "save": "bad"
+      }
+    ],
+    "fails": true,
+    "error": "Unknown hierarchical parent"
+  },
+  {
+    "name": "invalid_key",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a/b",
+          "code": "bad"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "cannot contain /"
+  },
+  {
+    "name": "immutable_key",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values": {
+          "id": "changed_______________"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "unmodifiable"
+  },
+  {
+    "name": "old_record_required",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "new"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "requires old_record"
+  },
+  {
+    "name": "counter_boundary",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "last__________________",
+          "code": "last",
+          "_row_count": 1295
+        },
+        "save": "last"
+      }
+    ]
+  },
+  {
+    "name": "counter_overflow",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "last__________________",
+          "code": "last",
+          "_row_count": 1295
+        },
+        "save": "last"
+      }
+    ],
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "overflow______________",
+          "code": "overflow"
+        },
+        "save": "overflow"
+      }
+    ],
+    "fails": true,
+    "error": "at most 1295"
+  },
+  {
+    "name": "invalid_counter_-1",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "invalid_______________",
+          "code": "invalid",
+          "_row_count": -1
+        },
+        "save": "invalid"
+      }
+    ],
+    "fails": true,
+    "error": "nonnegative integer"
+  },
+  {
+    "name": "invalid_counter_1.5",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "invalid_______________",
+          "code": "invalid",
+          "_row_count": 1.5
+        },
+        "save": "invalid"
+      }
+    ],
+    "fails": true,
+    "error": "nonnegative integer"
+  },
+  {
+    "name": "invalid_counter_True",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "invalid_______________",
+          "code": "invalid",
+          "_row_count": true
+        },
+        "save": "invalid"
+      }
+    ],
+    "fails": true,
+    "error": "nonnegative integer"
+  },
+  {
+    "name": "counter_zero",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "zero__________________",
+          "code": "zero",
+          "_row_count": 0
+        },
+        "save": "zero"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "next__________________",
+          "code": "next"
+        },
+        "save": "next"
+      }
+    ]
+  },
+  {
+    "name": "hooks_refresh_paths",
+    "hooks": true,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "new___________________",
+          "code": "new"
+        },
+        "save": "new"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "child_________________",
+          "code": "child",
+          "parent_id": "new___________________"
+        },
+        "save": "child"
+      },
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "new",
+        "values": {
+          "id": "new___________________",
+          "code": "renamed"
+        }
+      }
+    ]
+  },
+  {
+    "name": "hook_changes_insert_parent",
+    "hooks": true,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "redirect______________",
+          "code": "redirect",
+          "move_to": "b_____________________"
+        },
+        "save": "redirect"
+      }
+    ]
+  },
+  {
+    "name": "hook_changes_update_parent",
+    "hooks": true,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "c",
+        "values": {
+          "id": "c_____________________",
+          "move_to": "b_____________________"
+        }
+      }
+    ]
+  },
+  {
+    "name": "hook_rollback_subtree",
+    "hooks": true,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.tree",
+        "old_from": "a",
+        "values": {
+          "id": "a_____________________",
+          "code": "fail"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "hierarchy hook failure"
+  },
+  {
+    "name": "hook_rollback_delete",
+    "hooks": true,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "a_____________________",
+          "code": "a",
+          "_virtual_node": true
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "b_____________________",
+          "code": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "c_____________________",
+          "code": "c",
+          "parent_id": "a_____________________"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "leaf__________________",
+          "code": "leaf",
+          "parent_id": "c_____________________"
+        },
+        "save": "leaf"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bchild________________",
+          "code": "bchild",
+          "parent_id": "b_____________________"
+        },
+        "save": "bchild"
+      }
+    ],
+    "steps": [
+      {
+        "op": "delete",
+        "table": "app.tree",
+        "key_from": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "fail__________________",
+          "code": "fail"
+        },
+        "save": "fail"
+      }
+    ],
+    "fails": true,
+    "error": "hierarchy hook failure"
+  },
+  {
+    "name": "custom_parent_and_counter",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.custom",
+        "values": {
+          "id": "x_____________________",
+          "code": "x"
+        },
+        "save": "x"
+      },
+      {
+        "op": "insert",
+        "table": "app.custom",
+        "values": {
+          "id": "y_____________________",
+          "code": "y",
+          "owner_id": "x_____________________"
+        },
+        "save": "y"
+      },
+      {
+        "op": "insert",
+        "table": "app.custom",
+        "values": {
+          "id": "z_____________________",
+          "code": "z",
+          "owner_id": "y_____________________"
+        },
+        "save": "z"
+      },
+      {
+        "op": "update",
+        "table": "app.custom",
+        "old_from": "x",
+        "values": {
+          "id": "x_____________________",
+          "code": "new"
+        }
+      },
+      {
+        "op": "update",
+        "table": "app.custom",
+        "old_from": "y",
+        "values": {
+          "id": "y_____________________",
+          "owner_id": null
+        }
+      }
+    ]
+  },
+  {
+    "name": "no_counter_paths",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.plain_tree",
+        "values": {
+          "id": "x_____________________",
+          "code": "x"
+        },
+        "save": "x"
+      },
+      {
+        "op": "insert",
+        "table": "app.plain_tree",
+        "values": {
+          "id": "y_____________________",
+          "code": "y",
+          "parent_id": "x_____________________"
+        },
+        "save": "y"
+      },
+      {
+        "op": "update",
+        "table": "app.plain_tree",
+        "old_from": "x",
+        "values": {
+          "id": "x_____________________",
+          "code": "new"
+        }
+      }
+    ]
+  },
+  {
+    "name": "null_path_components",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.plain_tree",
+        "values": {
+          "id": "x_____________________"
+        },
+        "save": "x"
+      },
+      {
+        "op": "insert",
+        "table": "app.plain_tree",
+        "values": {
+          "id": "y_____________________",
+          "code": "y",
+          "parent_id": "x_____________________"
+        },
+        "save": "y"
+      }
+    ]
+  },
+  {
+    "name": "scoped_auto_counter",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "one___________________",
+          "scope": "a"
+        },
+        "save": "one"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "two___________________",
+          "scope": "a",
+          "group_id": null
+        },
+        "save": "two"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "b_____________________",
+          "scope": "b"
+        },
+        "save": "b"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "group_________________",
+          "scope": "a",
+          "group_id": 1
+        },
+        "save": "group"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "explicit______________",
+          "scope": "a",
+          "_row_count": 9
+        },
+        "save": "explicit"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "ten___________________",
+          "scope": "a"
+        },
+        "save": "ten"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "zero__________________",
+          "scope": "c",
+          "_row_count": 0
+        },
+        "save": "zero"
+      }
+    ]
+  },
+  {
+    "name": "counter_reuses_deleted_max",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "one___________________",
+          "scope": "a"
+        },
+        "save": "one"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "two___________________",
+          "scope": "a"
+        },
+        "save": "two"
+      },
+      {
+        "op": "delete",
+        "table": "app.ranked",
+        "key_from": "two"
+      },
+      {
+        "op": "insert",
+        "table": "app.ranked",
+        "values": {
+          "id": "three_________________",
+          "scope": "a"
+        },
+        "save": "three"
+      }
+    ]
+  },
+  {
+    "name": "linked_root_insert_rename",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "branch________________",
+          "code": "branch",
+          "parent_id": "owner_________________"
+        },
+        "save": "branch"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "twig__________________",
+          "code": "twig",
+          "parent_id": "branch________________"
+        },
+        "save": "twig"
+      },
+      {
+        "op": "update",
+        "table": "app.master",
+        "old_from": "owner",
+        "values": {
+          "id": "owner_________________",
+          "code": "renamed"
+        }
+      }
+    ]
+  },
+  {
+    "name": "linked_root_delete",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "branch________________",
+          "code": "branch",
+          "parent_id": "owner_________________"
+        },
+        "save": "branch"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "twig__________________",
+          "code": "twig",
+          "parent_id": "branch________________"
+        },
+        "save": "twig"
+      }
+    ],
+    "steps": [
+      {
+        "op": "delete",
+        "table": "app.master",
+        "key_from": "owner"
+      }
+    ]
+  },
+  {
+    "name": "linked_root_immutable",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "branch________________",
+          "code": "branch",
+          "parent_id": "owner_________________"
+        },
+        "save": "branch"
+      },
+      {
+        "op": "insert",
+        "table": "app.linked",
+        "values": {
+          "id": "twig__________________",
+          "code": "twig",
+          "parent_id": "branch________________"
+        },
+        "save": "twig"
+      }
+    ],
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.master",
+        "old_from": "owner",
+        "values": {
+          "id": "owner_________________",
+          "root_linked_id": "branch________________"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "unmodifiable"
+  },
+  {
+    "name": "linked_root_after_hook",
+    "hooks": true,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      },
+      {
+        "op": "update",
+        "table": "app.master",
+        "old_from": "owner",
+        "values": {
+          "id": "owner_________________",
+          "code": "renamed"
+        }
+      }
+    ]
+  },
+  {
+    "name": "linked_database_generated_key",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.generated_master",
+        "values": {}
+      }
+    ]
+  },
+  {
+    "name": "relative_index_survives_deletion",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      }
+    ],
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d1____________________",
+          "master_id": "owner_________________"
+        },
+        "save": "d1"
+      },
+      {
+        "op": "delete",
+        "table": "app.detail",
+        "key_from": "d1"
+      },
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d2____________________",
+          "master_id": "owner_________________"
+        },
+        "save": "d2"
+      },
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "explicit______________",
+          "master_id": "owner_________________",
+          "_relidx": 99
+        },
+        "save": "explicit"
+      },
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d3____________________",
+          "master_id": "owner_________________"
+        },
+        "save": "d3"
+      }
+    ]
+  },
+  {
+    "name": "relative_index_rollback",
+    "hooks": false,
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      }
+    ],
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d1____________________",
+          "master_id": "owner_________________"
+        },
+        "save": "d1"
+      },
+      {
+        "op": "insert",
+        "table": "app.tree",
+        "values": {
+          "id": "bad___________________",
+          "code": "bad",
+          "parent_id": "missing_______________"
+        },
+        "save": "bad"
+      }
+    ],
+    "fails": true,
+    "error": "Unknown hierarchical parent"
+  },
+  {
+    "name": "relative_index_missing_master",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "bad___________________"
+        }
+      }
+    ],
+    "fails": true,
+    "error": "requires a master key"
+  },
+  {
+    "name": "relative_index_per_master",
+    "hooks": false,
+    "steps": [
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "owner_________________",
+          "code": "owner"
+        },
+        "save": "owner"
+      },
+      {
+        "op": "insert",
+        "table": "app.master",
+        "values": {
+          "id": "other_________________",
+          "code": "other"
+        },
+        "save": "other"
+      },
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d1____________________",
+          "master_id": "owner_________________"
+        },
+        "save": "d1"
+      },
+      {
+        "op": "insert",
+        "table": "app.detail",
+        "values": {
+          "id": "d2____________________",
+          "master_id": "other_________________"
+        }
+      }
+    ]
+  }
+]

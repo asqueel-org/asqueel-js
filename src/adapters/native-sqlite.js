@@ -1,3 +1,5 @@
+import {sqliteBindings} from './sqlite-bindings.js';
+
 /** Shared driver boundary. Runtime-specific constructors stay in their entry points. */
 export function nativeAdapter(database) {
     let closed = false;
@@ -7,13 +9,15 @@ export function nativeAdapter(database) {
     return {
         async query(sql, params = []) {
             checkOpen();
-            const bindings = Array.isArray(params) ? params : [params];
+            const values = sqliteBindings(params);
+            const bindings = Array.isArray(values) ? values : [values];
             return database.prepare(sql).all(...bindings).map(row => ({...row}));
         },
         async execute(sql, params = []) {
             checkOpen();
             if (Object.keys(params).length) {
-                const bindings = Array.isArray(params) ? params : [params];
+                const values = sqliteBindings(params);
+                const bindings = Array.isArray(values) ? values : [values];
                 database.prepare(sql).run(...bindings);
             } else database.exec(sql);
         },

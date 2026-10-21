@@ -1,3 +1,4 @@
+import {sqliteBindings} from './sqlite-bindings.js';
 import SQLiteESMFactory from 'wa-sqlite/dist/wa-sqlite-async.mjs';
 import * as SQLite from 'wa-sqlite';
 import {IDBBatchAtomicVFS} from 'wa-sqlite/src/examples/IDBBatchAtomicVFS.js';
@@ -27,7 +28,7 @@ export async function openBrowserSQLite(idbName = 'asqueel-js-playground-v1') {
             if (closed) throw new Error('Database chiuso');
             const rows = [];
             for await (const stmt of sqlite.statements(db, sql)) {
-                sqlite.bind_collection(stmt, params);
+                sqlite.bind_collection(stmt, sqliteBindings(params));
                 while (await sqlite.step(stmt) === SQLite.SQLITE_ROW) {
                     rows.push(Object.fromEntries(sqlite.column_names(stmt).map((name, i) => [name, sqlite.column(stmt, i)])));
                 }

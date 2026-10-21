@@ -19,6 +19,7 @@ export class QueryPage extends PlaygroundPage {
         action(buttons, 'Esegui query', 'executeQuery', {id: 'query-run'});
         action(buttons, 'Verifica query con Python', 'checkQueries', {id: 'query-test'});
         action(buttons, 'Verifica sys_fields e hook', 'checkHooks', {id: 'hooks-test'});
+        action(buttons, 'Verifica gerarchie e contatori', 'checkBehaviors', {id: 'behaviors-test'});
         body.p('^queryStatus', {id: 'query-status', role: 'status', class: '^queryClass'});
         const compiled = detail(body, 'SQL JavaScript e parametri', 'querySQL', 'query-sql', true);
         compiled.pre('^queryParams', {id: 'query-params'});
@@ -27,6 +28,8 @@ export class QueryPage extends PlaygroundPage {
         detail(body, 'Verifiche query nel browser', 'queryChecks', 'query-checks');
         detail(body, 'Verifiche sys_fields e hook', 'hookChecks', 'hooks-checks', true);
         detail(body, 'Esempio verificato: record, eventi e scritture degli hook', 'hookSample', 'hooks-sample');
-        body.p('SQL, parametri e risultati sono confrontati con Python 0.6.1 + fix #44. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano database separati. Il test sys_fields esegue hook reali, anche con errori e rollback.', {class: 'db-note'});
+        detail(body, 'Verifiche gerarchie e contatori', 'behaviorChecks', 'behaviors-checks', true);
+        detail(body, 'Spostamento verificato: sottoalbero, posizioni e SQL', 'behaviorSample', 'behaviors-sample');
+        body.p('SQL, parametri e risultati sono confrontati con Python 0.6.1 + fix #44. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano database separati. Le verifiche eseguono hook reali, gerarchie e contatori, anche con errori, rollback e riapertura di IndexedDB.', {class: 'db-note'});
     }
 }

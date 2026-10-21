@@ -120,7 +120,7 @@ Il controllo browser confronta sia il modello desiderato sia il **catalogo
 SQLite effettivamente riletto** con gli oracoli Python; non salva il modello
 desiderato come sostituto dell'introspezione. Questa demo di migrazione inserisce esplicitamente gli ID. Il pulsante
 «Verifica sys_fields e hook» nella pagina Query esegue invece il ciclo applicativo
-con ID automatici e timestamp; opzioni audit e contatori restano da portare.
+con ID automatici e timestamp; «Verifica gerarchie e contatori» prova anche percorsi e numerazione automatica.
 
 ## Inserimenti e query dal modello
 
@@ -201,7 +201,8 @@ rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
 Restano esclusi macro, sottoquery, relazioni inverse/virtualRelation, formule
 parametriche, selezioni di chiavi composte virtuali, codec applicativi, lock,
-scritture bulk/da selezione, cascade applicative e opzioni diverse da `sys_fields`.
+scritture bulk/da selezione, azioni applicative `onUpdate` e su relazioni composte,
+e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
 Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
@@ -218,7 +219,7 @@ Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 protezioni/default, assegnazione della chiave, validazione, trigger di campo,
 hook di tabella, SQL, trigger di campo e hook successivi. L'ordine di draft e
 contatori segue quello specifico di INSERT/UPDATE/DELETE. I callback dei contatori
-sono punti di estensione; le opzioni automatiche dei contatori restano escluse.
+restano punti di estensione; `auto_counter` e `relative_index` sono ora eseguiti.
 
 ```javascript
 const model = defineModel(root => {
@@ -382,3 +383,61 @@ limiti del JSON portabile e differenze rispetto al vecchio riferimento.
 
 Il look usa gli stessi temi `gramlot-base`, `gramlot-compact` e `gramlot-index`
 della gallery: barra da 42 px, accento giallo, token condivisi e CodeMirror integrato.
+
+
+## Gerarchie e contatori automatici
+
+Le dichiarazioni restano quelle del modello portabile; i metodi di tabella
+eseguono i comportamenti dentro la stessa transazione degli hook:
+
+```javascript
+const model = defineModel(root => {
+    const pkg = root.db({name: 'local', implementation: 'sqlite'}).packages().package('app');
+    const category = pkg.table('category');
+    category.options().sys_fields();
+    category.options().hierarchical({columns: 'code', root_id: true, virtual_roots: true});
+    category.options().auto_counter();
+    category.column('code');
+});
+await migrateSQLite(adapter, model.toMigration());
+const db = model.queries(adapter, {environment: {user: 'ada'}});
+await db.transaction(async tx => {
+    const category = tx.table('app.category');
+    const first = await category.insert({code: 'first'});
+    const second = await category.insert({code: 'second'});
+    const child = await category.insert({code: 'child', parent_id: first.id});
+    await category.update({id: child.id, parent_id: second.id}, {old_record: child});
+});
+```
+
+Uno spostamento assegna l'ultima posizione fra i nuovi fratelli, ricalcola percorsi,
+`root_id` e `_h_count`, quindi aggiorna i discendenti tramite il normale ciclo di
+scrittura, compresi gli hook. UPDATE gerarchico richiede `old_record`, riletto dal
+database prima di usarlo. Sono rifiutati cicli, genitori inesistenti, modifica della
+chiave, contatori non interi/non negativi e nuove posizioni oltre 1295. Eliminare un
+nodo elimina i discendenti; l'archiviazione logica si propaga ai discendenti che
+hanno il relativo campo. `linked_to` crea e aggiorna la radice associata al master,
+anche quando SQLite ne genera la chiave.
+
+`auto_counter({field: 'position', scope: ['group_id', 'kind']})` usa il massimo
+esistente più uno nel gruppo, includendo righe draft/archiviate e trattando NULL
+come gruppo distinto. Conserva i valori espliciti; cancellando il massimo, il
+numero può essere riutilizzato. Nelle gerarchie il gruppo è il genitore.
+`relative_index('master_id')` aggiorna invece il contatore in `master_xtd`:
+il numero non viene riutilizzato dopo la cancellazione del dettaglio. Il modello
+deve dichiarare il master, la tabella di estensione con chiave `id` o `main_id`
+e la relazione del dettaglio. Un rollback annulla anche l'allocazione del numero.
+Vedere le dichiarazioni complete in `examples/hierarchies.js`.
+
+**Verifica gerarchie e contatori** nella pagina Query esegue 39 scenari reali in
+SQLite WASM, confronta record/eventi/SQL/parametri con Python e riapre ogni database
+IndexedDB per verificarne i dati. Mostra anche il risultato di uno spostamento
+con sottoalbero. Il riferimento è salvato nel bundle: Python non gira nel browser.
+
+Le operazioni usano `BEGIN IMMEDIATE` e le riserve SQLite del riferimento Python.
+La coda serializza le richieste sullo stesso adapter; non è ancora una garanzia
+verificata per applicazioni con più schede aperte. Gli interi JS sicuri vengono
+passati come INTEGER SQLite in tutti e tre gli adapter, evitando differenze di
+affinità testuale. Restano esclusi audit, altre opzioni, azioni applicative
+`onUpdate`, relazioni composte e query gerarchiche avanzate (per esempio la
+sottoquery virtuale `child_count`); i campi fisici di percorso sono già leggibili.

@@ -5,8 +5,8 @@ import {applicationHooks, applicationHookHandlers} from '../examples/application
 export const hooksModel = defineModel(applicationHooks);
 
 /** Same input script as Python, with independently implemented JS callbacks. */
-export async function runHookCase(adapter, input) {
-    await migrateSQLite(adapter, hooksModel.toMigration());
+export async function runHookCase(adapter, input, {model = hooksModel, handlers = applicationHookHandlers, tables = ['note', 'audit', 'plain', 'simple']} = {}) {
+    await migrateSQLite(adapter, model.toMigration());
     const events = [], statements = [], results = [], refs = {};
     let environment = input.setup_environment ?? {user: 'ada'}, ticks = 0, ids = 0;
     const tracing = {
@@ -17,10 +17,10 @@ export async function runHookCase(adapter, input) {
             return adapter.query(sql, params);
         },
     };
-    const db = hooksModel.queries(tracing, {environment: () => environment,
+    const db = model.queries(tracing, {environment: () => environment,
         clock: () => new Date(Date.UTC(2026, 0, 2, 3, 4, 5) + ticks++),
         uuid: () => 'Z' + String(++ids).padStart(21, '0'),
-        hooks: input.hooks === false ? {} : applicationHookHandlers(events)});
+        hooks: input.hooks === false ? {} : handlers(events)});
     async function steps(tx, items) {
         for (const step of items) {
             let values = structuredClone(step.values_from ? refs[step.values_from] : step.values ?? {});
@@ -47,10 +47,11 @@ export async function runHookCase(adapter, input) {
     try { await db.transaction(tx => steps(tx, input.steps)); }
     catch (error) {
         failed = true;
+        if (!input.fails) throw new Error(`${input.name}: ${error.message}`, {cause: error});
         if (input.error && !error.message.includes(input.error)) throw error;
     }
     if (failed !== (input.fails ?? false)) throw new Error(`${input.name}: unexpected outcome`);
     const rows = {};
-    for (const name of ['note', 'audit', 'plain', 'simple']) rows[name] = await adapter.query(`SELECT * FROM "${name}" ORDER BY id`);
+    for (const name of tables) rows[name] = await adapter.query(`SELECT * FROM "${name}" ORDER BY id`);
     return {failed, results, events, statements, rows};
 }

@@ -31,7 +31,7 @@ def recipe():
     return b
 
 
-def run_case(case):
+def run_case(case, declaration=declare, callbacks_factory=handlers, tables=('note', 'audit', 'plain', 'simple'), dbname='hooks'):
     events, statements, results, refs = [], [], [], {}
     ticks = ids = 0
 
@@ -48,14 +48,14 @@ def run_case(case):
         ids += 1
         return 'Z' + str(ids).zfill(21)
 
-    callbacks = handlers(events) if case.get('hooks', True) else {}
+    callbacks = callbacks_factory(events) if case.get('hooks', True) else {}
     classes = {name: type(name.split('.')[-1].title(), (SqlTable,), methods) for name, methods in callbacks.items()}
     with tempfile.TemporaryDirectory(prefix='asqueel-hooks-') as folder:
         path = str(Path(folder) / 'runtime.db')
         config = SqlDatabaseConfig()
-        root = config.source.db('hooks', implementation='sqlite')
+        root = config.source.db(dbname, implementation='sqlite')
         root.connection('main', database=path)
-        declare(root.packages().package('app', sqlschema='main', sqlprefix=False), classes)
+        declaration(root.packages().package('app', sqlschema='main', sqlprefix=False), classes)
         db = AsqueelDb(config)
         try:
             db.migrate()
@@ -113,7 +113,7 @@ def run_case(case):
                 with sqlite3.connect(path) as raw:
                     raw.row_factory = sqlite3.Row
                     rows = {name: [dict(row) for row in raw.execute(f'SELECT * FROM "{name}" ORDER BY id')]
-                            for name in ('note', 'audit', 'plain', 'simple')}
+                            for name in tables}
                 return dict(failed=failed, results=normalize(results), events=normalize(events), statements=statements, rows=rows)
         finally:
             db.closeConnection()

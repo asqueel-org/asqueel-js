@@ -46,6 +46,9 @@ relazioni dirette anche composte, aggregazioni e policy dichiarative: **60 casi*
 confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
 `sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
 aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel browser.
+Gerarchie, `auto_counter` e `relative_index` aggiungono **39 scenari**: percorsi,
+spostamenti e cancellazione di sottoalberi, radici collegate, contatori per gruppo,
+rollback e riapertura IndexedDB. [Esempi e limiti](docs/playground.md#gerarchie-e-contatori-automatici).
 Codec completi, altre opzioni applicative e query avanzate restano da portare.
 
 ## API iniziale

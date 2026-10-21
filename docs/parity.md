@@ -84,6 +84,27 @@ L'algoritmo ID effettivo è inoltre confrontato con `genro_toolbox.uid.get_uuid`
 parità di timestamp e byte casuali. Gli orologi JS ordinari hanno precisione al
 millisecondo, non al microsecondo.
 
-Gli oracoli si rigenerano con `$PYTHON scripts/hooks_oracle.py`. Non attestano
-l'esecuzione di gerarchie, contatori, audit, cascade applicative o codec completi:
-le capacità non portate sono rifiutate esplicitamente dal runtime JS.
+Gli oracoli si rigenerano con `$PYTHON scripts/hooks_oracle.py`.
+
+## Gerarchie e contatori
+
+`examples/hierarchies.py` e `examples/hierarchies.js` dichiarano indipendentemente
+lo stesso modello. `scripts/behaviors_oracle.py` esegue 39 scenari sul Python
+fissato; `test/behaviors-inputs.json` contiene solo le operazioni, senza algoritmi
+condivisi fra Python e JS. Si confrontano JSON completo, JSON migrate, record
+mutati, eventi, SQL/parametri DML (incluse le riserve SQLite) e tutte le righe
+persistite dopo commit/rollback. `verify:python` rigenera il riferimento in memoria
+e lo confronta con fixture, Node e Bun; Chromium esegue gli stessi scenari e
+riapre IndexedDB dopo ciascuno.
+
+Il corpus copre rinomina/spostamento/riordino di sottoalberi, genitore e contatore
+personalizzati, root_id, ereditarietà, assenza del contatore, archiviazione/ripristino,
+radici collegate anche con chiave SQL generata, intervento degli hook, cicli/genitori
+inesistenti, contatori invalidi e limite di 1295 fratelli. Include contatori per
+scope con NULL, valori espliciti, riuso dopo cancellazione e indici relativi che
+sopravvivono alla cancellazione dei dettagli, con rollback del record di estensione.
+
+Rigenerazione: `$PYTHON scripts/behaviors_oracle.py`. I test JS aggiungono richieste
+concorrenti sullo stesso adapter e riuso del numero dopo rollback. Non attestano
+concorrenza fra più schede browser, crash, audit o codec completi. Le azioni
+applicative `onUpdate` e quelle su relazioni composte restano fuori perimetro.

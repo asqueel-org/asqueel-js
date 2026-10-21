@@ -2,6 +2,13 @@
 
 ## Non rilasciato
 
+- Gerarchie e contatori automatici nel ciclo applicativo: percorsi, spostamenti,
+  riordino, ereditarietà, radici collegate, cancellazione/archiviazione dei discendenti,
+  `auto_counter` e `relative_index`. 39 scenari confrontati con Python, anche nel
+  browser con riapertura IndexedDB; pulsante dedicato nella pagina Query.
+- Binding SQLite degli interi coerente tra Node, Bun e browser: evita percorsi
+  testuali come `1.0/1` al posto di `1/1`.
+
 - Ciclo applicativo `table.insert/update/delete`: sys_fields, ID legacy22,
   timestamp/utente, default, campi protetti e hook JS asincroni con rollback atomico
   anche delle scritture annidate. 26 confronti indipendenti con Python.
