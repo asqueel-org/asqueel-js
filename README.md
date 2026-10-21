@@ -142,3 +142,9 @@ componenti in [architettura](docs/architecture.md). Licenza Apache-2.0.
 [Bag sorgente e snapshot TYTX](docs/transfers.md): Python → SQLite nel browser →
 Python, con selezione di package/tabelle, conservazione di struttura e valori e
 verifica reale su IndexedDB. La sincronizzazione resta al layer applicativo.
+
+
+Per provare il trasferimento offline anche senza server e senza un primo accesso online:
+`npm run build:file` produce **`output/asqueel-offline.html`**, esportato da Gramlot e
+apribile direttamente con `file://` in Chromium. Include SQLite WASM e conserva modello
+e dati nel profilo browser. Dettagli e verifiche in [Trasferimenti](docs/transfers.md).

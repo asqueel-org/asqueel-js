@@ -26,7 +26,9 @@
     "check": "npm test && npm run build",
     "prepack": "npm run check",
     "export:model": "${PYTHON:-python3} scripts/model_oracle.py",
-    "update:tools": "npm update --no-save @genrojs/builders @genrojs/bag @genrojs/tytx @gramlot/gramlot @gramlot/gramlot-serverless"
+    "update:tools": "npm update --no-save @genrojs/builders @genrojs/bag @genrojs/tytx @gramlot/gramlot @gramlot/gramlot-serverless",
+    "build:file": "node scripts/build_file.js",
+    "test:file": "npm run build:file && playwright test --config=playwright.file.config.js"
   },
   "dependencies": {
     "@genrojs/builders": ">=0.7.0",

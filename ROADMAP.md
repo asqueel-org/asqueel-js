@@ -49,6 +49,8 @@ di una transazione e verificare che nessuna scrittura resti; rileggere dopo relo
 - [x] Cache versionata di HTML, JavaScript, temi, worker e WASM con service worker nel playground.
 - [x] Primo avvio online, CRUD, chiusura e riavvio di Chromium senza rete con lo stesso profilo;
   ripristino del modello/dati e ritorno dello snapshot reale a Python.
+- [x] HTML unico esportato da Gramlot, aperto da `file://` senza primo avvio online:
+  SQLite WASM incorporato, CRUD, riavvio Chromium e ritorno verificato in Python.
 - [ ] Coordinare aggiornamento degli asset e versione dello schema locale.
 - [x] Importazione CSV/JSON/TYTX tramite sql_insert, con parità Python e verifiche browser.
 - [x] Snapshot Python → browser → Python: SourceBag anche parziale e dati TYTX,

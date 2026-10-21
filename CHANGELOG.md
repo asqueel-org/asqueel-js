@@ -2,6 +2,11 @@
 
 ## Non rilasciato
 
+- Export Gramlot in un unico HTML apribile con `file://`, con worker e SQLite WASM
+  incorporati. Caricamento modello/dati, CRUD, riavvio Chromium senza rete ed export
+  confrontato con Python; persistenza Bag/blob e isolamento dei workspace per percorso.
+  L'adapter browser accetta opzionalmente i byte WASM senza fetch esterno.
+
 - Ciclo offline completo nel playground: cache versionata di app/Gramlot/WASM,
   workspace persistente con Bag sorgente, editor CRUD sul modello caricato e
   ripristino alla riapertura. Test con rete disabilitata e riavvio di Chromium,

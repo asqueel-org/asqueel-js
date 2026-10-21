@@ -1,0 +1,6 @@
+body { margin: 0; background: var(--gramlot-surface, #f7f8fa); color: var(--gramlot-ink, #24354b); }
+.file-transfer { max-width: 1050px; margin: auto; padding: 24px; font-family: var(--gramlot-font-family, sans-serif); }
+.file-transfer button { margin: 4px 8px 12px 0; }
+.file-transfer label { display: block; margin: 12px 0 6px; }
+.file-transfer textarea { box-sizing: border-box; width: 100%; font-family: monospace; padding: 12px; }
+.file-transfer pre { overflow: auto; max-height: 55vh; font-size: 12px; }

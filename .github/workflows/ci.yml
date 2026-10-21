@@ -50,6 +50,7 @@ jobs:
       - run: npm run update:tools
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
+      - run: npm run test:file
       - uses: actions/upload-artifact@v7.0.2
         if: failure()
         with:

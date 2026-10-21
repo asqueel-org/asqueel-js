@@ -184,3 +184,38 @@ Il playground mantiene un solo workspace attivo; caricarne uno nuovo cambia il r
 soltanto dopo importazione e salvataggio riusciti. I precedenti database non vengono eliminati.
 Verificato su Chromium: quota, cancellazione/evizione dello storage da parte del browser e
 migrazioni tra versioni applicative richiedono ancora gestione dedicata.
+
+
+### Un solo HTML, aperto con `file://`
+
+```sh
+npm run build:file
+# Aprire output/asqueel-offline.html direttamente nel browser.
+npm run test:file
+.reference/venv-current/bin/python scripts/transfer_oracle.py \
+  --verify-return output/file-transfer-returns.json
+```
+
+`build:file` usa l'esportatore ufficiale `@gramlot/gramlot-serverless`: runtime Gramlot,
+Pagina/Logic, CSS, worker SQLite e WASM sono incorporati in un unico HTML. Non occorrono
+file accanto all'HTML, un server, un service worker o un primo avvio online.
+L'adapter accetta `openBrowserSQLite(name, {wasmBinary})`, con i byte WASM in una
+`Uint8Array`; omettendo l'opzione mantiene il caricamento esterno usato dal sito.
+
+La pagina offre download degli esempi Python, caricamento dello snapshot, editor JSON
+per le query sul modello, rilettura ed esportazione. Come nell'editor del playground,
+le scritture passano dal compiler e non invocano gli hook della API applicativa.
+Il file HTML resta invariato: SQLite e la Bag sorgente sono in IndexedDB nel profilo
+browser. Occorre riaprire lo stesso percorso con lo stesso profilo; percorsi diversi
+hanno workspace separati. Per spostare il lavoro, esportare e reimportare lo snapshot.
+
+Il test **Chromium** copia solo l'HTML in una cartella temporanea, parte già offline,
+carica dati Python, esegue CRUD dai controlli della pagina, termina il browser e lo
+riavvia con lo stesso profilo, ancora offline. Modello completo, migrate, catalogo
+SQLite e valori sono confrontati prima/dopo con il riferimento Python; il file realmente
+scaricato viene poi verificato dal ricevitore Python. Il test controlla zero richieste
+HTTP/HTTPS e l'isolamento tra percorsi. Una seconda prova conserva Bag annidate,
+attributi, blob, vuoti e NULL dopo reload da `file://`.
+
+La disponibilità di IndexedDB e Web Locks da `file://` è verificata su Chromium;
+Firefox e WebKit non sono qualificati per questo profilo.
