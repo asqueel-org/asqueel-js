@@ -16,23 +16,51 @@ La provenienza del confronto del modello rimane fissata in
    una migrazione SQLite, insert/select e una seconda migrazione su Node e Bun.
    Verificare anche il bundle dell'entry point browser dal pacchetto installato.
 
-## Pubblicazione
+## Collegamento iniziale npm / GitHub (una sola volta)
 
-Serve un account npm autorizzato allo scope `@asqueel`, con autenticazione
-richiesta da npm. Usare `npm login` senza salvare token nel repository.
-Controllare `npm whoami` e `npm view @asqueel/asqueel-js versions --json` prima di scegliere
-la versione. Una versione pubblicata non può essere sovrascritta.
+Nelle impostazioni npm di `@asqueel/asqueel-js`, sezione **Trusted Publisher**,
+aggiungere GitHub Actions con questi valori esatti:
 
-Dopo il merge del commit verificato, creare il tag `v0.1.0` e pubblicare lo stesso
-archivio verificato:
+| Campo | Valore |
+|---|---|
+| Organization or user | `asqueel-org` |
+| Repository | `asqueel-js` |
+| Workflow filename | `publish.yml` |
+| Environment name | `release` |
+| Allowed actions | **Allow npm publish** |
+
+Il solo permesso `npm stage publish` richiederebbe ancora una conferma manuale
+per ogni release. Non servono `NPM_TOKEN` o `NODE_AUTH_TOKEN`: il workflow usa
+OIDC su runner GitHub, Node 24 e npm 11.21.0. La prima pubblicazione deve avvenire
+entro due giorni dalla creazione del collegamento, altrimenti npm lo fa scadere.
+Vedere la [documentazione npm](https://docs.npmjs.com/trusted-publishers/).
+
+## Rilasci successivi
+
+1. Aggiornare versione, lockfile e changelog; integrare la PR con CI verde.
+2. Creare e inviare il tag `v<versione>` sul commit integrato di `main`.
+3. Attendere il workflow **Build and publish npm package**.
 
 ```sh
-npm publish /percorso/asqueel-asqueel-js-0.1.0.tgz --access public
+git tag -a v0.1.1 <commit-integrato> -m "Asqueel JS 0.1.1"
+git push origin v0.1.1
 ```
 
-Verificare la versione nel registry e installarla in una nuova directory, ripetendo
-lo smoke test SQLite. Creare la GitHub Release dallo stesso tag. Per ora la
-pubblicazione è esplicita; la CI dei test non pubblica automaticamente su npm.
+Il workflow verifica nome, versione/tag e appartenenza a `main`, crea un solo
+tarball e lo installa in isolamento. Prima dell'upload aspetta la CI completa
+Node/Bun/browser e la parità Python sullo stesso commit di `main`. Poi pubblica
+quell'archivio tramite OIDC, confronta l'integrità del file disponibile sul registry,
+prova il pacchetto scaricato e crea la GitHub Release.
+
+Le versioni pubblicate sono immutabili. Se l'upload riesce ma la verifica finale
+fallisce, controllare prima la versione su npm: non ripubblicare alla cieca.
+Il workflow manuale su un branch esegue soltanto build e verifiche; su un tag
+esegue anche la pubblicazione. Le PR che modificano il workflow o il packaging
+provano l'installazione del tarball senza avere permessi di pubblicazione.
+
+Le suite complete partono su PR e `main`, non sui tag né sui push dei branch di
+lavoro. I tag avviano soltanto il workflow di rilascio, che riusa l'esito della CI
+sul commit integrato senza duplicare le suite.
 
 ## Browser
 

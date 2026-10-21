@@ -44,7 +44,7 @@ la guida distingue esplicitamente il contratto di sviluppo da quello pubblicato.
 - Un package, con export separati per i driver dei tre runtime.
 - Dipendenze e lockfile rivisti insieme; nessun processo Python a runtime.
 - Le funzionalità non supportate producono errori espliciti prima delle scritture.
-- Pubblicazioni pubbliche esplicite: verificare il tarball installato seguendo
+- Pubblicazioni automatiche dai tag verificati: seguire
   [RELEASING.md](RELEASING.md). La serie 0.1.x resta sperimentale.
 
 Il playground esegue codice del suo editor: è uno strumento di sviluppo locale,
