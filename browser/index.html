@@ -1,72 +1,14 @@
 <!doctype html>
 <html lang="it">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Asqueel JS · Playground</title>
-<link rel="stylesheet" href="style.css">
-<header>
-  <div><p class="eyebrow">ASQUEEL JS / PLAYGROUND</p><h1>Dal modello alla migrazione.</h1>
-  <p>Dal modello JavaScript a SQLite nel browser, persistito su IndexedDB.</p></div>
-  <div class="actions"><button id="render">Genera JSON</button><button id="download" disabled>Scarica JSON</button></div>
-</header>
-<div class="toolbar">
-  <label for="example">Esempio</label>
-  <select id="example"><option value="queries">SQLite · inserimenti e query</option><option value="sqlite">SQLite · versione 1</option><option value="sqlite-v2">SQLite · versione 2 con email</option><option value="groups">Colgroups e formule</option><option value="virtual-relations">VirtualRelation</option><option value="application">Package e opzioni applicative</option><option value="shop">Schemi e modello fisico</option></select>
-  <button id="restore">Ripristina esempio</button>
-  <span>Il riferimento Python è quello salvato per l’esempio originale.</span>
-</div>
-<p id="status" role="status">Caricamento della grammatica…</p>
-<details id="resolved"><summary>Modello risolto completo · <span id="model-status"></span></summary><pre id="resolved-model"></pre></details>
-<details id="comparison" hidden><summary>Differenze JavaScript / Python</summary><pre id="differences"></pre></details>
-<section class="database">
-  <h2>Database nel browser <span>SQLite WASM · IndexedDB · worker</span></h2>
-  <div class="db-content">
-    <p>Calcola il piano, applicalo e passa alla versione 2: aggiunge <code>email</code> e il suo indice conservando i dati.</p>
-    <div class="db-actions">
-      <button data-db="composition-checks">Verifica composizione con Python</button>
-      <button data-db="plan">Calcola piano SQL</button>
-      <button data-db="apply">Applica migrazione</button>
-      <button data-db="seed">Inserisci dati di prova</button>
-      <button data-db="reopen">Riapri database</button>
-      <button data-db="checks">Verifica SQLite</button>
-    </div>
-    <p id="db-status" role="status">Avvio SQLite…</p>
-    <p id="db-rows"></p>
-    <details class="db-detail"><summary>Piano SQL / operazioni applicate</summary><pre id="sql-plan">Calcola il piano per leggere le istruzioni prima di applicarle.</pre></details>
-    <details class="db-detail"><summary>Schema letto dal database</summary><pre id="db-schema"></pre></details>
-    <details class="db-detail"><summary>Verifiche browser e confronto Python</summary><pre id="db-checks-result">Le verifiche usano un database di test separato.</pre></details>
-    <p class="db-note">Database locale di questo sito. Schema main; creazione e aggiunte di colonne nullable e indici.
-      Rimozioni e modifiche incompatibili vengono bloccate. I dati sopravvivono al reload; cancellare i dati del sito li elimina.</p>
-  </div>
-</section>
-<section class="database query-panel">
-  <h2>Query tramite il modello <span>INSERT · SELECT · confronto Python</span></h2>
-  <div class="db-content">
-    <p>Seleziona il modello <b>SQLite · inserimenti e query</b> e applica la migrazione.
-      Poi esegui gli inserimenti 1–5 e leggi i dati. Ogni INSERT viene salvato su IndexedDB.</p>
-    <label for="query-example">Richiesta</label>
-    <select id="query-example"></select>
-    <textarea id="query-input" spellcheck="false" aria-label="Richiesta query JSON"></textarea>
-    <div class="db-actions">
-      <button id="query-compile">Compila query</button><button id="query-run">Esegui query</button>
-      <button id="query-test">Verifica query con Python</button>
-    </div>
-    <p id="query-status" role="status">Compila per confrontare SQL e parametri prima dell’esecuzione.</p>
-    <details class="db-detail" open><summary>SQL JavaScript e parametri</summary><pre id="query-sql"></pre><pre id="query-params"></pre></details>
-    <details class="db-detail"><summary>SQL Python di riferimento</summary><pre id="query-python"></pre></details>
-    <details class="db-detail" open><summary>Risultati dal database</summary><pre id="query-rows">Query non ancora eseguita.</pre></details>
-    <details class="db-detail"><summary>Verifiche query nel browser</summary><pre id="query-checks"></pre></details>
-    <p class="db-note">Il riferimento Python riguarda la richiesta originale selezionata.
-      I valori passano come parametri separati. Gli ID di esempio sono fissi: ripetere un INSERT già eseguito segnala un duplicato.
-      Gli hook applicativi restano fuori perimetro (<a href="https://github.com/asqueel-org/asqueel/issues/29">issue #29</a>).</p>
-  </div>
-</section>
-<main>
-  <section><h2>Modello <span>JavaScript · root già disponibile</span></h2>
-    <textarea id="model" spellcheck="false" aria-label="Modello JavaScript"></textarea></section>
-  <section><h2><label for="output">Migrazione</label> <select id="output"><option value="javascript">JSON JavaScript</option><option value="python">Riferimento Python</option></select><span>structure-1.0</span></h2>
-    <pre id="result" aria-label="JSON della migrazione"></pre></section>
-</main>
-<footer>Grammatica condivisa con Python · Migrazione locale senza server · SQLite via wa-sqlite / IDBBatchAtomicVFS</footer>
-<script type="module" src="dist/app.js"></script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Asqueel JS · Gramlot</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <p id="boot-status" role="status">Avvio delle pagine Gramlot…</p>
+  <div id="gramlot-root"></div>
+  <script type="module" src="dist/app.js"></script>
+</body>
 </html>

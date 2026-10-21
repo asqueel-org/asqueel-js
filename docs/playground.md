@@ -17,20 +17,32 @@ npm run example -- --application
 npm run browser
 ```
 
-Aprire <http://127.0.0.1:8092>. L'editor consente di modificare il modello, generare
-il risultato e scaricare `migration.json`. Il modello viene eseguito localmente
-come normale codice JavaScript. Le modifiche dell'editor non vengono salvate
-quando si ricarica la pagina.
+Aprire <http://127.0.0.1:8092>. Il playground è composto da tre pagine **Gramlot**:
 
-Il playground parte dall'esempio SQLite con query e ricorda l'ultimo esempio
-selezionato, ma non le modifiche al testo dell'editor. È possibile selezionare
-anche il modello fisico, visualizzare il riferimento Python e leggere le
-differenze. Il confronto nel browser usa l'oracolo salvato dell'esempio originale:
-non esegue Python sul codice modificato nell'editor.
+- **Modello** (`?page=models`, pagina iniziale): editor, JSON migrate JavaScript/Python,
+  JSON completo del modello, download e verifiche di composizione.
+- **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
+  catalogo, riapertura e verifiche SQLite.
+- **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
+  con le fixture query storiche.
+
+Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
+bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
+un reload. **Ripristina esempio** sostituisce la bozza con la ricetta originale.
+Senza localStorage disponibile la pagina funziona, ma non conserva la bozza.
+Il confronto usa l'oracolo salvato dell'esempio originale: non esegue Python sul
+codice modificato nell'editor.
+
+Le dichiarazioni sono in `browser/pages/`: classi `Page` con elementi Source,
+binding `^path` e azioni nominate. `browser/logic.js` esporta la `Logic` che aggiorna
+la Data Bag; i servizi SQLite/query non manipolano il DOM. Gramlot serverless
+esegue la Page in un worker dedicato, distinto dal worker SQLite. La pagina HTML
+contiene soltanto il contenitore e il bootstrap. Le versioni npm fissate sono
+`@gramlot/gramlot@0.3.7` e `@gramlot/gramlot-serverless@0.2.14`, solo per il playground.
 
 ## Migrare nel browser
 
-1. Selezionare **SQLite · versione 1**, poi **Calcola piano SQL** e **Applica
+1. Aprire **Migrazioni SQLite**, selezionare **SQLite · versione 1**, poi **Calcola piano SQL** e **Applica
    migrazione**: crea due tabelle con campi di sistema, PK, UNIQUE, FK e indici.
 2. **Inserisci dati di prova** aggiunge un cliente e una fattura.
 3. Selezionare **SQLite · versione 2 con email**: il piano contiene solamente
@@ -78,7 +90,7 @@ inserisce esplicitamente gli ID dei record.
 
 ## Inserimenti e query dal modello
 
-Selezionare **SQLite · inserimenti e query** e applicare il piano: alle tabelle
+Aprire **Query**, selezionare **SQLite · inserimenti e query** e applicare il piano: alle tabelle
 precedenti aggiunge `query_people` e `q_memo`, senza rimuovere dati. Il modello
 indipendente è in `examples/browser-queries.js` e `examples/browser_queries.py`.
 

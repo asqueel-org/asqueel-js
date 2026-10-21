@@ -19,7 +19,9 @@ npm test
 npm run browser
 ```
 
-Il playground apre un server su <http://127.0.0.1:8092>. JavaScript, worker e WASM
+Il playground Gramlot apre un server su <http://127.0.0.1:8092>, con pagine
+**Modello**, **Migrazioni SQLite** e **Query**. La bozza del modello è condivisa
+tra le pagine e conservata al reload. JavaScript, worker e WASM
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 

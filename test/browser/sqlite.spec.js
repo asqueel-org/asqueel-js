@@ -51,4 +51,87 @@ test('browser exposes and compares the complete hierarchical model',async({page}
     await page.goto('/');await page.locator('#example').selectOption('application');
     await expect(page.locator('#model-status')).toHaveText('Modello completo identico a Python 0.6.1');
     expect(JSON.parse(await page.locator('#resolved-model').textContent())).toEqual(examples.application.model);
+    await page.screenshot({path: 'output/gramlot-model.png'});
+});
+
+async function ready(page, section) {
+    await expect(page.locator('[data-gramlot-page]')).toHaveAttribute('data-gramlot-page', section);
+    await expect(page.locator('#db-status')).toContainText('SQLite aperto');
+    await expect(page.locator('#example')).toBeEnabled();
+    expect(await page.evaluate(() => window.gramlot.data.getItem('section'))).toBe(section);
+}
+
+test('Gramlot pages preserve an edited model across navigation and export its migration', async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/?page=models');
+    await ready(page, 'models');
+    const source = "root.db({name: 'draft', implementation: 'sqlite'}).packages().package('app').table({name: 'item', pkey: 'id'}).column({name: 'id', dtype: 'I'});";
+    await page.locator('#model').fill(source);
+    await expect(page.locator('#download')).toBeDisabled();
+    await page.locator('#render').click();
+    await expect(page.locator('#status')).toContainText('1 tabelle');
+    const expected = JSON.parse(await page.locator('#result').textContent());
+    expect(expected.root.entity_name).toBe('draft');
+    const downloading = page.waitForEvent('download');
+    await page.locator('#download').click();
+    const downloaded = await downloading;
+    expect(downloaded.suggestedFilename()).toBe('migration.json');
+    const {readFile} = await import('node:fs/promises');
+    expect(JSON.parse(await readFile(await downloaded.path(), 'utf8'))).toEqual(expected);
+    await page.getByRole('link', {name: 'Migrazioni SQLite', exact: true}).click();
+    await ready(page, 'sqlite');
+    await page.getByRole('button', {name: 'Calcola piano SQL'}).click();
+    await expect(page.locator('#sql-plan')).toContainText('app_item');
+    await page.getByRole('link', {name: 'Modello', exact: true}).click();
+    await ready(page, 'models');
+    await expect(page.locator('#model')).toHaveValue(source);
+    expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
+    await page.locator('#model').fill('not valid JavaScript {');
+    await page.locator('#render').click();
+    await expect(page.locator('#status')).toHaveClass('error');
+    await expect(page.locator('#download')).toBeDisabled();
+    await expect(page.locator('#resolved-model')).toBeEmpty();
+    await page.locator('#restore').click();
+    await expect(page.locator('#status')).toContainText('JSON identico');
+    expect(errors).toEqual([]);
+});
+
+test('Gramlot query actions persist real data across pages and reload', async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('/?page=queries');
+    await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Applica migrazione'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completato');
+    await page.locator('#query-run').click();
+    await expect(page.locator('#query-status')).toContainText('INSERT completato e salvato');
+    await page.locator('#query-example').selectOption('people');
+    await page.locator('#query-run').click();
+    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    const records = JSON.parse(await page.locator('#query-rows').textContent());
+    expect(records).toHaveLength(1);
+    await page.getByRole('link', {name: 'Migrazioni SQLite', exact: true}).click();
+    await ready(page, 'sqlite');
+    await expect(page.locator('#db-rows')).toContainText('query_people: 1 riga');
+    await page.getByRole('link', {name: 'Query', exact: true}).click();
+    await ready(page, 'queries');
+    await page.reload();
+    await ready(page, 'queries');
+    await page.locator('#query-example').selectOption('people');
+    await page.locator('#query-run').click();
+    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
+    await page.locator('#query-test').click();
+    await expect(page.locator('#query-status')).toContainText('18 query confrontate con Python');
+    expect(errors).toEqual([]);
+});
+
+test('Gramlot model page fits a phone viewport', async ({page}) => {
+    await page.setViewportSize({width: 390, height: 844});
+    await page.goto('/?page=models');
+    await ready(page, 'models');
+    await expect(page.getByRole('link', {name: 'Migrazioni SQLite', exact: true})).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+    await page.screenshot({path: 'output/gramlot-mobile.png'});
 });

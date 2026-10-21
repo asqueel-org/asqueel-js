@@ -57,6 +57,14 @@ Le verifiche browser sono eseguite tramite il worker vero su database temporanei
 distinti e confrontano l'esito con fixture Python. L'entry point principale non
 importa driver Node/Bun, API DOM o il modulo WASM.
 
+Il playground usa tre classi `Page` Gramlot (`browser/pages/`) e una `Logic`
+condivisa. Il worker Gramlot costruisce la Source; il runtime nel browser rende
+gli elementi e collega i binding alla Data Bag. `sqlite-panel.js` e `query-panel.js`
+aggiornano quei dati e parlano con il worker SQLite, senza accesso diretto al DOM.
+Il cambio pagina conserva la bozza in localStorage e riapre lo stesso database
+IndexedDB. Le dipendenze Gramlot sono di sviluppo e non entrano negli export della
+libreria Asqueel. Tutti gli asset vengono compilati e serviti localmente.
+
 ## Compatibilità
 
 Il modello serializzato attraversa il worker come dati; il worker ricompila la
