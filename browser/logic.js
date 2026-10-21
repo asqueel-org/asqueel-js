@@ -9,8 +9,8 @@ const sourceOf = recipe => {
 };
 
 export class Logic {
-    async start() {
-        this.view = {get: key => this.page.data.getItem(key), set: (key, value) => this.page.data.setItem(key, value)};
+    async start(node) {
+        this.view = {get: key => node.GET(key), set: (key, value) => node.SET(key, value)};
         let example = 'queries', source;
         try {
             const selected = localStorage.getItem('asqueel-example');
@@ -43,8 +43,7 @@ export class Logic {
     navigate(node, event) {
         if (!this.view || this.view.get('busy')) event.preventDefault();
     }
-    selectExample(node, event) {
-        this.view.set('example', event.target.value);
+    selectExample() {
         this.restore();
     }
     restore() {
@@ -52,15 +51,13 @@ export class Logic {
         this.view.set('output', 'javascript');
         this.saveDraft(); this.render(); this.db?.invalidate(); this.queries?.invalidate();
     }
-    editModel(node, event) {
-        this.view.set('source', event.target.value);
+    editModel() {
         this.saveDraft(); this.db?.invalidate(); this.queries?.invalidate();
         this.view.set('status', 'Modello modificato: genera il JSON per aggiornare il confronto.');
         this.view.set('statusClass', 'changed');
         this.view.set('noJSON', true); // Do not download a stale projection.
     }
-    showOutput(node, event) {
-        if (event) this.view.set('output', event.target.value);
+    showOutput() {
         this.view.set('result', this.view.get('output') === 'python'
             ? JSON.stringify(examples[this.view.get('example')].expected, null, 2) : this.view.get('json'));
     }
@@ -92,15 +89,16 @@ export class Logic {
     }
     download() {
         if (this.view.get('noJSON')) return;
+        // GC-095 §095 inout.download exports a Bag; this is the migration's plain
+        // JSON contract, kept verbatim rather than round-tripped through a Bag.
         const url = URL.createObjectURL(new Blob([this.view.get('json') + '\n'], {type: 'application/json'}));
         const link = document.createElement('a');
         link.href = url; link.download = 'migration.json'; link.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
-    database(node, event) { return this.db.run(event.currentTarget.dataset.command); }
-    selectQuery(node, event) { this.view.set('queryExample', event.target.value); this.queries.load(); }
-    editQuery(node, event) {
-        this.view.set('queryInput', event.target.value);
+    database(node, {command}) { return this.db.run(command); }
+    selectQuery() { this.queries.load(); }
+    editQuery() {
         this.view.set('queryStatus', 'Richiesta modificata: ricompila per confrontare il SQL.');
     }
     compileQuery() { this.queries.preview(); }

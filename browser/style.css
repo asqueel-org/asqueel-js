@@ -30,3 +30,7 @@ textarea{resize:vertical;outline-offset:-3px}pre{white-space:pre}footer{font-siz
 .full-model{background:#fff;border-color:#d9e2dc}.full-model pre{height:auto;max-height:55vh;margin-top:12px;font-size:12px}.checks-output{height:auto;max-height:350px;font-size:12px;white-space:pre-wrap;padding:14px 0}.checks-output:empty{display:none}
 [hidden]{display:none!important}footer a{color:#16685b}button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #c28c35;outline-offset:2px}
 .page-nav a[aria-disabled=true]{opacity:.55;cursor:wait}
+/* Gramlot command components expose styling through CSS custom properties. */
+gramlot-button{--gramlot-ink:#fff;--gramlot-button-background:#16685b;--gramlot-button-hover:#12594d;--gramlot-border-control:#16685b;--gramlot-radius-sm:7px;--gramlot-button-padding:10px 14px;font:600 14px system-ui,sans-serif}
+.toolbar gramlot-button{--gramlot-ink:#16685b;--gramlot-button-background:transparent;--gramlot-button-hover:#e5eee7;--gramlot-button-padding:7px 10px;font-size:12px}
+.db-actions gramlot-button{--gramlot-button-padding:9px 12px;font-size:12px}

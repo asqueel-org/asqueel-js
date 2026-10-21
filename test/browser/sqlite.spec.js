@@ -68,7 +68,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await ready(page, 'models');
     const source = "root.db({name: 'draft', implementation: 'sqlite'}).packages().package('app').table({name: 'item', pkey: 'id'}).column({name: 'id', dtype: 'I'});";
     await page.locator('#model').fill(source);
-    await expect(page.locator('#download')).toBeDisabled();
+    await expect(page.locator('#download').getByRole('button')).toBeDisabled();
     await page.locator('#render').click();
     await expect(page.locator('#status')).toContainText('1 tabelle');
     const expected = JSON.parse(await page.locator('#result').textContent());
@@ -90,7 +90,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await page.locator('#model').fill('not valid JavaScript {');
     await page.locator('#render').click();
     await expect(page.locator('#status')).toHaveClass('error');
-    await expect(page.locator('#download')).toBeDisabled();
+    await expect(page.locator('#download').getByRole('button')).toBeDisabled();
     await expect(page.locator('#resolved-model')).toBeEmpty();
     await page.locator('#restore').click();
     await expect(page.locator('#status')).toContainText('JSON identico');

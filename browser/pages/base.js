@@ -2,11 +2,9 @@ import {Page} from '@gramlot/gramlot/page';
 import {exampleLabels} from '../catalog.js';
 
 export function action(parent, label, func, attributes = {}, args = {}) {
-    return parent.html_button(label, {
-        type: 'button', disabled: '^busy', ...attributes,
-        connect_onclick: 'playground.' + func,
-        ...(args.command ? {'data-command': args.command} : {}),
-    });
+    const button = parent.button(label, {disabled: '^busy', ...attributes});
+    button.dataController({func: 'playground.' + func, ...args});
+    return button;
 }
 export function detail(parent, title, path, id, open = false) {
     const box = parent.details({class: 'db-detail', open});

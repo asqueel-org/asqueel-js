@@ -40,6 +40,15 @@ esegue la Page in un worker dedicato, distinto dal worker SQLite. La pagina HTML
 contiene soltanto il contenitore e il bootstrap. Le versioni npm fissate sono
 `@gramlot/gramlot@0.3.7` e `@gramlot/gramlot-serverless@0.2.14`, solo per il playground.
 
+L'authoring segue [Writing pages (GC-095)](https://github.com/gramlot-org/gramlot/blob/main/docs/public/095-writing-pages.md):
+`dataSetter` inizializza Data, `_onStart` avvia la Logic, `node.GET/SET` accede
+ai valori e `live: true` aggiorna gli editor durante la digitazione. Le azioni
+usano `button` con un `dataController` figlio; i parametri passano al controller,
+senza recuperarli dal DOM. Gli eventi nativi restano per select, editor e link.
+Il gruppo nominato `playground` viene registrato dal nostro host serverless.
+Il download conserva direttamente il JSON migrate: `utl.inout.download` è per
+rami Bag, non per questo documento JSON già serializzato.
+
 ## Migrare nel browser
 
 1. Aprire **Migrazioni SQLite**, selezionare **SQLite · versione 1**, poi **Calcola piano SQL** e **Applica
