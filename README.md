@@ -5,11 +5,20 @@ offline, con piccole tabelle locali. Browser prima; Node.js e Bun condividono
 modello, compilazione SQL e migrazioni.
 
 **Stato: sviluppo iniziale.** La base deriva dal PoC di Asqueel, con confronti
-indipendenti contro Python. Non è ancora un porting completo né una release npm.
+indipendenti contro Python. La prima release npm 0.1.0 espone le capacità già verificate; non è un porting completo.
 La persistenza nel browser funziona; il caricamento dell'app senza rete non è
 ancora implementato. Vedi [copertura](docs/coverage.md) e [roadmap](ROADMAP.md).
 
-## Avvio
+## Installazione
+
+```sh
+npm install @asqueel/js
+```
+
+Il pacchetto include sorgenti ESM, adapter e grammatica; non richiede Python.
+Le API sono ancora in evoluzione. Il playground si avvia dal checkout del repository.
+
+## Avvio dal checkout
 
 Servono Node.js >=22.13 e npm. Bun è opzionale per la seconda suite nativa.
 
@@ -38,7 +47,7 @@ precedente compilatore, non una dichiarazione di parità query con la 0.6.1.
 
 ## API iniziale
 
-Dal checkout, gli import seguenti usano gli entry point del package:
+Gli import seguenti usano gli entry point del package installato:
 
 ```js
 import {defineModel} from '@asqueel/js';

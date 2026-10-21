@@ -1,7 +1,6 @@
 {
   "name": "@asqueel/js",
-  "version": "0.1.0-dev.0",
-  "private": true,
+  "version": "0.1.0",
   "type": "module",
   "description": "Model-driven SQLite for offline browser applications, Node.js and Bun",
   "exports": {
@@ -54,6 +53,13 @@
     "src",
     "LICENSE",
     "NOTICE",
-    "README.md"
-  ]
+    "README.md",
+    "docs",
+    "ROADMAP.md",
+    "CHANGELOG.md",
+    "RELEASING.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
