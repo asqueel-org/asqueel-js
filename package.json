@@ -1,5 +1,5 @@
 {
-  "name": "@asqueel/js",
+  "name": "@asqueel/asqueel-js",
   "version": "0.1.0",
   "type": "module",
   "description": "Model-driven SQLite for offline browser applications, Node.js and Bun",

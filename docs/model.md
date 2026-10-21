@@ -5,7 +5,7 @@ Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.1
 la grammatica JSON da sola non implementa espansioni, relazioni o migrazioni.
 
 ```js
-import {defineModel, DbModel} from '@asqueel/js';
+import {defineModel, DbModel} from '@asqueel/asqueel-js';
 
 const recipe = defineModel(root => {
     const item = root.db('offline').packages().package('app').table('item');

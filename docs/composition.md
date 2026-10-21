@@ -12,7 +12,7 @@ risolvere riferimenti o espandere opzioni in colonne fisiche. Il riferimento
 ## Estendere lo stesso modello
 
 ```js
-import {defineModel} from '@asqueel/js';
+import {defineModel} from '@asqueel/asqueel-js';
 
 const model = defineModel(root => {
     const pkg = root.db({name: 'notes', implementation: 'sqlite'})
@@ -53,7 +53,7 @@ posizionale delle chiamate Python.
 ## Comporre modelli indipendenti
 
 ```js
-import {defineModel, composeModels} from '@asqueel/js';
+import {defineModel, composeModels} from '@asqueel/asqueel-js';
 
 const base = defineModel(root => {
     const table = root.db({name: 'notes', implementation: 'sqlite'})

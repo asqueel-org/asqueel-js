@@ -1,6 +1,6 @@
 # Pubblicare Asqueel JS
 
-Package npm pubblico: `@asqueel/js`. Prima versione: `0.1.0`.
+Package npm pubblico: `@asqueel/asqueel-js`. Prima versione: `0.1.0`.
 La serie 0.1.x è sperimentale; non dichiara parità completa con Python.
 La provenienza del confronto del modello rimane fissata in
 `test/fixtures/provenance.json`, indipendentemente dalla versione npm.
@@ -20,14 +20,14 @@ La provenienza del confronto del modello rimane fissata in
 
 Serve un account npm autorizzato allo scope `@asqueel`, con autenticazione
 richiesta da npm. Usare `npm login` senza salvare token nel repository.
-Controllare `npm whoami` e `npm view @asqueel/js versions --json` prima di scegliere
+Controllare `npm whoami` e `npm view @asqueel/asqueel-js versions --json` prima di scegliere
 la versione. Una versione pubblicata non può essere sovrascritta.
 
 Dopo il merge del commit verificato, creare il tag `v0.1.0` e pubblicare lo stesso
 archivio verificato:
 
 ```sh
-npm publish /percorso/asqueel-js-0.1.0.tgz --access public
+npm publish /percorso/asqueel-asqueel-js-0.1.0.tgz --access public
 ```
 
 Verificare la versione nel registry e installarla in una nuova directory, ripetendo

@@ -12,7 +12,7 @@ ancora implementato. Vedi [copertura](docs/coverage.md) e [roadmap](ROADMAP.md).
 ## Installazione
 
 ```sh
-npm install @asqueel/js
+npm install @asqueel/asqueel-js
 ```
 
 Il pacchetto include sorgenti ESM, adapter e grammatica; non richiede Python.
@@ -50,9 +50,9 @@ precedente compilatore, non una dichiarazione di parità query con la 0.6.1.
 Gli import seguenti usano gli entry point del package installato:
 
 ```js
-import {defineModel} from '@asqueel/js';
-import {migrateSQLite} from '@asqueel/js/sqlite';
-import {openNodeSQLite} from '@asqueel/js/adapters/node';
+import {defineModel} from '@asqueel/asqueel-js';
+import {migrateSQLite} from '@asqueel/asqueel-js/sqlite';
+import {openNodeSQLite} from '@asqueel/asqueel-js/adapters/node';
 
 const model = defineModel(root => {
     const pkg = root.db({name: 'notes'}).packages()
@@ -72,8 +72,8 @@ try {
 }
 ```
 
-Su Bun usare `openBunSQLite` da `@asqueel/js/adapters/bun`. Nel browser usare
-`openBrowserSQLite` da `@asqueel/js/adapters/browser` in un worker: occorre
+Su Bun usare `openBunSQLite` da `@asqueel/asqueel-js/adapters/bun`. Nel browser usare
+`openBrowserSQLite` da `@asqueel/asqueel-js/adapters/browser` in un worker: occorre
 bundlare l'entry point e servire il WASM accanto al bundle, come nel playground.
 Il chiamante deve serializzare operazioni e transazioni intere; l'API worker
 riusabile è ancora in roadmap. Gli adapter Node/Bun usano driver sincroni dietro
