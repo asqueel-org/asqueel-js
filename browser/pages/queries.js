@@ -18,7 +18,7 @@ export class QueryPage extends PlaygroundPage {
         action(buttons, 'Compila query', 'compileQuery', {id: 'query-compile'});
         action(buttons, 'Esegui query', 'executeQuery', {id: 'query-run'});
         action(buttons, 'Verifica query con Python', 'checkQueries', {id: 'query-test'});
-        body.p('Il confronto include formule, sottoquery, EXISTS e aggregazioni inverse (conteggi, somme, concatenazioni e JSON), con esecuzione SQLite e riapertura di IndexedDB.', {class: 'db-note'});
+        body.p('Il confronto include callback dinamiche (formule, sottoquery, #ENV e colonne), EXISTS e aggregazioni inverse (conteggi, somme, concatenazioni e JSON), con esecuzione SQLite e riapertura di IndexedDB.', {class: 'db-note'});
         action(buttons, 'Verifica sys_fields e hook', 'checkHooks', {id: 'hooks-test'});
         action(buttons, 'Verifica gerarchie e contatori', 'checkBehaviors', {id: 'behaviors-test'});
         action(buttons, 'Verifica cascade onUpdate', 'checkCascades', {id: 'cascades-test'});

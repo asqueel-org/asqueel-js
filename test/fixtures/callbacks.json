@@ -1,0 +1,2132 @@
+{
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "callbacks"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "app",
+          "tag": "package",
+          "attributes": {
+            "sqlschema": "main",
+            "sqlprefix": false,
+            "name": "app"
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "owner",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "owner",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "code",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "code",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "scaled",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "scaled",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "from_formula",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "from_formula",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "invalid",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "invalid",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "cycle",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "cycle",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "missing",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "missing",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "raises",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "name": "raises",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "total",
+                            "name": "total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "present",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "exists": "present",
+                            "name": "present",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "named",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#a + #b + :factor",
+                            "select_a": "total",
+                            "select_b": "total",
+                            "var_factor": 3,
+                            "name": "named",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "label",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#ENV(label)",
+                            "name": "label",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "foreign_label",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#ENV(label,app.line)",
+                            "name": "foreign_label",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "fallback_label",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#ENV(label,fallback)",
+                            "name": "fallback_label",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "nested",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "app.line",
+                              "columns": "MAX(@owner_id.total)",
+                              "where": "$owner_id=#THIS.id"
+                            },
+                            "name": "nested",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "alias",
+                          "tag": "aliasColumn",
+                          "attributes": {
+                            "relation_path": "$scaled",
+                            "name": "alias",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [
+                            "static"
+                          ],
+                          "generated": false
+                        },
+                        {
+                          "name": "first",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "query": "first",
+                            "name": "first"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_invalid",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "invalid",
+                            "name": "sub_invalid",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_missing",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "missing",
+                            "name": "sub_missing",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_cycle",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "cycle",
+                            "name": "sub_cycle",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_raises",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "raises",
+                            "name": "sub_raises",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_options",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "options",
+                            "name": "sub_options",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_multi",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "multi",
+                            "name": "sub_multi",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_where",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": "where",
+                            "name": "sub_where",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "line",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "line",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "owner_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "owner_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "relation_name": "lines",
+                                "to": "app.owner.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "other_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "other_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "relation_name": "others",
+                                "to": "app.owner.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "line_owner_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "owner_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "line_other_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "other_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "app.line.@owner_id",
+        "attributes": {
+          "many_relation": "app.line.owner_id",
+          "one_relation": "app.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "lines",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "app.line.@other_id",
+        "attributes": {
+          "many_relation": "app.line.other_id",
+          "one_relation": "app.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "others",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "app.owner.@lines",
+        "attributes": {
+          "many_relation": "app.line.owner_id",
+          "one_relation": "app.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      },
+      {
+        "path": "app.owner.@others",
+        "attributes": {
+          "many_relation": "app.line.other_id",
+          "one_relation": "app.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      }
+    ]
+  },
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "callbacks",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "owner": {
+              "entity": "table",
+              "entity_name": "owner",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "owner",
+                  "column_name": "id"
+                },
+                "code": {
+                  "entity": "column",
+                  "entity_name": "code",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "owner",
+                  "column_name": "code"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "owner",
+                  "column_name": "amount"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "owner"
+            },
+            "line": {
+              "entity": "table",
+              "entity_name": "line",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line",
+                  "column_name": "id"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line",
+                  "column_name": "amount"
+                },
+                "owner_id": {
+                  "entity": "column",
+                  "entity_name": "owner_id",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line",
+                  "column_name": "owner_id"
+                },
+                "other_id": {
+                  "entity": "column",
+                  "entity_name": "other_id",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line",
+                  "column_name": "other_id"
+                }
+              },
+              "relations": {
+                "fk_c1183530": {
+                  "entity": "relation",
+                  "entity_name": "fk_c1183530",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "owner",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "owner_id"
+                    ],
+                    "constraint_name": "fk_c1183530"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line"
+                },
+                "fk_02b1a8d1": {
+                  "entity": "relation",
+                  "entity_name": "fk_02b1a8d1",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "owner",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "other_id"
+                    ],
+                    "constraint_name": "fk_02b1a8d1"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_8aa515ce": {
+                  "entity": "index",
+                  "entity_name": "idx_8aa515ce",
+                  "attributes": {
+                    "columns": {
+                      "owner_id": null
+                    },
+                    "index_name": "idx_8aa515ce"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line"
+                },
+                "idx_2e65f826": {
+                  "entity": "index",
+                  "entity_name": "idx_2e65f826",
+                  "attributes": {
+                    "columns": {
+                      "other_id": null
+                    },
+                    "index_name": "idx_2e65f826"
+                  },
+                  "schema_name": "main",
+                  "table_name": "line"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "line"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "seed_owner_1",
+      "request": {
+        "operation": "insert",
+        "table": "app.owner",
+        "values": {
+          "id": 1,
+          "code": "ada",
+          "amount": 10
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"owner\"(\"id\",\"code\",\"amount\") VALUES (:id,:code,:amount)",
+        "params": {
+          "id": 1,
+          "code": "ada",
+          "amount": 10
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "seed_owner_2",
+      "request": {
+        "operation": "insert",
+        "table": "app.owner",
+        "values": {
+          "id": 2,
+          "code": "bob",
+          "amount": 20
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"owner\"(\"id\",\"code\",\"amount\") VALUES (:id,:code,:amount)",
+        "params": {
+          "id": 2,
+          "code": "bob",
+          "amount": 20
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "seed_owner_3",
+      "request": {
+        "operation": "insert",
+        "table": "app.owner",
+        "values": {
+          "id": 3,
+          "code": "empty",
+          "amount": 30
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"owner\"(\"id\",\"code\",\"amount\") VALUES (:id,:code,:amount)",
+        "params": {
+          "id": 3,
+          "code": "empty",
+          "amount": 30
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "seed_line_1",
+      "request": {
+        "operation": "insert",
+        "table": "app.line",
+        "values": {
+          "id": 1,
+          "owner_id": 1,
+          "other_id": 2,
+          "amount": 5
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"line\"(\"id\",\"owner_id\",\"other_id\",\"amount\") VALUES (:id,:owner_id,:other_id,:amount)",
+        "params": {
+          "id": 1,
+          "owner_id": 1,
+          "other_id": 2,
+          "amount": 5
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "seed_line_2",
+      "request": {
+        "operation": "insert",
+        "table": "app.line",
+        "values": {
+          "id": 2,
+          "owner_id": 1,
+          "other_id": 2,
+          "amount": 8
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"line\"(\"id\",\"owner_id\",\"other_id\",\"amount\") VALUES (:id,:owner_id,:other_id,:amount)",
+        "params": {
+          "id": 2,
+          "owner_id": 1,
+          "other_id": 2,
+          "amount": 8
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "seed_line_3",
+      "request": {
+        "operation": "insert",
+        "table": "app.line",
+        "values": {
+          "id": 3,
+          "owner_id": 2,
+          "other_id": 1,
+          "amount": 12
+        },
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"line\"(\"id\",\"owner_id\",\"other_id\",\"amount\") VALUES (:id,:owner_id,:other_id,:amount)",
+        "params": {
+          "id": 3,
+          "owner_id": 2,
+          "other_id": 1,
+          "amount": 12
+        }
+      },
+      "rows": [],
+      "events": []
+    },
+    {
+      "name": "formula",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$scaled",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "scaled": 20
+        },
+        {
+          "id": 2,
+          "scaled": 40
+        },
+        {
+          "id": 3,
+          "scaled": 60
+        }
+      ],
+      "events": [
+        "app.owner.scaled"
+      ]
+    },
+    {
+      "name": "formula_environment",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$scaled",
+        "order_by": "$id",
+        "environment": {
+          "factor": 3
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 3
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "scaled": 30
+        },
+        {
+          "id": 2,
+          "scaled": 60
+        },
+        {
+          "id": 3,
+          "scaled": 90
+        }
+      ],
+      "events": [
+        "app.owner.scaled"
+      ]
+    },
+    {
+      "name": "formula_repeat",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$scaled,$alias",
+        "order_by": "$scaled",
+        "where": "$scaled>15",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"alias\"\n FROM \"main\".\"owner\" AS \"t0\"\nWHERE (( \"t0\".\"amount\" * :f1_factor )>15)\nORDER BY ( \"t0\".\"amount\" * :f1_factor )",
+        "params": {
+          "f1_factor": 2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "scaled": 20,
+          "alias": 20
+        },
+        {
+          "id": 2,
+          "scaled": 40,
+          "alias": 40
+        },
+        {
+          "id": 3,
+          "scaled": 60,
+          "alias": 60
+        }
+      ],
+      "events": [
+        "app.owner.scaled"
+      ]
+    },
+    {
+      "name": "subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$total,$present",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"amount\" * :s1_factor) AS \"SUM__amount____s1_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  ) AS \"total\",\n( EXISTS  ( SELECT \"t0_t0\".\"id\" AS \"id\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  ) AS \"present\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "s1_factor": 7
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 91,
+          "present": 1
+        },
+        {
+          "id": 2,
+          "total": 84,
+          "present": 1
+        },
+        {
+          "id": 3,
+          "total": null,
+          "present": 0
+        }
+      ],
+      "events": [
+        "app.owner.total",
+        "app.owner.present"
+      ]
+    },
+    {
+      "name": "subquery_named",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$named",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  +  ( SELECT SUM(\"t0_t0\".\"amount\" * :s3_factor) AS \"SUM__amount____s3_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  + :f1_factor ) AS \"named\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 3,
+          "s2_factor": 7,
+          "s3_factor": 7
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "named": 185
+        },
+        {
+          "id": 2,
+          "named": 171
+        },
+        {
+          "id": 3,
+          "named": null
+        }
+      ],
+      "events": [
+        "app.owner.total",
+        "app.owner.total"
+      ]
+    },
+    {
+      "name": "subquery_environment",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$total",
+        "order_by": "$id",
+        "environment": {
+          "factor": 4
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"amount\" * :s1_factor) AS \"SUM__amount____s1_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  ) AS \"total\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "s1_factor": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 52
+        },
+        {
+          "id": 2,
+          "total": 48
+        },
+        {
+          "id": 3,
+          "total": null
+        }
+      ],
+      "events": [
+        "app.owner.total"
+      ]
+    },
+    {
+      "name": "formula_mutates_attrs",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$from_formula",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  + :f1_factor ) AS \"from_formula\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 5,
+          "s2_factor": 7
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "from_formula": 96
+        },
+        {
+          "id": 2,
+          "from_formula": 89
+        },
+        {
+          "id": 3,
+          "from_formula": null
+        }
+      ],
+      "events": [
+        "app.owner.from_formula",
+        "app.owner.total"
+      ]
+    },
+    {
+      "name": "formula_subquery_repeat",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$from_formula",
+        "order_by": "$id",
+        "where": "$from_formula>0",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  + :f1_factor ) AS \"from_formula\"\n FROM \"main\".\"owner\" AS \"t0\"\nWHERE ((  ( SELECT SUM(\"t0_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  + :f1_factor )>0)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 5,
+          "s2_factor": 7
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "from_formula": 96
+        },
+        {
+          "id": 2,
+          "from_formula": 89
+        }
+      ],
+      "events": [
+        "app.owner.from_formula",
+        "app.owner.total"
+      ]
+    },
+    {
+      "name": "nested_root_dispatch",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$nested",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT MAX((  ( SELECT SUM(\"t0_t1_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t0_t1_t0\"\nWHERE (\"t0_t1_t0\".\"owner_id\"=\"t0_t1\".\"id\") )  )) AS \"MAX___owner_id_total_\"\n FROM \"main\".\"line\" AS \"t0_t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t0_t1\" ON ((\"t0_t0\".\"owner_id\")=\"t0_t1\".\"id\")\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\") )  ) AS \"nested\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "s2_factor": 11
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "nested": 143
+        },
+        {
+          "id": 2,
+          "nested": 132
+        },
+        {
+          "id": 3,
+          "nested": null
+        }
+      ],
+      "events": [
+        "app.line.total"
+      ]
+    },
+    {
+      "name": "subquery_column",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$first",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT \"t0_t0\".\"amount\" AS \"amount\"\n FROM \"main\".\"line\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\"\nLIMIT 1 )  ) AS \"first\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "first": 5
+        },
+        {
+          "id": 2,
+          "first": 12
+        },
+        {
+          "id": 3,
+          "first": null
+        }
+      ],
+      "events": [
+        "app.owner.first"
+      ]
+    },
+    {
+      "name": "environment_handler",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$label,$foreign_label",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'owner SQL' ) AS \"label\",\n( 'line SQL' ) AS \"foreign_label\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "label": "owner SQL",
+          "foreign_label": "line SQL"
+        },
+        {
+          "id": 2,
+          "label": "owner SQL",
+          "foreign_label": "line SQL"
+        },
+        {
+          "id": 3,
+          "label": "owner SQL",
+          "foreign_label": "line SQL"
+        }
+      ],
+      "events": [
+        "app.owner.env_label",
+        "app.line.env_label"
+      ]
+    },
+    {
+      "name": "environment_value",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$label,$foreign_label",
+        "order_by": "$id",
+        "environment": {
+          "label": "O'Reilly"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'O''Reilly' ) AS \"label\",\n( 'O''Reilly' ) AS \"foreign_label\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "label": "O'Reilly",
+          "foreign_label": "O'Reilly"
+        },
+        {
+          "id": 2,
+          "label": "O'Reilly",
+          "foreign_label": "O'Reilly"
+        },
+        {
+          "id": 3,
+          "label": "O'Reilly",
+          "foreign_label": "O'Reilly"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "environment_fallback",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$fallback_label",
+        "order_by": "$id",
+        "environment": {
+          "fallback": "fallback text"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'fallback text' ) AS \"fallback_label\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "fallback_label": "fallback text"
+        },
+        {
+          "id": 2,
+          "fallback_label": "fallback text"
+        },
+        {
+          "id": 3,
+          "fallback_label": "fallback text"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "environment_table_key",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$foreign_label",
+        "order_by": "$id",
+        "environment": {
+          "app.line": "key before callback"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'key before callback' ) AS \"foreign_label\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "foreign_label": "key before callback"
+        },
+        {
+          "id": 2,
+          "foreign_label": "key before callback"
+        },
+        {
+          "id": 3,
+          "foreign_label": "key before callback"
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "environment_null",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$label",
+        "order_by": "$id",
+        "environment": {
+          "label": null
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( '' ) AS \"label\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "label": ""
+        },
+        {
+          "id": 2,
+          "label": ""
+        },
+        {
+          "id": 3,
+          "label": ""
+        }
+      ],
+      "events": []
+    },
+    {
+      "name": "dynamic_columns",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$twice,$dynamicscale,$dynamic_method",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * 2 ) AS \"twice\",\n( \"t0\".\"amount\" * 2 ) AS \"dynamicscale\",\n( \"t0\".\"amount\" + :f1_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "twice": 20,
+          "dynamicscale": 20,
+          "dynamic_method": 14
+        },
+        {
+          "id": 2,
+          "twice": 40,
+          "dynamicscale": 40,
+          "dynamic_method": 24
+        },
+        {
+          "id": 3,
+          "twice": 60,
+          "dynamicscale": 60,
+          "dynamic_method": 34
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "name": "dynamic_environment",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$DynamicScale,$dynamic_method",
+        "order_by": "$id",
+        "environment": {
+          "factor": 5
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * 5 ) AS \"DynamicScale\",\n( \"t0\".\"amount\" + :f1_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "DynamicScale": 50,
+          "dynamic_method": 14
+        },
+        {
+          "id": 2,
+          "DynamicScale": 100,
+          "dynamic_method": 24
+        },
+        {
+          "id": 3,
+          "DynamicScale": 150,
+          "dynamic_method": 34
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "name": "dynamic_repeat",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$dynamic_method",
+        "order_by": "$dynamic_method",
+        "where": "$dynamic_method>10",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" + :f1_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"\nWHERE (( \"t0\".\"amount\" + :f1_offset )>10)\nORDER BY ( \"t0\".\"amount\" + :f1_offset )",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "dynamic_method": 14
+        },
+        {
+          "id": 2,
+          "dynamic_method": 24
+        },
+        {
+          "id": 3,
+          "dynamic_method": 34
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "name": "dynamic_renamed",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$renamed",
+        "order_by": "$id",
+        "environment": {
+          "dynamic_name": "renamed"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"amount\" * 2 ) AS \"renamed\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "renamed": 20
+        },
+        {
+          "id": 2,
+          "renamed": 40
+        },
+        {
+          "id": 3,
+          "renamed": 60
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
+    },
+    {
+      "name": "dynamic_count",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "COUNT(*) AS n",
+        "order_by": "$id",
+        "where": "$dynamic_method>15",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT COUNT(*) AS n\n FROM \"main\".\"owner\" AS \"t0\"\nWHERE (( \"t0\".\"amount\" + :f1_offset )>15)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "n": 2
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "name": "related_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$id,@owner_id.scaled,@other_id.scaled",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t1\".\"amount\" * :f1_factor ) AS \"_owner_id_scaled\",\n( \"t2\".\"amount\" * :f2_factor ) AS \"_other_id_scaled\"\n FROM \"main\".\"line\" AS \"t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\n       LEFT JOIN \"main\".\"owner\" AS \"t2\" ON ((\"t0\".\"other_id\")=\"t2\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 2,
+          "f2_factor": 2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_owner_id_scaled": 20,
+          "_other_id_scaled": 40
+        },
+        {
+          "id": 2,
+          "_owner_id_scaled": 20,
+          "_other_id_scaled": 40
+        },
+        {
+          "id": 3,
+          "_owner_id_scaled": 40,
+          "_other_id_scaled": 20
+        }
+      ],
+      "events": [
+        "app.owner.scaled"
+      ]
+    },
+    {
+      "name": "related_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$id,@owner_id.total,@other_id.total",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t1_t0\".\"amount\" * :s1_factor) AS \"SUM__amount____s1_factor_\"\n FROM \"main\".\"line\" AS \"t1_t0\"\nWHERE (\"t1_t0\".\"owner_id\"=\"t1\".\"id\") )  ) AS \"_owner_id_total\",\n(  ( SELECT SUM(\"t2_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t2_t0\"\nWHERE (\"t2_t0\".\"owner_id\"=\"t2\".\"id\") )  ) AS \"_other_id_total\"\n FROM \"main\".\"line\" AS \"t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\n       LEFT JOIN \"main\".\"owner\" AS \"t2\" ON ((\"t0\".\"other_id\")=\"t2\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "s1_factor": 11,
+          "s2_factor": 11
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_owner_id_total": 143,
+          "_other_id_total": 132
+        },
+        {
+          "id": 2,
+          "_owner_id_total": 143,
+          "_other_id_total": 132
+        },
+        {
+          "id": 3,
+          "_owner_id_total": 132,
+          "_other_id_total": 143
+        }
+      ],
+      "events": [
+        "app.line.total",
+        "app.line.total"
+      ]
+    },
+    {
+      "name": "related_mutable_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$id,@owner_id.from_formula,@other_id.from_formula",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t1_t0\".\"amount\" * :s2_factor) AS \"SUM__amount____s2_factor_\"\n FROM \"main\".\"line\" AS \"t1_t0\"\nWHERE (\"t1_t0\".\"owner_id\"=\"t1\".\"id\") )  + :f1_factor ) AS \"_owner_id_from_formula\",\n(  ( SELECT SUM(\"t2_t0\".\"amount\" * :s4_factor) AS \"SUM__amount____s4_factor_\"\n FROM \"main\".\"line\" AS \"t2_t0\"\nWHERE (\"t2_t0\".\"owner_id\"=\"t2\".\"id\") )  + :f3_factor ) AS \"_other_id_from_formula\"\n FROM \"main\".\"line\" AS \"t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\n       LEFT JOIN \"main\".\"owner\" AS \"t2\" ON ((\"t0\".\"other_id\")=\"t2\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 5,
+          "s2_factor": 11,
+          "f3_factor": 5,
+          "s4_factor": 11
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_owner_id_from_formula": 148,
+          "_other_id_from_formula": 137
+        },
+        {
+          "id": 2,
+          "_owner_id_from_formula": 148,
+          "_other_id_from_formula": 137
+        },
+        {
+          "id": 3,
+          "_owner_id_from_formula": 137,
+          "_other_id_from_formula": 148
+        }
+      ],
+      "events": [
+        "app.owner.from_formula",
+        "app.line.total",
+        "app.line.total"
+      ]
+    },
+    {
+      "name": "related_environment",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$id,@owner_id.label",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'owner SQL' ) AS \"_owner_id_label\"\n FROM \"main\".\"line\" AS \"t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_owner_id_label": "owner SQL"
+        },
+        {
+          "id": 2,
+          "_owner_id_label": "owner SQL"
+        },
+        {
+          "id": 3,
+          "_owner_id_label": "owner SQL"
+        }
+      ],
+      "events": [
+        "app.owner.env_label"
+      ]
+    },
+    {
+      "name": "related_dynamic",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$id,@owner_id.twice,@other_id.dynamic_method",
+        "order_by": "$id",
+        "environment": {}
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t1\".\"amount\" * 2 ) AS \"_owner_id_twice\",\n( \"t2\".\"amount\" + :f1_offset ) AS \"_other_id_dynamic_method\"\n FROM \"main\".\"line\" AS \"t0\"\n       LEFT JOIN \"main\".\"owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\n       LEFT JOIN \"main\".\"owner\" AS \"t2\" ON ((\"t0\".\"other_id\")=\"t2\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_owner_id_twice": 20,
+          "_other_id_dynamic_method": 24
+        },
+        {
+          "id": 2,
+          "_owner_id_twice": 20,
+          "_other_id_dynamic_method": 24
+        },
+        {
+          "id": 3,
+          "_owner_id_twice": 40,
+          "_other_id_dynamic_method": 14
+        }
+      ],
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.dynamic_method"
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "name": "missing_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$missing",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$invalid",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "empty_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$invalid",
+        "environment": {
+          "invalid": " "
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "nonstring_formula",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$invalid",
+        "environment": {
+          "invalid": 7
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_cycle",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$cycle",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_raises",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$raises",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "missing_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_missing",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_invalid",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "list_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_invalid",
+        "environment": {
+          "invalid": []
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "subquery_cycle",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_cycle",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "subquery_raises",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_raises",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "subquery_options",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_options",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "subquery_multi",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_multi",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "subquery_where",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$sub_where",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "dynamic_redefines",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$twice",
+        "environment": {
+          "dynamic_name": "id"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "unknown_dynamic",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$unknown",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "unknown_env_owner",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$fallback_label",
+        "environment": {}
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_and_select",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "select": "total"
+          }
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_unused_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "select_unused": "total"
+          }
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_duplicate_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "exists_result": "present"
+          }
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_bad_subquery",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "select_result": {
+              "table": "app.line"
+            }
+          }
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_bad_kwargs",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "var_kwargs": 7
+          }
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_bad_parameter",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$from_formula",
+        "environment": {
+          "attributes": {
+            "var_bad-name": 3
+          }
+        }
+      },
+      "rejected": true
+    }
+  ],
+  "cache": [
+    {
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"amount\" * 3 ) AS \"dynamicscale\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\",\n( \"t0\".\"amount\" + :f2_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"",
+        "params": {
+          "f1_factor": 3,
+          "f2_offset": 4
+        }
+      },
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.scaled",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"amount\" * 3 ) AS \"dynamicscale\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\",\n( \"t0\".\"amount\" + :f2_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"",
+        "params": {
+          "f1_factor": 5,
+          "f2_offset": 4
+        }
+      },
+      "events": [
+        "app.owner.scaled",
+        "app.owner.dynamic_method"
+      ]
+    },
+    {
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"amount\" * 7 ) AS \"dynamicscale\",\n( \"t0\".\"amount\" * :f1_factor ) AS \"scaled\",\n( \"t0\".\"amount\" + :f2_offset ) AS \"dynamic_method\"\n FROM \"main\".\"owner\" AS \"t0\"",
+        "params": {
+          "f1_factor": 7,
+          "f2_offset": 4
+        }
+      },
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.scaled",
+        "app.owner.dynamic_method"
+      ]
+    }
+  ]
+}

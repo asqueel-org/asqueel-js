@@ -1,3 +1,4 @@
+import {CompilerMethods, validateCompilerMethods} from './compiler-methods.js';
 import {projectApplication} from './application.js';
 import {own, record} from './sql-expressions.js';
 import {compileSelect} from './select-compiler.js';
@@ -42,10 +43,13 @@ export class SqliteQueries {
         this.adapter = adapter;
         this.scope = scope;
         this.runtime = runtime;
+        this.compilerEnvironments = new WeakMap();
+        this.defaultEnvironment = {};
         if (!scope) {
             record(runtime);
-            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid'].includes(key))
+            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods'].includes(key))
                 throw new Error(`Opzione runtime sconosciuta: ${key}`);
+            validateCompilerMethods(this.tables, runtime.methods ?? {});
             for (const key of ['clock', 'uuid']) if (runtime[key] != null && typeof runtime[key] !== 'function')
                 throw new TypeError(`${key} deve essere una funzione`);
             for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
@@ -86,7 +90,10 @@ export class SqliteQueries {
     }
     compile(request) {
         record(request);
-        request = {...request, environment: request.environment ?? this.environment()};
+        const environment = record(request.environment ?? this.scope?.environment ??
+            (typeof this.runtime.environment === 'function' ? this.runtime.environment() : this.runtime.environment) ?? this.defaultEnvironment);
+        if (!this.compilerEnvironments.has(environment)) this.compilerEnvironments.set(environment, new Map());
+        request = {...request, environment: structuredClone(environment)};
         const read = ['select', 'count'].includes(request.operation);
         if (!read && !['insert', 'update', 'delete'].includes(request.operation)) throw new Error('Operazione query non supportata');
         const allowed = read ? ['operation', 'table', 'columns', 'where', 'sqlparams', 'order_by', 'limit', 'offset',
@@ -94,7 +101,10 @@ export class SqliteQueries {
             : ['operation', 'table', 'values', 'pkey', 'old_record', 'ignore_partition', 'environment'];
         for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Opzione query fuori perimetro: ${name}`);
         const table = this.resolveTable(request.table, !read);
-        return read ? compileSelect(this.tables, table, request) : compileWrite(table, request.operation, request.values, request);
+        if (!read) return compileWrite(table, request.operation, request.values, request);
+        const methods = new CompilerMethods(this.tables, this.runtime.methods ?? {},
+            structuredClone(request.environment), this.compilerEnvironments.get(environment));
+        return compileSelect(this.tables, table, request, methods);
     }
     async execute(request) {
         const compiled = this.compile(request);

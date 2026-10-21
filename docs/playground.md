@@ -201,17 +201,18 @@ come frammenti di espressione. Collisioni nei nomi generati per liste vengono
 rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
 Restano fuori dal perimetro altre macro, navigazione diretta attraverso relazioni molti,
-callback applicative delle formule e dell'ambiente, codec applicativi, lock,
+codec applicativi, lock,
 scritture bulk/da selezione, azioni applicative su relazioni composte,
 e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
 Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
 
-**Verifica query con Python** esegue quattordici gruppi di controlli in database
+**Verifica query con Python** esegue diciannove gruppi di controlli in database
 IndexedDB separati: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
 helper e transazioni, 28 casi aggiuntivi, 32 casi di formule parametrizzate/chiavi
 composte, 48 casi di sottoquery/aggregazioni e 17 query rifiutate,
+31 casi callback con ordine delle chiamate, 23 callback non valide e cache per ambiente,
 con rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
@@ -377,7 +378,7 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 140 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+I 171 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
@@ -497,9 +498,23 @@ Le azioni su relazioni composte restano rifiutate esplicitamente.
 configurazioni rifiutate. Il worker crea un database separato, confronta SQL e
 parametri con l'oracolo Python e poi esegue realmente ogni richiesta su SQLite
 WASM. Dopo la riapertura IndexedDB ripete tutte le SELECT e confronta i risultati.
-I dettagli compaiono in **Verifiche query nel browser**; il totale è di 140 query.
+I dettagli compaiono in **Verifiche query nel browser**; il totale è di 171 query.
 
 Le ricette indipendenti e la semantica di correlazione, binding e filtri sono in
 [parity.md](parity.md#sottoquery-e-aggregazioni-inverse). Il confronto browser usa
 fixture Python salvate; `npm run verify:python` rigenera i risultati in memoria dal
 riferimento fissato e li confronta con Node e Bun.
+
+
+## Callback dinamiche nel browser
+
+**Verifica query con Python** esegue anche i 31 casi delle callback del compilatore:
+formule SQL generate da metodi, sottoquery, risoluzione `#ENV` e colonne dinamiche.
+Il worker importa `examples/compiler-callbacks.js`; le funzioni restano separate dal
+JSON del modello. SQL, parametri, chiamate e risultati SQLite sono confrontati con
+l'oracolo Python, insieme a 23 rifiuti attesi e al ciclo della cache per ambiente.
+Tutte le SELECT vengono rieseguite dopo chiusura e riapertura di IndexedDB.
+
+I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
+171 casi query e 19 gruppi di verifiche. Per registrare le proprie funzioni vedere
+[il contratto delle callback](parity.md#callback-dinamiche-del-compilatore).

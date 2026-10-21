@@ -7,6 +7,7 @@ import featureOracle from '../test/fixtures/query-features.json' with {type: 'js
 import {queryFeatures} from '../examples/query-features.js';
 import {queryRuntimeChecks} from '../test/query-runtime-checks.js';
 import {readChecks} from './read-checks.js';
+import {callbackChecks} from './callback-checks.js';
 import {subqueryChecks} from './subquery-checks.js';
 
 export async function queryChecks() {
@@ -50,6 +51,7 @@ export async function queryChecks() {
         checks.push('Riapertura IndexedDB: SELECT con relazione restituisce gli stessi dati');
         checks.push(...await readChecks());
         checks.push(...await subqueryChecks());
+        checks.push(...await callbackChecks());
         return checks;
     } finally {
         await db.close();

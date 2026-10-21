@@ -1,0 +1,243 @@
+[
+  {
+    "name": "missing_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$missing",
+      "environment": {}
+    }
+  },
+  {
+    "name": "invalid_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$invalid",
+      "environment": {}
+    }
+  },
+  {
+    "name": "empty_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$invalid",
+      "environment": {
+        "invalid": " "
+      }
+    }
+  },
+  {
+    "name": "nonstring_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$invalid",
+      "environment": {
+        "invalid": 7
+      }
+    }
+  },
+  {
+    "name": "formula_cycle",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$cycle",
+      "environment": {}
+    }
+  },
+  {
+    "name": "formula_raises",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$raises",
+      "environment": {}
+    }
+  },
+  {
+    "name": "missing_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_missing",
+      "environment": {}
+    }
+  },
+  {
+    "name": "invalid_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_invalid",
+      "environment": {}
+    }
+  },
+  {
+    "name": "list_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_invalid",
+      "environment": {
+        "invalid": []
+      }
+    }
+  },
+  {
+    "name": "subquery_cycle",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_cycle",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_raises",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_raises",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_options",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_options",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_multi",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_multi",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_where",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$sub_where",
+      "environment": {}
+    }
+  },
+  {
+    "name": "dynamic_redefines",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$twice",
+      "environment": {
+        "dynamic_name": "id"
+      }
+    }
+  },
+  {
+    "name": "unknown_dynamic",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$unknown",
+      "environment": {}
+    }
+  },
+  {
+    "name": "unknown_env_owner",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$fallback_label",
+      "environment": {}
+    }
+  },
+  {
+    "name": "formula_and_select",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "select": "total"
+        }
+      }
+    }
+  },
+  {
+    "name": "formula_unused_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "select_unused": "total"
+        }
+      }
+    }
+  },
+  {
+    "name": "formula_duplicate_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "exists_result": "present"
+        }
+      }
+    }
+  },
+  {
+    "name": "formula_bad_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "select_result": {
+            "table": "app.line"
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "formula_bad_kwargs",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "var_kwargs": 7
+        }
+      }
+    }
+  },
+  {
+    "name": "formula_bad_parameter",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$from_formula",
+      "environment": {
+        "attributes": {
+          "var_bad-name": 3
+        }
+      }
+    }
+  }
+]

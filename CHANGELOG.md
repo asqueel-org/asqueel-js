@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Callback sincrone del compilatore (`sql_formula_*`, `subquery_*`, `env_*`,
+  `formulaColumn_*`) nel registro runtime `methods`, con risoluzione del proprietario,
+  attributi locali e cache per ambiente allineati a Python. 31 nuovi casi verificano
+  modello/migrate, SQL, parametri, chiamate e dati; 23 errori e il ciclo cache sono
+  confrontati con Python anche su SQLite WASM e dopo riapertura IndexedDB.
+
 - Sottoquery scalari ed EXISTS, select_*/exists_* nelle formule, subQueryColumn
   dichiarative e aggregazioni inverse/virtuali `aggr()` (count/sum/avg/min/max,
   join ordinato e to_json). Scope dei parametri e alias SQL allineati a Python,

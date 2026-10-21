@@ -1,0 +1,353 @@
+[
+  {
+    "name": "seed_owner_1",
+    "request": {
+      "operation": "insert",
+      "table": "app.owner",
+      "values": {
+        "id": 1,
+        "code": "ada",
+        "amount": 10
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "seed_owner_2",
+    "request": {
+      "operation": "insert",
+      "table": "app.owner",
+      "values": {
+        "id": 2,
+        "code": "bob",
+        "amount": 20
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "seed_owner_3",
+    "request": {
+      "operation": "insert",
+      "table": "app.owner",
+      "values": {
+        "id": 3,
+        "code": "empty",
+        "amount": 30
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "seed_line_1",
+    "request": {
+      "operation": "insert",
+      "table": "app.line",
+      "values": {
+        "id": 1,
+        "owner_id": 1,
+        "other_id": 2,
+        "amount": 5
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "seed_line_2",
+    "request": {
+      "operation": "insert",
+      "table": "app.line",
+      "values": {
+        "id": 2,
+        "owner_id": 1,
+        "other_id": 2,
+        "amount": 8
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "seed_line_3",
+    "request": {
+      "operation": "insert",
+      "table": "app.line",
+      "values": {
+        "id": 3,
+        "owner_id": 2,
+        "other_id": 1,
+        "amount": 12
+      },
+      "environment": {}
+    }
+  },
+  {
+    "name": "formula",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$scaled",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "formula_environment",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$scaled",
+      "order_by": "$id",
+      "environment": {
+        "factor": 3
+      }
+    }
+  },
+  {
+    "name": "formula_repeat",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$scaled,$alias",
+      "order_by": "$scaled",
+      "where": "$scaled>15",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$total,$present",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_named",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$named",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_environment",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$total",
+      "order_by": "$id",
+      "environment": {
+        "factor": 4
+      }
+    }
+  },
+  {
+    "name": "formula_mutates_attrs",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$from_formula",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "formula_subquery_repeat",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$from_formula",
+      "order_by": "$id",
+      "where": "$from_formula>0",
+      "environment": {}
+    }
+  },
+  {
+    "name": "nested_root_dispatch",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$nested",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "subquery_column",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$first",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "environment_handler",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$label,$foreign_label",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "environment_value",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$label,$foreign_label",
+      "order_by": "$id",
+      "environment": {
+        "label": "O'Reilly"
+      }
+    }
+  },
+  {
+    "name": "environment_fallback",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$fallback_label",
+      "order_by": "$id",
+      "environment": {
+        "fallback": "fallback text"
+      }
+    }
+  },
+  {
+    "name": "environment_table_key",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$foreign_label",
+      "order_by": "$id",
+      "environment": {
+        "app.line": "key before callback"
+      }
+    }
+  },
+  {
+    "name": "environment_null",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$label",
+      "order_by": "$id",
+      "environment": {
+        "label": null
+      }
+    }
+  },
+  {
+    "name": "dynamic_columns",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$twice,$dynamicscale,$dynamic_method",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "dynamic_environment",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$DynamicScale,$dynamic_method",
+      "order_by": "$id",
+      "environment": {
+        "factor": 5
+      }
+    }
+  },
+  {
+    "name": "dynamic_repeat",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$dynamic_method",
+      "order_by": "$dynamic_method",
+      "where": "$dynamic_method>10",
+      "environment": {}
+    }
+  },
+  {
+    "name": "dynamic_renamed",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$renamed",
+      "order_by": "$id",
+      "environment": {
+        "dynamic_name": "renamed"
+      }
+    }
+  },
+  {
+    "name": "dynamic_count",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "COUNT(*) AS n",
+      "order_by": "$id",
+      "where": "$dynamic_method>15",
+      "environment": {}
+    }
+  },
+  {
+    "name": "related_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$id,@owner_id.scaled,@other_id.scaled",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "related_subquery",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$id,@owner_id.total,@other_id.total",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "related_mutable_formula",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$id,@owner_id.from_formula,@other_id.from_formula",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "related_environment",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$id,@owner_id.label",
+      "order_by": "$id",
+      "environment": {}
+    }
+  },
+  {
+    "name": "related_dynamic",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$id,@owner_id.twice,@other_id.dynamic_method",
+      "order_by": "$id",
+      "environment": {}
+    }
+  }
+]

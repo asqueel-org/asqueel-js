@@ -1,3 +1,4 @@
+import {CompilerMethods} from './compiler-methods.js';
 import {names} from './structures.js';
 import {IDENT, q, record, columnName, tableSQL, tokens, split, projectionAlias, fieldReference} from './sql-expressions.js';
 import {prepareParameters} from './sql-parameters.js';
@@ -16,7 +17,7 @@ function environmentText(value) {
 
 /** SQLite SELECT clauses ported from the hierarchical Python 0.6.1 compiler. */
 class Context {
-    constructor(tables, table, parameters, environment, parent = null, aliasPrefix = 't', bindings = null) {
+    constructor(tables, table, parameters, environment, parent = null, aliasPrefix = 't', bindings = null, methods = null) {
         this.tables = tables; this.table = table; this.environment = environment;
         this.bindings = bindings ?? new QueryBindings(record(parameters ?? {}));
         this.params = this.bindings.params;
@@ -24,6 +25,8 @@ class Context {
         this.joins = new Map(); this.active = parent?.active ?? new Set();
         this.formulaBindings = new Map(); this.manyColumns = new Map();
         this.fragments = parent?.fragments ?? [];
+        this.methods = parent?.methods ?? methods ?? new CompilerMethods(tables, {}, environment);
+        this.definitions = parent?.definitions ?? new Map();
     }
     protect(sql) {
         const index = this.fragments.push(sql) - 1;
@@ -39,7 +42,7 @@ class Context {
         if (name === 'pkey') name = table.a.x_logical_pkey || table.a.pkey;
         const column = table.columns.get(name);
         if (column) return `${q(alias)}.${q(columnName(column))}`;
-        const virtual = table.virtual.get(name) ?? table.composites.get(name);
+        const virtual = table.virtual.get(name) ?? table.composites.get(name) ?? this.methods.columns(table).get(name.toLowerCase());
         if (!virtual) throw new Error(`Colonna sconosciuta: ${table.key}.${name}`);
         const key = `${table.key}.${name}`;
         if (this.active.has(key)) throw new Error(`Formula o alias ciclico: ${key}`);
@@ -61,15 +64,46 @@ class Context {
     }
     formulaScope(column, key) {
         if (!this.formulaBindings.has(key)) {
-            const values = {...(column.a.var_kwargs ?? {})};
+            const values = {...record(column.a.var_kwargs ?? {})};
             for (const [name, value] of Object.entries(column.a))
                 if (name.startsWith('var_') && name !== 'var_kwargs') values[name.slice(4)] = value;
+            for (const name of Object.keys(values)) if (!/^[A-Za-z_]\w*$/.test(name)) throw new Error('Nome parametro formula non valido');
             this.formulaBindings.set(key, Object.keys(values).length ? this.bindings.child(values, 'f') : this.bindings);
         }
         return this.formulaBindings.get(key);
     }
     formula(table, column, alias) {
-        const attrs = column.a, bindings = this.formulaScope(column, `${table.key}.${column.label}.${alias}`);
+        const key = `${table.key}.${column.label}`;
+        if (!this.definitions.has(key)) {
+            const attrs = structuredClone(column.a);
+            if (column.tag === 'formulaColumn' && attrs.sql_formula === true) {
+                const sql = this.methods.call(table, 'sql_formula_' + column.label, attrs);
+                if (typeof sql !== 'string' || !sql.trim()) throw new TypeError(`${key}: la callback deve restituire SQL non vuoto`);
+                attrs.sql_formula = sql;
+            }
+            if (column.tag === 'formulaColumn') {
+                if ([attrs.sql_formula, attrs.select, attrs.exists].filter(v => v != null).length !== 1)
+                    throw new Error(`${key}: specificare una sola formula, select o exists`);
+                const found = new Set();
+                const validateSubquery = value => {
+                    if (typeof value === 'string' && value.trim()) return;
+                    record(value);
+                    for (const name of ['table', 'where']) if (typeof value[name] !== 'string' || !value[name].trim())
+                        throw new Error(`${key}: sottoquery senza ${name}`);
+                };
+                for (const name of ['select', 'exists']) if (attrs[name] != null) validateSubquery(attrs[name]);
+                for (const [name, value] of Object.entries(attrs)) {
+                    if (!/^(select_|exists_)/.test(name)) continue;
+                    const token = name.slice(name.indexOf('_') + 1);
+                    const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    if (found.has(token) || typeof attrs.sql_formula !== 'string' || !new RegExp('#' + escaped + '\\b').test(attrs.sql_formula))
+                        throw new Error(`${key}: sottoquery duplicata o non usata: ${token}`);
+                    found.add(token); validateSubquery(value);
+                }
+            }
+            this.definitions.set(key, attrs);
+        }
+        const attrs = this.definitions.get(key), bindings = this.formulaScope({a: attrs}, `${key}.${alias}`);
         let formula = attrs.sql_formula, mode, definition = attrs.select ?? attrs.exists;
         const isExists = attrs.exists != null;
         if (column.tag === 'subQueryColumn') {
@@ -87,13 +121,18 @@ class Context {
         const subqueries = new Map();
         if (definition != null) { formula = '#default'; subqueries.set('default', {definition, exists: isExists}); }
         else {
-            if (typeof formula !== 'string' || column.children.length) throw new UnsupportedFeatureError('Formula richiede SQL dichiarativo; callback non supportate');
+            if (typeof formula !== 'string' || column.children.length) throw new UnsupportedFeatureError('Formula richiede SQL valido');
             for (const prefix of ['select_', 'exists_']) for (const [key, value] of Object.entries(attrs))
                 if (key.startsWith(prefix)) subqueries.set(key.slice(prefix.length), {definition: value, exists: prefix === 'exists_'});
         }
         if (column.tag === 'formulaColumn') formula = formula.replace(/#ENV\(([^,)]+)(,[^),]+)?\)/g, (_, name, fallback) => {
             const key = [name, fallback?.slice(1)].find(k => k != null && Object.hasOwn(this.environment, k));
-            if (key == null) throw new Error(`${table.key}.${column.label}: #ENV(${name}) senza valore; callback env non supportate`);
+            if (key == null) {
+                const owner = fallback ? this.knownTable(fallback.slice(1), this.table, '#ENV') : table;
+                const sql = this.methods.call(owner, 'env_' + name);
+                if (typeof sql !== 'string') throw new TypeError('La callback env deve restituire SQL');
+                return sql;
+            }
             return `'${environmentText(this.environment[key]).replaceAll("'", "''")}'`;
         });
         formula = this.expandMany(formula, table, false);
@@ -107,13 +146,13 @@ class Context {
         formula = this.thisFields(formula, table, alias);
         return `( ${this.expression(formula, table, alias)} )`;
     }
-    knownTable(name, owner = this.table) {
+    knownTable(name, owner = this.table, context = 'sottoquery') {
         const table = this.tables.get(name) ?? this.tables.get(`${owner.namespace}.${name}`);
-        if (!table) throw new Error(`Tabella sottoquery sconosciuta: ${name}`);
+        if (!table) throw new Error(`Tabella ${context} sconosciuta: ${name}`);
         return table;
     }
     subquery(definition, owner, alias, bindings, exists = false, mode = null) {
-        if (typeof definition === 'string') throw new UnsupportedFeatureError('Callback subquery non supportate');
+        if (typeof definition === 'string') definition = this.methods.call(this.table, 'subquery_' + definition);
         const options = structuredClone(record(definition));
         for (const [old, name] of [['excludeDraft', 'exclude_draft'], ['excludeLogicalDeleted', 'exclude_logical_deleted'], ['ignorePartition', 'ignore_partition']]) {
             if (Object.hasOwn(options, old)) {
@@ -370,8 +409,8 @@ function selectPlan(context, request) {
     return {sql, projected, columns};
 }
 
-export function compileSelect(tables, table, request) {
-    const context = new Context(tables, table, request.sqlparams, request.environment ?? {});
+export function compileSelect(tables, table, request, methods = null) {
+    const context = new Context(tables, table, request.sqlparams, request.environment ?? {}, null, 't', null, methods);
     const plan = selectPlan(context, request);
     return prepareParameters(context.restore(plan.sql), context.params, request.environment);
 }

@@ -51,9 +51,9 @@ rigenera automaticamente il riferimento.
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
 0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
-I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate e i 48 casi
-di sottoquery/aggregazioni confrontano il JSON completo dei quattro modelli,
-il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le quattro ricette hanno
+I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
+di sottoquery/aggregazioni e i 31 casi callback confrontano il JSON completo dei
+cinque modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le cinque ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
 
@@ -197,6 +197,71 @@ chiusura e riapertura del database IndexedDB.
 
 Come Python SQLite, il compilatore rifiuta navigazione diretta attraverso relazioni
 molti, aggr fuori da una proiezione autonoma, count con argomenti, XML, vecchi mode
-JSON/XML delle subQueryColumn e virtualRelation con ask. I metodi Python che generano
-sottoquery richiedono un futuro equivalente JS: qui sono accettate definizioni dati,
-non callback. Restano fuori le altre macro e i JOIN con condizioni personalizzate.
+JSON/XML delle subQueryColumn e virtualRelation con ask. Le sottoquery accettano
+anche riferimenti a callback JS, come descritto sotto. Restano fuori le altre macro
+e i JOIN con condizioni personalizzate.
+
+
+## Callback dinamiche del compilatore
+
+Il registro `methods` tiene le funzioni fuori dal JSON del modello e dal JSON migrate.
+I nomi e gli argomenti seguono i metodi Python `SqlTable`:
+
+```js
+const methods = {
+    'app.owner': {
+        sql_formula_scaled(attr) {
+            attr.var_factor = this.db.currentEnv.factor ?? 2;
+            return '$amount * :factor';
+        },
+        subquery_total() {
+            return {table: 'app.line', columns: 'SUM($amount)',
+                where: '$owner_id=#THIS.id'};
+        },
+        env_label() { return "'owner SQL'"; },
+        formulaColumn_extra() {
+            return [{name: 'twice', sql_formula: '$amount * 2'}];
+        },
+    },
+};
+const query = model.queries(adapter, {methods, environment: {factor: 3}});
+const rows = await query.table('app.owner').query({columns: '$scaled,$twice'}).fetch();
+```
+
+Le dichiarazioni statiche corrispondenti usano `sql_formula: true`, `select: 'total'`
+o `exists: 'total'`, `query: 'total'` nelle `subQueryColumn`, e `#ENV(label)`.
+`formulaColumn_*` restituisce una dichiarazione o una lista; i nomi dinamici sono
+cercati senza distinzione di maiuscole, come Python, e non entrano nel modello persistito.
+
+`sql_formula_*` riceve una copia degli attributi e può aggiungere `var_*` e
+`select_*`/`exists_*`; deve restituire SQL non vuoto. La definizione viene calcolata
+una volta per colonna durante una compilazione, anche se raggiunta da più JOIN o
+sottoquery. I metodi delle formule e delle colonne dinamiche appartengono alla
+tabella della colonna; `subquery_*` appartiene alla tabella della SELECT corrente,
+anche quando la formula viene raggiunta attraverso una relazione.
+
+`#ENV` cerca prima la chiave nell'ambiente, poi la chiave alternativa, infine
+`env_<nome>()` sulla tabella proprietaria o sulla tabella alternativa. Il risultato
+del metodo è un frammento SQL; i valori trovati nell'ambiente sono invece quotati.
+
+Le dichiarazioni `formulaColumn_*` sono memorizzate per oggetto ambiente, come la
+cache `currentEnv` Python. Modificare `factor` nello stesso oggetto non rigenera
+queste dichiarazioni; un nuovo oggetto ambiente crea una cache distinta. Un provider
+`environment: () => ({factor: ...})` produce quindi un ambiente nuovo a ogni chiamata.
+Gli attributi delle formule vengono invece ricalcolati a ogni compilazione.
+
+Il contesto JS espone `this.fullname`, `this.name`, `this.db.currentEnv` come copia
+locale e `this.db.table(nome)` per chiamare gli altri metodi registrati. Non emula
+l'intero `SqlTable` Python: accesso al database, hook di scrittura e stato persistente
+vanno gestiti con le API applicative. Le callback sono sincrone; Promise, metodi
+mancanti, ritorni invalidi, definizioni in conflitto e cicli vengono rifiutati.
+Come per l'API query esistente, `execute`/`fetch` compila al momento dell'esecuzione:
+le callback devono essere deterministiche per l'ambiente corrente.
+
+`examples/compiler_callbacks.py` e `examples/compiler-callbacks.js` contengono
+ricette e funzioni indipendenti. L'oracolo esegue veri metodi Python associati a
+`SqlTable`: 31 casi verificano JSON, SQL, parametri, dati e ordine delle chiamate;
+23 casi verificano i rifiuti; tre compilazioni consecutive verificano la cache.
+Node, Bun e il worker browser eseguono le funzioni JS, con rilettura SQLite dopo
+riapertura IndexedDB. Il browser importa moduli JS: non serializza né valuta codice
+ricevuto nel JSON. Il confronto dal vivo rigenera l'oracolo dalla revisione Python fissata.
