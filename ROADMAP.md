@@ -46,8 +46,9 @@ di una transazione e verificare che nessuna scrittura resti; rileggere dopo relo
 
 ## 3. Avvio e utilizzo offline
 
-- [ ] Cache versionata di HTML, JavaScript, worker e WASM con service worker.
-- [ ] Primo avvio online, chiusura, riapertura senza rete e CRUD completo.
+- [x] Cache versionata di HTML, JavaScript, temi, worker e WASM con service worker nel playground.
+- [x] Primo avvio online, CRUD, chiusura e riavvio di Chromium senza rete con lo stesso profilo;
+  ripristino del modello/dati e ritorno dello snapshot reale a Python.
 - [ ] Coordinare aggiornamento degli asset e versione dello schema locale.
 - [x] Importazione CSV/JSON/TYTX tramite sql_insert, con parità Python e verifiche browser.
 - [x] Snapshot Python → browser → Python: SourceBag anche parziale e dati TYTX,

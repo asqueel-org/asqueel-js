@@ -12,7 +12,18 @@ export function transferPanel(view, database) {
         catch(error) {view.set('transferStatus',error.message);}
         finally {view.set('busy',false);}
     };
+    const show = result => view.set('transferSample', JSON.stringify(result,null,2));
     return {
+        resume: () => run(async () => {
+            const result = await database.request('transfer-resume');
+            if (result) { show(result); view.set('transferStatus','Workspace ripristinato da IndexedDB: modello e dati locali.'); }
+            else view.set('transferStatus','Carica uno snapshot Python per iniziare.');
+        }),
+        edit: () => run(async () => {
+            const request = JSON.parse(view.get('transferRequest'));
+            show(await database.request('transfer-edit', {request}));
+            view.set('transferStatus', `${request.operation.toUpperCase()} completato in SQLite locale e salvato in IndexedDB.`);
+        }),
         check: () => run(async () => {
             const result=await database.request('transfer-checks');
             view.set('transferChecks',result.checks.map(s=>'✓ '+s).join('\n'));

@@ -37,7 +37,9 @@ export class PlaygroundPage extends Page {
             sqlPlan: 'Calcola il piano per leggere le istruzioni prima di applicarle.',
             queryExample: 'insert_person', queryInput: '', queryStatus: 'Compila per confrontare SQL e parametri.',
             queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
-            transferStatus: '', transferChecks: '', transferSample: '', transferBinarySample: '', transferFileName: 'Nessun file selezionato',
+            offlineStatus: 'Preparazione della cache offline…', connectionStatus: '',
+            transferRequest: JSON.stringify({operation:'update',table:'work.document',values:{id:'d1',title:'Modificato offline'}},null,2),
+            transferStatus: '',  transferChecks: '', transferSample: '', transferBinarySample: '', transferFileName: 'Nessun file selezionato',
             importTable: 'notes.person', importFileName: 'Nessun file selezionato', importStatus: '', importChecks: '', importSample: '',
             hookChecks: '', hookSample: '', behaviorChecks: '', behaviorSample: '', cascadeChecks: '', cascadeSample: '',
         })) root.dataSetter({destination_path: path, value});

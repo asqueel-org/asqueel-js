@@ -9,3 +9,4 @@ playwright-report/
 .venv/
 *.tgz
 .DS_Store
+browser/service-worker.js

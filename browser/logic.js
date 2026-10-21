@@ -45,6 +45,12 @@ export class Logic {
         }, {signal: this.page.abort.signal});
         this.view.set('busy', false);
         await this.db.run('inspect');
+        if (this.view.get('section') === 'transfer') await this.transfers.resume();
+        const connection = () => this.view.set('connectionStatus', navigator.onLine ? 'Rete disponibile' : 'Offline · lavoro sul database locale');
+        connection();
+        for (const event of ['online','offline']) window.addEventListener(event, connection, {signal:this.page.abort.signal});
+        window.offlineReady.then(() => this.view.set('offlineStatus','App pronta per la riapertura senza rete: pagina, worker e SQLite WASM salvati.'))
+            .catch(error => this.view.set('offlineStatus', `Cache offline non disponibile: ${error.message}`));
         this.view.set('ready', true);
     }
     saveDraft() {
@@ -130,6 +136,8 @@ export class Logic {
         this.selectedTransferFile = event.target.files?.[0] ?? null;
         this.view.set('transferFileName', this.selectedTransferFile?.name ?? 'Nessun file selezionato');
     }
+    editTransfer() { return this.transfers.edit(); }
+    resumeTransfer() { return this.transfers.resume(); }
     checkTransfers() { return this.transfers.check(); }
     downloadBinaryTransferExample() { return this.transfers.binaryExample(); }
     downloadTransferExample() { return this.transfers.example(); }

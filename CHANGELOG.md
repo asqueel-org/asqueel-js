@@ -2,6 +2,11 @@
 
 ## Non rilasciato
 
+- Ciclo offline completo nel playground: cache versionata di app/Gramlot/WASM,
+  workspace persistente con Bag sorgente, editor CRUD sul modello caricato e
+  ripristino alla riapertura. Test con rete disabilitata e riavvio di Chromium,
+  esportazione reale e confronto Python di modello, migrate, struttura e valori.
+
 - Campi Bag (X) e blob (O) negli snapshot Python/browser/Python. Bag statiche
   annidate con tag, attributi e valori TYTX precisi; blob confrontati byte per byte,
   inclusi vuoti e NULL. Verifica di modifiche nel browser e ritorno Python.

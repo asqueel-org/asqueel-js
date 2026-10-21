@@ -146,3 +146,41 @@ La verifica confronta modello completo, JSON migrate, catalogo fisico e valori;
 il ricevitore controlla anche i tipi TYTX decodificati. `scripts/verify_python.py`
 include lo stesso giro con Node e Bun e verifica che le fixture corrispondano
 al Python di riferimento non modificato.
+
+
+### Ciclo completo senza rete nel playground
+
+1. Aprire `/?page=transfer` online e attendere **App pronta per la riapertura senza rete**.
+   Il service worker salva HTML, moduli, temi Gramlot, worker e SQLite WASM.
+2. Scaricare l'esempio Python, selezionarlo e premere **Carica in SQLite locale**.
+   In IndexedDB vengono conservati sia il database sia la Bag sorgente e il suo identificatore.
+3. Disconnettere la rete. L'editor JSON esegue `select`, `insert`, `update` e `delete`
+   sul workspace caricato tramite il compiler del modello. SQL, risultati, struttura e valori
+   compaiono in **Struttura e valori**. Le scritture di questo editor sono query dirette:
+   non invocano gli hook applicativi della API `table.insert/update/delete`.
+4. Chiudere e riaprire l'app allo stesso indirizzo, anche riavviando il browser:
+   il modello viene ricostruito dalla sorgente salvata; i dati vengono riletti, senza importare
+   nuovamente quelli iniziali. Premere **Esporta snapshot per Python** anche senza rete.
+
+Il test automatico esegue lettura, modifica, inserimento e cancellazione, termina Chromium
+poi avvia un nuovo processo con lo stesso profilo e con rete già disabilitata.
+Confronta modello, migrate, catalogo e valori con Python prima e dopo; esporta il file
+reale dall'app riaperta. Un altro test ricarica offline Bag e blob senza perdere valori;
+un import fallito lascia attivo il workspace precedente.
+
+```sh
+npm run test:browser
+.reference/venv-current/bin/python scripts/transfer_oracle.py \
+  --verify-return output/offline-transfer-returns.json
+```
+
+Questa ultima verifica importa davvero in Python il file prodotto durante il test offline.
+La sincronizzazione sul database remoto resta al layer applicativo.
+
+Gli asset hanno una cache per versione, installata integralmente prima dell'attivazione.
+Gli aggiornamenti attendono la chiusura delle schede della vecchia versione; nessuna
+migrazione automatica del database utente viene eseguita al cambio degli asset.
+Il playground mantiene un solo workspace attivo; caricarne uno nuovo cambia il riferimento
+soltanto dopo importazione e salvataggio riusciti. I precedenti database non vengono eliminati.
+Verificato su Chromium: quota, cancellazione/evizione dello storage da parte del browser e
+migrazioni tra versioni applicative richiedono ancora gestione dedicata.
