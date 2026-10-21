@@ -33,9 +33,9 @@ delle dichiarazioni sulle righe appartiene alla fase successiva.
 
 ## 2. CRUD per piccole applicazioni
 
-- [ ] UPDATE e DELETE con parametri, RETURNING e selezione per chiave primaria.
-- [ ] Lettura di un singolo record, count ed exists con semantica definita.
-- [ ] API transazione per più scritture atomiche; niente commit impliciti interni
+- [x] UPDATE e DELETE con parametri, RETURNING automatico e selezione per chiave primaria.
+- [x] Lettura di un singolo record, count ed exists con semantica definita.
+- [x] API transazione per più scritture atomiche; niente commit impliciti interni
       che impediscano un'unità di lavoro esterna.
 - [ ] Errori identificabili per record assente, vincolo e funzionalità non supportata.
 - [ ] API worker utilizzabile da un'app senza dipendere dal playground.
@@ -64,7 +64,7 @@ sola non soddisfa questo traguardo.
 - [ ] Default e validazioni basilari, rispettando campi mancanti e NULL.
 - [ ] `sys_fields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
 - [ ] Hook before/after e rollback coerente delle scritture.
-- [ ] Colonne formula e alias semplici, poi aggregazioni GROUP BY/HAVING/DISTINCT.
+- [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
 
 Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python
 scelto; orologio, identità e generatore ID controllabili. Controllare il Python

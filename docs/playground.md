@@ -26,7 +26,7 @@ Le tre pagine vengono aperte in iframe dalla shell:
 - **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
   catalogo, riapertura e verifiche SQLite.
 - **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
-  con le fixture query storiche.
+  con le fixture Python 0.6.1 + fix #44.
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
@@ -130,7 +130,7 @@ indipendente è in `examples/browser-queries.js` e `examples/browser_queries.py`
 
 Il pannello query consente di modificare una richiesta JSON, confrontare SQL e
 parametri con l'esempio Python ed eseguirla nel worker. Gli esempi 1–5 inseriscono
-due persone e tre note; gli altri leggono quei dati con filtri e una relazione.
+due persone e tre note; i casi successivi mostrano letture, aggregazioni e un ciclo UPDATE/DELETE su un record temporaneo.
 Gli ID sono fissi: ripetere un INSERT provoca un errore di chiave duplicata,
 senza sovrascrivere il record. I dati rimangono dopo un reload; selezionare poi
 una richiesta di lettura.
@@ -140,8 +140,7 @@ L'API JavaScript usa i nomi **logici** del modello:
 ```javascript
 const db = model.queries(adapter); // adapter SQLite aperto e modello già migrato
 await db.table('notes.person').insert(
-    {id: 101, name: 'Ada', active: true},
-    {returning: '$id,$name'}
+    {id: 101, name: 'Ada', active: true}
 );
 const query = db.table('notes.memo').query({
     columns: '$id,$body,@person_id.name AS person,$amount',
@@ -160,33 +159,58 @@ genera un LEFT JOIN. Il worker ricostruisce il modello da dati e ricompila la
 richiesta prima dell'esecuzione: il SQL mostrato viene verificato contro quello
 del worker.
 
-Perimetro: INSERT con RETURNING opzionale; SELECT di campi fisici, alias ed
-espressioni con alias esplicito; navigazione di relazioni dirette fisiche,
-parametri scalari e liste `IN`/`NOT IN` (anche vuote), ordinamento, limit/offset.
-La sintassi `$campo`, `@relazione.campo` e `:parametro` viene riconosciuta fuori da
-stringhe e commenti SQL. I valori restano separati dal testo SQL. I frammenti
-di espressione sono codice dell'applicazione, non input da utenti non fidati.
-Booleani diventano 0/1 soltanto al confine del driver; i risultati sono righe
-SQLite semplici, senza i codec del runtime Python.
+Il compilatore segue Python 0.6.1 + fix #44 per il sottoinsieme verificato:
+INSERT/UPDATE/DELETE per chiave primaria anche composta, RETURNING automatico dei
+default SQL, `sql_value` e colonne generate; SELECT di campi, formule/alias semplici,
+relazioni dirette anche composte, GROUP BY/HAVING/DISTINCT, IN/NOT IN, ordine e
+paginazione. Draft e logical deletion filtrano le letture; `environment` esplicito
+fornisce valori `current_*`/`allowed_*` per le partizioni e parametri `:env_*`.
 
-Sono rifiutati campi/tabelle sconosciuti, parametri mancanti, valori non scalari,
-interi JS non sicuri, macro, sottoquery, ILIKE, GROUP BY/HAVING/DISTINCT, update/
-delete, colonne virtuali richieste, codec applicativi e hook/opzioni attivi sulla
-tabella interrogata. Non è un porting completo del compiler Python. Il confronto
-usa `QueryCompiler(resolve_model(...), SqliteDialect(), SqliteDriver())`, con
-uguaglianza esatta del testo SQL, dei parametri e delle righe su SQLite reale.
+```javascript
+const queries = model.queries(adapter);
+await queries.transaction(async tx => {
+    const people = tx.table('notes.person');
+    const record = await people.insert({id: 104, name: 'Nuova persona'});
+    await people.update({name: 'Nome modificato'}, {pkey: record.id});
+    console.log(await people.query({where: '$id=:id', sqlparams: {id: record.id}}).fetchRecord());
+    await people.delete(record.id);
+});
+```
 
-Il modello mantiene le vecchie tabelle con `sys_fields` per migrate, ma le
-scritture dimostrative riguardano le nuove tabelle esplicite. Nel riferimento iniziale del PoC l'API pubblica
-Python rifiutava le scritture con `sys_fields`: problema documentato
-nella [issue #29](https://github.com/asqueel-org/asqueel/issues/29#issuecomment-6298801145).
-Non vengono disabilitati controlli per aggirare quel limite.
+`insert` e `update` restituiscono lo stesso record passato, arricchito dai valori
+SQL restituiti; `delete` restituisce `undefined`. `execute(request)` restituisce
+invece le righe SQL grezze. `returning` esplicito non fa più parte del contratto.
+`fetchRecord()` segnala zero/più record con `RecordNotFoundError` e
+`RecordMultipleRowsError`; `fetchRecord(true)` restituisce `null` se assente.
+Con `order_by` esplicito restituisce il primo record. `count()` conta gruppi o
+righe distinte quando richiesto; `exists()` verifica la presenza di almeno una riga.
+Le righe sono oggetti SQLite semplici, senza codec/metadati del runtime Python.
 
-**Verifica query con Python** esegue cinque controlli in un database IndexedDB
-separato: modello/migrazione, 18 SQL con parametri, 18 risultati, rollback di
-INSERT duplicato e rilettura con JOIN dopo riapertura. Nel browser il riferimento
-Python è salvato per l'esempio originale; modificare la richiesta non avvia un
-processo Python. La verifica dal vivo è disponibile con `verify:python`.
+Durante una transazione usare il contesto `tx` e attendere tutte le operazioni.
+Un errore SQL annulla l'intera transazione anche se intercettato nel callback;
+transazioni annidate e uso del contesto dopo la chiusura sono rifiutati.
+Le operazioni attraverso la stessa istanza adapter sono serializzate; accesso
+diretto all'adapter e migrazioni richiedono coordinamento esterno.
+
+Per compatibilità con Python, un parametro assente diventa NULL, un INSERT
+omette i valori null (lasciando agire i default), e `limit: 0` non aggiunge LIMIT.
+Il parser Python sostituisce riferimenti `$campo` anche nei letterali SQL: anche
+questa particolarità è riprodotta. Passare testi utente tramite parametri, non
+come frammenti di espressione. Collisioni nei nomi generati per liste vengono
+rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
+
+Restano esclusi macro, sottoquery, relazioni inverse/virtualRelation, formule
+parametriche, selezioni di chiavi composte virtuali, codec applicativi, lock,
+scritture bulk/da selezione, hook e opzioni applicative attive in scrittura.
+`sys_fields` descrive correttamente il modello ma non genera ancora ID/timestamp
+nel runtime JS. La migrazione JS di colonne generate resta esclusa: i relativi
+test query preparano lo schema con il DDL del migratore Python.
+
+**Verifica query con Python** esegue sette gruppi di controlli in un database
+IndexedDB separato: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
+helper e transazioni, 28 casi aggiuntivi e rilettura dopo riapertura. Gli oracoli
+Python sono salvati: modificare una richiesta nell'editor non avvia Python.
+Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
 ## Esempi da terminale
 
@@ -271,9 +295,12 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-Le 18 query del PoC restano regressioni storiche, non parità query con la 0.6.1.
+I 60 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
 FK fisiche o eseguire JOIN. Vedi il [contratto del modello](model.md) per API,
 limiti del JSON portabile e differenze rispetto al vecchio riferimento.
+
+Il look usa gli stessi temi `gramlot-base`, `gramlot-compact` e `gramlot-index`
+della gallery: barra da 42 px, accento giallo, token condivisi e CodeMirror integrato.

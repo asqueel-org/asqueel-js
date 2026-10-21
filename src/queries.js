@@ -1,201 +1,20 @@
 import {projectApplication} from './application.js';
-import {names} from './structures.js';
+import {own, record} from './sql-expressions.js';
+import {compileSelect} from './select-compiler.js';
+import {compileWrite, keyColumns, keyValues} from './write-compiler.js';
+import {driverParameters} from './sql-parameters.js';
+import {RecordNotFoundError, RecordMultipleRowsError, TransactionStateError} from './query-errors.js';
 
-const IDENT = '[A-Za-z_][A-Za-z0-9_]*';
-const own = (o, k) => Object.hasOwn(o, k);
-const q = value => {
-    if (typeof value !== 'string' || !value || value.includes('\0')) throw new Error('Identificatore non valido');
-    return `"${value.replaceAll('"', '""')}"`;
-};
-const scalar = value => {
-    if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
-    if (typeof value === 'number' && Number.isFinite(value) && (!Number.isInteger(value) || Number.isSafeInteger(value))) return value;
-    throw new Error('Parametro non supportato: usare null, stringa, booleano o numero finito sicuro');
-};
-const record = value => {
-    if (!value || Array.isArray(value) || ![Object.prototype, null].includes(Object.getPrototypeOf(value))) {
-        throw new Error('È richiesto un oggetto di attributi');
-    }
-    return value;
-};
-const columnName = c => c.a.sqlname || c.a.x_sql_name || c.a.name;
-const tableSQL = t => `${q(t.sqlschema)}.${q(t.sqlname)}`;
-
-// Preserve quoted SQL and comments. No parameter or model substitution ever
-// takes place inside a protected token.
-function tokens(text) {
-    if (typeof text !== 'string' || !text.trim()) throw new Error('Espressione SQL vuota');
-    const out = [];
-    for (let i = 0; i < text.length;) {
-        const rest = text.slice(i);
-        const pattern = /^(?:'(?:''|[^'])*'|"(?:\"\"|[^"])*"|`(?:``|[^`])*`|\[[^\]]*\]|--[^\n]*(?:\n|$)|\/\*[\s\S]*?\*\/)/;
-        const quotedField = /^\$"((?:""|[^"])*)"/.exec(rest);
-        if (quotedField) {
-            out.push({kind: 'field', text: quotedField[0], field: quotedField[1].replaceAll('""', '"'), start: i});
-            i += quotedField[0].length;
-        } else {
-            const protectedToken = pattern.exec(rest);
-            if (protectedToken) {
-                out.push({kind: 'protected', text: protectedToken[0], start: i});
-                i += protectedToken[0].length;
-            } else {
-                if ("'\"`[".includes(text[i]) || rest.startsWith('/*')) throw new Error('Stringa o commento SQL non terminato');
-                const previous = out.at(-1);
-                if (previous?.kind === 'code') previous.text += text[i];
-                else out.push({kind: 'code', text: text[i], start: i});
-                i++;
-            }
-        }
-    }
-    return out;
+const queues = new WeakMap();
+function adapterState(adapter) {
+    if (!queues.has(adapter)) queues.set(adapter, {tail: Promise.resolve(), transaction: null});
+    return queues.get(adapter);
 }
-function split(text) {
-    const result = [], source = tokens(text);
-    let depth = 0, start = 0;
-    for (const token of source) if (token.kind === 'code') {
-        for (let i = 0; i < token.text.length; i++) {
-            const ch = token.text[i], position = token.start + i;
-            if (ch === '(') depth++;
-            if (ch === ')' && --depth < 0) throw new Error('Parentesi SQL non bilanciate');
-            if (ch === ',' && !depth) { result.push(text.slice(start, position).trim()); start = position + 1; }
-        }
-    }
-    if (depth) throw new Error('Parentesi SQL non bilanciate');
-    result.push(text.slice(start).trim());
-    if (result.some(s => !s)) throw new Error('Espressione vuota');
+function enqueue(state, action) {
+    const result = state.tail.then(action);
+    state.tail = result.catch(() => {});
     return result;
 }
-function projectionAlias(text) {
-    let depth = 0, found = null;
-    for (const token of tokens(text)) if (token.kind === 'code') {
-        for (let i = 0; i < token.text.length; i++) {
-            if (token.text[i] === '(') depth++;
-            else if (token.text[i] === ')') depth--;
-            else if (!depth && /^AS\b/i.test(token.text.slice(i)) && (i === 0 || /\s/.test(token.text[i - 1]))) found = token.start + i;
-        }
-    }
-    if (found == null) return [text, null];
-    const alias = text.slice(found + 2).trim();
-    if (new RegExp(`^${IDENT}$`).test(alias)) return [text.slice(0, found).trim(), alias];
-    if (/^"(?:\"\"|[^"])*"$/.test(alias)) return [text.slice(0, found).trim(), alias.slice(1, -1).replaceAll('""', '"')];
-    throw new Error('Alias di proiezione non valido');
-}
-const fieldReference = text => {
-    const simple = new RegExp(`^\\$(${IDENT})$`).exec(text);
-    if (simple) return simple[1];
-    const quoted = /^\$"((?:""|[^"])*)"$/.exec(text);
-    return quoted ? quoted[1].replaceAll('""', '"') : null;
-};
-const pathReference = text => new RegExp(`^@(${IDENT}(?:\\.@?${IDENT})+)`).exec(text);
-
-class Context {
-    constructor(tables, table, parameters, insert) {
-        this.tables = tables; this.table = table; this.insert = insert;
-        this.available = record(parameters || {}); this.params = Object.create(null); this.used = new Set(Object.keys(this.available));
-        this.uses = new Map(); this.joins = new Map();
-    }
-    field(table, alias, name) {
-        const column = table.columns.get(name);
-        if (table.virtual.has(name)) throw new Error('Colonne virtuali fuori perimetro query');
-        if (!column) throw new Error(`Campo fisico sconosciuto: ${table.key}.${name}`);
-        return `${this.insert ? '' : q(alias) + '.'}${q(columnName(column))}`;
-    }
-    related(path) {
-        if (this.insert) throw new Error('Relazioni in RETURNING fuori perimetro');
-        const parts = path.replaceAll('@', '').split('.');
-        let table = this.table, alias = 't0';
-        for (const name of parts.slice(0, -1)) {
-            if (table.relations.get(name)?.kind === 'virtual') throw new Error('Navigazione virtualRelation fuori perimetro query');
-            const owner = table.columns.get(name) || table.composites.get(name);
-            const relation = owner?.children.find(n => n.tag === 'relation');
-            if (!relation || relation.a.x_weak) throw new Error(`Relazione diretta non supportata: ${table.key}.${name}`);
-            const targetParts = relation.a.to.split('.');
-            const target = this.tables.get(targetParts.slice(0, 2).join('.'));
-            if (!target) throw new Error('Target della relazione sconosciuto');
-            const remote = targetParts.length === 2 ? names(target.a.pkey)
-                : target.composites.has(targetParts[2]) ? names(target.composites.get(targetParts[2]).a.columns) : [targetParts[2]];
-            const local = owner.tag === 'column' ? [name] : names(owner.a.columns);
-            if (local.length !== remote.length) throw new Error('Chiavi della relazione incompatibili');
-            const key = `${alias}.${name}`;
-            if (!this.joins.has(key)) {
-                const targetAlias = `t${this.joins.size + 1}`;
-                const condition = local.map((col, i) => `${this.field(table, alias, col)} = ${this.field(target, targetAlias, remote[i])}`).join(' AND ');
-                this.joins.set(key, {table: target, alias: targetAlias, condition});
-            }
-            alias = this.joins.get(key).alias;
-            table = target;
-        }
-        return this.field(table, alias, parts.at(-1));
-    }
-    bind(name, collection, negated = false) {
-        if (!own(this.available, name)) throw new Error(`Parametro mancante: ${name}`);
-        if (this.uses.has(name) && this.uses.get(name) !== collection) throw new Error(`Parametro usato come scalare e collezione: ${name}`);
-        this.uses.set(name, collection);
-        if (!collection) {
-            this.params[name] = scalar(this.available[name]);
-            return `:${name}`;
-        }
-        const values = this.available[name];
-        if (!Array.isArray(values)) throw new Error(`IN richiede una lista: ${name}`);
-        if (!values.length) return `${negated ? 'NOT ' : ''}IN (SELECT 1 WHERE 0)`;
-        const slots = values.map(value => {
-            let i = 0;
-            while (this.used.has(`${name}_${i}`)) i++;
-            const slot = `${name}_${i}`;
-            this.used.add(slot); this.params[slot] = scalar(value);
-            return `:${slot}`;
-        });
-        return `${negated ? 'NOT ' : ''}IN (${slots.join(', ')})`;
-    }
-    expression(text) {
-        split(text); // balanced parentheses before rendering
-        return tokens(text).map(token => {
-            if (token.kind === 'field') return this.field(this.table, 't0', token.field);
-            if (token.kind === 'protected') return token.text;
-            const code = token.text;
-            if (/;|\b(?:SELECT|INSERT|UPDATE|DELETE|DROP|ATTACH|DETACH|PRAGMA|WITH|ILIKE)\b/i.test(code)) {
-                throw new Error('Sottoquery, statement e ILIKE fuori perimetro query');
-            }
-            let out = '';
-            for (let i = 0; i < code.length;) {
-                const rest = code.slice(i);
-                let match;
-                if ((match = /^(NOT\s+)?IN\s+:([A-Za-z_][A-Za-z0-9_]*)\b/i.exec(rest))
-                    && (i === 0 || !/\w/.test(code[i - 1]))) {
-                    out += this.bind(match[2], true, !!match[1]); i += match[0].length;
-                } else if ((match = new RegExp(`^\\$(${IDENT})`).exec(rest))) {
-                    out += this.field(this.table, 't0', match[1]); i += match[0].length;
-                } else if ((match = pathReference(rest))) {
-                    out += this.related(match[1]); i += match[0].length;
-                } else if ((match = new RegExp(`^:(${IDENT})`).exec(rest))) {
-                    out += this.bind(match[1], false); i += match[0].length;
-                } else {
-                    if ('$@:#?'.includes(code[i])) throw new Error('Sintassi espressione fuori perimetro');
-                    out += code[i++];
-                }
-            }
-            return out;
-        }).join('');
-    }
-    projections(columns) {
-        if (columns === null) return [];
-        const expressions = typeof columns === 'string' ? split(columns) : columns;
-        if (!Array.isArray(expressions) || !expressions.length) throw new Error('Specificare le colonne');
-        const expanded = expressions.flatMap(s => s.trim() === '*' ? [...this.table.columns.keys()].map(n => `$${q(n)}`) : [s]);
-        const aliases = new Set();
-        return expanded.map(raw => {
-            const [value, explicit] = projectionAlias(raw.trim());
-            const field = fieldReference(value);
-            const path = pathReference(value);
-            const alias = explicit || field || (path?.[0] === value ? path[1].replaceAll('@', '').replaceAll('.', '_') : null);
-            if (!alias) throw new Error('Le espressioni calcolate richiedono AS alias');
-            if (aliases.has(alias)) throw new Error(`Alias duplicato: ${alias}`);
-            aliases.add(alias);
-            return `${this.expression(value)} AS ${q(alias)}`;
-        });
-    }
-}
-
 /** Data-only source for worker-side compilation; no user code crosses the worker. */
 export function querySource(builder) {
     return builder.toSource();
@@ -213,13 +32,14 @@ export function modelFromQuerySource(source, Builder) {
     return model;
 }
 
+
 export class SqliteQueries {
-    constructor(builder, adapter = null) {
-        // Reuse the migration resolver for option expansion, types, references
-        // and logical-to-physical naming; never infer logical names from SQL names.
+    constructor(builder, adapter = null, scope = null) {
         builder.toMigration();
+        this.builder = builder;
         this.tables = projectApplication(builder, builder.constructor, {withModel: true}).tables;
         this.adapter = adapter;
+        this.scope = scope;
     }
     resolveTable(name, write) {
         let table = this.tables.get(name);
@@ -228,17 +48,13 @@ export class SqliteQueries {
             if (matches.length === 1) table = matches[0];
         }
         if (!table) throw new Error(`Tabella sconosciuta o ambigua: ${name}`);
-        if ([...table.options.values()].some(o => o.spec.enabled !== false)) {
-            throw new Error(`${name}: hook/opzioni applicative fuori perimetro query${write ? ' (blocco anche in Python)' : ''}`);
-        }
-        if (Object.entries(table.a).some(([k,v])=>v!=null && v!==false &&
-            (['draftField','logicalDeletionField','protectionColumn'].includes(k)||k.startsWith('partition_')))) {
-            throw new Error(`${name}: policy del modello 0.6.1 fuori perimetro query`);
+        if (write && [...table.options.values()].some(o => o.spec.enabled !== false)) {
+            throw new Error(`${name}: hook/opzioni applicative non ancora implementati nelle scritture JS`);
         }
         for (const c of table.columns.values()) {
             if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');
             if (write && (c.children.some(n => n.tag !== 'relation') ||
-                ['default', 'default_from', 'sql_value', 'x_generation', 'read_only', 'unmodifiable',
+                ['default', 'default_from', 'x_generation', 'read_only', 'unmodifiable',
                     'onInserting','onUpdating','onDeleting','onInserted','onUpdated','onDeleted','trigger_table']
                     .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
         }
@@ -248,68 +64,96 @@ export class SqliteQueries {
     }
     compile(request) {
         record(request);
-        const insert = request.operation === 'insert';
-        if (!insert && request.operation !== 'select') throw new Error('Supportati INSERT e SELECT');
-        const allowed = insert ? ['operation', 'table', 'values', 'returning']
-            : ['operation', 'table', 'columns', 'where', 'sqlparams', 'order_by', 'limit', 'offset'];
-        for (const k of Object.keys(request)) if (!allowed.includes(k)) throw new Error(`Opzione query fuori perimetro: ${k}`);
-        const table = this.resolveTable(request.table, insert);
-        const context = new Context(this.tables, table, insert ? {} : request.sqlparams, insert);
-        let sql;
-        if (insert) {
-            const assignments = Object.entries(record(request.values)).map(([name, value], i) => {
-                const c = table.columns.get(name);
-                if (!c) throw new Error(`Campo fisico sconosciuto: ${name}`);
-                const parameter = `__value_${i}`;
-                context.params[parameter] = scalar(value);
-                return {column: q(columnName(c)), parameter: `:${parameter}`};
-            });
-            sql = `INSERT INTO ${tableSQL(table)} AS "t0"`;
-            sql += assignments.length ? ` (${assignments.map(a => a.column).join(', ')}) VALUES (${assignments.map(a => a.parameter).join(', ')})` : ' DEFAULT VALUES';
-            const returning = context.projections(own(request, 'returning') ? request.returning : '*');
-            if (returning.length) sql += `\nRETURNING ${returning.join(',\n')}`;
-        } else {
-            const projections = context.projections(own(request, 'columns') ? request.columns : '*');
-            if (!projections.length) throw new Error('SELECT richiede colonne');
-            const where = request.where == null ? null : context.expression(request.where);
-            const ordering = request.order_by == null ? null : context.expression(request.order_by);
-            sql = `SELECT ${projections.join(',\n')}\n FROM ${tableSQL(table)} AS "t0"`;
-            for (const join of context.joins.values()) sql += `\n LEFT JOIN ${tableSQL(join.table)} AS ${q(join.alias)} ON ${join.condition}`;
-            if (where != null) sql += `\nWHERE ${where}`;
-            if (ordering != null) sql += `\nORDER BY ${ordering}`;
-            for (const key of ['limit', 'offset']) {
-                const value = request[key];
-                if (value != null && (!Number.isSafeInteger(value) || value < 0)) throw new Error(`${key} deve essere un intero non negativo`);
-            }
-            if (request.limit != null) sql += `\nLIMIT ${request.limit}`;
-            else if (request.offset != null) sql += '\nLIMIT 9223372036854775807';
-            if (request.offset != null) sql += `\nOFFSET ${request.offset}`;
-        }
-        return {sql, params: structuredClone(context.params)};
+        const read = ['select', 'count'].includes(request.operation);
+        if (!read && !['insert', 'update', 'delete'].includes(request.operation)) throw new Error('Operazione query non supportata');
+        const allowed = read ? ['operation', 'table', 'columns', 'where', 'sqlparams', 'order_by', 'limit', 'offset',
+            'distinct', 'group_by', 'having', 'bagFields', 'addPkeyColumn', 'for_update', 'exclude_draft', 'exclude_logical_deleted', 'ignore_partition', 'environment']
+            : ['operation', 'table', 'values', 'pkey', 'old_record', 'ignore_partition', 'environment'];
+        for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Opzione query fuori perimetro: ${name}`);
+        const table = this.resolveTable(request.table, !read);
+        return read ? compileSelect(this.tables, table, request) : compileWrite(table, request.operation, request.values, request);
     }
     async execute(request) {
         const compiled = this.compile(request);
         if (!this.adapter) throw new Error('Adapter non collegato');
-        // Driver boundary: wa-sqlite requires prefix-bearing binding keys;
-        // all adapters receive the same canonical compiled SQL/params above.
-        const params = Object.fromEntries(Object.entries(compiled.params).map(([k, v]) =>
-            [`:${k}`, typeof v === 'boolean' ? Number(v) : v]));
-        if (request.operation === 'select') return this.adapter.query(compiled.sql, params);
-        await this.adapter.execute('BEGIN IMMEDIATE');
-        try {
-            const rows = await this.adapter.query(compiled.sql, params);
-            await this.adapter.execute('COMMIT');
-            return rows;
-        } catch (e) { await this.adapter.execute('ROLLBACK'); throw e; }
+        const state = adapterState(this.adapter);
+        if (this.scope) {
+            if (!this.scope.active) throw new TransactionStateError('La transazione è terminata');
+            return enqueue(this.scope, async () => {
+                if (this.scope.error) throw this.scope.error;
+                try { return await this.adapter.query(compiled.sql, driverParameters(compiled)); }
+                catch (error) { this.scope.error = error; throw error; }
+            });
+        }
+        if (state.transaction) throw new TransactionStateError('Usare il contesto tx per le operazioni durante una transazione');
+        return enqueue(state, async () => {
+            if (['select', 'count'].includes(request.operation)) return this.adapter.query(compiled.sql, driverParameters(compiled));
+            await this.adapter.execute('BEGIN IMMEDIATE');
+            try {
+                const rows = await this.adapter.query(compiled.sql, driverParameters(compiled));
+                await this.adapter.execute('COMMIT');
+                return rows;
+            } catch (error) { await this.adapter.execute('ROLLBACK'); throw error; }
+        });
+    }
+    async transaction(callback) {
+        if (typeof callback !== 'function') throw new TypeError('transaction richiede una funzione');
+        if (!this.adapter) throw new Error('Adapter non collegato');
+        const state = adapterState(this.adapter);
+        if (this.scope || state.transaction) throw new TransactionStateError('Transazioni annidate non ancora supportate');
+        return enqueue(state, async () => {
+            const scope = {active: true, tail: Promise.resolve()};
+            const tx = new SqliteQueries(this.builder, this.adapter, scope);
+            await this.adapter.execute('BEGIN IMMEDIATE');
+            state.transaction = scope;
+            try {
+                const result = await callback(tx);
+                scope.active = false;
+                await scope.tail;
+                if (scope.error) throw scope.error;
+                await this.adapter.execute('COMMIT');
+                return result;
+            } catch (error) {
+                scope.active = false;
+                await scope.tail;
+                await this.adapter.execute('ROLLBACK');
+                throw error;
+            } finally { scope.active = false; state.transaction = null; }
+        });
     }
     table(name) {
-        this.resolveTable(name, false);
+        const table = this.resolveTable(name, false);
+        const executeWrite = async (operation, values, options = {}) => {
+            const rows = await this.execute({...options, operation, table: name, values});
+            if (operation === 'delete') return;
+            Object.assign(values, rows[0] ?? {});
+            return values;
+        };
+        const query = (options = {}) => {
+            if (typeof options === 'string') options = {columns: options};
+            const request = structuredClone({...options, operation: 'select', table: name});
+            return {
+                compiled: this.compile(request),
+                fetch: () => this.execute(request),
+                fetchRecord: async (ignoreMissing = false) => {
+                    const rows = await this.execute(request.order_by ? {...request, limit: 1} : request);
+                    if (!rows.length) { if (ignoreMissing) return null; throw new RecordNotFoundError(); }
+                    if (rows.length > 1) throw new RecordMultipleRowsError();
+                    return rows[0];
+                },
+                count: async () => {
+                    const rows = await this.execute({...request, operation: 'count'});
+                    return rows.length === 1 && own(rows[0], 'gnr_row_count') ? Number(rows[0].gnr_row_count) : rows.length;
+                },
+                exists: async () => (await this.execute({...request, limit: 1})).length > 0,
+            };
+        };
         return {
-            insert: (values, {returning = '*'} = {}) => this.execute({operation: 'insert', table: name, values, returning}),
-            query: (options = {}) => {
-                const request = structuredClone({...options, operation: 'select', table: name});
-                return {compiled: this.compile(request), fetch: () => this.execute(request)};
-            },
+            insert: (values, options) => executeWrite('insert', values, options),
+            update: (values, options) => executeWrite('update', values, options),
+            delete: (values, options) => executeWrite('delete', typeof values === 'object' && values !== null ? values
+                : Object.fromEntries(keyColumns(table).map((key, i) => [key, keyValues(table, values)[i]])), options),
+            query,
         };
     }
 }

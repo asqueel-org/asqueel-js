@@ -1,0 +1,334 @@
+[
+  {
+    "name": "default_generated_sql_value",
+    "request": {
+      "operation": "insert",
+      "table": "app.item",
+      "values": {
+        "id": 1,
+        "company": "A",
+        "stamp_value": 10
+      }
+    }
+  },
+  {
+    "name": "draft_insert",
+    "request": {
+      "operation": "insert",
+      "table": "app.item",
+      "values": {
+        "id": 2,
+        "company": "A",
+        "value": 7,
+        "draft": true,
+        "stamp_value": 20
+      }
+    }
+  },
+  {
+    "name": "deleted_insert",
+    "request": {
+      "operation": "insert",
+      "table": "app.item",
+      "values": {
+        "id": 3,
+        "company": "B",
+        "value": 9,
+        "deleted": "yesterday",
+        "stamp_value": 30
+      }
+    }
+  },
+  {
+    "name": "unscoped_insert",
+    "request": {
+      "operation": "insert",
+      "table": "app.item",
+      "values": {
+        "id": 4,
+        "stamp_value": 40
+      }
+    }
+  },
+  {
+    "name": "static_formula_star",
+    "request": {
+      "operation": "select",
+      "table": "app.item"
+    }
+  },
+  {
+    "name": "formula_alias",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "columns": "$id,$total,$amount",
+      "where": "$total > :minimum",
+      "sqlparams": {
+        "minimum": 0
+      }
+    }
+  },
+  {
+    "name": "policies_disabled",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "exclude_draft": false,
+      "exclude_logical_deleted": false
+    }
+  },
+  {
+    "name": "mark_deleted",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "columns": "$id",
+      "exclude_draft": false,
+      "exclude_logical_deleted": "mark"
+    }
+  },
+  {
+    "name": "current_partition",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "environment": {
+        "current_company": "A"
+      },
+      "exclude_draft": false
+    }
+  },
+  {
+    "name": "allowed_partition",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "environment": {
+        "allowed_company": [
+          "A",
+          "B"
+        ]
+      },
+      "exclude_logical_deleted": false
+    }
+  },
+  {
+    "name": "ignored_partition",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "environment": {
+        "current_company": "A"
+      },
+      "ignore_partition": true,
+      "exclude_draft": false,
+      "exclude_logical_deleted": false
+    }
+  },
+  {
+    "name": "partition_insert",
+    "request": {
+      "operation": "insert",
+      "table": "app.item",
+      "values": {
+        "id": 5,
+        "stamp_value": 50
+      },
+      "environment": {
+        "current_company": "B"
+      }
+    }
+  },
+  {
+    "name": "partition_update",
+    "request": {
+      "operation": "update",
+      "table": "app.item",
+      "values": {
+        "value": 11,
+        "stamp_value": 60
+      },
+      "pkey": 5,
+      "environment": {
+        "current_company": "B"
+      }
+    }
+  },
+  {
+    "name": "partition_update_miss",
+    "request": {
+      "operation": "update",
+      "table": "app.item",
+      "values": {
+        "value": 99
+      },
+      "pkey": 5,
+      "environment": {
+        "current_company": "A"
+      }
+    }
+  },
+  {
+    "name": "partition_read_updated",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "where": "$id=5",
+      "environment": {
+        "current_company": "B"
+      }
+    }
+  },
+  {
+    "name": "allowed_partition_update",
+    "request": {
+      "operation": "update",
+      "table": "app.item",
+      "values": {
+        "value": 12,
+        "stamp_value": 70
+      },
+      "pkey": 5,
+      "environment": {
+        "allowed_company": [
+          "B"
+        ]
+      }
+    }
+  },
+  {
+    "name": "empty_partition_delete",
+    "request": {
+      "operation": "delete",
+      "table": "app.item",
+      "values": {
+        "id": 5
+      },
+      "environment": {
+        "allowed_company": []
+      }
+    }
+  },
+  {
+    "name": "partition_delete",
+    "request": {
+      "operation": "delete",
+      "table": "app.item",
+      "values": {
+        "id": 5
+      },
+      "environment": {
+        "current_company": "B"
+      }
+    }
+  },
+  {
+    "name": "partition_read_deleted",
+    "request": {
+      "operation": "select",
+      "table": "app.item",
+      "where": "$id=5",
+      "environment": {
+        "current_company": "B"
+      }
+    }
+  },
+  {
+    "name": "composite_insert",
+    "request": {
+      "operation": "insert",
+      "table": "app.line",
+      "values": {
+        "doc": 10,
+        "pos": 1,
+        "body": "first"
+      }
+    }
+  },
+  {
+    "name": "composite_second",
+    "request": {
+      "operation": "insert",
+      "table": "app.line",
+      "values": {
+        "doc": 10,
+        "pos": 2,
+        "body": "second"
+      }
+    }
+  },
+  {
+    "name": "composite_update",
+    "request": {
+      "operation": "update",
+      "table": "app.line",
+      "values": {
+        "body": "updated"
+      },
+      "pkey": "[10,1]"
+    }
+  },
+  {
+    "name": "composite_rename",
+    "request": {
+      "operation": "update",
+      "table": "app.line",
+      "values": {
+        "pos": 3
+      },
+      "old_record": {
+        "doc": 10,
+        "pos": 2
+      }
+    }
+  },
+  {
+    "name": "composite_read",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$doc,$pos,$body",
+      "order_by": "$pos"
+    }
+  },
+  {
+    "name": "composite_note",
+    "request": {
+      "operation": "insert",
+      "table": "app.note",
+      "values": {
+        "id": 1,
+        "doc": 10,
+        "pos": 1
+      }
+    }
+  },
+  {
+    "name": "composite_join_alias",
+    "request": {
+      "operation": "select",
+      "table": "app.note",
+      "columns": "$id,@line_key.body,$body"
+    }
+  },
+  {
+    "name": "composite_delete",
+    "request": {
+      "operation": "delete",
+      "table": "app.line",
+      "values": {
+        "doc": 10,
+        "pos": 3
+      }
+    }
+  },
+  {
+    "name": "composite_read_deleted",
+    "request": {
+      "operation": "select",
+      "table": "app.line",
+      "columns": "$doc,$pos,$body"
+    }
+  }
+]

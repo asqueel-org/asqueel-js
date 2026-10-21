@@ -8,6 +8,8 @@ from asqueel_migration import StructureValidator
 from export_python import examples
 from model_oracle import document
 from asqueel import resolve_model,SqlMigrationRenderer
+from query_oracle import query_oracle
+from query_features import feature_model
 
 inputs=json.loads((ROOT/'test/model-inputs.json').read_text())
 def isolated(case):
@@ -18,6 +20,9 @@ fixtures=json.loads((ROOT/'test/fixtures/resolved-model.json').read_text())
 assert expected == [r['expected'] for r in fixtures], 'Checked-in full-model fixtures differ from live Python'
 models,sqlite=examples()
 example_expected={name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()}
+queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'query-feature-inputs.json')}
+for name, filename in [('base', 'queries.json'), ('features', 'query-features.json')]:
+    assert queries[name] == json.loads((ROOT / 'test/fixtures' / filename).read_text()), f'{filename} differs from live Python'
 for runtime in ('node','bun'):
     rendered=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_models.js')],cwd=ROOT,text=True))
     assert rendered['cases']==expected, f'{runtime}: complete model or migration differs from live Python'
@@ -28,4 +33,6 @@ for runtime in ('node','bun'):
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_sqlite.js')],cwd=ROOT,text=True))
     assert actual=={n:{k:s[k] for k in ('desired','actual')} for n,s in sqlite.items()},f'{runtime}: SQLite migration/catalog differs'
     print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.1')
-print('Query SQL fixtures remain regression tests of the previous compiler; query parity with 0.6.1 is the next phase.')
+    actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_queries.js')],cwd=ROOT,text=True))
+    assert actual == queries, f'{runtime}: query model, SQL, parameters or SQLite results differ from live Python'
+    print(f'{runtime}: {sum(len(q["cases"]) for q in queries.values())} query/CRUD cases match live Python SQL, parameters and SQLite results')

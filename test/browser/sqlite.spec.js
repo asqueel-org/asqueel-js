@@ -3,7 +3,7 @@ import compositionCases from '../fixtures/resolved-model.json' with {type:'json'
 import examples from '../fixtures/model-examples.json' with {type:'json'};
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
-for (const [command, expected] of [['checks', 7], ['query-checks', 5], ['composition-checks', compositionCases.length + 3]]) {
+for (const [command, expected] of [['checks', 7], ['query-checks', 7], ['composition-checks', compositionCases.length + 3]]) {
     test(`browser SQLite: ${command}`, async ({page}) => {
         await leaf(page);
         const checks = await page.evaluate(type => new Promise((resolve, reject) => {
@@ -127,7 +127,7 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('18 query confrontate con Python');
+    await expect(page.locator('#query-status')).toContainText('60 query confrontate con Python');
     expect(errors).toEqual([]);
 });
 

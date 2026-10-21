@@ -13,4 +13,11 @@ export const queryLabels = {
     binding_collision: 'Parametri con nomi simili', page: 'Pagina di risultati',
     offset_only: 'Solo offset', zero_limit: 'Limit zero', null_filter: 'Filtro IS NULL',
     quoted_expression: 'Stringa letterale nella query', total: 'Somma importi',
+    grouped: 'Somme per persona · GROUP BY / HAVING', distinct: 'Persone distinte',
+    count: 'Conta note', count_grouped: 'Conta gruppi', count_distinct: 'Conta valori distinti',
+    missing_binding: 'Parametro mancante · NULL', ilike: 'Filtro ILIKE',
+    pkey_alias: 'Chiave primaria e alias', field_parameter: 'Parametro che riferisce un campo',
+    insert_default: '6 · Inserisci persona temporanea con default SQL',
+    update_temporary: '7 · Modifica persona temporanea', rename_key: '8 · Modifica chiave primaria',
+    read_updated: '9 · Leggi record modificato', delete_temporary: '10 · Elimina persona temporanea',
 };

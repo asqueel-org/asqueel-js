@@ -3,6 +3,7 @@ import grammar from "./generated/grammar.json" with { type: "json" };
 import configurationGrammar from "./generated/configuration-grammar.json" with { type: "json" };
 import { resolveModel, migrationForBuilder } from "./model.js";
 import { SqliteQueries } from "./queries.js";
+export {RecordNotFoundError, RecordMultipleRowsError, TransactionStateError} from './query-errors.js';
 export {
   resolveModel,
   DbModel,

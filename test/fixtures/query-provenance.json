@@ -1,5 +1,6 @@
 {
-  "coreCommit": "926000dde5f7dbaa07d56aa4c5a4985bd8162c85",
-  "buildersVersion": "0.28.1",
-  "status": "Historical compiler regression; not Python 0.6.1 query parity"
+  "coreCommit": "8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988",
+  "coreVersion": "0.6.1 + fix #44",
+  "buildersVersion": "0.29.0",
+  "status": "60 deterministic QueryCompiler/WriteCompiler cases: full model, migrate JSON, SQL, parameters and real SQLite results. Not complete application-runtime parity."
 }

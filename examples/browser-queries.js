@@ -16,7 +16,7 @@ export function browserQueries(root) {
     invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
     invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
 
-    // Explicit fields: Python currently rejects writes with active option hooks.
+    // Explicit fields: the JS runtime does not yet execute application option hooks.
     const tables = packages.package({name: 'notes', sqlprefix: 'q'}).tables();
     const person = tables.table({name: 'person', sqlname: 'query_people', pkey: 'id'});
     const personColumns = person.columns();

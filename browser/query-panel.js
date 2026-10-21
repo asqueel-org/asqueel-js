@@ -1,5 +1,6 @@
 import oracle from '../test/fixtures/queries.json' with {type: 'json'};
 import {querySource} from '../src/queries.js';
+import featureOracle from '../test/fixtures/query-features.json' with {type: 'json'};
 import {equal} from '../src/sqlite.js';
 
 export function queryPanel(view, database, getModel) {
@@ -38,7 +39,7 @@ export function queryPanel(view, database, getModel) {
                 view.set('queryStatus', 'Verifica delle query su un database separato…');
                 const result = await database.request('query-checks');
                 view.set('queryChecks', result.map(s => `✓ ${s}`).join('\n'));
-                view.set('queryStatus', `${result.length} verifiche browser superate · ${oracle.cases.length} query confrontate con Python.`);
+                view.set('queryStatus', `${result.length} verifiche browser superate · ${oracle.cases.length + featureOracle.cases.length} query confrontate con Python.`);
                 view.set('queryClass', '');
             } else {
                 const {model, request, compiled, message} = compile();
@@ -46,7 +47,7 @@ export function queryPanel(view, database, getModel) {
                 if (!equal(compiled, result.compiled)) throw new Error('Il worker ha prodotto un SQL diverso dalla preview');
                 view.set('queryRows', JSON.stringify(result.records, null, 2));
                 database.showDatabase(result);
-                view.set('queryStatus', `${request.operation === 'insert' ? 'INSERT completato e salvato.' : `${result.records.length} righe lette.`} ${message}`);
+                view.set('queryStatus', `${['insert', 'update', 'delete'].includes(request.operation) ? `${request.operation.toUpperCase()} completato e salvato.` : `${result.records.length} righe lette.`} ${message}`);
             }
         } catch (error) {
             view.set('queryStatus', error.message); view.set('queryClass', 'error');

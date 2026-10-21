@@ -1,4 +1,1162 @@
 {
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "browser"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "crm",
+          "tag": "package",
+          "attributes": {
+            "name": "crm",
+            "sqlprefix": true
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "customer",
+                  "tag": "table",
+                  "attributes": {
+                    "name": "customer",
+                    "lookup": false,
+                    "deletable": true,
+                    "group_zzz": "System",
+                    "pkey": "id",
+                    "logicalDeletionField": "__del_ts",
+                    "lastTS": "__mod_ts"
+                  },
+                  "children": [
+                    {
+                      "name": "options",
+                      "tag": "options",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "sys_fields",
+                          "tag": "sys_fields",
+                          "attributes": {
+                            "syscode": true,
+                            "id": true,
+                            "ins": true,
+                            "upd": true,
+                            "user_ins": true,
+                            "user_upd": true,
+                            "ldel": true,
+                            "draft": false,
+                            "group": "zzz",
+                            "group_name": "System",
+                            "enabled": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Id",
+                            "size": "22",
+                            "read_only": true,
+                            "x_generation": {
+                              "type": "uuid",
+                              "algorithm": "legacy22"
+                            },
+                            "dtype": "A",
+                            "name": "id",
+                            "x_legacy__sysfield": true,
+                            "x_legacy__sendback": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__ins_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Insert date",
+                            "indexed": true,
+                            "onInserting": "setTSNow",
+                            "dtype": "DHZ",
+                            "name": "__ins_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__del_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Logical delete date",
+                            "indexed": true,
+                            "dtype": "DHZ",
+                            "name": "__del_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__mod_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Update date",
+                            "indexed": true,
+                            "onInserting": "setTSNow",
+                            "onUpdating": "setTSNow",
+                            "dtype": "DHZ",
+                            "name": "__mod_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__ins_user",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]User Insert",
+                            "onInserting": "setCurrentUser",
+                            "dtype": "T",
+                            "name": "__ins_user",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__mod_user",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]User Modify",
+                            "onInserting": "setCurrentUser",
+                            "onUpdating": "setCurrentUser",
+                            "dtype": "T",
+                            "name": "__mod_user",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__syscode",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Internal code",
+                            "size": ":20",
+                            "indexed": true,
+                            "unique": true,
+                            "dtype": "A",
+                            "name": "__syscode",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "name",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "notnull": true,
+                            "name": "name",
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "email",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "indexed": true,
+                            "name": "email",
+                            "notnull": false,
+                            "unique": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "__record_pointer",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": " 'crm.customer.' || $id ",
+                            "group": "zzz",
+                            "name_long": "!![en]Record pointer",
+                            "dtype": "A",
+                            "name": "__record_pointer",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__protecting_reasons",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "group": "zzz",
+                            "name_long": "!![en]Protecting reasons",
+                            "dtype": "A",
+                            "name": "__protecting_reasons",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__is_protected_row",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "$__protecting_reasons!=''",
+                            "group": "zzz",
+                            "name_long": "!![en]Row Protected",
+                            "dtype": "A",
+                            "name": "__is_protected_row",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__invalid_reasons",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "group": "zzz",
+                            "name_long": "!![en]Invalid reasons",
+                            "dtype": "A",
+                            "name": "__invalid_reasons",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__is_invalid_row",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "$__invalid_reasons!=''",
+                            "group": "zzz",
+                            "name_long": "!![en]Invalid row",
+                            "dtype": "A",
+                            "name": "__is_invalid_row",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "customer___ins_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__ins_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "customer___del_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__del_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "customer___mod_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__mod_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "customer___syscode_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "__syscode",
+                            "unique": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "customer_email_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "email": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        },
+        {
+          "name": "sales",
+          "tag": "package",
+          "attributes": {
+            "name": "sales",
+            "sqlprefix": true
+          },
+          "children": [
+            {
+              "name": "options",
+              "tag": "options",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "requires",
+                  "tag": "requires",
+                  "attributes": {
+                    "packages": "crm"
+                  },
+                  "children": [],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            },
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "invoice",
+                  "tag": "table",
+                  "attributes": {
+                    "name": "invoice",
+                    "lookup": false,
+                    "deletable": true,
+                    "group_zzz": "System",
+                    "pkey": "id",
+                    "logicalDeletionField": "__del_ts",
+                    "lastTS": "__mod_ts",
+                    "draftField": "__is_draft",
+                    "x_legacy_audit": "lazy"
+                  },
+                  "children": [
+                    {
+                      "name": "options",
+                      "tag": "options",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "sys_fields",
+                          "tag": "sys_fields",
+                          "attributes": {
+                            "draft": true,
+                            "id": true,
+                            "ins": true,
+                            "upd": true,
+                            "user_ins": true,
+                            "user_upd": true,
+                            "ldel": true,
+                            "group": "zzz",
+                            "group_name": "System",
+                            "enabled": true,
+                            "syscode": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "audit",
+                          "tag": "audit",
+                          "attributes": {
+                            "mode": "lazy",
+                            "version_field": "__version",
+                            "enabled": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Id",
+                            "size": "22",
+                            "read_only": true,
+                            "x_generation": {
+                              "type": "uuid",
+                              "algorithm": "legacy22"
+                            },
+                            "dtype": "A",
+                            "name": "id",
+                            "x_legacy__sysfield": true,
+                            "x_legacy__sendback": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__ins_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Insert date",
+                            "indexed": true,
+                            "onInserting": "setTSNow",
+                            "dtype": "DHZ",
+                            "name": "__ins_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__del_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Logical delete date",
+                            "indexed": true,
+                            "dtype": "DHZ",
+                            "name": "__del_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__mod_ts",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Update date",
+                            "indexed": true,
+                            "onInserting": "setTSNow",
+                            "onUpdating": "setTSNow",
+                            "dtype": "DHZ",
+                            "name": "__mod_ts",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__ins_user",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]User Insert",
+                            "onInserting": "setCurrentUser",
+                            "dtype": "T",
+                            "name": "__ins_user",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__mod_user",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]User Modify",
+                            "onInserting": "setCurrentUser",
+                            "onUpdating": "setCurrentUser",
+                            "dtype": "T",
+                            "name": "__mod_user",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__is_draft",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "!![en]Is Draft",
+                            "indexed": true,
+                            "dtype": "B",
+                            "name": "__is_draft",
+                            "x_legacy__sysfield": true,
+                            "x_legacy__sendback": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__version",
+                          "tag": "column",
+                          "attributes": {
+                            "group": "zzz",
+                            "name_long": "Audit version",
+                            "onInserting": "setAuditVersionIns",
+                            "onUpdating": "setAuditVersionUpd",
+                            "dtype": "L",
+                            "name": "__version",
+                            "x_legacy__sysfield": true
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "customer_id",
+                          "tag": "column",
+                          "attributes": {
+                            "name": "customer_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false,
+                            "dtype": "A",
+                            "size": "22"
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "onDelete_sql": "restrict",
+                                "to": "crm.customer.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "N",
+                            "size": "12,2",
+                            "sql_default": "0",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "__record_pointer",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": " 'sales.invoice.' || $id ",
+                            "group": "zzz",
+                            "name_long": "!![en]Record pointer",
+                            "dtype": "A",
+                            "name": "__record_pointer",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__protecting_reasons",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "group": "zzz",
+                            "name_long": "!![en]Protecting reasons",
+                            "dtype": "A",
+                            "name": "__protecting_reasons",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__is_protected_row",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "$__protecting_reasons!=''",
+                            "group": "zzz",
+                            "name_long": "!![en]Row Protected",
+                            "dtype": "A",
+                            "name": "__is_protected_row",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__invalid_reasons",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": true,
+                            "group": "zzz",
+                            "name_long": "!![en]Invalid reasons",
+                            "dtype": "A",
+                            "name": "__invalid_reasons",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "__is_invalid_row",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "$__invalid_reasons!=''",
+                            "group": "zzz",
+                            "name_long": "!![en]Invalid row",
+                            "dtype": "A",
+                            "name": "__is_invalid_row",
+                            "x_legacy__sysfield": true,
+                            "x_requires_compilation": "formulaColumn"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "invoice___ins_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__ins_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "invoice___del_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__del_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "invoice___mod_ts_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__mod_ts": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "invoice___is_draft_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": {
+                              "__is_draft": null
+                            }
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "invoice_customer_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "customer_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        },
+        {
+          "name": "notes",
+          "tag": "package",
+          "attributes": {
+            "sqlprefix": "q",
+            "name": "notes"
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "person",
+                  "tag": "table",
+                  "attributes": {
+                    "sqlname": "query_people",
+                    "pkey": "id",
+                    "name": "person",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "name",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "sqlname": "display_name",
+                            "notnull": true,
+                            "name": "name",
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "active",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "B",
+                            "sql_default": "1",
+                            "name": "active",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "memo",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "memo",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "person_id",
+                          "tag": "column",
+                          "attributes": {
+                            "name": "person_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false,
+                            "dtype": "I"
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "to": "notes.person.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "body",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "body",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "N",
+                            "size": "12,2",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "memo_person_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "person_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "sales.invoice.@customer_id",
+        "attributes": {
+          "many_relation": "sales.invoice.customer_id",
+          "one_relation": "crm.customer.id",
+          "onDelete_sql": "restrict",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "sales_invoice_customer_id",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "crm.customer.@sales_invoice_customer_id",
+        "attributes": {
+          "many_relation": "sales.invoice.customer_id",
+          "one_relation": "crm.customer.id",
+          "onDelete_sql": "restrict",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      },
+      {
+        "path": "notes.memo.@person_id",
+        "attributes": {
+          "many_relation": "notes.memo.person_id",
+          "one_relation": "notes.person.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "notes_memo_person_id",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "notes.person.@notes_memo_person_id",
+        "attributes": {
+          "many_relation": "notes.memo.person_id",
+          "one_relation": "notes.person.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      }
+    ]
+  },
   "desired": {
     "root": {
       "entity": "db",
@@ -15,27 +1173,6 @@
                 "pkeys": "id"
               },
               "columns": {
-                "name": {
-                  "entity": "column",
-                  "entity_name": "name",
-                  "attributes": {
-                    "dtype": "T",
-                    "notnull": true
-                  },
-                  "schema_name": "main",
-                  "table_name": "crm_customer",
-                  "column_name": "name"
-                },
-                "email": {
-                  "entity": "column",
-                  "entity_name": "email",
-                  "attributes": {
-                    "dtype": "T"
-                  },
-                  "schema_name": "main",
-                  "table_name": "crm_customer",
-                  "column_name": "email"
-                },
                 "id": {
                   "entity": "column",
                   "entity_name": "id",
@@ -109,23 +1246,32 @@
                   "schema_name": "main",
                   "table_name": "crm_customer",
                   "column_name": "__syscode"
+                },
+                "name": {
+                  "entity": "column",
+                  "entity_name": "name",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": true
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "name"
+                },
+                "email": {
+                  "entity": "column",
+                  "entity_name": "email",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer",
+                  "column_name": "email"
                 }
               },
               "relations": {},
               "constraints": {},
               "indexes": {
-                "idx_39aaeffd": {
-                  "entity": "index",
-                  "entity_name": "idx_39aaeffd",
-                  "attributes": {
-                    "columns": {
-                      "email": null
-                    },
-                    "index_name": "idx_39aaeffd"
-                  },
-                  "schema_name": "main",
-                  "table_name": "crm_customer"
-                },
                 "idx_4234876c": {
                   "entity": "index",
                   "entity_name": "idx_4234876c",
@@ -161,6 +1307,18 @@
                   },
                   "schema_name": "main",
                   "table_name": "crm_customer"
+                },
+                "idx_39aaeffd": {
+                  "entity": "index",
+                  "entity_name": "idx_39aaeffd",
+                  "attributes": {
+                    "columns": {
+                      "email": null
+                    },
+                    "index_name": "idx_39aaeffd"
+                  },
+                  "schema_name": "main",
+                  "table_name": "crm_customer"
                 }
               },
               "schema_name": "main",
@@ -173,29 +1331,6 @@
                 "pkeys": "id"
               },
               "columns": {
-                "customer_id": {
-                  "entity": "column",
-                  "entity_name": "customer_id",
-                  "attributes": {
-                    "dtype": "C",
-                    "size": "22"
-                  },
-                  "schema_name": "main",
-                  "table_name": "sales_invoice",
-                  "column_name": "customer_id"
-                },
-                "amount": {
-                  "entity": "column",
-                  "entity_name": "amount",
-                  "attributes": {
-                    "dtype": "N",
-                    "sqldefault": "0",
-                    "size": "12,2"
-                  },
-                  "schema_name": "main",
-                  "table_name": "sales_invoice",
-                  "column_name": "amount"
-                },
                 "id": {
                   "entity": "column",
                   "entity_name": "id",
@@ -277,6 +1412,29 @@
                   "schema_name": "main",
                   "table_name": "sales_invoice",
                   "column_name": "__version"
+                },
+                "customer_id": {
+                  "entity": "column",
+                  "entity_name": "customer_id",
+                  "attributes": {
+                    "dtype": "C",
+                    "size": "22"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "customer_id"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "N",
+                    "size": "12,2",
+                    "sqldefault": "0"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice",
+                  "column_name": "amount"
                 }
               },
               "relations": {
@@ -303,18 +1461,6 @@
               },
               "constraints": {},
               "indexes": {
-                "idx_f3729b7d": {
-                  "entity": "index",
-                  "entity_name": "idx_f3729b7d",
-                  "attributes": {
-                    "columns": {
-                      "customer_id": null
-                    },
-                    "index_name": "idx_f3729b7d"
-                  },
-                  "schema_name": "main",
-                  "table_name": "sales_invoice"
-                },
                 "idx_9ca9b146": {
                   "entity": "index",
                   "entity_name": "idx_9ca9b146",
@@ -359,6 +1505,18 @@
                       "__is_draft": null
                     },
                     "index_name": "idx_28f8b110"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sales_invoice"
+                },
+                "idx_f3729b7d": {
+                  "entity": "index",
+                  "entity_name": "idx_f3729b7d",
+                  "attributes": {
+                    "columns": {
+                      "customer_id": null
+                    },
+                    "index_name": "idx_f3729b7d"
                   },
                   "schema_name": "main",
                   "table_name": "sales_invoice"
@@ -521,24 +1679,17 @@
           "id": 101,
           "name": "Ada",
           "active": true
-        },
-        "returning": "$id,$name,$active"
+        }
       },
       "compiled": {
-        "sql": "INSERT INTO \"main\".\"query_people\" AS \"t0\" (\"id\", \"display_name\", \"active\") VALUES (:__value_0, :__value_1, :__value_2)\nRETURNING \"id\" AS \"id\",\n\"display_name\" AS \"name\",\n\"active\" AS \"active\"",
+        "sql": "INSERT INTO \"main\".\"query_people\"(\"id\",\"display_name\",\"active\") VALUES (:id,:name,:active)",
         "params": {
-          "__value_0": 101,
-          "__value_1": "Ada",
-          "__value_2": true
-        }
-      },
-      "rows": [
-        {
           "id": 101,
           "name": "Ada",
-          "active": 1
+          "active": true
         }
-      ]
+      },
+      "rows": []
     },
     {
       "name": "insert_quoted",
@@ -549,24 +1700,17 @@
           "id": 102,
           "name": "O'Brien; -- $id :name",
           "active": false
-        },
-        "returning": "*"
+        }
       },
       "compiled": {
-        "sql": "INSERT INTO \"main\".\"query_people\" AS \"t0\" (\"id\", \"display_name\", \"active\") VALUES (:__value_0, :__value_1, :__value_2)\nRETURNING \"id\" AS \"id\",\n\"display_name\" AS \"name\",\n\"active\" AS \"active\"",
+        "sql": "INSERT INTO \"main\".\"query_people\"(\"id\",\"display_name\",\"active\") VALUES (:id,:name,:active)",
         "params": {
-          "__value_0": 102,
-          "__value_1": "O'Brien; -- $id :name",
-          "__value_2": false
-        }
-      },
-      "rows": [
-        {
           "id": 102,
           "name": "O'Brien; -- $id :name",
-          "active": 0
+          "active": false
         }
-      ]
+      },
+      "rows": []
     },
     {
       "name": "insert_memo",
@@ -578,26 +1722,18 @@
           "person_id": 101,
           "body": "Prima nota",
           "amount": 42.5
-        },
-        "returning": "*"
-      },
-      "compiled": {
-        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)\nRETURNING \"id\" AS \"id\",\n\"person_id\" AS \"person_id\",\n\"body\" AS \"body\",\n\"amount\" AS \"amount\"",
-        "params": {
-          "__value_0": 201,
-          "__value_1": 101,
-          "__value_2": "Prima nota",
-          "__value_3": 42.5
         }
       },
-      "rows": [
-        {
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"q_memo\"(\"id\",\"person_id\",\"body\",\"amount\") VALUES (:id,:person_id,:body,:amount)",
+        "params": {
           "id": 201,
           "person_id": 101,
           "body": "Prima nota",
           "amount": 42.5
         }
-      ]
+      },
+      "rows": []
     },
     {
       "name": "insert_null",
@@ -609,24 +1745,18 @@
           "person_id": 102,
           "body": null,
           "amount": 0
-        },
-        "returning": "$id,$body"
+        }
       },
       "compiled": {
-        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)\nRETURNING \"id\" AS \"id\",\n\"body\" AS \"body\"",
+        "sql": "INSERT INTO \"main\".\"q_memo\"(\"id\",\"person_id\",\"amount\") VALUES (:id,:person_id,:amount)",
         "params": {
-          "__value_0": 202,
-          "__value_1": 102,
-          "__value_2": null,
-          "__value_3": 0
+          "id": 202,
+          "person_id": 102,
+          "body": null,
+          "amount": 0
         }
       },
-      "rows": [
-        {
-          "id": 202,
-          "body": null
-        }
-      ]
+      "rows": []
     },
     {
       "name": "insert_no_return",
@@ -638,16 +1768,15 @@
           "person_id": 101,
           "body": "Seconda nota",
           "amount": 10
-        },
-        "returning": null
+        }
       },
       "compiled": {
-        "sql": "INSERT INTO \"main\".\"q_memo\" AS \"t0\" (\"id\", \"person_id\", \"body\", \"amount\") VALUES (:__value_0, :__value_1, :__value_2, :__value_3)",
+        "sql": "INSERT INTO \"main\".\"q_memo\"(\"id\",\"person_id\",\"body\",\"amount\") VALUES (:id,:person_id,:body,:amount)",
         "params": {
-          "__value_0": 203,
-          "__value_1": 101,
-          "__value_2": "Seconda nota",
-          "__value_3": 10
+          "id": 203,
+          "person_id": 101,
+          "body": "Seconda nota",
+          "amount": 10
         }
       },
       "rows": []
@@ -690,7 +1819,7 @@
         }
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"display_name\" AS \"name\"\n FROM \"main\".\"query_people\" AS \"t0\"\nWHERE \"t0\".\"active\" = :active AND \"t0\".\"display_name\" LIKE :pattern",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"display_name\" AS \"name\"\n FROM \"main\".\"query_people\" AS \"t0\"\nWHERE (\"t0\".\"active\" = :active AND \"t0\".\"display_name\" LIKE :pattern)",
         "params": {
           "active": true,
           "pattern": "%da%"
@@ -716,7 +1845,7 @@
         "order_by": "$id"
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"body\" AS \"body\",\n\"t1\".\"display_name\" AS \"person\",\n\"t0\".\"amount\" AS \"amount\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON \"t0\".\"person_id\" = \"t1\".\"id\"\nWHERE \"t0\".\"amount\" >= :minimum\nORDER BY \"t0\".\"id\"",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"body\" AS \"body\",\n\"t1\".\"display_name\" AS person,\n\"t0\".\"amount\" AS \"amount\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n       LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON ((\"t0\".\"person_id\")=\"t1\".\"id\")\nWHERE (\"t0\".\"amount\" >= :minimum)\nORDER BY \"t0\".\"id\"",
         "params": {
           "minimum": 10
         }
@@ -752,20 +1881,20 @@
         "order_by": "$id"
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t1\".\"display_name\" AS \"person_id_name\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON \"t0\".\"person_id\" = \"t1\".\"id\"\nWHERE \"t0\".\"id\" IN (:ids_0, :ids_1)\nORDER BY \"t0\".\"id\"",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t1\".\"display_name\" AS \"_person_id_name\"\n FROM \"main\".\"q_memo\" AS \"t0\"\n       LEFT JOIN \"main\".\"query_people\" AS \"t1\" ON ((\"t0\".\"person_id\")=\"t1\".\"id\")\nWHERE (\"t0\".\"id\" IN (:ids0,:ids1) )\nORDER BY \"t0\".\"id\"",
         "params": {
-          "ids_0": 201,
-          "ids_1": 203
+          "ids0": 201,
+          "ids1": 203
         }
       },
       "rows": [
         {
           "id": 201,
-          "person_id_name": "Ada"
+          "_person_id_name": "Ada"
         },
         {
           "id": 203,
-          "person_id_name": "Ada"
+          "_person_id_name": "Ada"
         }
       ]
     },
@@ -781,7 +1910,7 @@
         }
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" IN (SELECT 1 WHERE 0)",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" IN () )",
         "params": {}
       },
       "rows": []
@@ -799,7 +1928,7 @@
         "order_by": "$id"
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" NOT IN (SELECT 1 WHERE 0)\nORDER BY \"t0\".\"id\"",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" NOT IN () )\nORDER BY \"t0\".\"id\"",
         "params": {}
       },
       "rows": [
@@ -830,11 +1959,11 @@
         }
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" IN (:ids_1, :ids_2) AND \"t0\".\"id\" <> :ids_0",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" IN (:ids0,:ids1)  AND \"t0\".\"id\" <> :ids_0)",
         "params": {
-          "ids_1": 201,
-          "ids_2": 202,
-          "ids_0": 202
+          "ids_0": 202,
+          "ids0": 201,
+          "ids1": 202
         }
       },
       "rows": [
@@ -895,10 +2024,20 @@
         "limit": 0
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nLIMIT 0",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"",
         "params": {}
       },
-      "rows": []
+      "rows": [
+        {
+          "id": 201
+        },
+        {
+          "id": 203
+        },
+        {
+          "id": 202
+        }
+      ]
     },
     {
       "name": "null_filter",
@@ -909,7 +2048,7 @@
         "where": "$body IS NULL"
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"body\" IS NULL",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"body\" IS NULL)",
         "params": {}
       },
       "rows": [
@@ -930,15 +2069,16 @@
         }
       },
       "compiled": {
-        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n':literal $id; --' AS \"literal\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE \"t0\".\"id\" = :id",
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n':literal \"t0\".\"id\"; --' AS literal\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" = :id)",
         "params": {
-          "id": 201
+          "id": 201,
+          "literal": null
         }
       },
       "rows": [
         {
           "id": 201,
-          "literal": ":literal $id; --"
+          "literal": ":literal \"t0\".\"id\"; --"
         }
       ]
     },
@@ -950,7 +2090,7 @@
         "columns": "SUM($amount) AS total"
       },
       "compiled": {
-        "sql": "SELECT SUM(\"t0\".\"amount\") AS \"total\"\n FROM \"main\".\"q_memo\" AS \"t0\"",
+        "sql": "SELECT SUM(\"t0\".\"amount\") AS total\n FROM \"main\".\"q_memo\" AS \"t0\"",
         "params": {}
       },
       "rows": [
@@ -958,6 +2098,318 @@
           "total": 52.5
         }
       ]
+    },
+    {
+      "name": "grouped",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$person_id,SUM($amount) AS total",
+        "group_by": "$person_id",
+        "having": "SUM($amount)>:minimum",
+        "sqlparams": {
+          "minimum": 0
+        },
+        "order_by": "$person_id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"person_id\" AS \"person_id\",\nSUM(\"t0\".\"amount\") AS total\n FROM \"main\".\"q_memo\" AS \"t0\"\nGROUP BY \"t0\".\"person_id\"\nHAVING SUM(\"t0\".\"amount\")>:minimum\nORDER BY \"t0\".\"person_id\"",
+        "params": {
+          "minimum": 0
+        }
+      },
+      "rows": [
+        {
+          "person_id": 101,
+          "total": 52.5
+        }
+      ]
+    },
+    {
+      "name": "distinct",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$person_id",
+        "distinct": true,
+        "order_by": "$person_id"
+      },
+      "compiled": {
+        "sql": "SELECT DISTINCT \"t0\".\"person_id\" AS \"person_id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nORDER BY \"t0\".\"person_id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "person_id": 101
+        },
+        {
+          "person_id": 102
+        }
+      ]
+    },
+    {
+      "name": "count",
+      "request": {
+        "operation": "count",
+        "table": "notes.memo"
+      },
+      "compiled": {
+        "sql": "SELECT count(*) AS \"gnr_row_count\"\n FROM \"main\".\"q_memo\" AS \"t0\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "gnr_row_count": 3
+        }
+      ]
+    },
+    {
+      "name": "count_grouped",
+      "request": {
+        "operation": "count",
+        "table": "notes.memo",
+        "columns": "$person_id",
+        "group_by": "$person_id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"person_id\" AS \"person_id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nGROUP BY \"t0\".\"person_id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "person_id": 101
+        },
+        {
+          "person_id": 102
+        }
+      ]
+    },
+    {
+      "name": "count_distinct",
+      "request": {
+        "operation": "count",
+        "table": "notes.memo",
+        "columns": "$person_id",
+        "distinct": true
+      },
+      "compiled": {
+        "sql": "SELECT DISTINCT \"t0\".\"person_id\" AS \"person_id\"\n FROM \"main\".\"q_memo\" AS \"t0\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "person_id": 101
+        },
+        {
+          "person_id": 102
+        }
+      ]
+    },
+    {
+      "name": "missing_binding",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$id=:missing"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\"=:missing)",
+        "params": {
+          "missing": null
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "ilike",
+      "request": {
+        "operation": "select",
+        "table": "notes.person",
+        "columns": "$id",
+        "where": "$name ILIKE :name",
+        "sqlparams": {
+          "name": "ada"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"query_people\" AS \"t0\"\nWHERE (\"t0\".\"display_name\" LIKE :name)",
+        "params": {
+          "name": "ada"
+        }
+      },
+      "rows": [
+        {
+          "id": 101
+        }
+      ]
+    },
+    {
+      "name": "pkey_alias",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$pkey,$body",
+        "order_by": "$id",
+        "addPkeyColumn": true
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"pkey\",\n\"t0\".\"body\" AS \"body\",\n\"t0\".\"id\" AS \"pkey\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "pkey": 201,
+          "body": "Prima nota"
+        },
+        {
+          "pkey": 202,
+          "body": null
+        },
+        {
+          "pkey": 203,
+          "body": "Seconda nota"
+        }
+      ]
+    },
+    {
+      "name": "field_parameter",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id",
+        "where": "$id=:field",
+        "sqlparams": {
+          "field": "$id"
+        },
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\"=\"t0\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "field": "$id"
+        }
+      },
+      "rows": [
+        {
+          "id": 201
+        },
+        {
+          "id": 202
+        },
+        {
+          "id": 203
+        }
+      ]
+    },
+    {
+      "name": "insert_default",
+      "request": {
+        "operation": "insert",
+        "table": "notes.person",
+        "values": {
+          "id": 103,
+          "name": "Temporary",
+          "active": null
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"query_people\"(\"id\",\"display_name\") VALUES (:id,:name) RETURNING \"active\" AS \"active\"",
+        "params": {
+          "id": 103,
+          "name": "Temporary",
+          "active": null
+        }
+      },
+      "rows": [
+        {
+          "active": 1
+        }
+      ]
+    },
+    {
+      "name": "update_temporary",
+      "request": {
+        "operation": "update",
+        "table": "notes.person",
+        "values": {
+          "name": "Changed",
+          "active": false
+        },
+        "pkey": 103
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"query_people\" SET \"display_name\"=:name,\"active\"=:active WHERE \"id\"=:__pkey__0",
+        "params": {
+          "name": "Changed",
+          "active": false,
+          "__pkey__0": 103
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "rename_key",
+      "request": {
+        "operation": "update",
+        "table": "notes.person",
+        "values": {
+          "id": 104
+        },
+        "old_record": {
+          "id": 103
+        }
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"query_people\" SET \"id\"=:id WHERE \"id\"=:__pkey__0",
+        "params": {
+          "id": 104,
+          "__pkey__0": 103
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "read_updated",
+      "request": {
+        "operation": "select",
+        "table": "notes.person",
+        "columns": "*",
+        "where": "$id=:id",
+        "sqlparams": {
+          "id": 104
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"display_name\" AS \"name\",\n\"t0\".\"active\" AS \"active\"\n FROM \"main\".\"query_people\" AS \"t0\"\nWHERE (\"t0\".\"id\"=:id)",
+        "params": {
+          "id": 104
+        }
+      },
+      "rows": [
+        {
+          "id": 104,
+          "name": "Changed",
+          "active": 0
+        }
+      ]
+    },
+    {
+      "name": "delete_temporary",
+      "request": {
+        "operation": "delete",
+        "table": "notes.person",
+        "values": {
+          "id": 104
+        }
+      },
+      "compiled": {
+        "sql": "DELETE FROM \"main\".\"query_people\" WHERE \"id\"=:__pkey__0",
+        "params": {
+          "__pkey__0": 104
+        }
+      },
+      "rows": []
     }
   ]
 }

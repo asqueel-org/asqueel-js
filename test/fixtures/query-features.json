@@ -1,0 +1,1570 @@
+{
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "features"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "app",
+          "tag": "package",
+          "attributes": {
+            "name": "app",
+            "sqlprefix": true
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "item",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "order_by": "$id",
+                    "partition_company": "company",
+                    "draftField": "draft",
+                    "logicalDeletionField": "deleted",
+                    "name": "item",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "company",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "company",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "value",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "sqlname": "stored_value",
+                            "sql_default": "5",
+                            "name": "value",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "stamp",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "sql_value": ":stamp_value",
+                            "name": "stamp",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "computed",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "sql_generatedExpression": "stored_value * 2",
+                            "name": "computed",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "draft",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "B",
+                            "name": "draft",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "deleted",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "deleted",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "I",
+                            "sql_formula": "$value + $computed",
+                            "static": true,
+                            "name": "total"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "aliasColumn",
+                          "attributes": {
+                            "relation_path": "value",
+                            "name": "amount",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [
+                            "static"
+                          ],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "line",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "doc,pos",
+                    "name": "line",
+                    "lookup": false,
+                    "deletable": true,
+                    "x_logical_pkey": "doc_pos"
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "doc",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "sqlname": "document_id",
+                            "name": "doc",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "pos",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "pos",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "body",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "body",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "composites",
+                      "tag": "composites",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "doc_pos",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "doc,pos",
+                            "name": "doc_pos",
+                            "unique": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "note",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "note",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "doc",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "doc",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "pos",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "pos",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "composites",
+                      "tag": "composites",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "line_key",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "doc,pos",
+                            "name": "line_key",
+                            "unique": false,
+                            "virtual": true
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "to": "app.line.doc_pos",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "body",
+                          "tag": "aliasColumn",
+                          "attributes": {
+                            "relation_path": "@line_key.body",
+                            "name": "body",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [
+                            "static"
+                          ],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "app.note.@line_key",
+        "attributes": {
+          "many_relation": "app.note.line_key",
+          "one_relation": "app.line.doc_pos",
+          "one_rel_name": "line_key",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "virtual": true,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "app_note_line_key",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "app.line.@app_note_line_key",
+        "attributes": {
+          "many_relation": "app.note.line_key",
+          "one_relation": "app.line.doc_pos",
+          "one_rel_name": "line_key",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "virtual": true,
+          "mode": "M"
+        }
+      }
+    ]
+  },
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "features",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "app_item": {
+              "entity": "table",
+              "entity_name": "app_item",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "id"
+                },
+                "company": {
+                  "entity": "column",
+                  "entity_name": "company",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "company"
+                },
+                "stored_value": {
+                  "entity": "column",
+                  "entity_name": "stored_value",
+                  "attributes": {
+                    "dtype": "I",
+                    "sqldefault": "5"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "stored_value"
+                },
+                "stamp": {
+                  "entity": "column",
+                  "entity_name": "stamp",
+                  "attributes": {
+                    "dtype": "I"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "stamp"
+                },
+                "computed": {
+                  "entity": "column",
+                  "entity_name": "computed",
+                  "attributes": {
+                    "dtype": "I",
+                    "generated_expression": "stored_value * 2"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "computed"
+                },
+                "draft": {
+                  "entity": "column",
+                  "entity_name": "draft",
+                  "attributes": {
+                    "dtype": "B"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "draft"
+                },
+                "deleted": {
+                  "entity": "column",
+                  "entity_name": "deleted",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_item",
+                  "column_name": "deleted"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "app_item"
+            },
+            "app_line": {
+              "entity": "table",
+              "entity_name": "app_line",
+              "attributes": {
+                "pkeys": "document_id,pos"
+              },
+              "columns": {
+                "document_id": {
+                  "entity": "column",
+                  "entity_name": "document_id",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_line",
+                  "column_name": "document_id"
+                },
+                "pos": {
+                  "entity": "column",
+                  "entity_name": "pos",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_line",
+                  "column_name": "pos"
+                },
+                "body": {
+                  "entity": "column",
+                  "entity_name": "body",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_line",
+                  "column_name": "body"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "app_line"
+            },
+            "app_note": {
+              "entity": "table",
+              "entity_name": "app_note",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "I",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_note",
+                  "column_name": "id"
+                },
+                "doc": {
+                  "entity": "column",
+                  "entity_name": "doc",
+                  "attributes": {
+                    "dtype": "I"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_note",
+                  "column_name": "doc"
+                },
+                "pos": {
+                  "entity": "column",
+                  "entity_name": "pos",
+                  "attributes": {
+                    "dtype": "I"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_note",
+                  "column_name": "pos"
+                }
+              },
+              "relations": {
+                "fk_0a31326f": {
+                  "entity": "relation",
+                  "entity_name": "fk_0a31326f",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "app_line",
+                    "related_columns": [
+                      "document_id",
+                      "pos"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "doc",
+                      "pos"
+                    ],
+                    "constraint_name": "fk_0a31326f"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_note"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_bbeddcaa": {
+                  "entity": "index",
+                  "entity_name": "idx_bbeddcaa",
+                  "attributes": {
+                    "columns": {
+                      "doc": null,
+                      "pos": null
+                    },
+                    "index_name": "idx_bbeddcaa"
+                  },
+                  "schema_name": "main",
+                  "table_name": "app_note"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "app_note"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "default_generated_sql_value",
+      "request": {
+        "operation": "insert",
+        "table": "app.item",
+        "values": {
+          "id": 1,
+          "company": "A",
+          "stamp_value": 10
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_item\"(\"id\",\"company\",\"stamp\") VALUES (:id,:company,:stamp_value\n) RETURNING \"stored_value\" AS \"value\",\"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "id": 1,
+          "company": "A",
+          "stamp_value": 10,
+          "stamp": null
+        }
+      },
+      "rows": [
+        {
+          "value": 5,
+          "stamp": 10,
+          "computed": 10
+        }
+      ]
+    },
+    {
+      "name": "draft_insert",
+      "request": {
+        "operation": "insert",
+        "table": "app.item",
+        "values": {
+          "id": 2,
+          "company": "A",
+          "value": 7,
+          "draft": true,
+          "stamp_value": 20
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_item\"(\"id\",\"company\",\"stored_value\",\"draft\",\"stamp\") VALUES (:id,:company,:value,:draft,:stamp_value\n) RETURNING \"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "id": 2,
+          "company": "A",
+          "value": 7,
+          "draft": true,
+          "stamp_value": 20,
+          "stamp": null
+        }
+      },
+      "rows": [
+        {
+          "stamp": 20,
+          "computed": 14
+        }
+      ]
+    },
+    {
+      "name": "deleted_insert",
+      "request": {
+        "operation": "insert",
+        "table": "app.item",
+        "values": {
+          "id": 3,
+          "company": "B",
+          "value": 9,
+          "deleted": "yesterday",
+          "stamp_value": 30
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_item\"(\"id\",\"company\",\"stored_value\",\"deleted\",\"stamp\") VALUES (:id,:company,:value,:deleted,:stamp_value\n) RETURNING \"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "id": 3,
+          "company": "B",
+          "value": 9,
+          "deleted": "yesterday",
+          "stamp_value": 30,
+          "stamp": null
+        }
+      },
+      "rows": [
+        {
+          "stamp": 30,
+          "computed": 18
+        }
+      ]
+    },
+    {
+      "name": "unscoped_insert",
+      "request": {
+        "operation": "insert",
+        "table": "app.item",
+        "values": {
+          "id": 4,
+          "stamp_value": 40
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_item\"(\"id\",\"stamp\") VALUES (:id,:stamp_value\n) RETURNING \"stored_value\" AS \"value\",\"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "id": 4,
+          "stamp_value": 40,
+          "stamp": null
+        }
+      },
+      "rows": [
+        {
+          "value": 5,
+          "stamp": 40,
+          "computed": 10
+        }
+      ]
+    },
+    {
+      "name": "static_formula_star",
+      "request": {
+        "operation": "select",
+        "table": "app.item"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (\"t0\".\"deleted\" IS NULL) AND ((\"t0\".\"draft\" IS NULL OR \"t0\".\"draft\" !=1))\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "company": "A",
+          "value": 5,
+          "stamp": 10,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        },
+        {
+          "id": 4,
+          "company": null,
+          "value": 5,
+          "stamp": 40,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "name": "formula_alias",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "columns": "$id,$total,$amount",
+        "where": "$total > :minimum",
+        "sqlparams": {
+          "minimum": 0
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\",\n\"t0\".\"stored_value\" AS \"amount\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) > :minimum) AND (\"t0\".\"deleted\" IS NULL) AND ((\"t0\".\"draft\" IS NULL OR \"t0\".\"draft\" !=1))\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "minimum": 0
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 15,
+          "amount": 5
+        },
+        {
+          "id": 4,
+          "total": 15,
+          "amount": 5
+        }
+      ]
+    },
+    {
+      "name": "policies_disabled",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "exclude_draft": false,
+        "exclude_logical_deleted": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "company": "A",
+          "value": 5,
+          "stamp": 10,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        },
+        {
+          "id": 2,
+          "company": "A",
+          "value": 7,
+          "stamp": 20,
+          "computed": 14,
+          "draft": 1,
+          "deleted": null,
+          "total": 21
+        },
+        {
+          "id": 3,
+          "company": "B",
+          "value": 9,
+          "stamp": 30,
+          "computed": 18,
+          "draft": null,
+          "deleted": "yesterday",
+          "total": 27
+        },
+        {
+          "id": 4,
+          "company": null,
+          "value": 5,
+          "stamp": 40,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "name": "mark_deleted",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "columns": "$id",
+        "exclude_draft": false,
+        "exclude_logical_deleted": "mark"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"deleted\" AS \"_isdeleted\"\n FROM \"main\".\"app_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_isdeleted": null
+        },
+        {
+          "id": 2,
+          "_isdeleted": null
+        },
+        {
+          "id": 3,
+          "_isdeleted": "yesterday"
+        },
+        {
+          "id": 4,
+          "_isdeleted": null
+        }
+      ]
+    },
+    {
+      "name": "current_partition",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "environment": {
+          "current_company": "A"
+        },
+        "exclude_draft": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (\"t0\".\"company\" = :env_current_company) AND (\"t0\".\"deleted\" IS NULL)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_current_company": "A"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "company": "A",
+          "value": 5,
+          "stamp": 10,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        },
+        {
+          "id": 2,
+          "company": "A",
+          "value": 7,
+          "stamp": 20,
+          "computed": 14,
+          "draft": 1,
+          "deleted": null,
+          "total": 21
+        }
+      ]
+    },
+    {
+      "name": "allowed_partition",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "environment": {
+          "allowed_company": [
+            "A",
+            "B"
+          ]
+        },
+        "exclude_logical_deleted": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (\"t0\".\"company\" IS NULL OR \"t0\".\"company\" IN (:env_allowed_company0,:env_allowed_company1) ) AND ((\"t0\".\"draft\" IS NULL OR \"t0\".\"draft\" !=1))\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_allowed_company0": "A",
+          "env_allowed_company1": "B"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "company": "A",
+          "value": 5,
+          "stamp": 10,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        },
+        {
+          "id": 3,
+          "company": "B",
+          "value": 9,
+          "stamp": 30,
+          "computed": 18,
+          "draft": null,
+          "deleted": "yesterday",
+          "total": 27
+        },
+        {
+          "id": 4,
+          "company": null,
+          "value": 5,
+          "stamp": 40,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "name": "ignored_partition",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "environment": {
+          "current_company": "A"
+        },
+        "ignore_partition": true,
+        "exclude_draft": false,
+        "exclude_logical_deleted": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "company": "A",
+          "value": 5,
+          "stamp": 10,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        },
+        {
+          "id": 2,
+          "company": "A",
+          "value": 7,
+          "stamp": 20,
+          "computed": 14,
+          "draft": 1,
+          "deleted": null,
+          "total": 21
+        },
+        {
+          "id": 3,
+          "company": "B",
+          "value": 9,
+          "stamp": 30,
+          "computed": 18,
+          "draft": null,
+          "deleted": "yesterday",
+          "total": 27
+        },
+        {
+          "id": 4,
+          "company": null,
+          "value": 5,
+          "stamp": 40,
+          "computed": 10,
+          "draft": null,
+          "deleted": null,
+          "total": 15
+        }
+      ]
+    },
+    {
+      "name": "partition_insert",
+      "request": {
+        "operation": "insert",
+        "table": "app.item",
+        "values": {
+          "id": 5,
+          "stamp_value": 50
+        },
+        "environment": {
+          "current_company": "B"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_item\"(\"id\",\"stamp\",\"company\") VALUES (:id,:stamp_value\n,:company) RETURNING \"stored_value\" AS \"value\",\"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "id": 5,
+          "stamp_value": 50,
+          "stamp": null,
+          "company": "B"
+        }
+      },
+      "rows": [
+        {
+          "value": 5,
+          "stamp": 50,
+          "computed": 10
+        }
+      ]
+    },
+    {
+      "name": "partition_update",
+      "request": {
+        "operation": "update",
+        "table": "app.item",
+        "values": {
+          "value": 11,
+          "stamp_value": 60
+        },
+        "pkey": 5,
+        "environment": {
+          "current_company": "B"
+        }
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"app_item\" SET \"stored_value\"=:value,\"stamp\"=:stamp_value\n WHERE (\"id\"=:__pkey__0) AND (\"company\" = :__partition_0) RETURNING \"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "value": 11,
+          "stamp_value": 60,
+          "stamp": null,
+          "__pkey__0": 5,
+          "__partition_0": "B"
+        }
+      },
+      "rows": [
+        {
+          "stamp": 60,
+          "computed": 22
+        }
+      ]
+    },
+    {
+      "name": "partition_update_miss",
+      "request": {
+        "operation": "update",
+        "table": "app.item",
+        "values": {
+          "value": 99
+        },
+        "pkey": 5,
+        "environment": {
+          "current_company": "A"
+        }
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"app_item\" SET \"stored_value\"=:value,\"stamp\"=:stamp_value\n WHERE (\"id\"=:__pkey__0) AND (\"company\" = :__partition_0) RETURNING \"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "value": 99,
+          "stamp": null,
+          "__pkey__0": 5,
+          "__partition_0": "A",
+          "stamp_value": null
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "partition_read_updated",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "where": "$id=5",
+        "environment": {
+          "current_company": "B"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (\"t0\".\"id\"=5) AND (\"t0\".\"company\" = :env_current_company) AND (\"t0\".\"deleted\" IS NULL) AND ((\"t0\".\"draft\" IS NULL OR \"t0\".\"draft\" !=1))\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_current_company": "B"
+        }
+      },
+      "rows": [
+        {
+          "id": 5,
+          "company": "B",
+          "value": 11,
+          "stamp": 60,
+          "computed": 22,
+          "draft": null,
+          "deleted": null,
+          "total": 33
+        }
+      ]
+    },
+    {
+      "name": "allowed_partition_update",
+      "request": {
+        "operation": "update",
+        "table": "app.item",
+        "values": {
+          "value": 12,
+          "stamp_value": 70
+        },
+        "pkey": 5,
+        "environment": {
+          "allowed_company": [
+            "B"
+          ]
+        }
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"app_item\" SET \"stored_value\"=:value,\"stamp\"=:stamp_value\n WHERE (\"id\"=:__pkey__0) AND ((\"company\" IS NULL OR \"company\" IN (:__partition_00) )) RETURNING \"stamp\" AS \"stamp\",\"computed\" AS \"computed\"",
+        "params": {
+          "value": 12,
+          "stamp_value": 70,
+          "stamp": null,
+          "__pkey__0": 5,
+          "__partition_00": "B"
+        }
+      },
+      "rows": [
+        {
+          "stamp": 70,
+          "computed": 24
+        }
+      ]
+    },
+    {
+      "name": "empty_partition_delete",
+      "request": {
+        "operation": "delete",
+        "table": "app.item",
+        "values": {
+          "id": 5
+        },
+        "environment": {
+          "allowed_company": []
+        }
+      },
+      "compiled": {
+        "sql": "DELETE FROM \"main\".\"app_item\" WHERE (\"id\"=:__pkey__0) AND (1=0)",
+        "params": {
+          "__pkey__0": 5
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "partition_delete",
+      "request": {
+        "operation": "delete",
+        "table": "app.item",
+        "values": {
+          "id": 5
+        },
+        "environment": {
+          "current_company": "B"
+        }
+      },
+      "compiled": {
+        "sql": "DELETE FROM \"main\".\"app_item\" WHERE (\"id\"=:__pkey__0) AND (\"company\" = :__partition_0)",
+        "params": {
+          "__pkey__0": 5,
+          "__partition_0": "B"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "partition_read_deleted",
+      "request": {
+        "operation": "select",
+        "table": "app.item",
+        "where": "$id=5",
+        "environment": {
+          "current_company": "B"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"company\" AS \"company\",\n\"t0\".\"stored_value\" AS \"value\",\n\"t0\".\"stamp\" AS \"stamp\",\n\"t0\".\"computed\" AS \"computed\",\n\"t0\".\"draft\" AS \"draft\",\n\"t0\".\"deleted\" AS \"deleted\",\n( \"t0\".\"stored_value\" + \"t0\".\"computed\" ) AS \"total\"\n FROM \"main\".\"app_item\" AS \"t0\"\nWHERE (\"t0\".\"id\"=5) AND (\"t0\".\"company\" = :env_current_company) AND (\"t0\".\"deleted\" IS NULL) AND ((\"t0\".\"draft\" IS NULL OR \"t0\".\"draft\" !=1))\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_current_company": "B"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_insert",
+      "request": {
+        "operation": "insert",
+        "table": "app.line",
+        "values": {
+          "doc": 10,
+          "pos": 1,
+          "body": "first"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_line\"(\"document_id\",\"pos\",\"body\") VALUES (:doc,:pos,:body)",
+        "params": {
+          "doc": 10,
+          "pos": 1,
+          "body": "first"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_second",
+      "request": {
+        "operation": "insert",
+        "table": "app.line",
+        "values": {
+          "doc": 10,
+          "pos": 2,
+          "body": "second"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_line\"(\"document_id\",\"pos\",\"body\") VALUES (:doc,:pos,:body)",
+        "params": {
+          "doc": 10,
+          "pos": 2,
+          "body": "second"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_update",
+      "request": {
+        "operation": "update",
+        "table": "app.line",
+        "values": {
+          "body": "updated"
+        },
+        "pkey": "[10,1]"
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"app_line\" SET \"body\"=:body WHERE \"document_id\"=:__pkey__0 AND \"pos\"=:__pkey__1",
+        "params": {
+          "body": "updated",
+          "__pkey__0": 10,
+          "__pkey__1": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_rename",
+      "request": {
+        "operation": "update",
+        "table": "app.line",
+        "values": {
+          "pos": 3
+        },
+        "old_record": {
+          "doc": 10,
+          "pos": 2
+        }
+      },
+      "compiled": {
+        "sql": "UPDATE \"main\".\"app_line\" SET \"pos\"=:pos WHERE \"document_id\"=:__pkey__0 AND \"pos\"=:__pkey__1",
+        "params": {
+          "pos": 3,
+          "__pkey__0": 10,
+          "__pkey__1": 2
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_read",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$doc,$pos,$body",
+        "order_by": "$pos"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"document_id\" AS \"doc\",\n\"t0\".\"pos\" AS \"pos\",\n\"t0\".\"body\" AS \"body\"\n FROM \"main\".\"app_line\" AS \"t0\"\nORDER BY \"t0\".\"pos\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "doc": 10,
+          "pos": 1,
+          "body": "updated"
+        },
+        {
+          "doc": 10,
+          "pos": 3,
+          "body": "second"
+        }
+      ]
+    },
+    {
+      "name": "composite_note",
+      "request": {
+        "operation": "insert",
+        "table": "app.note",
+        "values": {
+          "id": 1,
+          "doc": 10,
+          "pos": 1
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"app_note\"(\"id\",\"doc\",\"pos\") VALUES (:id,:doc,:pos)",
+        "params": {
+          "id": 1,
+          "doc": 10,
+          "pos": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_join_alias",
+      "request": {
+        "operation": "select",
+        "table": "app.note",
+        "columns": "$id,@line_key.body,$body"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t1\".\"body\" AS \"_line_key_body\",\n\"t1\".\"body\" AS \"body\"\n FROM \"main\".\"app_note\" AS \"t0\"\n       LEFT JOIN \"main\".\"app_line\" AS \"t1\" ON ((\"t0\".\"doc\")=\"t1\".\"document_id\" AND (\"t0\".\"pos\")=\"t1\".\"pos\")",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_line_key_body": "updated",
+          "body": "updated"
+        }
+      ]
+    },
+    {
+      "name": "composite_delete",
+      "request": {
+        "operation": "delete",
+        "table": "app.line",
+        "values": {
+          "doc": 10,
+          "pos": 3
+        }
+      },
+      "compiled": {
+        "sql": "DELETE FROM \"main\".\"app_line\" WHERE \"document_id\"=:__pkey__0 AND \"pos\"=:__pkey__1",
+        "params": {
+          "__pkey__0": 10,
+          "__pkey__1": 3
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "composite_read_deleted",
+      "request": {
+        "operation": "select",
+        "table": "app.line",
+        "columns": "$doc,$pos,$body"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"document_id\" AS \"doc\",\n\"t0\".\"pos\" AS \"pos\",\n\"t0\".\"body\" AS \"body\"\n FROM \"main\".\"app_line\" AS \"t0\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "doc": 10,
+          "pos": 1,
+          "body": "updated"
+        }
+      ]
+    }
+  ],
+  "ddl": [
+    "CREATE TABLE \"app_item\"(\n \"id\" integer NOT NULL,\n \"company\" text,\n \"stored_value\" integer DEFAULT 5,\n \"stamp\" integer,\n \"computed\" integer GENERATED ALWAYS AS (stored_value * 2) STORED,\n \"draft\" boolean,\n \"deleted\" text,\n PRIMARY KEY (\"id\")\n)",
+    "CREATE TABLE \"app_line\"(\n \"document_id\" integer NOT NULL,\n \"pos\" integer NOT NULL,\n \"body\" text,\n PRIMARY KEY (\"document_id\",\"pos\")\n)",
+    "CREATE TABLE \"app_note\"(\n \"id\" integer NOT NULL,\n \"doc\" integer,\n \"pos\" integer,\n PRIMARY KEY (\"id\"),\n CONSTRAINT \"fk_0a31326f\" FOREIGN KEY (\"doc\", \"pos\") REFERENCES \"app_line\" (\"document_id\", \"pos\") ON UPDATE CASCADE\n)",
+    "CREATE INDEX \"idx_bbeddcaa\" ON \"app_note\" (\"doc\", \"pos\")"
+  ]
+}

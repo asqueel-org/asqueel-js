@@ -24,6 +24,6 @@ export class QueryPage extends PlaygroundPage {
         detail(body, 'SQL Python di riferimento', 'queryPython', 'query-python');
         detail(body, 'Risultati dal database', 'queryRows', 'query-rows', true);
         detail(body, 'Verifiche query nel browser', 'queryChecks', 'query-checks');
-        body.p('Le 18 query sono regressioni del compilatore precedente: non attestano parità query con Python 0.6.1. Gli ID degli INSERT sono fissi; ripeterli segnala un duplicato. Gli hook applicativi non vengono eseguiti.', {class: 'db-note'});
+        body.p('SQL, parametri e risultati sono confrontati con Python 0.6.1 + fix #44. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano un database separato. Gli hook applicativi non vengono eseguiti.', {class: 'db-note'});
     }
 }

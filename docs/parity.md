@@ -47,10 +47,22 @@ vuoto. Node, Bun e Chromium eseguono gli stessi confronti; il browser usa fixtur
 non un processo Python. L'editor confronta gli esempi originali: modificarli non
 rigenera automaticamente il riferimento.
 
-## Query: provenienza distinta
+## Query e CRUD: stesso riferimento
 
-Le 18 fixture SQL/query restano test di regressione del compilatore precedente,
-con provenienza in `test/fixtures/query-provenance.json`. **Non attestano parità delle
-query con Python 0.6.1.** L'oracolo query storico è conservato come ricetta per il
-prossimo porting e non è chiamato dall'export o dalla CI di parità del modello.
-Le query non sono state ampliate in questa fase; usano una vista del nuovo modello.
+`scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
+0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
+I 32 casi base e i 28 casi aggiuntivi confrontano il JSON completo dei due modelli,
+il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le due ricette hanno
+controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
+e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
+
+I casi coprono INSERT/UPDATE/DELETE, chiavi composte, default e `sql_value`,
+formule/alias semplici, JOIN diretti, aggregazioni, draft/logical deletion e
+partizioni con snapshot esplicito. Il corpus aggiuntivo include colonne generate:
+il database viene preparato dal DDL prodotto dal migratore Python, perché il
+migratore JS additivo ancora le rifiuta. Questo non attesta parità della loro
+migrazione. Transazioni e helper record hanno inoltre contratti eseguiti su tutti
+e tre gli adapter; non sono un porting completo del runtime applicativo Python.
+
+Rigenerazione degli oracoli query: `PYTHON=.reference/venv-current/bin/python`,
+quindi `$PYTHON scripts/query_oracle.py`. Le fixture non vanno modificate a mano.

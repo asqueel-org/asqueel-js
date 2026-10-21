@@ -120,7 +120,7 @@ test("unsupported JSON version and executable class declarations are refused", (
   );
 });
 
-test("new model policies and hooks remain blocked in the old query runtime", () => {
+test("inactive partition compiles, invalid active policy and unported hooks fail explicitly", () => {
   const policy = defineModel((r) =>
     r
       .db("x")
@@ -129,10 +129,9 @@ test("new model policies and hooks remain blocked in the old query runtime", () 
       .table({ name: "item", partition_company_id: "company" })
       .column({ name: "id", dtype: "I" }),
   );
-  assert.throws(
-    () => policy.queries().compile({ operation: "select", table: "app.item" }),
-    /policy.*fuori perimetro/,
-  );
+  assert.doesNotThrow(() => policy.queries().compile({ operation: "select", table: "app.item" }));
+  assert.throws(() => policy.queries().compile({ operation: "select", table: "app.item",
+    environment: {current_company: 'one'} }), /Colonna sconosciuta/);
   const hook = defineModel((r) =>
     r
       .db("x")

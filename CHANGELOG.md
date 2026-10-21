@@ -1,5 +1,17 @@
 # Changelog
 
+## Non rilasciato
+
+- Playground allineato alla gallery Gramlot: temi Base/Compact/Index, barra compatta,
+  colori e spaziature condivisi, CodeMirror coerente con il tema.
+- Compilatori SELECT/CRUD allineati a Python 0.6.1 + fix #44, con 60 confronti
+  di modello completo, migrate JSON, SQL, parametri e risultati SQLite.
+- UPDATE/DELETE, aggregazioni, formule/alias semplici, chiavi composte, policy
+  e transazioni atomiche; helper `fetchRecord`, `count`, `exists`.
+- Cambiamento API del PoC: `insert`/`update` restituiscono il record arricchito dai
+  default SQL; `returning` esplicito è ritirato a favore del comportamento Python.
+  Parametri assenti diventano NULL, `limit: 0` non limita i risultati.
+
 ## 0.1.1 — 2026-10-21
 
 - Rimozione dei limiti superiori sui tool Genro e Gramlot; tutte le suite CI

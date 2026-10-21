@@ -41,9 +41,10 @@ i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON m
 sono confrontati indipendentemente con Python, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
-sono ritirate anche qui. Le query e l'esecuzione dei comportamenti applicativi
-sono il prossimo incremento: le fixture SQL esistenti restano regressioni del
-precedente compilatore, non una dichiarazione di parità query con la 0.6.1.
+sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
+relazioni dirette anche composte, aggregazioni e policy dichiarative: **60 casi**
+confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
+Hook, codec applicativi e query avanzate restano da portare.
 
 ## API iniziale
 
@@ -75,8 +76,10 @@ try {
 Su Bun usare `openBunSQLite` da `@asqueel/asqueel-js/adapters/bun`. Nel browser usare
 `openBrowserSQLite` da `@asqueel/asqueel-js/adapters/browser` in un worker: occorre
 bundlare l'entry point e servire il WASM accanto al bundle, come nel playground.
-Il chiamante deve serializzare operazioni e transazioni intere; l'API worker
-riusabile è ancora in roadmap. Gli adapter Node/Bun usano driver sincroni dietro
+`model.queries(adapter)` serializza le proprie operazioni e offre `transaction(async tx => …)`
+per più scritture atomiche. L'accesso diretto all'adapter, incluse le migrazioni,
+va coordinato dal chiamante; l'API worker riusabile è ancora in roadmap.
+Gli adapter Node/Bun usano driver sincroni dietro
 un contratto asincrono, quindi non spostano il lavoro su un thread separato.
 
 ## Verifiche
@@ -89,8 +92,8 @@ npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
 La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, rollback, vincoli, persistenza e le 18 regressioni query
-confrontate con i risultati del precedente riferimento Python.
+completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 60 casi query
+confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 
 ## Organizzazione

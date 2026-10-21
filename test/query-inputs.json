@@ -1,0 +1,368 @@
+[
+  {
+    "name": "insert_person",
+    "request": {
+      "operation": "insert",
+      "table": "notes.person",
+      "values": {
+        "id": 101,
+        "name": "Ada",
+        "active": true
+      }
+    }
+  },
+  {
+    "name": "insert_quoted",
+    "request": {
+      "operation": "insert",
+      "table": "notes.person",
+      "values": {
+        "id": 102,
+        "name": "O'Brien; -- $id :name",
+        "active": false
+      }
+    }
+  },
+  {
+    "name": "insert_memo",
+    "request": {
+      "operation": "insert",
+      "table": "notes.memo",
+      "values": {
+        "id": 201,
+        "person_id": 101,
+        "body": "Prima nota",
+        "amount": 42.5
+      }
+    }
+  },
+  {
+    "name": "insert_null",
+    "request": {
+      "operation": "insert",
+      "table": "notes.memo",
+      "values": {
+        "id": 202,
+        "person_id": 102,
+        "body": null,
+        "amount": 0
+      }
+    }
+  },
+  {
+    "name": "insert_no_return",
+    "request": {
+      "operation": "insert",
+      "table": "notes.memo",
+      "values": {
+        "id": 203,
+        "person_id": 101,
+        "body": "Seconda nota",
+        "amount": 10
+      }
+    }
+  },
+  {
+    "name": "people",
+    "request": {
+      "operation": "select",
+      "table": "notes.person",
+      "columns": "*",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "active_people",
+    "request": {
+      "operation": "select",
+      "table": "notes.person",
+      "columns": "$id,$name",
+      "where": "$active = :active AND $name LIKE :pattern",
+      "sqlparams": {
+        "active": true,
+        "pattern": "%da%"
+      }
+    }
+  },
+  {
+    "name": "related_notes",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,$body,@person_id.name AS person,$amount",
+      "where": "$amount >= :minimum",
+      "sqlparams": {
+        "minimum": 10
+      },
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "collection",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,@person_id.name",
+      "where": "$id IN :ids",
+      "sqlparams": {
+        "ids": [
+          201,
+          203
+        ]
+      },
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "empty_collection",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$id IN :ids",
+      "sqlparams": {
+        "ids": []
+      }
+    }
+  },
+  {
+    "name": "not_in_empty",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$id NOT IN :ids",
+      "sqlparams": {
+        "ids": []
+      },
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "binding_collision",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$id IN :ids AND $id <> :ids_0",
+      "sqlparams": {
+        "ids": [
+          201,
+          202
+        ],
+        "ids_0": 202
+      }
+    }
+  },
+  {
+    "name": "page",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,$body",
+      "order_by": "$id",
+      "limit": 1,
+      "offset": 1
+    }
+  },
+  {
+    "name": "offset_only",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "order_by": "$id",
+      "offset": 1
+    }
+  },
+  {
+    "name": "zero_limit",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "limit": 0
+    }
+  },
+  {
+    "name": "null_filter",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$body IS NULL"
+    }
+  },
+  {
+    "name": "quoted_expression",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,':literal $id; --' AS literal",
+      "where": "$id = :id",
+      "sqlparams": {
+        "id": 201
+      }
+    }
+  },
+  {
+    "name": "total",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "SUM($amount) AS total"
+    }
+  },
+  {
+    "name": "grouped",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$person_id,SUM($amount) AS total",
+      "group_by": "$person_id",
+      "having": "SUM($amount)>:minimum",
+      "sqlparams": {
+        "minimum": 0
+      },
+      "order_by": "$person_id"
+    }
+  },
+  {
+    "name": "distinct",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$person_id",
+      "distinct": true,
+      "order_by": "$person_id"
+    }
+  },
+  {
+    "name": "count",
+    "request": {
+      "operation": "count",
+      "table": "notes.memo"
+    }
+  },
+  {
+    "name": "count_grouped",
+    "request": {
+      "operation": "count",
+      "table": "notes.memo",
+      "columns": "$person_id",
+      "group_by": "$person_id"
+    }
+  },
+  {
+    "name": "count_distinct",
+    "request": {
+      "operation": "count",
+      "table": "notes.memo",
+      "columns": "$person_id",
+      "distinct": true
+    }
+  },
+  {
+    "name": "missing_binding",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$id=:missing"
+    }
+  },
+  {
+    "name": "ilike",
+    "request": {
+      "operation": "select",
+      "table": "notes.person",
+      "columns": "$id",
+      "where": "$name ILIKE :name",
+      "sqlparams": {
+        "name": "ada"
+      }
+    }
+  },
+  {
+    "name": "pkey_alias",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$pkey,$body",
+      "order_by": "$id",
+      "addPkeyColumn": true
+    }
+  },
+  {
+    "name": "field_parameter",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id",
+      "where": "$id=:field",
+      "sqlparams": {
+        "field": "$id"
+      },
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "insert_default",
+    "request": {
+      "operation": "insert",
+      "table": "notes.person",
+      "values": {
+        "id": 103,
+        "name": "Temporary",
+        "active": null
+      }
+    }
+  },
+  {
+    "name": "update_temporary",
+    "request": {
+      "operation": "update",
+      "table": "notes.person",
+      "values": {
+        "name": "Changed",
+        "active": false
+      },
+      "pkey": 103
+    }
+  },
+  {
+    "name": "rename_key",
+    "request": {
+      "operation": "update",
+      "table": "notes.person",
+      "values": {
+        "id": 104
+      },
+      "old_record": {
+        "id": 103
+      }
+    }
+  },
+  {
+    "name": "read_updated",
+    "request": {
+      "operation": "select",
+      "table": "notes.person",
+      "columns": "*",
+      "where": "$id=:id",
+      "sqlparams": {
+        "id": 104
+      }
+    }
+  },
+  {
+    "name": "delete_temporary",
+    "request": {
+      "operation": "delete",
+      "table": "notes.person",
+      "values": {
+        "id": 104
+      }
+    }
+  }
+]
