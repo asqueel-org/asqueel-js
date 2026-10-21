@@ -272,3 +272,36 @@ test('Gramlot PERIOD query preview and ordinary worker execution use the same da
     await page.screenshot({path: 'output/gramlot-period-query.png'});
     expect(errors).toEqual([]);
 });
+
+for (const [format, content] of [
+    ['csv', 'id,name,active\n81,"Tea, green",yes\n'],
+    ['json', '[{"id":81,"name":"Tea, green","active":true}]'],
+    ['tytx', '{"id":81,"name":"Tea, green","active":true}::JS\n'],
+]) test(`Gramlot imports a local ${format} file in the SQLite worker and persists it`, async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await leaf(page, 'queries'); await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Applica migrazione'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completato');
+    await page.locator('#import-file').setInputFiles({name: `records.${format}`, mimeType: 'text/plain', buffer: Buffer.from(content)});
+    await expect(page.locator('#import-file-name')).toHaveText(`records.${format}`);
+    await page.locator('#import-run').click();
+    await expect(page.locator('#import-status')).toContainText('1 record importati e salvati');
+    await page.reload(); await ready(page, 'queries');
+    await page.locator('#query-example').selectOption('people');
+    await page.locator('#query-run').click();
+    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    const rows = JSON.parse(await page.locator('#query-rows').textContent());
+    expect(rows[0].id).toBe(81); expect(rows[0].name).toBe('Tea, green');
+    expect(errors).toEqual([]);
+});
+
+test('Gramlot compares imports with Python, including rollback and IndexedDB reopening', async ({page}) => {
+    await leaf(page, 'queries'); await ready(page, 'queries');
+    await page.locator('#import-test').click();
+    await expect(page.locator('#import-status')).toContainText('49 import identici a Python', {timeout: 90000});
+    await expect(page.locator('#import-checks')).toContainText('rollback_after_block');
+    await page.getByText('Verifiche import nel browser', {exact:true}).click();
+    await page.locator('#import-checks').scrollIntoViewIfNeeded();
+    await page.screenshot({path:'output/gramlot-imports.png'});
+});

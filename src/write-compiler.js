@@ -78,7 +78,7 @@ function returning(table, data, insert) {
         || insert && data[name] == null && (own(a, 'sql_default') || ['serial', 'serial4'].includes(a.dtype)));
     return selected.length ? ' RETURNING ' + selected.map(([name, column]) => `${q(columnName(column))} AS ${q(name)}`).join(',') : '';
 }
-export function compileWrite(table, operation, values, {pkey, old_record, environment = {}, ignore_partition = false} = {}) {
+export function compileWrite(table, operation, values, {pkey, old_record, environment = {}, ignore_partition = false, returningRows = true} = {}) {
     const policy = partition(table, environment, ignore_partition);
     const data = operation === 'delete' ? Object.create(null) : prepareRecord(table, values);
     let sql;
@@ -88,7 +88,7 @@ export function compileWrite(table, operation, values, {pkey, old_record, enviro
         const columns = entries.map(([name]) => q(columnName(table.columns.get(name))));
         const parameters = entries.map(([name]) => table.columns.get(name).a.sql_value ? table.columns.get(name).a.sql_value + '\n' : `:${name}`);
         sql = `INSERT INTO ${tableSQL(table)}` + (entries.length ? `(${columns.join(',')}) VALUES (${parameters.join(',')})` : ' DEFAULT VALUES');
-        sql += returning(table, data, true);
+        if (returningRows) sql += returning(table, data, true);
     } else if (operation === 'update') {
         guardPartition(table, data, policy, false);
         const assignments = Object.keys(data).filter(name => table.columns.has(name)).map(name => {

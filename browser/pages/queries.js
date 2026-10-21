@@ -10,6 +10,21 @@ export class QueryPage extends PlaygroundPage {
         body.p('Seleziona SQLite · inserimenti e query e applica la migrazione. Esegui gli inserimenti 1–5, poi leggi i dati.');
         databaseControls(body);
         detail(body, 'Piano SQL / operazioni applicate', 'sqlPlan', 'sql-plan');
+        const importing = body.details({class: 'db-detail', open: true});
+        importing.summary('Importa CSV, JSON o TYTX');
+        importing.html_label('Tabella del modello', {for: 'import-table'});
+        importing.input({id: 'import-table', type: 'text', value: '^importTable', disabled: '^busy'});
+        importing.html_label('File locale', {for: 'import-file'});
+        importing.input({id: 'import-file', type: 'file', accept: '.csv,.json,.tytx', disabled: '^busy', connect_onchange: 'playground.selectImportFile'});
+        importing.p('^importFileName', {id: 'import-file-name'});
+        const importButtons = importing.div({class: 'db-actions'});
+        action(importButtons, 'Importa file', 'importFile', {id: 'import-run'});
+        action(importButtons, 'Verifica import con Python', 'checkImports', {id: 'import-test'});
+        importing.p('CSV con intestazioni e separatore virgola; JSON come array di record; TYTX con un record per riga. I campi devono corrispondere alle colonne del modello. Importazione atomica senza trigger, come sql_insert in Python.', {class: 'db-note'});
+        importing.p('^importStatus', {id: 'import-status', role: 'status'});
+        detail(importing, 'Verifiche import nel browser', 'importChecks', 'import-checks');
+        detail(importing, 'Esempio TYTX: SQL, parametri e dati', 'importSample', 'import-sample');
+
         body.html_label('Richiesta', {for: 'query-example'});
         const select = body.select({id: 'query-example', value: '^queryExample', disabled: '^busy', connect_onchange: 'playground.selectQuery'});
         for (const [value, label] of Object.entries(queryLabels)) select.option(label, {value});

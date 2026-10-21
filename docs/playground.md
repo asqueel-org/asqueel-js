@@ -549,3 +549,16 @@ proprio modello, `where: "#PERIOD($issued,period)"` con
 `sqlparams: {period: "mese scorso"}`. Il totale è di 350 casi query e 27 gruppi
 di verifiche; gli esempi modificati non generano un nuovo oracolo Python.
 Vedere [il contratto del runtime](parity.md#period-e-parser-delle-date-naturali).
+
+
+## Importazione locale
+
+Nella pagina Query aprire **Importa CSV, JSON o TYTX**, indicare la tabella del
+modello e scegliere il file. Applicare prima la migrazione. **Importa file** invia
+il File al worker locale e salva i dati in IndexedDB, senza backend. Un errore
+annulla l'intera importazione. Non vengono eseguiti i trigger, come nel metodo
+Python `sql_insert`.
+
+**Verifica import con Python** esegue 49 scenari in database separati e confronta
+SQL, parametri, risultati e rollback, poi riapre IndexedDB. I dettagli includono
+un esempio TYTX con decimali, date e timestamp. [Formati e API](import.md).

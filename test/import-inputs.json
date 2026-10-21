@@ -1,0 +1,302 @@
+[
+  {
+    "name": "csv_typed",
+    "source": "id,name,price,stock,active,since\n7,\"Tea, green\",3.10,,yes,2026-01-02\n8,Caffè,2.25,4,no,2025-01-31\n",
+    "format": "csv"
+  },
+  {
+    "name": "json_typed",
+    "source": "[{\"id\": \"3\", \"name\": \"Tea\", \"price\": \"1.50\", \"stock\": \" 12 \", \"active\": \"TRUE\", \"since\": \"2026-01-02\"}, {\"id\": 4, \"name\": \"\", \"price\": null, \"active\": false}]",
+    "format": "json"
+  },
+  {
+    "name": "tytx_typed",
+    "source": "{\"id\":1,\"name\":\"Tea\",\"price\":\"1.50::N\",\"active\":true,\"since\":\"2026-10-20::D\",\"moment\":\"2026-10-20T12:34:56.123456+02:00::DHZ\",\"time\":\"12:34:56.000001::H\"}::JS\n\n{\"id\":2,\"name\":\"Coffee\",\"price\":\"2.25::N\",\"active\":false}::JS\n",
+    "format": "tytx"
+  },
+  {
+    "name": "csv_quotes",
+    "source": "id,name,note\r\n1,\"a\"\"b\",\"first\nsecond\"\r\n\r\n2, x ,\"\"\r\n",
+    "format": "csv"
+  },
+  {
+    "name": "csv_short",
+    "source": "id,name,stock\n1,a\n",
+    "format": "csv"
+  },
+  {
+    "name": "csv_duplicate_header",
+    "source": "id,name,name\n1,old,new\n",
+    "format": "csv"
+  },
+  {
+    "name": "csv_unclosed_quote",
+    "source": "id,name\n1,\"still accepted",
+    "format": "csv"
+  },
+  {
+    "name": "csv_after_quote",
+    "source": "id,name\n1,\"abc\"def\n",
+    "format": "csv"
+  },
+  {
+    "name": "csv_whitespace",
+    "source": "id,name,stock,active\n1,  ,  ,   \n",
+    "format": "csv"
+  },
+  {
+    "name": "empty_csv",
+    "source": "id,name\n",
+    "format": "csv"
+  },
+  {
+    "name": "empty_json",
+    "source": "[]",
+    "format": "json"
+  },
+  {
+    "name": "empty_tytx",
+    "source": "\n \n",
+    "format": "tytx"
+  },
+  {
+    "name": "json_reader_legacy_separators",
+    "source": "[, {\"id\":1,\"name\":\"a\"} {\"id\":2,\"name\":\"b\"},,] ignored",
+    "format": "json"
+  },
+  {
+    "name": "json_braces",
+    "source": "[{\"id\":1,\"name\":\"a}\\\"b[\"}]",
+    "format": "json"
+  },
+  {
+    "name": "named_file",
+    "source": "id,name\n1,CSV\n",
+    "filename": "records.CSV"
+  },
+  {
+    "name": "explicit_format_overrides_name",
+    "source": "[{\"id\":1}]",
+    "filename": "wrong.csv",
+    "format": "json"
+  },
+  {
+    "name": "automatic_keys",
+    "source": "name\na\nb\nc\n",
+    "format": "csv"
+  },
+  {
+    "name": "mixed_keys",
+    "source": "[{\"id\":10},{},{\"id\":2},{}]",
+    "format": "json"
+  },
+  {
+    "name": "existing_keys",
+    "source": "name\nnew\nnext\n",
+    "setup": [
+      {
+        "id": 50,
+        "name": "existing"
+      }
+    ],
+    "format": "csv"
+  },
+  {
+    "name": "database_keys",
+    "source": "name\na\nb\n",
+    "table": "automatic",
+    "format": "csv"
+  },
+  {
+    "name": "custom_adapt",
+    "source": "id,name\n1,tea\n",
+    "table": "upper",
+    "format": "csv"
+  },
+  {
+    "name": "custom_adapt_false",
+    "source": "{\"id\":1,\"name\":\"tea\"}::JS\n",
+    "table": "upper",
+    "adapt": false,
+    "format": "tytx"
+  },
+  {
+    "name": "adapt_false_unknown",
+    "source": "[{\"id\":1,\"name\":\"a\",\"ignored\":\"yes\"}]",
+    "adapt": false,
+    "format": "json"
+  },
+  {
+    "name": "boolean_spellings",
+    "source": "id,active\n1,true\n2,YES\n3,Y\n4,1\n5,false\n6,NO\n7,N\n8,0\n9,\n",
+    "format": "csv"
+  },
+  {
+    "name": "decimal_precision",
+    "source": "[{\"id\":1,\"price\":\"12345678901234567890.123456\"},{\"id\":2,\"price\":\"1e-8\"},{\"id\":3,\"price\":\"-0.00\"}]",
+    "format": "json"
+  },
+  {
+    "name": "iso_types",
+    "source": "[{\"id\":1,\"since\":\"20260102\",\"moment\":\"2026-01-02 12:34:56.123456Z\",\"time\":\"12:34:56.12\"}]",
+    "format": "json"
+  },
+  {
+    "name": "bad_integer",
+    "source": "id,stock\n1,many\n",
+    "fails": true,
+    "format": "csv"
+  },
+  {
+    "name": "bad_boolean",
+    "source": "id,active\n1,maybe\n",
+    "fails": true,
+    "format": "csv"
+  },
+  {
+    "name": "bad_date",
+    "source": "[{\"id\":1,\"since\":\"2026-02-29\"}]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "unknown_column",
+    "source": "[{\"id\":1,\"unknown\":\"x\"}]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "virtual_column",
+    "source": "[{\"id\":1,\"label\":\"x\"}]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "extra_csv_cell",
+    "source": "id,name\n1,a,extra\n",
+    "fails": true,
+    "format": "csv"
+  },
+  {
+    "name": "json_object",
+    "source": "{\"id\":1}",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "json_scalar",
+    "source": "[1]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "json_truncated",
+    "source": "[{\"id\":1}",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "json_bad",
+    "source": "[{\"id\":}]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "tytx_nonrecord",
+    "source": "[1,2]::JS\n",
+    "fails": true,
+    "format": "tytx"
+  },
+  {
+    "name": "tytx_bad",
+    "source": "invalid\n",
+    "fails": true,
+    "format": "tytx"
+  },
+  {
+    "name": "duplicate_key",
+    "source": "[{\"id\":1},{\"id\":2},{\"id\":1}]",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "missing_format",
+    "source": "[]",
+    "fails": true
+  },
+  {
+    "name": "unknown_format",
+    "source": "[]",
+    "fails": true,
+    "format": "xml"
+  },
+  {
+    "name": "unknown_extension",
+    "source": "[]",
+    "filename": "file.xlsx",
+    "fails": true
+  },
+  {
+    "name": "list_adapt",
+    "source": [
+      {
+        "id": "1",
+        "price": "1.50",
+        "since": "2026-01-02"
+      }
+    ],
+    "kind": "records",
+    "adapt": true
+  },
+  {
+    "name": "single_returning",
+    "source": {
+      "name": "single"
+    },
+    "kind": "records",
+    "table": "automatic"
+  },
+  {
+    "name": "list_format_rejected",
+    "source": [
+      {
+        "id": 1
+      }
+    ],
+    "kind": "records",
+    "fails": true,
+    "format": "json"
+  },
+  {
+    "name": "blocks_csv",
+    "source": "",
+    "generate": 1005,
+    "format": "csv"
+  },
+  {
+    "name": "blocks_json",
+    "source": "",
+    "generate": 1005,
+    "format": "json"
+  },
+  {
+    "name": "blocks_tytx",
+    "source": "",
+    "generate": 1005,
+    "format": "tytx"
+  },
+  {
+    "name": "rollback_after_block",
+    "source": "",
+    "generate": 1001,
+    "late_error": true,
+    "fails": true,
+    "setup": [
+      {
+        "id": 5000,
+        "name": "kept"
+      }
+    ],
+    "format": "json"
+  }
+]

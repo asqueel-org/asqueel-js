@@ -216,3 +216,17 @@ export async function writeRecord(db, table, operation, input, options) {
     await hook(context, operation === 'insert' ? 'trigger_onInserted' : 'trigger_onUpdated', values, operation === 'insert' ? {} : {old_record: old});
     return values;
 }
+
+
+/** Raw SqlTable._assign_keys: no write triggers, consecutive integer keys within a block. */
+export async function assignImportKeys(db, table, records) {
+    const pkey = table.a.pkey, column = table.columns.get(pkey);
+    if (!pkey || column && (own(column.a, 'sql_default') || ['serial', 'serial4'].includes(column.a.dtype))) return;
+    const integer = column && ['L', 'I', 'R'].includes(column.a.dtype);
+    let next = null;
+    for (const values of records) {
+        if (integer && next !== null && (values[pkey] == null || values[pkey] === '')) values[pkey] = next;
+        else await checkPkey(db, table, values, hookContext(db, table));
+        if (integer && values[pkey] != null) next = Math.max(next || 0, Number(values[pkey]) + 1);
+    }
+}

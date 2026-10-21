@@ -1,3 +1,4 @@
+import {importChecks} from './import-checks.js';
 import {parseDateExpression} from '@gramlot/gramlot';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {readSQLite, planSQLite, migrateSQLite, quote} from '../src/sqlite.js';
@@ -26,6 +27,7 @@ async function dispatch(type, desired) {
     if (type === 'query-checks') return queryChecks();
     if (type === 'cascades-checks') return cascadesChecks();
     if (type === 'behaviors-checks') return behaviorsChecks();
+    if (type === 'import-checks') return importChecks();
     if (type === 'hooks-checks') return hooksChecks();
     return navigator.locks.request(`${DATABASE}:migration`, async () => {
         db ??= await openBrowserSQLite(DATABASE);
@@ -35,6 +37,11 @@ async function dispatch(type, desired) {
             const compiled = compiler.compile(desired.request);
             const records = await compiler.execute(desired.request);
             return {compiled, records, ...await inspect()};
+        }
+        if (type === 'import') {
+            const model = modelFromQuerySource(desired.source, SqlBuilder);
+            const count = await model.queries(db).table(desired.table).sql_insert(desired.file);
+            return {count, ...await inspect()};
         }
         if (type === 'inspect') return inspect();
         if (type === 'plan') return planSQLite(db, desired);

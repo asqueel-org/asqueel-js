@@ -18,6 +18,7 @@ from compiler_callbacks import callback_model, callback_methods
 from hooks_oracle import oracle as hooks_oracle
 from behaviors_oracle import oracle as behaviors_oracle
 from cascades_oracle import oracle as cascades_oracle
+from import_oracle import oracle as import_oracle
 
 inputs=json.loads((ROOT/'test/model-inputs.json').read_text())
 def isolated(case):
@@ -34,6 +35,8 @@ queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'qu
            'callbacks': query_oracle(callback_model(), 'callback-inputs.json', 'callback-errors.json', callback_methods),
            'macros': query_oracle(macro_model(), 'macro-inputs.json', 'macro-errors.json'),
            'periods': query_oracle(period_model(), 'period-inputs.json', 'period-errors.json')}
+imports = import_oracle()
+assert imports == json.loads((ROOT / 'test/fixtures/imports.json').read_text()), 'Import fixtures differ from live Python'
 hooks = hooks_oracle()
 behaviors = behaviors_oracle()
 cascades = cascades_oracle()
@@ -64,3 +67,15 @@ for runtime in ('node','bun'):
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_cascades.js')],cwd=ROOT,text=True))
     assert actual == cascades, f'{runtime}: application onUpdate differs from live Python'
     print(f'{runtime}: {len(cascades["cases"])} onUpdate cycles match live Python model, migrate, records, events, DML and stored rows')
+
+    actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_imports.js')],cwd=ROOT,text=True))
+    # JSON.stringify emits some SQLite REAL doubles as integer tokens (e.g. 1.23e19).
+    # Restore only the cells whose Python SQLite result is already a float.
+    # Decimal binding strings, INTEGER cells, input data and SQL remain exact.
+    for found, reference in zip(actual['cases'], imports['cases']):
+        for row, expected_row in zip(found['expected']['rows'], reference['expected']['rows']):
+            for key, expected_value in expected_row.items():
+                if isinstance(expected_value, float) and isinstance(row.get(key), (int, float)):
+                    row[key] = float(row[key])
+    assert actual == imports, f'{runtime}: file import SQL, parameters, results or rollback differ from live Python'
+    print(f'{runtime}: {len(imports["cases"])} CSV/JSON/TYTX imports match live Python SQL, parameters, rows and rollback')

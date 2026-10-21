@@ -61,7 +61,31 @@ export function queryPanel(view, database, getModel) {
         } finally { view.set('busy', false); }
     }
     load(false);
-    return {load, preview, execute, async checkHooks() {
+    return {load, preview, execute,
+    async importFile(file) {
+        if (view.get('busy')) return;
+        if (!file) {view.set('importStatus', 'Seleziona un file CSV, JSON o TYTX.'); return;}
+        view.set('busy', true);
+        view.set('importStatus', 'Importazione locale in corso…');
+        try {
+            const result = await database.request('import', {source: querySource(getModel()), table: view.get('importTable'), file});
+            database.showDatabase(result);
+            view.set('importStatus', `${result.count} record importati e salvati in IndexedDB.`);
+        } catch (error) {view.set('importStatus', `Importazione annullata: ${error.message}`);}
+        finally {view.set('busy', false);}
+    },
+    async checkImports() {
+        if (view.get('busy')) return;
+        view.set('busy', true);
+        view.set('importStatus', 'Confronto import con Python su SQLite/IndexedDB…');
+        try {
+            const result = await database.request('import-checks');
+            view.set('importChecks', result.checks.map(s => '✓ ' + s).join('\n'));
+            view.set('importSample', JSON.stringify(result.sample, null, 2));
+            view.set('importStatus', `${result.checks.length} import identici a Python: SQL, parametri, dati e rollback; riapertura IndexedDB verificata.`);
+        } catch (error) {view.set('importStatus', error.message);}
+        finally {view.set('busy', false);}
+    }, async checkHooks() {
         if (view.get('busy')) return;
         view.set('busy', true);
         view.set('queryStatus', 'Verifica sys_fields e hook su SQLite/IndexedDB…');

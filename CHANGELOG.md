@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Import CSV/JSON/TYTX tramite `table.sql_insert`, con lettura incrementale,
+  blocchi di 1.000 record, adattamento dal modello e chiavi automatiche.
+  Semantica SQL diretta senza trigger, come Python, e transazioni atomiche JS.
+  49 scenari confrontano SQL, parametri e dati Python anche nel worker browser,
+  con rollback e riapertura IndexedDB; selettore di file nel playground Gramlot.
+
 - #PERIOD nel WHERE e nelle sottoquery, con parser pubblico Gramlot fornito al
   runtime, senza duplicare le routine delle date naturali. 131 casi e 27 rifiuti
   confrontano modello/migrate, SQL, parametri e risultati Python; esecuzione anche

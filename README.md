@@ -71,6 +71,11 @@ Codec completi, altre opzioni applicative e query avanzate restano da portare.
 
 ## API iniziale
 
+È disponibile anche `table.sql_insert(file, {format})` per importare **CSV, JSON e
+TYTX**, con adattamento secondo il modello e rollback atomico, senza trigger come
+in Python. **49 scenari** confrontano SQL e dati anche nel browser; il playground
+permette di scegliere un file locale. [API, esempi e limiti](docs/import.md).
+
 Gli import seguenti usano gli entry point del package installato:
 
 ```js

@@ -358,3 +358,14 @@ le altre query continuano a funzionare. PERIOD non è una macro generica utilizz
 in colonne, ORDER BY o `sql_formula`: segue i contesti ammessi da Python. Una formula
 può però dichiarare una SELECT con PERIOD nel suo WHERE. Restano da portare le
 macro Bag e i metadati dei risultati.
+
+
+## Importazione CSV, JSON e TYTX
+
+49 scenari aggiuntivi confrontano le chiamate reali a `SqlTable.sql_insert` con
+l'API JS: modello/migrate, SQL degli INSERT, parametri passati a SQLite, righe,
+assenza di trigger, adattamento personalizzato e rollback. Le due dichiarazioni
+sono indipendenti (`examples/import_records.py` e `examples/import-records.js`).
+Il corpus usa blocchi oltre le 1.000 righe, file malformati, duplicati e fallimenti
+dopo un blocco già scritto. Il browser confronta gli stessi risultati e riapre
+IndexedDB. I limiti e il contratto delle transazioni sono in [Importazione](import.md).

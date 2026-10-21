@@ -1,3 +1,4 @@
+import {sqlInsert, adaptImportRecord} from './import-runtime.js';
 import {CompilerMethods, validateCompilerMethods} from './compiler-methods.js';
 import {projectApplication} from './application.js';
 import {own, record} from './sql-expressions.js';
@@ -55,7 +56,7 @@ export class SqliteQueries {
             for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
                 if (!this.tables.has(table)) throw new Error(`Tabella degli hook sconosciuta: ${table}`);
                 for (const [name, fn] of Object.entries(record(hooks))) {
-                    if (!(name.startsWith('trigger_') || ['protect_update', 'protect_delete', 'protect_validate', 'protect_draft', 'newPkeyValue'].includes(name))
+                    if (!(name.startsWith('trigger_') || ['protect_update', 'protect_delete', 'protect_validate', 'protect_draft', 'newPkeyValue', 'adaptRecord'].includes(name))
                         || typeof fn !== 'function') throw new TypeError(`Hook non valido: ${table}.${name}`);
                 }
             }
@@ -154,6 +155,20 @@ export class SqliteQueries {
             } finally { child.active = false; await child.tail; }
         });
     }
+    async _sqlInsert(name, source, options = {}) {
+        if (!this.scope) return this.transaction(tx => tx._sqlInsert(name, source, options));
+        return this._inScope(async () => {
+            const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
+                environment: this.environment(), trigger: this.scope.trigger};
+            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            try {
+                const result = await sqlInsert(db, db.resolveTable(name, false), source, options);
+                await child.tail;
+                if (child.root.error) throw child.root.error;
+                return result;
+            } finally {child.active = false; await child.tail;}
+        });
+    }
     async transaction(callback) {
         if (typeof callback !== 'function') throw new TypeError('transaction richiede una funzione');
         if (!this.adapter) throw new Error('Adapter non collegato');
@@ -201,6 +216,8 @@ export class SqliteQueries {
             };
         };
         return {
+            sql_insert: (source, options) => this._sqlInsert(name, source, options),
+            adaptRecord: values => adaptImportRecord(this, this.resolveTable(name, false), values),
             insert: (values, options) => this._writeRecord(name, 'insert', values, options),
             update: (values, options) => this._writeRecord(name, 'update', values, options),
             delete: (values, options) => this._writeRecord(name, 'delete', values, options),

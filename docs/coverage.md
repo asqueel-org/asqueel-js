@@ -9,6 +9,7 @@
 | Ciclo applicativo | sys_fields, ID legacy22, timestamp/utente, default, protezioni di campo, hook before/after e scritture annidate atomiche, gerarchie, auto_counter, relative_index, cancellazione/archiviazione dei discendenti, onUpdate cascade/raise/ignore | Altre opzioni, azioni su relazioni composte, ambiente mutabile e servizi esterni |
 | Letture | Formule parametrizzate, #THIS/#ENV/#TEMPLATE/#IN_RANGE/#PERIOD (parser Gramlot iniettato), colonne composte, JOIN diretti, filtri/aggregazioni/paginazione, sottoquery scalari/EXISTS/subQueryColumn, aggregazioni inverse e virtualRelation (count/sum/avg/min/max/join/to_json), callback sincrone formula/env/subquery e colonne dinamiche | Altre macro, contesto applicativo completo e metadati dei risultati |
 | Policy di riga | Draft/logical deletion in lettura, partizioni con snapshot esplicito in lettura/scrittura | Ambiente applicativo contestuale completo |
+| Importazione | CSV/JSON/TYTX a blocchi, adattamento dal modello, chiavi, default SQL e rollback; 49 casi Python/browser | Export, codec Bag, date ISO settimanali, offset con secondi e numeri oltre i limiti JS |
 | Browser | SQLite WASM in worker, IndexedDB, riapertura, coda e Web Locks nel playground | API worker pubblica e prove crash/quota/concorrenza |
 | Offline | Dati locali persistiti | Cache degli asset e riapertura dell'app senza rete |
 | Node/Bun | Adapter e stessa suite di contratti | API applicativa stabile e codec delle righe |

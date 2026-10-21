@@ -119,6 +119,12 @@ export class Logic {
     }
     compileQuery() { this.queries.preview(); }
     executeQuery() { return this.queries.execute(false); }
+    selectImportFile(node, event) {
+        this.selectedImportFile = event.target.files?.[0] ?? null;
+        this.view.set('importFileName', this.selectedImportFile?.name ?? 'Nessun file selezionato');
+    }
+    importFile() { return this.queries.importFile(this.selectedImportFile); }
+    checkImports() { return this.queries.checkImports(); }
     checkQueries() { return this.queries.execute(true); }
     checkCascades() { return this.queries.checkCascades(); }
     checkBehaviors() { return this.queries.checkBehaviors(); }
