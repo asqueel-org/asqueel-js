@@ -1,0 +1,2101 @@
+[
+  {
+    "name": "owner_1",
+    "request": {
+      "operation": "insert",
+      "table": "period.owner",
+      "values": {
+        "id": 1,
+        "day": "2026-10-21"
+      }
+    }
+  },
+  {
+    "name": "owner_2",
+    "request": {
+      "operation": "insert",
+      "table": "period.owner",
+      "values": {
+        "id": 2,
+        "day": "2026-09-01"
+      }
+    }
+  },
+  {
+    "name": "event_1",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 1,
+        "owner_id": 1,
+        "issued": "1946-01-01"
+      }
+    }
+  },
+  {
+    "name": "event_2",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 2,
+        "owner_id": 2,
+        "issued": "2008-04-28"
+      }
+    }
+  },
+  {
+    "name": "event_3",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 3,
+        "owner_id": 1,
+        "issued": "2024-02-29"
+      }
+    }
+  },
+  {
+    "name": "event_4",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 4,
+        "owner_id": 2,
+        "issued": "2024-12-31"
+      }
+    }
+  },
+  {
+    "name": "event_5",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 5,
+        "owner_id": 1,
+        "issued": "2025-01-01"
+      }
+    }
+  },
+  {
+    "name": "event_6",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 6,
+        "owner_id": 2,
+        "issued": "2025-03-31"
+      }
+    }
+  },
+  {
+    "name": "event_7",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 7,
+        "owner_id": 1,
+        "issued": "2026-01-10"
+      }
+    }
+  },
+  {
+    "name": "event_8",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 8,
+        "owner_id": 2,
+        "issued": "2026-04-10"
+      }
+    }
+  },
+  {
+    "name": "event_9",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 9,
+        "owner_id": 1,
+        "issued": "2026-09-01"
+      }
+    }
+  },
+  {
+    "name": "event_10",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 10,
+        "owner_id": 2,
+        "issued": "2026-09-30"
+      }
+    }
+  },
+  {
+    "name": "event_11",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 11,
+        "owner_id": 1,
+        "issued": "2026-10-01"
+      }
+    }
+  },
+  {
+    "name": "event_12",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 12,
+        "owner_id": 2,
+        "issued": "2026-10-18"
+      }
+    }
+  },
+  {
+    "name": "event_13",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 13,
+        "owner_id": 1,
+        "issued": "2026-10-19"
+      }
+    }
+  },
+  {
+    "name": "event_14",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 14,
+        "owner_id": 2,
+        "issued": "2026-10-20"
+      }
+    }
+  },
+  {
+    "name": "event_15",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 15,
+        "owner_id": 1,
+        "issued": "2026-10-21"
+      }
+    }
+  },
+  {
+    "name": "event_16",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 16,
+        "owner_id": 2,
+        "issued": "2026-10-22"
+      }
+    }
+  },
+  {
+    "name": "event_17",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 17,
+        "owner_id": 1,
+        "issued": "2026-10-25"
+      }
+    }
+  },
+  {
+    "name": "event_18",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 18,
+        "owner_id": 2,
+        "issued": "2026-10-26"
+      }
+    }
+  },
+  {
+    "name": "event_19",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 19,
+        "owner_id": 1,
+        "issued": "2026-10-31"
+      }
+    }
+  },
+  {
+    "name": "event_20",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 20,
+        "owner_id": 2,
+        "issued": "2026-11-01"
+      }
+    }
+  },
+  {
+    "name": "event_21",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 21,
+        "owner_id": 1,
+        "issued": "2026-12-31"
+      }
+    }
+  },
+  {
+    "name": "event_22",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 22,
+        "owner_id": 2,
+        "issued": "2027-01-01"
+      }
+    }
+  },
+  {
+    "name": "event_23",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 23,
+        "owner_id": 1,
+        "issued": "2027-03-31"
+      }
+    }
+  },
+  {
+    "name": "event_24",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 24,
+        "owner_id": 2,
+        "issued": "2045-01-01"
+      }
+    }
+  },
+  {
+    "name": "event_25",
+    "request": {
+      "operation": "insert",
+      "table": "period.event",
+      "values": {
+        "id": 25,
+        "owner_id": 1,
+        "issued": null
+      }
+    }
+  },
+  {
+    "name": "it_0",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_1",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "ieri"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_2",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "domani"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_3",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi-3"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_4",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "domani + 2"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_5",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "questa settimana"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_6",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "la settimana scorsa"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_7",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "settimana prossima+2"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_8",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "questo mese"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_9",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "il mese scorso"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_10",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mese prossimo-1"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_11",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_12",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mar"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_13",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "m3"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_14",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "marzo 26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_15",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "lo scorso ottobre"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_16",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "marzo prossimo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_17",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10 gennaio 2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_18",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10 gennaio"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_19",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "q1"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_20",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "t4"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_21",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "1º trimestre"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_22",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2024Q1"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_23",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "Q1 2024"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_24",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "lunedì"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_25",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "dom"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_26",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_27",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_28",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "45"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_29",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "46"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_30",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "dal gennaio al marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_31",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "tra gennaio e marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_32",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi;domani"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_33",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "da oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_34",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "a marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_35",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi;"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_36",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": ";marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_37",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": ""
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_38",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "   "
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_39",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "sempre"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_40",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "senza periodo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_41",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "-"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_42",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": ";"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_43",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "dicembre;marzo"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_44",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "da 2025 a gennaio 2024"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_45",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2026-10-22;2026-10-21"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_46",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2026-10-21;2026-10-21"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_47",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2026-01-01,2026-01-31"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_48",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/1/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_49",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10-1-2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_50",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "100126"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_51",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10012026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_52",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2024-02-29"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_53",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "today"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_54",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "from today to tomorrow"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_55",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": null
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_56",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": false
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "it_57",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": 0
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "en_0",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "today"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_1",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "yesterday"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_2",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "tomorrow"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_3",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "this week"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_4",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "last week+1"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_5",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "next month"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_6",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "last october"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_7",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "next march"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_8",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "january 10 2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_9",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10 january 2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_10",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "apr 07"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_11",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "1st quarter"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_12",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mon"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_13",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "between january and march"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_14",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "from december to march 2025"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_15",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "always"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_16",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "no period"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_17",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "28/4/08"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_18",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_19",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "041026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "en_20",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "04102026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-US"
+      }
+    }
+  },
+  {
+    "name": "regional_en-GB",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-GB"
+      }
+    }
+  },
+  {
+    "name": "regional_en_AU",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en_AU"
+      }
+    }
+  },
+  {
+    "name": "regional_en_IE",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en_IE"
+      }
+    }
+  },
+  {
+    "name": "regional_en-NZ",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-NZ"
+      }
+    }
+  },
+  {
+    "name": "regional_en-IN",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-IN"
+      }
+    }
+  },
+  {
+    "name": "regional_EN_gb",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "EN_gb"
+      }
+    }
+  },
+  {
+    "name": "regional_en-ZZ",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "en-ZZ"
+      }
+    }
+  },
+  {
+    "name": "regional_IT_it",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "10/4/26"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "IT_it"
+      }
+    }
+  },
+  {
+    "name": "leap",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mese prossimo"
+      },
+      "environment": {
+        "workdate": "2024-01-31",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "nonleap",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mese prossimo"
+      },
+      "environment": {
+        "workdate": "2025-01-31",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "year_cross",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "domani"
+      },
+      "environment": {
+        "workdate": "2026-12-31",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "dst_start",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "domani"
+      },
+      "environment": {
+        "workdate": "2026-03-28",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "dst_end",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi+1"
+      },
+      "environment": {
+        "workdate": "2026-10-24",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "refreshed",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-22",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "repeat_collision",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "(#PERIOD($issued,period) OR #PERIOD($issued,:period)) AND $id>:period_from",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi",
+        "period_from": 0,
+        "_period_from": 99
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "distinct_periods",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period) OR #PERIOD($issued,second)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mese scorso",
+        "second": "oggi",
+        "period_to": "reserved",
+        "second_from": "reserved"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "env_period",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,:env_period)",
+      "order_by": "$id",
+      "sqlparams": {},
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT",
+        "period": "oggi"
+      }
+    }
+  },
+  {
+    "name": "env_override",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,env_period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "env_period": "ieri"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT",
+        "period": "oggi"
+      }
+    }
+  },
+  {
+    "name": "parameter_data",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,#TEMPLATE('${x}', :text AS x) AS label",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi",
+        "text": "#PERIOD($issued,other)"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "bare_column",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD(issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "formula_field",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($date_alias,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "relation_field",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD(@owner_id.day,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "count",
+    "request": {
+      "operation": "count",
+      "table": "period.event",
+      "columns": "$id,$issued",
+      "where": "#PERIOD($issued,period)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "mese scorso"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "template_and_range",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id,#TEMPLATE('${d}', $issued AS d) AS label",
+      "where": "#PERIOD($issued,period) AND #IN_RANGE($id,:low,:high)",
+      "order_by": "$id",
+      "sqlparams": {
+        "period": "2026",
+        "low": 10,
+        "high": 17
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "child_scopes",
+    "request": {
+      "operation": "select",
+      "table": "period.owner",
+      "columns": "$id,$within,$today,$yesterday,$inherited,$environment",
+      "where": "$id>:s2_period_from",
+      "sqlparams": {
+        "s2_period_from": 0
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT",
+        "period": "oggi"
+      },
+      "order_by": "$id"
+    }
+  }
+]

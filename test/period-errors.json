@@ -1,0 +1,433 @@
+[
+  {
+    "name": "invalid_0",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "31/02/2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_1",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "2026-02-29"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_2",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "q5"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_3",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "m13"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_4",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "not a period"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_5",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "la"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_6",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "oggi;domani;ieri"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_7",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "january 10, 2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_8",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "february"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_9",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "29/2/25"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_10",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "0000"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_11",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "32 gennaio 2026"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_12",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": true
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_13",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": 17
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "invalid_14",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": {
+          "value": "oggi"
+        }
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "unknown_locale",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "fr"
+      }
+    }
+  },
+  {
+    "name": "missing_locale",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21"
+      }
+    }
+  },
+  {
+    "name": "missing_workdate",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "locale": "it"
+      }
+    }
+  },
+  {
+    "name": "missing_parameter",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period)",
+      "sqlparams": {},
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "missing_environment_parameter",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,env_period)",
+      "sqlparams": {},
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "wrong_context_columns",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "#PERIOD($issued,period)",
+      "where": null,
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "wrong_context_order_by",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": null,
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      },
+      "order_by": "#PERIOD($issued,period)"
+    }
+  },
+  {
+    "name": "wrong_context_group_by",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": null,
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      },
+      "group_by": "#PERIOD($issued,period)"
+    }
+  },
+  {
+    "name": "wrong_context_having",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": null,
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      },
+      "having": "#PERIOD($issued,period)"
+    }
+  },
+  {
+    "name": "formula_context",
+    "request": {
+      "operation": "select",
+      "table": "period.owner",
+      "columns": "$invalid_formula",
+      "where": null,
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "expression_operand",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued + 1,period)",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  },
+  {
+    "name": "extra_argument",
+    "request": {
+      "operation": "select",
+      "table": "period.event",
+      "columns": "$id",
+      "where": "#PERIOD($issued,period,extra)",
+      "sqlparams": {
+        "period": "oggi"
+      },
+      "environment": {
+        "workdate": "2026-10-21",
+        "locale": "it-IT"
+      }
+    }
+  }
+]

@@ -1,0 +1,6274 @@
+{
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "periods"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "period",
+          "tag": "package",
+          "attributes": {
+            "sqlschema": "main",
+            "sqlprefix": true,
+            "name": "period"
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "owner",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "owner",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "day",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "D",
+                            "name": "day",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "within",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#IN_RANGE($id,:low,:high)",
+                            "var_low": 0,
+                            "var_high": 9,
+                            "name": "within",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "today",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "period.event",
+                              "columns": "COUNT(*)",
+                              "where": "$owner_id=#THIS.id AND #PERIOD($issued,period)",
+                              "sqlparams": {
+                                "period": "oggi"
+                              }
+                            },
+                            "name": "today",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "yesterday",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "period.event",
+                              "columns": "COUNT(*)",
+                              "where": "$owner_id=#THIS.id AND #PERIOD($issued,period)",
+                              "sqlparams": {
+                                "period": "ieri"
+                              }
+                            },
+                            "name": "yesterday",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "inherited",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "var_period": "mese scorso",
+                            "select": {
+                              "table": "period.event",
+                              "columns": "COUNT(*)",
+                              "where": "$owner_id=#THIS.id AND #PERIOD($issued,period)"
+                            },
+                            "name": "inherited",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "environment",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "period.event",
+                              "columns": "COUNT(*)",
+                              "where": "$owner_id=#THIS.id AND #PERIOD($issued,env_period)"
+                            },
+                            "name": "environment",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "invalid_formula",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "#PERIOD($day,period)",
+                            "name": "invalid_formula",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "event",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "event",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "owner_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "owner_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "relation_name": "events",
+                                "to": "period.owner.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "issued",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "D",
+                            "name": "issued",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "date_alias",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "sql_formula": "$issued",
+                            "dtype": "D",
+                            "name": "date_alias",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "event_owner_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "owner_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "period.event.@owner_id",
+        "attributes": {
+          "many_relation": "period.event.owner_id",
+          "one_relation": "period.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "events",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "period.owner.@events",
+        "attributes": {
+          "many_relation": "period.event.owner_id",
+          "one_relation": "period.owner.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      }
+    ]
+  },
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "periods",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "period_owner": {
+              "entity": "table",
+              "entity_name": "period_owner",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_owner",
+                  "column_name": "id"
+                },
+                "day": {
+                  "entity": "column",
+                  "entity_name": "day",
+                  "attributes": {
+                    "dtype": "D"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_owner",
+                  "column_name": "day"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "period_owner"
+            },
+            "period_event": {
+              "entity": "table",
+              "entity_name": "period_event",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_event",
+                  "column_name": "id"
+                },
+                "owner_id": {
+                  "entity": "column",
+                  "entity_name": "owner_id",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_event",
+                  "column_name": "owner_id"
+                },
+                "issued": {
+                  "entity": "column",
+                  "entity_name": "issued",
+                  "attributes": {
+                    "dtype": "D"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_event",
+                  "column_name": "issued"
+                }
+              },
+              "relations": {
+                "fk_2b176e45": {
+                  "entity": "relation",
+                  "entity_name": "fk_2b176e45",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "period_owner",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "owner_id"
+                    ],
+                    "constraint_name": "fk_2b176e45"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_event"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_fd8cd234": {
+                  "entity": "index",
+                  "entity_name": "idx_fd8cd234",
+                  "attributes": {
+                    "columns": {
+                      "owner_id": null
+                    },
+                    "index_name": "idx_fd8cd234"
+                  },
+                  "schema_name": "main",
+                  "table_name": "period_event"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "period_event"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "owner_1",
+      "request": {
+        "operation": "insert",
+        "table": "period.owner",
+        "values": {
+          "id": 1,
+          "day": "2026-10-21"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_owner\"(\"id\",\"day\") VALUES (:id,:day)",
+        "params": {
+          "id": 1,
+          "day": "2026-10-21"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "owner_2",
+      "request": {
+        "operation": "insert",
+        "table": "period.owner",
+        "values": {
+          "id": 2,
+          "day": "2026-09-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_owner\"(\"id\",\"day\") VALUES (:id,:day)",
+        "params": {
+          "id": 2,
+          "day": "2026-09-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_1",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 1,
+          "owner_id": 1,
+          "issued": "1946-01-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 1,
+          "owner_id": 1,
+          "issued": "1946-01-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_2",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 2,
+          "owner_id": 2,
+          "issued": "2008-04-28"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 2,
+          "owner_id": 2,
+          "issued": "2008-04-28"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_3",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 3,
+          "owner_id": 1,
+          "issued": "2024-02-29"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 3,
+          "owner_id": 1,
+          "issued": "2024-02-29"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_4",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 4,
+          "owner_id": 2,
+          "issued": "2024-12-31"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 4,
+          "owner_id": 2,
+          "issued": "2024-12-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_5",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 5,
+          "owner_id": 1,
+          "issued": "2025-01-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 5,
+          "owner_id": 1,
+          "issued": "2025-01-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_6",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 6,
+          "owner_id": 2,
+          "issued": "2025-03-31"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 6,
+          "owner_id": 2,
+          "issued": "2025-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_7",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 7,
+          "owner_id": 1,
+          "issued": "2026-01-10"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 7,
+          "owner_id": 1,
+          "issued": "2026-01-10"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_8",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 8,
+          "owner_id": 2,
+          "issued": "2026-04-10"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 8,
+          "owner_id": 2,
+          "issued": "2026-04-10"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_9",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 9,
+          "owner_id": 1,
+          "issued": "2026-09-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 9,
+          "owner_id": 1,
+          "issued": "2026-09-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_10",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 10,
+          "owner_id": 2,
+          "issued": "2026-09-30"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 10,
+          "owner_id": 2,
+          "issued": "2026-09-30"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_11",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 11,
+          "owner_id": 1,
+          "issued": "2026-10-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 11,
+          "owner_id": 1,
+          "issued": "2026-10-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_12",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 12,
+          "owner_id": 2,
+          "issued": "2026-10-18"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 12,
+          "owner_id": 2,
+          "issued": "2026-10-18"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_13",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 13,
+          "owner_id": 1,
+          "issued": "2026-10-19"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 13,
+          "owner_id": 1,
+          "issued": "2026-10-19"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_14",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 14,
+          "owner_id": 2,
+          "issued": "2026-10-20"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 14,
+          "owner_id": 2,
+          "issued": "2026-10-20"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_15",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 15,
+          "owner_id": 1,
+          "issued": "2026-10-21"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 15,
+          "owner_id": 1,
+          "issued": "2026-10-21"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_16",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 16,
+          "owner_id": 2,
+          "issued": "2026-10-22"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 16,
+          "owner_id": 2,
+          "issued": "2026-10-22"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_17",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 17,
+          "owner_id": 1,
+          "issued": "2026-10-25"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 17,
+          "owner_id": 1,
+          "issued": "2026-10-25"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_18",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 18,
+          "owner_id": 2,
+          "issued": "2026-10-26"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 18,
+          "owner_id": 2,
+          "issued": "2026-10-26"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_19",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 19,
+          "owner_id": 1,
+          "issued": "2026-10-31"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 19,
+          "owner_id": 1,
+          "issued": "2026-10-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_20",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 20,
+          "owner_id": 2,
+          "issued": "2026-11-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 20,
+          "owner_id": 2,
+          "issued": "2026-11-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_21",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 21,
+          "owner_id": 1,
+          "issued": "2026-12-31"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 21,
+          "owner_id": 1,
+          "issued": "2026-12-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_22",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 22,
+          "owner_id": 2,
+          "issued": "2027-01-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 22,
+          "owner_id": 2,
+          "issued": "2027-01-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_23",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 23,
+          "owner_id": 1,
+          "issued": "2027-03-31"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 23,
+          "owner_id": 1,
+          "issued": "2027-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_24",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 24,
+          "owner_id": 2,
+          "issued": "2045-01-01"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\",\"issued\") VALUES (:id,:owner_id,:issued)",
+        "params": {
+          "id": 24,
+          "owner_id": 2,
+          "issued": "2045-01-01"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "event_25",
+      "request": {
+        "operation": "insert",
+        "table": "period.event",
+        "values": {
+          "id": 25,
+          "owner_id": 1,
+          "issued": null
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"period_event\"(\"id\",\"owner_id\") VALUES (:id,:owner_id)",
+        "params": {
+          "id": 25,
+          "owner_id": 1,
+          "issued": null
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_0",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "it_1",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "ieri"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "ieri",
+          "period_from": "2026-10-20"
+        }
+      },
+      "rows": [
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "name": "it_2",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "domani"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "domani",
+          "period_from": "2026-10-22"
+        }
+      },
+      "rows": [
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "name": "it_3",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi-3"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi-3",
+          "period_from": "2026-10-18"
+        }
+      },
+      "rows": [
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "name": "it_4",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "domani + 2"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "domani + 2",
+          "period_from": "2026-10-24"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_5",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "questa settimana"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "questa settimana",
+          "period_from": "2026-10-19",
+          "period_to": "2026-10-25"
+        }
+      },
+      "rows": [
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "it_6",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "la settimana scorsa"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "la settimana scorsa",
+          "period_from": "2026-10-12",
+          "period_to": "2026-10-18"
+        }
+      },
+      "rows": [
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        }
+      ]
+    },
+    {
+      "name": "it_7",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "settimana prossima+2"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "settimana prossima+2",
+          "period_from": "2026-11-09",
+          "period_to": "2026-11-15"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_8",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "questo mese"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "questo mese",
+          "period_from": "2026-10-01",
+          "period_to": "2026-10-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "name": "it_9",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "il mese scorso"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "il mese scorso",
+          "period_from": "2026-09-01",
+          "period_to": "2026-09-30"
+        }
+      },
+      "rows": [
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        }
+      ]
+    },
+    {
+      "name": "it_10",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mese prossimo-1"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mese prossimo-1",
+          "period_from": "2026-10-01",
+          "period_to": "2026-10-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "name": "it_11",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "marzo",
+          "period_from": "2026-03-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_12",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mar"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mar",
+          "period_from": "2026-03-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_13",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "m3"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "m3",
+          "period_from": "2026-03-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_14",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "marzo 26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "marzo 26",
+          "period_from": "2026-03-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_15",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "lo scorso ottobre"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "lo scorso ottobre",
+          "period_from": "2026-10-01",
+          "period_to": "2026-10-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "name": "it_16",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "marzo prossimo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "marzo prossimo",
+          "period_from": "2027-03-01",
+          "period_to": "2027-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        }
+      ]
+    },
+    {
+      "name": "it_17",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10 gennaio 2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10 gennaio 2026",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_18",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10 gennaio"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10 gennaio",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_19",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "q1"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "q1",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_20",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "t4"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "t4",
+          "period_from": "2026-10-01",
+          "period_to": "2026-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "name": "it_21",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "1º trimestre"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "1º trimestre",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_22",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2024Q1"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2024Q1",
+          "period_from": "2024-01-01",
+          "period_to": "2024-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        }
+      ]
+    },
+    {
+      "name": "it_23",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "Q1 2024"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "Q1 2024",
+          "period_from": "2024-01-01",
+          "period_to": "2024-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        }
+      ]
+    },
+    {
+      "name": "it_24",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "lunedì"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "lunedì",
+          "period_from": "2026-10-19"
+        }
+      },
+      "rows": [
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        }
+      ]
+    },
+    {
+      "name": "it_25",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "dom"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "dom",
+          "period_from": "2026-10-25"
+        }
+      },
+      "rows": [
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "it_26",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2026",
+          "period_from": "2026-01-01",
+          "period_to": "2026-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "name": "it_27",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "26",
+          "period_from": "2026-01-01",
+          "period_to": "2026-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "name": "it_28",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "45"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "45",
+          "period_from": "2045-01-01",
+          "period_to": "2045-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        }
+      ]
+    },
+    {
+      "name": "it_29",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "46"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "46",
+          "period_from": "1946-01-01",
+          "period_to": "1946-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        }
+      ]
+    },
+    {
+      "name": "it_30",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "dal gennaio al marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "dal gennaio al marzo",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_31",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "tra gennaio e marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "tra gennaio e marzo",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_32",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi;domani"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi;domani",
+          "period_from": "2026-10-21",
+          "period_to": "2026-10-22"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "name": "it_33",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "da oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" >= :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "da oggi",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        }
+      ]
+    },
+    {
+      "name": "it_34",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "a marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" <= :period_to )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "a marzo",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_35",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi;"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" >= :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi;",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        }
+      ]
+    },
+    {
+      "name": "it_36",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": ";marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" <= :period_to )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": ";marzo",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_37",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": ""
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": ""
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_38",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "   "
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "   "
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_39",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "sempre"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "sempre"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_40",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "senza periodo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "senza periodo"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_41",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "-"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "-"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_42",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": ";"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": ";"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_43",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "dicembre;marzo"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "dicembre;marzo",
+          "period_from": "2026-12-01",
+          "period_to": "2027-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        }
+      ]
+    },
+    {
+      "name": "it_44",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "da 2025 a gennaio 2024"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "da 2025 a gennaio 2024",
+          "period_from": "2025-01-01",
+          "period_to": "2025-01-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        }
+      ]
+    },
+    {
+      "name": "it_45",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2026-10-22;2026-10-21"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2026-10-22;2026-10-21",
+          "period_from": "2026-10-22",
+          "period_to": "2026-10-21"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "it_46",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2026-10-21;2026-10-21"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2026-10-21;2026-10-21",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "it_47",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2026-01-01,2026-01-31"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2026-01-01,2026-01-31",
+          "period_from": "2026-01-01",
+          "period_to": "2026-01-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_48",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/1/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/1/26",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_49",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10-1-2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10-1-2026",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_50",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "100126"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "100126",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_51",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10012026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10012026",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "it_52",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2024-02-29"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2024-02-29",
+          "period_from": "2024-02-29"
+        }
+      },
+      "rows": [
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        }
+      ]
+    },
+    {
+      "name": "it_53",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "today"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "today",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "it_54",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "from today to tomorrow"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "from today to tomorrow",
+          "period_from": "2026-10-21",
+          "period_to": "2026-10-22"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "name": "it_55",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": null
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": null
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_56",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": false
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": false
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "it_57",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": 0
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": 0
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "en_0",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "today"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "today",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "en_1",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "yesterday"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "yesterday",
+          "period_from": "2026-10-20"
+        }
+      },
+      "rows": [
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "name": "en_2",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "tomorrow"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "tomorrow",
+          "period_from": "2026-10-22"
+        }
+      },
+      "rows": [
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "name": "en_3",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "this week"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "this week",
+          "period_from": "2026-10-19",
+          "period_to": "2026-10-25"
+        }
+      },
+      "rows": [
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "en_4",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "last week+1"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "last week+1",
+          "period_from": "2026-10-19",
+          "period_to": "2026-10-25"
+        }
+      },
+      "rows": [
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "en_5",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "next month"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "next month",
+          "period_from": "2026-11-01",
+          "period_to": "2026-11-30"
+        }
+      },
+      "rows": [
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        }
+      ]
+    },
+    {
+      "name": "en_6",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "last october"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "last october",
+          "period_from": "2026-10-01",
+          "period_to": "2026-10-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "name": "en_7",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "next march"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "next march",
+          "period_from": "2027-03-01",
+          "period_to": "2027-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        }
+      ]
+    },
+    {
+      "name": "en_8",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "january 10 2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "january 10 2026",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "en_9",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10 january 2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10 january 2026",
+          "period_from": "2026-01-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "en_10",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "apr 07"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "apr 07",
+          "period_from": "2007-04-01",
+          "period_to": "2007-04-30"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "en_11",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "1st quarter"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "1st quarter",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "en_12",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mon"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mon",
+          "period_from": "2026-10-19"
+        }
+      },
+      "rows": [
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        }
+      ]
+    },
+    {
+      "name": "en_13",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "between january and march"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "between january and march",
+          "period_from": "2026-01-01",
+          "period_to": "2026-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        }
+      ]
+    },
+    {
+      "name": "en_14",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "from december to march 2025"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "from december to march 2025",
+          "period_from": "2024-12-01",
+          "period_to": "2025-03-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        }
+      ]
+    },
+    {
+      "name": "en_15",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "always"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "always"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "en_16",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "no period"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( true )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "no period"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 4,
+          "issued": "2024-12-31"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 6,
+          "issued": "2025-03-31"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "issued": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 18,
+          "issued": "2026-10-26"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 20,
+          "issued": "2026-11-01"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 24,
+          "issued": "2045-01-01"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "en_17",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "28/4/08"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "28/4/08",
+          "period_from": "2008-04-28"
+        }
+      },
+      "rows": [
+        {
+          "id": 2,
+          "issued": "2008-04-28"
+        }
+      ]
+    },
+    {
+      "name": "en_18",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-10-04"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "en_19",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "041026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "041026",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "en_20",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "04102026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-US"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "04102026",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en-GB",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-GB"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en_AU",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en_AU"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en_IE",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en_IE"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en-NZ",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-NZ"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en-IN",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-IN"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_EN_gb",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "EN_gb"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "regional_en-ZZ",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "en-ZZ"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-10-04"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "regional_IT_it",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "10/4/26"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "IT_it"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "10/4/26",
+          "period_from": "2026-04-10"
+        }
+      },
+      "rows": [
+        {
+          "id": 8,
+          "issued": "2026-04-10"
+        }
+      ]
+    },
+    {
+      "name": "leap",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mese prossimo"
+        },
+        "environment": {
+          "workdate": "2024-01-31",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mese prossimo",
+          "period_from": "2024-02-01",
+          "period_to": "2024-02-29"
+        }
+      },
+      "rows": [
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        }
+      ]
+    },
+    {
+      "name": "nonleap",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mese prossimo"
+        },
+        "environment": {
+          "workdate": "2025-01-31",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mese prossimo",
+          "period_from": "2025-02-01",
+          "period_to": "2025-02-28"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "year_cross",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "domani"
+        },
+        "environment": {
+          "workdate": "2026-12-31",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "domani",
+          "period_from": "2027-01-01"
+        }
+      },
+      "rows": [
+        {
+          "id": 22,
+          "issued": "2027-01-01"
+        }
+      ]
+    },
+    {
+      "name": "dst_start",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "domani"
+        },
+        "environment": {
+          "workdate": "2026-03-28",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "domani",
+          "period_from": "2026-03-29"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "dst_end",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi+1"
+        },
+        "environment": {
+          "workdate": "2026-10-24",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi+1",
+          "period_from": "2026-10-25"
+        }
+      },
+      "rows": [
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "refreshed",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-22",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": "2026-10-22"
+        }
+      },
+      "rows": [
+        {
+          "id": 16,
+          "issued": "2026-10-22"
+        }
+      ]
+    },
+    {
+      "name": "repeat_collision",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "(#PERIOD($issued,period) OR #PERIOD($issued,:period)) AND $id>:period_from",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi",
+          "period_from": 0,
+          "_period_from": 99
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE (( \"t0\".\"issued\" = :__period_from  OR  \"t0\".\"issued\" = :__period_from ) AND \"t0\".\"id\">:period_from)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": 0,
+          "_period_from": 99,
+          "__period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "distinct_periods",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period) OR #PERIOD($issued,second)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mese scorso",
+          "second": "oggi",
+          "period_to": "reserved",
+          "second_from": "reserved"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :_period_to)  OR  \"t0\".\"issued\" = :_second_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "mese scorso",
+          "second": "oggi",
+          "period_to": "reserved",
+          "second_from": "reserved",
+          "period_from": "2026-09-01",
+          "_period_to": "2026-09-30",
+          "_second_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 10,
+          "issued": "2026-09-30"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "env_period",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,:env_period)",
+        "order_by": "$id",
+        "sqlparams": {},
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT",
+          "period": "oggi"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :env_period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "env_override",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,env_period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "env_period": "ieri"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT",
+          "period": "oggi"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :env_period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_period_from": "2026-10-20",
+          "env_period": "ieri"
+        }
+      },
+      "rows": [
+        {
+          "id": 14,
+          "issued": "2026-10-20"
+        }
+      ]
+    },
+    {
+      "name": "parameter_data",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,#TEMPLATE('${x}', :text AS x) AS label",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi",
+          "text": "#PERIOD($issued,other)"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(COALESCE(CAST((:text) AS TEXT), '')) AS label\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( \"t0\".\"issued\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "text": "#PERIOD($issued,other)",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "label": "#PERIOD($issued,other)"
+        }
+      ]
+    },
+    {
+      "name": "bare_column",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD(issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( issued = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "formula_field",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($date_alias,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( ( \"t0\".\"issued\" ) = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        }
+      ]
+    },
+    {
+      "name": "relation_field",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD(@owner_id.day,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n\"t0\".\"issued\" AS \"issued\"\n FROM \"main\".\"period_event\" AS \"t0\"\n       LEFT JOIN \"main\".\"period_owner\" AS \"t1\" ON ((\"t0\".\"owner_id\")=\"t1\".\"id\")\nWHERE ( \"t1\".\"day\" = :period_from )\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "oggi",
+          "period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "issued": "1946-01-01"
+        },
+        {
+          "id": 3,
+          "issued": "2024-02-29"
+        },
+        {
+          "id": 5,
+          "issued": "2025-01-01"
+        },
+        {
+          "id": 7,
+          "issued": "2026-01-10"
+        },
+        {
+          "id": 9,
+          "issued": "2026-09-01"
+        },
+        {
+          "id": 11,
+          "issued": "2026-10-01"
+        },
+        {
+          "id": 13,
+          "issued": "2026-10-19"
+        },
+        {
+          "id": 15,
+          "issued": "2026-10-21"
+        },
+        {
+          "id": 17,
+          "issued": "2026-10-25"
+        },
+        {
+          "id": 19,
+          "issued": "2026-10-31"
+        },
+        {
+          "id": 21,
+          "issued": "2026-12-31"
+        },
+        {
+          "id": 23,
+          "issued": "2027-03-31"
+        },
+        {
+          "id": 25,
+          "issued": null
+        }
+      ]
+    },
+    {
+      "name": "count",
+      "request": {
+        "operation": "count",
+        "table": "period.event",
+        "columns": "$id,$issued",
+        "where": "#PERIOD($issued,period)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "mese scorso"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT count(*) AS \"gnr_row_count\"\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to) )",
+        "params": {
+          "period": "mese scorso",
+          "period_from": "2026-09-01",
+          "period_to": "2026-09-30"
+        }
+      },
+      "rows": [
+        {
+          "gnr_row_count": 2
+        }
+      ]
+    },
+    {
+      "name": "template_and_range",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id,#TEMPLATE('${d}', $issued AS d) AS label",
+        "where": "#PERIOD($issued,period) AND #IN_RANGE($id,:low,:high)",
+        "order_by": "$id",
+        "sqlparams": {
+          "period": "2026",
+          "low": 10,
+          "high": 17
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(COALESCE(CAST((\"t0\".\"issued\") AS TEXT), '')) AS label\n FROM \"main\".\"period_event\" AS \"t0\"\nWHERE ( (\"t0\".\"issued\" BETWEEN :period_from AND :period_to)  AND ((\"t0\".\"id\">=:low AND \"t0\".\"id\"<=:high AND :low IS NOT NULL AND :high IS NOT NULL) OR (:low IS NULL AND :high IS NOT NULL AND \"t0\".\"id\"<=:high) OR (:low IS NOT NULL AND :high IS NULL AND \"t0\".\"id\">=:low) OR (:low IS NULL AND :high IS NULL)))\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "period": "2026",
+          "low": 10,
+          "high": 17,
+          "period_from": "2026-01-01",
+          "period_to": "2026-12-31"
+        }
+      },
+      "rows": [
+        {
+          "id": 10,
+          "label": "2026-09-30"
+        },
+        {
+          "id": 11,
+          "label": "2026-10-01"
+        },
+        {
+          "id": 12,
+          "label": "2026-10-18"
+        },
+        {
+          "id": 13,
+          "label": "2026-10-19"
+        },
+        {
+          "id": 14,
+          "label": "2026-10-20"
+        },
+        {
+          "id": 15,
+          "label": "2026-10-21"
+        },
+        {
+          "id": 16,
+          "label": "2026-10-22"
+        },
+        {
+          "id": 17,
+          "label": "2026-10-25"
+        }
+      ]
+    },
+    {
+      "name": "child_scopes",
+      "request": {
+        "operation": "select",
+        "table": "period.owner",
+        "columns": "$id,$within,$today,$yesterday,$inherited,$environment",
+        "where": "$id>:s2_period_from",
+        "sqlparams": {
+          "s2_period_from": 0
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT",
+          "period": "oggi"
+        },
+        "order_by": "$id"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( ((\"t0\".\"id\">=:f1_low AND \"t0\".\"id\"<=:f1_high AND :f1_low IS NOT NULL AND :f1_high IS NOT NULL) OR (:f1_low IS NULL AND :f1_high IS NOT NULL AND \"t0\".\"id\"<=:f1_high) OR (:f1_low IS NOT NULL AND :f1_high IS NULL AND \"t0\".\"id\">=:f1_low) OR (:f1_low IS NULL AND :f1_high IS NULL)) ) AS \"within\",\n(  ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"period_event\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\" AND  \"t0_t0\".\"issued\" = :_s2_period_from ) )  ) AS \"today\",\n(  ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"period_event\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\" AND  \"t0_t0\".\"issued\" = :s3_period_from ) )  ) AS \"yesterday\",\n(  ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"period_event\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\" AND  (\"t0_t0\".\"issued\" BETWEEN :s5_period_from AND :s5_period_to) ) )  ) AS \"inherited\",\n(  ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"period_event\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"owner_id\"=\"t0\".\"id\" AND  \"t0_t0\".\"issued\" = :s6_env_period_from ) )  ) AS \"environment\"\n FROM \"main\".\"period_owner\" AS \"t0\"\nWHERE (\"t0\".\"id\">:s2_period_from)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "s2_period_from": 0,
+          "f1_low": 0,
+          "f1_high": 9,
+          "_s2_period_from": "2026-10-21",
+          "s3_period_from": "2026-10-20",
+          "s5_period_from": "2026-09-01",
+          "s5_period_to": "2026-09-30",
+          "s6_env_period_from": "2026-10-21"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "within": 1,
+          "today": 1,
+          "yesterday": 0,
+          "inherited": 1,
+          "environment": 1
+        },
+        {
+          "id": 2,
+          "within": 1,
+          "today": 0,
+          "yesterday": 1,
+          "inherited": 1,
+          "environment": 0
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "name": "invalid_0",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "31/02/2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_1",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "2026-02-29"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_2",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "q5"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_3",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "m13"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_4",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "not a period"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_5",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "la"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_6",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "oggi;domani;ieri"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_7",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "january 10, 2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_8",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "february"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_9",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "29/2/25"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_10",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "0000"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_11",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "32 gennaio 2026"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_12",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": true
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_13",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": 17
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "invalid_14",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": {
+            "value": "oggi"
+          }
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "unknown_locale",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "fr"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "missing_locale",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "missing_workdate",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "locale": "it"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "missing_parameter",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period)",
+        "sqlparams": {},
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "missing_environment_parameter",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,env_period)",
+        "sqlparams": {},
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "wrong_context_columns",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "#PERIOD($issued,period)",
+        "where": null,
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "wrong_context_order_by",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": null,
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        },
+        "order_by": "#PERIOD($issued,period)"
+      },
+      "rejected": true
+    },
+    {
+      "name": "wrong_context_group_by",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": null,
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        },
+        "group_by": "#PERIOD($issued,period)"
+      },
+      "rejected": true
+    },
+    {
+      "name": "wrong_context_having",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": null,
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        },
+        "having": "#PERIOD($issued,period)"
+      },
+      "rejected": true
+    },
+    {
+      "name": "formula_context",
+      "request": {
+        "operation": "select",
+        "table": "period.owner",
+        "columns": "$invalid_formula",
+        "where": null,
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "expression_operand",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued + 1,period)",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    },
+    {
+      "name": "extra_argument",
+      "request": {
+        "operation": "select",
+        "table": "period.event",
+        "columns": "$id",
+        "where": "#PERIOD($issued,period,extra)",
+        "sqlparams": {
+          "period": "oggi"
+        },
+        "environment": {
+          "workdate": "2026-10-21",
+          "locale": "it-IT"
+        }
+      },
+      "rejected": true
+    }
+  ]
+}

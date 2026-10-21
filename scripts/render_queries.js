@@ -1,3 +1,6 @@
+import {parseDateExpression} from '@gramlot/gramlot';
+import {queryPeriods} from '../examples/query-periods.js';
+import periodOracle from '../test/fixtures/periods.json' with {type: 'json'};
 import {queryMacros} from '../examples/query-macros.js';
 import macroOracle from '../test/fixtures/macros.json' with {type: 'json'};
 import {compilerCallbacks, compilerMethods, callbackCacheProbe} from '../examples/compiler-callbacks.js';
@@ -14,12 +17,12 @@ import features from '../test/fixtures/query-features.json' with {type: 'json'};
 import {nativeSQLite} from '../test/native-sqlite.js';
 import {migrateSQLite} from '../src/sqlite.js';
 const result = {};
-for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features', queryFeatures, features], ['reads', readFormulas, reads], ['subqueries', subqueries, subqueryOracle], ['callbacks', compilerCallbacks, callbackOracle], ['macros', queryMacros, macroOracle]]) {
+for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features', queryFeatures, features], ['reads', readFormulas, reads], ['subqueries', subqueries, subqueryOracle], ['callbacks', compilerCallbacks, callbackOracle], ['macros', queryMacros, macroOracle], ['periods', queryPeriods, periodOracle]]) {
     const model = defineModel(recipe), db = nativeSQLite();
     try {
         if (oracle.ddl) { for (const sql of oracle.ddl) await db.execute(sql); }
         else await migrateSQLite(db, model.toMigration());
-        const events = [], compiled = model.queries(db, name === 'callbacks' ? {methods: compilerMethods(events)} : {}), cases = [];
+        const events = [], compiled = model.queries(db, {parseDateExpression, ...(name === 'callbacks' ? {methods: compilerMethods(events)} : {})}), cases = [];
         for (const c of oracle.cases) {
             events.length = 0;
             const sql = compiled.compile(c.request), calls = [...events];

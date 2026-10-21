@@ -1,3 +1,4 @@
+import {periodChecks} from './period-checks.js';
 import {macroChecks} from './macro-checks.js';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
@@ -54,6 +55,7 @@ export async function queryChecks() {
         checks.push(...await subqueryChecks());
         checks.push(...await callbackChecks());
         checks.push(...await macroChecks());
+        checks.push(...await periodChecks());
         return checks;
     } finally {
         await db.close();

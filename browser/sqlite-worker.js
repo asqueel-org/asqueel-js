@@ -1,3 +1,4 @@
+import {parseDateExpression} from '@gramlot/gramlot';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {readSQLite, planSQLite, migrateSQLite, quote} from '../src/sqlite.js';
 import {seedDemo, browserChecks} from './sqlite-checks.js';
@@ -30,7 +31,7 @@ async function dispatch(type, desired) {
         db ??= await openBrowserSQLite(DATABASE);
         if (type === 'query') {
             const model = modelFromQuerySource(desired.source, SqlBuilder);
-            const compiler = model.queries(db);
+            const compiler = model.queries(db, {parseDateExpression});
             const compiled = compiler.compile(desired.request);
             const records = await compiler.execute(desired.request);
             return {compiled, records, ...await inspect()};

@@ -47,10 +47,10 @@ export class SqliteQueries {
         this.defaultEnvironment = {};
         if (!scope) {
             record(runtime);
-            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods'].includes(key))
+            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods', 'parseDateExpression'].includes(key))
                 throw new Error(`Opzione runtime sconosciuta: ${key}`);
             validateCompilerMethods(this.tables, runtime.methods ?? {});
-            for (const key of ['clock', 'uuid']) if (runtime[key] != null && typeof runtime[key] !== 'function')
+            for (const key of ['clock', 'uuid', 'parseDateExpression']) if (runtime[key] != null && typeof runtime[key] !== 'function')
                 throw new TypeError(`${key} deve essere una funzione`);
             for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
                 if (!this.tables.has(table)) throw new Error(`Tabella degli hook sconosciuta: ${table}`);
@@ -104,7 +104,7 @@ export class SqliteQueries {
         if (!read) return compileWrite(table, request.operation, request.values, request);
         const methods = new CompilerMethods(this.tables, this.runtime.methods ?? {},
             structuredClone(request.environment), this.compilerEnvironments.get(environment));
-        return compileSelect(this.tables, table, request, methods);
+        return compileSelect(this.tables, table, request, methods, this.runtime.parseDateExpression);
     }
     async execute(request) {
         const compiled = this.compile(request);

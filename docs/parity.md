@@ -52,8 +52,8 @@ rigenera automaticamente il riferimento.
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
 0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
 I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
-di sottoquery/aggregazioni, i 33 casi callback e i 46 casi macro confrontano il JSON completo dei
-sei modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sei ricette hanno
+di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il JSON completo dei
+sette modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sette ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
 
@@ -304,5 +304,57 @@ testo letterale del template viene rifiutato. Il browser riesegue tutte le SELEC
 
 Il porting conserva l'ordine di espansione Python. I template direttamente annidati
 negli argomenti sono rifiutati dal riferimento; le formule che richiamano altre
-formule contenenti template sono invece supportate. `#PERIOD` e `#BAG/#BAGCOLS`
-restano incrementi separati.
+formule contenenti template sono invece supportate. `#BAG/#BAGCOLS` restano incrementi separati.
+
+
+## PERIOD e parser delle date naturali
+
+Il compiler espande `#PERIOD(campo,parametro)` nel WHERE, anche nelle SELECT
+correlate delle formule. La lettura del testo usa il parser pubblico di Gramlot,
+registrato una volta nel runtime. Il core Asqueel non importa Gramlot e non
+mantiene un secondo parser. Lo stesso collegamento funziona in Node, Bun e worker:
+
+```js
+import {parseDateExpression} from '@gramlot/gramlot';
+
+const queries = model.queries(adapter, {
+    parseDateExpression,
+    environment: {locale: 'it-IT', workdate: '2026-10-21'},
+});
+const rows = await queries.table('period.event').query({
+    columns: '$id,$issued',
+    where: '#PERIOD($issued,period)',
+    sqlparams: {period: 'mese scorso'},
+}).fetch();
+// WHERE (t0."issued" BETWEEN :period_from AND :period_to)
+// period_from: '2026-09-01', period_to: '2026-09-30'
+```
+
+Entrambi i valori `locale` e `workdate` sono obbligatori, come nel riferimento
+Python. In JS workdate è una data civile ISO `YYYY-MM-DD`, senza conversioni di
+fuso orario. Il risultato del parser sincrono è `{ok:true,kind:'date',date}` oppure
+`{ok:true,kind:'period',start,end}`; gli estremi aperti sono `null`.
+I parametri Python di tipo `date` sono normalizzati a ISO per confrontarli con
+le stringhe JS e passarli a SQLite. Il testo originale resta tra i parametri
+compilati, come Python; l'adapter inoltra solo quelli effettivamente usati dal SQL.
+
+Sono confrontati italiano e inglese, varianti regionali, oggi/ieri/domani,
+settimane, mesi, trimestri, anni, spostamenti e intervalli aperti. Un solo giorno
+produce `=`, due estremi diversi `BETWEEN`, un estremo solo `>=` o `<=`, il periodo
+vuoto `true`. Il compiler sostituisce le virgole con `;` prima del parser, proprio
+come Python: alcune espressioni accettate dal parser diretto non lo sono in PERIOD.
+Le macro ripetute condividono i parametri nello stesso SELECT; sottoquery e formule
+rispettano i namespace e le collisioni del compiler Python. Ogni compilazione
+rilegge l'ambiente; `env_period` può prelevare il testo dall'ambiente.
+
+Il riferimento controllato usa Toolbox 0.18.0 e il parser Gramlot 0.3.8 già
+installato. Due ricette indipendenti producono modello e JSON migrate identici;
+131 casi confrontano SQL, parametri e righe, 27 verificano i rifiuti. Gli stessi
+casi sono eseguiti nel worker e riletti dopo riapertura IndexedDB. Il playground
+collega il parser anche alla preview e alle query personalizzate dell'editor.
+
+Senza il servizio `parseDateExpression`, una query PERIOD fallisce esplicitamente;
+le altre query continuano a funzionare. PERIOD non è una macro generica utilizzabile
+in colonne, ORDER BY o `sql_formula`: segue i contesti ammessi da Python. Una formula
+può però dichiarare una SELECT con PERIOD nel suo WHERE. Restano da portare le
+macro Bag e i metadati dei risultati.

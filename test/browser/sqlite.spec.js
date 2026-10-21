@@ -1,3 +1,5 @@
+import periodOracle from '../fixtures/periods.json' with {type: 'json'};
+import {queryPeriods} from '../../examples/query-periods.js';
 import {test, expect} from '@playwright/test';
 import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
 import examples from '../fixtures/model-examples.json' with {type:'json'};
@@ -22,7 +24,7 @@ test('sys_fields and hooks execute like Python, roll back and survive IndexedDB 
 });
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
-for (const [command, expected] of [['checks', 7], ['query-checks', 23], ['composition-checks', compositionCases.length + 3]]) {
+for (const [command, expected] of [['checks', 7], ['query-checks', 27], ['composition-checks', compositionCases.length + 3]]) {
     test(`browser SQLite: ${command}`, async ({page}) => {
         await leaf(page);
         const checks = await page.evaluate(type => new Promise((resolve, reject) => {
@@ -146,7 +148,7 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('219 query confrontate con Python', {timeout: 30000});
+    await expect(page.locator('#query-status')).toContainText('350 query confrontate con Python', {timeout: 30000});
     await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
     await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
     await expect(page.locator('#query-checks')).toContainText('48 sottoquery/aggregazioni');
@@ -158,10 +160,13 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-checks')).toContainText('46 casi #TEMPLATE/#IN_RANGE');
     await expect(page.locator('#query-checks')).toContainText('18 macro non valide');
     await expect(page.locator('#query-checks')).toContainText('#TEMPLATE e #IN_RANGE ancora identiche a Python');
+    await expect(page.locator('#query-checks')).toContainText('131 casi #PERIOD');
+    await expect(page.locator('#query-checks')).toContainText('27 periodi non validi');
+    await expect(page.locator('#query-checks')).toContainText('#PERIOD ancora identico a Python');
     await page.getByText('Verifiche query nel browser', {exact: true}).click();
     await page.locator('#query-checks').scrollIntoViewIfNeeded();
     await page.locator('#query-checks').evaluate(element => { element.scrollTop = element.scrollHeight; });
-    await page.screenshot({path: 'output/gramlot-macros.png'});
+    await page.screenshot({path: 'output/gramlot-period.png'});
     expect(errors).toEqual([]);
 });
 
@@ -237,5 +242,33 @@ test('application onUpdate cascades match Python in browser SQLite with rollback
     await page.getByText('Cascade verificata: figli, hook e SQL', {exact: true}).click();
     await page.locator('#cascades-sample').scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/gramlot-cascades.png'});
+    expect(errors).toEqual([]);
+});
+
+
+test('Gramlot PERIOD query preview and ordinary worker execution use the same date parser', async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await leaf(page, 'models');
+    await ready(page, 'models');
+    await page.locator('#model').getByRole('textbox').fill(`(${queryPeriods.toString()})(root);`);
+    await page.locator('#render').click();
+    await expect(page.locator('#status')).toContainText('2 tabelle');
+    await leaf(page, 'queries');
+    await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Applica migrazione'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completato');
+    const query = periodOracle.cases.find(c => c.request.sqlparams?.period === 'oggi');
+    const event = periodOracle.cases.find(c => c.request.operation === 'insert' && c.request.values.issued === '2026-10-21');
+    const owner = periodOracle.cases.find(c => c.request.table === 'period.owner' && c.request.values?.id === event.request.values.owner_id);
+    for (const c of [owner, event, query]) {
+        await page.locator('#query-input').getByRole('textbox').fill(JSON.stringify(c.request, null, 2));
+        await page.locator('#query-compile').click();
+        expect(await page.locator('#query-sql').textContent()).toBe(c.compiled.sql);
+        expect(JSON.parse(await page.locator('#query-params').textContent())).toEqual(c.compiled.params);
+        await page.locator('#query-run').click();
+        await expect.poll(async () => page.locator('#query-rows').textContent()).toBe(JSON.stringify(c.rows, null, 2));
+    }
+    await page.screenshot({path: 'output/gramlot-period-query.png'});
     expect(errors).toEqual([]);
 });

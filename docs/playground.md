@@ -214,6 +214,7 @@ helper e transazioni, 28 casi aggiuntivi, 32 casi di formule parametrizzate/chia
 composte, 48 casi di sottoquery/aggregazioni e 17 query rifiutate,
 33 casi callback con ordine delle chiamate, 23 callback non valide e cache per ambiente,
 46 casi #TEMPLATE/#IN_RANGE e 18 usi non validi,
+131 casi #PERIOD e 27 rifiuti,
 con rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
@@ -379,7 +380,7 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 219 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+I 350 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
@@ -499,7 +500,7 @@ Le azioni su relazioni composte restano rifiutate esplicitamente.
 configurazioni rifiutate. Il worker crea un database separato, confronta SQL e
 parametri con l'oracolo Python e poi esegue realmente ogni richiesta su SQLite
 WASM. Dopo la riapertura IndexedDB ripete tutte le SELECT e confronta i risultati.
-I dettagli compaiono in **Verifiche query nel browser**; il totale è di 219 query.
+I dettagli compaiono in **Verifiche query nel browser**; il totale è di 350 query.
 
 Le ricette indipendenti e la semantica di correlazione, binding e filtri sono in
 [parity.md](parity.md#sottoquery-e-aggregazioni-inverse). Il confronto browser usa
@@ -517,7 +518,7 @@ l'oracolo Python, insieme a 23 rifiuti attesi e al ciclo della cache per ambient
 Tutte le SELECT vengono rieseguite dopo chiusura e riapertura di IndexedDB.
 
 I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
-219 casi query e 23 gruppi di verifiche. Per registrare le proprie funzioni vedere
+350 casi query e 27 gruppi di verifiche. Per registrare le proprie funzioni vedere
 [il contratto delle callback](parity.md#callback-dinamiche-del-compilatore).
 
 
@@ -527,7 +528,24 @@ I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
 18 rifiuti attesi e due casi aggiuntivi di macro restituite dalle callback.
 Il worker compila ed esegue le query su SQLite WASM, confronta SQL, parametri e
 risultati con Python e ripete le SELECT dopo riapertura IndexedDB. Il totale è di
-219 casi query e 23 gruppi di verifiche, visibili in **Verifiche query nel browser**.
+350 casi query e 27 gruppi di verifiche, visibili in **Verifiche query nel browser**.
 
 Sono coperti testi e NULL, apostrofi, Unicode, estremi inclusivi e assenti, formule,
 relazioni, aggregazioni e sottoquery. [Sintassi e limiti](parity.md#macro-template-e-in_range).
+
+
+## PERIOD nel browser
+
+**Verifica query con Python** include 131 casi PERIOD: italiano/inglese,
+workdate diverse, intervalli aperti, anni bisestili, mesi/trimestri, collisioni di
+parametri, formule correlate e sottoquery. Si confrontano JSON completo/migrate,
+SQL esatto, parametri e righe SQLite; le SELECT si ripetono dopo riapertura
+IndexedDB. I 27 usi non validi devono essere rifiutati anche nel worker.
+
+La preview e l'esecuzione ordinaria dell'editor usano `parseDateExpression`
+esportato da Gramlot. Per una richiesta personalizzata inserire
+`environment: {locale: "it-IT", workdate: "2026-10-21"}` e, su un campo data del
+proprio modello, `where: "#PERIOD($issued,period)"` con
+`sqlparams: {period: "mese scorso"}`. Il totale è di 350 casi query e 27 gruppi
+di verifiche; gli esempi modificati non generano un nuovo oracolo Python.
+Vedere [il contratto del runtime](parity.md#period-e-parser-delle-date-naturali).

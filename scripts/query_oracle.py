@@ -1,5 +1,6 @@
 """Independent SQL/parameter/result oracle against the pinned Python 0.6.1 + #44."""
 import json
+from datetime import date
 from pathlib import Path
 import sqlite3
 import tempfile
@@ -19,6 +20,8 @@ from query_features import feature_model
 from read_formulas import read_model
 from subqueries import subquery_model
 from query_macros import macro_model
+from query_periods import period_model
+from genro_toolbox.dates.period_parser import PeriodLocaleError
 from compiler_callbacks import callback_model, callback_methods
 from asqueel import UnsupportedFeatureError
 from asqueel.environment import SqlEnvironment
@@ -28,6 +31,19 @@ from model_oracle import document
 
 def requests(filename):
     return [(c['name'], c['request']) for c in json.loads((ROOT / 'test' / filename).read_text())]
+
+
+def query_environment(environment):
+    environment = deepcopy(environment)
+    if isinstance(environment.get('workdate'), str):
+        environment['workdate'] = date.fromisoformat(environment['workdate'])
+    return environment
+
+
+def sql_parameters(compiled):
+    # Python dates and JS civil ISO strings represent the same SQLite binding.
+    return {key: value.isoformat() if isinstance(value, date) else value
+            for key, value in compiled.params.items()}
 
 
 def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=None):
@@ -64,7 +80,7 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
         try:
             for name, request in requests(inputs):
                 kwargs = {k: v for k, v in request.items() if k not in ("operation", "table")}
-                environment = kwargs.pop('environment', {})
+                environment = query_environment(kwargs.pop('environment', {}))
                 if runtime:
                     runtime.currentEnv = deepcopy(environment)
                     events.clear()
@@ -74,10 +90,10 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
                 else:
                     values = kwargs.pop('values')
                     compiled = getattr(writer, request['operation'])(model.table(request['table']), values, environment, **kwargs)
-                cursor = connection.execute(compiled.sql, dict(compiled.params))
+                cursor = connection.execute(compiled.sql, sql_parameters(compiled))
                 rows = [dict(row) for row in cursor.fetchall()]
                 result["cases"].append({"name": name, "request": request,
-                    "compiled": {"sql": compiled.sql, "params": dict(compiled.params)}, "rows": rows, **({"events": list(events)} if runtime else {})})
+                    "compiled": {"sql": compiled.sql, "params": sql_parameters(compiled)}, "rows": rows, **({"events": list(events)} if runtime else {})})
             connection.commit()
         finally:
             connection.close()
@@ -85,13 +101,13 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
         result['errors'] = []
         for name, request in requests(errors):
             options = {k: v for k, v in request.items() if k not in ('operation', 'table')}
-            environment = options.pop('environment', {})
+            environment = query_environment(options.pop('environment', {}))
             if runtime:
                 runtime.currentEnv = deepcopy(environment)
             compiler = QueryCompiler(model, adapter, environment=runtime.environment if runtime else SqlEnvironment(environment))
             try:
                 compiler.select(request['table'], **options)
-            except (ValueError, UnsupportedFeatureError, KeyError, TypeError):
+            except (ValueError, UnsupportedFeatureError, KeyError, TypeError, PeriodLocaleError):
                 result['errors'].append(dict(name=name, request=request, rejected=True))
             else:
                 raise AssertionError(f'{name}: Python unexpectedly accepted the query')
@@ -106,7 +122,7 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
             events.clear()
             compiled = QueryCompiler(model, adapter, environment=runtime.environment).select(
                 'app.owner', columns='$dynamicscale,$scaled,$dynamic_method')
-            result['cache'].append(dict(compiled=dict(sql=compiled.sql, params=dict(compiled.params)), events=list(events)))
+            result['cache'].append(dict(compiled=dict(sql=compiled.sql, params=sql_parameters(compiled)), events=list(events)))
         runtime.closeConnection()
     return result
 
@@ -132,3 +148,7 @@ if __name__ == "__main__":
     macros = query_oracle(macro_model(), 'macro-inputs.json', 'macro-errors.json')
     (ROOT / 'test/fixtures/macros.json').write_text(json.dumps(macros, indent=2, ensure_ascii=False) + '\n')
     print(f"Python: {len(macros['cases'])} macro cases and {len(macros['errors'])} rejected queries.")
+
+    periods = query_oracle(period_model(), 'period-inputs.json', 'period-errors.json')
+    (ROOT / 'test/fixtures/periods.json').write_text(json.dumps(periods, indent=2, ensure_ascii=False) + '\n')
+    print(f"Python: {len(periods['cases'])} period cases and {len(periods['errors'])} rejected queries.")

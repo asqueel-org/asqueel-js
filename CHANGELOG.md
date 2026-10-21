@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- #PERIOD nel WHERE e nelle sottoquery, con parser pubblico Gramlot fornito al
+  runtime, senza duplicare le routine delle date naturali. 131 casi e 27 rifiuti
+  confrontano modello/migrate, SQL, parametri e risultati Python; esecuzione anche
+  su SQLite WASM e rilettura dopo riapertura IndexedDB. Date civili ISO, locale e
+  workdate espliciti; nessuna dipendenza Gramlot nel core.
+
 - Macro #TEMPLATE e #IN_RANGE portate dal compiler Python, con concatenazione
   SQLite compatibile con NULL, nomi Unicode e intervalli inclusivi/aperti.
   46 casi dedicati e due casi callback confrontano SQL, parametri e risultati;
