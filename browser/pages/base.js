@@ -37,7 +37,7 @@ export class PlaygroundPage extends Page {
             sqlPlan: 'Calcola il piano per leggere le istruzioni prima di applicarle.',
             queryExample: 'insert_person', queryInput: '', queryStatus: 'Compila per confrontare SQL e parametri.',
             queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
-            transferStatus: '', transferChecks: '', transferSample: '', transferFileName: 'Nessun file selezionato',
+            transferStatus: '', transferChecks: '', transferSample: '', transferBinarySample: '', transferFileName: 'Nessun file selezionato',
             importTable: 'notes.person', importFileName: 'Nessun file selezionato', importStatus: '', importChecks: '', importSample: '',
             hookChecks: '', hookSample: '', behaviorChecks: '', behaviorSample: '', cascadeChecks: '', cascadeSample: '',
         })) root.dataSetter({destination_path: path, value});

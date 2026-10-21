@@ -17,8 +17,10 @@ export function transferPanel(view, database) {
             const result=await database.request('transfer-checks');
             view.set('transferChecks',result.checks.map(s=>'✓ '+s).join('\n'));
             view.set('transferSample',JSON.stringify(result.sample,null,2));
+            view.set('transferBinarySample',JSON.stringify(result.binarySample,null,2));
             view.set('transferStatus',`${result.checks.length} trasferimenti identici al riferimento Python; modifiche offline e riapertura IndexedDB verificate.`);
         }),
+        binaryExample: () => download(oracle.find(e=>e.name==='bags_blobs').bundle,'python-bag-blob.json'),
         example: () => download(oracle.find(e=>e.name==='tables').bundle,'python-snapshot.json'),
         load: file => run(async () => {
             if(!file) throw new Error('Seleziona uno snapshot JSON esportato da Python');

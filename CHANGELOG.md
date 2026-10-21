@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Campi Bag (X) e blob (O) negli snapshot Python/browser/Python. Bag statiche
+  annidate con tag, attributi e valori TYTX precisi; blob confrontati byte per byte,
+  inclusi vuoti e NULL. Verifica di modifiche nel browser e ritorno Python.
+  Corretti nell’adapter WASM il binding del blob vuoto e la copia dei risultati
+  binari dalla memoria SQLite prima del prossimo step/finalize.
+
 - Trasferimento Python → browser → Python: vera SourceBag TYTX completa o
   selezionata per package/tabelle, snapshot di record TYTX, caricamento atomico
   con NULL espliciti e export dal database locale. Confronto del modello completo,

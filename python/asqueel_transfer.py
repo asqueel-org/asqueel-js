@@ -9,7 +9,7 @@ import json
 import math
 from genro_bag import Bag
 from genro_builders import SourceBag
-from genro_tytx import from_tytx
+from genro_tytx import from_tytx, to_tytx
 from asqueel import SqlBuilder, SqlDatabaseConfig, resolve_model, SqlMigrationRenderer, AsqueelDb
 from asqueel.configuration import _compose_source
 
@@ -88,17 +88,53 @@ def export_transfer(builder, records, *, tables=None, packages=None):
     data = {}
     for name, rows in records.items():
         columns = model.tables[name].columns
-        if any(c.attributes['dtype'] not in {'A','B','C','D','DH','DHZ','H','I','L','N','R','T'} for c in columns.values()):
+        if any(c.attributes['dtype'] not in {'A','B','C','D','DH','DHZ','H','I','L','N','R','T','X','O'} for c in columns.values()):
             raise ValueError(f'{name}: unsupported snapshot column type')
         lines = []
         for row in rows:
             if set(row) != set(columns): raise ValueError(f'{name}: snapshot requires every physical column exactly once')
-            lines.append(json.dumps({k: wire_value(v) for k, v in row.items()}, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '::JS\n')
+            lines.append(json.dumps({k: column_wire(v, columns[k].attributes['dtype']) for k, v in row.items()}, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '::JS\n')
         data[name] = ''.join(lines)
     return dict(format=FORMAT, version=1, source=source, data=data, omitted=omitted)
 
 
+def bag_wire(bag):
+    # Keep the standard Bag wire (including labels/tags/subtypes). Replace scalar
+    # payloads before transport to retain civil datetimes and six fractional digits.
+    encoded = bag.to_tytx()
+    payload = encoded[:-3]
+    if payload.endswith('::JS'): payload = payload[:-4]
+    wire = json.loads(payload)
+    rows = iter(wire['rows'])
+    def visit(value):
+        for node in value:
+            if node.resolver is not None: raise ValueError('Snapshot Bags cannot contain resolvers')
+            row = next(rows)
+            child = node.get_value(static=True)
+            row[4] = {k: wire_value(v) for k, v in node.attr.items()}
+            if isinstance(child, Bag): visit(child)
+            else: row[3] = wire_value(child)
+    visit(bag)
+    return json.dumps(wire, ensure_ascii=False, separators=(',', ':'), allow_nan=False) + '::JS::X'
+
+
+def column_wire(value, dtype):
+    if value is not None:
+        if dtype == 'X' and not isinstance(value, Bag): raise ValueError('X snapshot field requires a Bag or NULL')
+        if dtype == 'O' and not isinstance(value, (bytes, bytearray, memoryview)): raise ValueError('O snapshot field requires bytes or NULL')
+        if dtype not in {'X','O'} and isinstance(value, (Bag, bytes, bytearray, memoryview, dict, list, tuple)):
+            raise ValueError('Bag/blob value in a scalar column')
+    return wire_value(value)
+
+
 def wire_value(value):
+    if isinstance(value, Bag): return bag_wire(value)
+    if isinstance(value, (bytes, bytearray, memoryview)): return to_tytx(bytes(value))
+    if isinstance(value, dict):
+        return {k: wire_value(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [wire_value(v) for v in value]
+
     # Generic TYTX datetime encoding normalizes UTC/milliseconds. Snapshots retain
     # civil spelling, timezone and all six Python fractional digits instead.
     if isinstance(value, datetime): return value.isoformat() + '::DHZ'
@@ -149,7 +185,9 @@ def quote(name): return '"' + name.replace('"', '""') + '"'
 
 
 def stored_value(value):
-    wire_value(value)  # Same scalar/precision validation on the receiving side.
+    wire_value(value)  # Same type/precision validation on the receiving side.
+    if isinstance(value, Bag): return bag_wire(value)
+    if isinstance(value, (bytes, bytearray, memoryview)): return bytes(value)
     if isinstance(value, (date, time, datetime)): return value.isoformat()
     if isinstance(value, Decimal): return str(value)
     if isinstance(value, bool): return int(value)
@@ -189,6 +227,7 @@ def load_transfer(bundle, path):
                 row = from_tytx(line)
                 if not isinstance(row, dict) or set(row) != set(labels):
                     raise ValueError(f'{name}: snapshot requires every physical column exactly once')
+                for c in columns: column_wire(row[c.name], c.attributes['dtype'])
                 con.execute(sql, {f'c{i}': stored_value(row[c]) for i, c in enumerate(labels)})
         if con.execute('PRAGMA foreign_key_check').fetchone(): raise ValueError('Snapshot has missing referenced records')
     return builder

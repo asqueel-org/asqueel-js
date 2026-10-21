@@ -131,6 +131,7 @@ export class Logic {
         this.view.set('transferFileName', this.selectedTransferFile?.name ?? 'Nessun file selezionato');
     }
     checkTransfers() { return this.transfers.check(); }
+    downloadBinaryTransferExample() { return this.transfers.binaryExample(); }
     downloadTransferExample() { return this.transfers.example(); }
     loadTransfer() { return this.transfers.load(this.selectedTransferFile); }
     downloadTransfer() { return this.transfers.download(); }

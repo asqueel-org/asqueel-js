@@ -1,0 +1,52 @@
+[
+  {
+    "name": "blob_text",
+    "patch": {
+      "binary": "not bytes::T"
+    }
+  },
+  {
+    "name": "blob_base64",
+    "patch": {
+      "binary": "%%%::RAW"
+    }
+  },
+  {
+    "name": "bag_text",
+    "patch": {
+      "payload": "not a Bag::T"
+    }
+  },
+  {
+    "name": "bag_object",
+    "patch": {
+      "payload": {
+        "ordinary": "object"
+      }
+    }
+  },
+  {
+    "name": "bag_corrupt",
+    "patch": {
+      "payload": "{broken}::X"
+    }
+  },
+  {
+    "name": "bag_unsafe_integer",
+    "patch": {
+      "payload": "{\"rows\":[[[],\"too_big\",null,9007199254740992,{}]]}::X"
+    }
+  },
+  {
+    "name": "bag_nonfinite",
+    "patch": {
+      "payload": "{\"rows\":[[[],\"nonfinite\",null,\"Infinity::R\",{}]]}::JS::X"
+    }
+  },
+  {
+    "name": "bag_nonfinite_decimal",
+    "patch": {
+      "payload": "{\"rows\":[[[],\"nonfinite\",null,\"NaN::N\",{}]]}::JS::X"
+    }
+  }
+]

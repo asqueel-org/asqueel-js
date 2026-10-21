@@ -374,7 +374,7 @@ IndexedDB. I limiti e il contratto delle transazioni sono in [Importazione](impo
 
 `scripts/transfer_oracle.py` esporta una SourceBag Python TYTX, con modello
 completo, selezioni per package/tabelle, modello senza dati, colgroups,
-virtualRelation e sys_fields (compresi package vuoti richiesti). Le sette prove
+virtualRelation e sys_fields (compresi package vuoti richiesti). Le otto prove
 confrontano modello completo, migrate JSON, catalogo SQLite e valori fisici.
 I casi con dati modificano un documento e inseriscono una riga offline;
 verificano anche NULL con default SQL, booleani, decimali, Unicode, nomi SQL
@@ -389,3 +389,13 @@ salvano **gli effettivi bundle del browser** in `output/browser-transfer-returns
 `verify_transfers.py --browser output/browser-transfer-returns.json` li carica
 con Python e verifica anche i tipi TYTX decodificati. Non è un confronto simulato
 né un servizio di sincronizzazione. API e limiti: [Trasferimenti](transfers.md).
+
+
+La prova `bags_blobs` confronta Bag annidate (etichette, tag, ordine, attributi,
+Decimal, date con offset/microsecondi, oggetti/liste JSON e byte) e blob contenenti
+ogni valore 0–255. Distingue Bag vuota, blob vuoto e NULL. Crea una nuova Bag e
+modifica un blob nel browser prima di esportarli; verifica i buffer Uint8Array
+con offset e la proprietà dei byte restituiti dall’adapter. Otto input non validi
+sono rifiutati da Python e JS con rollback dei record precedenti, anche su WASM.
+Il database di staging conserva le Bag in TYTX: il confronto riguarda il valore
+tipizzato, non la formattazione XML del writer applicativo Python.

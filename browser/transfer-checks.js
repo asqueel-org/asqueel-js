@@ -14,7 +14,7 @@ export async function transferChecks() {
             await db.close(); db = await openBrowserSQLite(id);
             if (!equal(await transferSnapshot(db, readTransfer(result.bundle)), entry.after)) throw new Error(`${entry.name}: IndexedDB reopening differs`);
             returns.push({name:entry.name,bundle:result.bundle});
-            checks.push(`${entry.name}: Bag sorgente, modello completo, migrate, catalogo SQLite e valori identici a Python; ${result.builder.resolve().tables.has('work.document') ? 'modifiche offline e ' : ''}riapertura IndexedDB verificata`);
+            checks.push(`${entry.name}: Bag sorgente, modello completo, migrate, catalogo SQLite e valori identici a Python; ${(result.builder.resolve().tables.has('work.document') || entry.name === 'bags_blobs') ? 'modifiche offline e ' : ''}riapertura IndexedDB verificata`);
         } finally {
             await db.close();
             await new Promise((resolve,reject) => {
@@ -24,5 +24,5 @@ export async function transferChecks() {
             });
         }
     }
-    return {checks, returns, sample:oracle.find(e=>e.name==='tables').after};
+    return {checks, returns, sample:oracle.find(e=>e.name==='tables').after, binarySample:oracle.find(e=>e.name==='bags_blobs').after};
 }

@@ -76,12 +76,44 @@ Bag sorgente. Non filtra righe, non calcola delta né cancellazioni. Per una
 riapertura dopo reload l’applicazione conserva anche `bundle.source`/l’envelope:
 IndexedDB conserva il database, non il builder in memoria.
 
-Tipi scalari attualmente supportati: A, B, C, D, DH, DHZ, H, I, L, N, R, T.
+Tipi supportati: A, B, C, D, DH, DHZ, H, I, L, N, R, T, più **X (Bag)** e
+**O (blob)**.
 Le date conservano la rappresentazione civile, il fuso e i microsecondi.
 La precisione dei numeri resta quella di SQLite: NUMERIC non è un archivio
 Decimal arbitrariamente preciso. Gli interi oltre la precisione sicura JS
-vengono rifiutati; Bag/blob e valori strutturati non sono ancora snapshot dati
-supportati. Gli snapshot piccoli sono materializzati in memoria.
+vengono rifiutati. Gli snapshot piccoli sono materializzati in memoria.
+
+## Campi Bag e blob
+
+I record Python contengono `Bag` per le colonne X e `bytes`, `bytearray` o
+`memoryview` per le colonne O. Per un campo Bag letto come XML dal server,
+convertirlo prima con `Bag.from_xml(xml)`. I blob viaggiano nel tipo TYTX
+`RAW` (base64) e vengono salvati come **BLOB SQLite**, senza conversioni UTF-8.
+
+Le Bag viaggiano nel normale formato TYTX `X`. Sono conservati ordine dei nodi,
+etichette, tag, attributi, annidamento, valori tipizzati e byte contenuti nella
+Bag. Sono supportati anche dizionari/liste JSON all’interno della Bag. I resolver
+non sono snapshot di dati e vengono rifiutati. Bag vuota, blob vuoto e NULL
+restano tre casi distinti.
+
+Il database locale e il database Python di staging conservano la Bag come
+**testo TYTX**, non come XML legacy. L’export restituisce il TYTX originale,
+senza decodificarlo e ricodificarlo attraverso `Date` JavaScript: fuso,
+microsecondi e precisione Decimal dei campi annidati restano intatti.
+Per lavorare sulla Bag in JavaScript si può usare `Bag.fromTytx(testo)`;
+quando la si riserializza dopo modifiche si applicano i limiti dei tipi JS
+(per esempio `Date` ha precisione al millisecondo). Il trasferimento di una
+Bag non modificata conserva invece la rappresentazione Python originale.
+
+Al ritorno `genro_tytx.from_tytx(riga)` produce vere `Bag` e `bytes` Python.
+La conversione verso XML legacy e la scrittura nel database applicativo restano
+al chiamante: questo lavoro estende gli snapshot, non il compiler delle query
+Bag o la sincronizzazione. Il ricevitore di staging conserva anche le Bag vuote,
+mentre il normale writer Python può trattarle come NULL.
+
+L’adapter browser copia i byte dalla memoria WASM prima del prossimo step
+SQLite e gestisce esplicitamente il binding del blob vuoto, per evitare che
+sia confuso con NULL.
 
 ## Ritorno Python e verifica
 

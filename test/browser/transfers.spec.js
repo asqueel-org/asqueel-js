@@ -45,3 +45,26 @@ test('Gramlot navigation opens the offline transfer page', async ({page}) => {
     await expect(frame.locator('#example')).toHaveCount(0);
     await expect(page.getByRole('treeitem',{name:'Trasferimento offline',exact:true})).toBeVisible();
 });
+
+test('Gramlot uploads Bag/blob snapshots and exports lossless TYTX values', async ({page}) => {
+    const entry=oracle.find(e=>e.name==='bags_blobs');
+    await page.goto('/?page=transfer&embedded=1');
+    await page.waitForFunction(() => window.gramlot?.data.getItem('ready') === true);
+    const examplePending=page.waitForEvent('download');
+    await page.locator('#transfer-binary-example').click();
+    const example=await examplePending;
+    expect(JSON.parse(await readFile(await example.path(),'utf8'))).toEqual(entry.bundle);
+    await page.locator('#transfer-file').setInputFiles({name:'bag-blob.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(entry.bundle))});
+    await page.locator('#transfer-load').click();
+    await expect(page.locator('#transfer-status')).toContainText('files.asset: 4 record');
+    const pending=page.waitForEvent('download');await page.locator('#transfer-export').click();
+    const returned=JSON.parse(await readFile(await (await pending).path(),'utf8'));
+    const rows=returned.data['files.asset'].trim().split('\n').map(line=>JSON.parse(line.slice(0,-4)));
+    const row=id=>rows.find(r=>r.id===id+'::T');
+    expect(row('rich').payload).toBe(JSON.parse(entry.bundle.data['files.asset'].split('\n')[0].slice(0,-4)).payload);
+    expect(row('rich').binary).toBe(Buffer.from(Array.from({length:256},(_,i)=>i)).toString('base64')+'::RAW');
+    expect(row('empty').binary).toBe('::RAW');
+    expect(row('null').binary).toBeNull();
+    expect(row('empty').payload).toContain('"rows":[]');
+    expect(row('null').payload).toBeNull();
+});
