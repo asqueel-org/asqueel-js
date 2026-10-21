@@ -66,6 +66,7 @@ sola non soddisfa questo traguardo.
 - [x] Hook before/after e rollback coerente delle scritture, anche annidate.
 - [x] Gerarchie: percorsi, spostamenti, ereditarietà, radici collegate e cancellazione dei discendenti.
 - [x] `auto_counter` per gruppo e `relative_index`, con rollback e verifica IndexedDB.
+- [x] Cascade applicative `onUpdate` su colonne fisiche, hook annidati, raise/ignore e rollback.
 - [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
 
 Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python
@@ -87,7 +88,7 @@ simulato durante la copia e migrazione idempotente dopo riapertura.
 - [ ] Inventario di ogni capacità Python con stato JS: supportata, da portare,
       non applicabile a SQLite o dipendente da servizi esterni.
 - [ ] Relazioni inverse, sottoquery, macro e colonne virtuali avanzate.
-- [ ] Partizioni, audit e altre opzioni; completamento delle azioni applicative delle relazioni.
+- [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
 - [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.
 - [ ] Documentazione applicativa, compatibilità e criteri della prima release.
 

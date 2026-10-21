@@ -1,6 +1,7 @@
 import {test, expect} from '@playwright/test';
 import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
 import examples from '../fixtures/model-examples.json' with {type:'json'};
+import cascadesOracle from '../fixtures/cascades.json' with {type: 'json'};
 import behaviorsOracle from '../fixtures/behaviors.json' with {type: 'json'};
 import hooksOracle from '../fixtures/hooks.json' with {type: 'json'};
 
@@ -205,5 +206,21 @@ test('hierarchies and counters match Python on real browser SQLite and reopen In
     await page.getByText('Spostamento verificato: sottoalbero, posizioni e SQL', {exact: true}).click();
     await page.locator('#behaviors-sample').scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/gramlot-behaviors.png'});
+    expect(errors).toEqual([]);
+});
+
+test('application onUpdate cascades match Python in browser SQLite with rollback and reopening', async ({page}) => {
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await leaf(page, 'queries');
+    await ready(page, 'queries');
+    await page.getByRole('button', {name: 'Verifica cascade onUpdate', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${cascadesOracle.cases.length} cicli cascade onUpdate identici a Python`, {timeout: 90000});
+    await expect(page.locator('#cascades-checks')).toContainText('leaf_hook_failure_rollback');
+    expect(JSON.parse(await page.locator('#cascades-sample').textContent())).toEqual(
+        cascadesOracle.cases.find(c => c.name === 'cascade_chain_and_hooks').expected);
+    await page.getByText('Cascade verificata: figli, hook e SQL', {exact: true}).click();
+    await page.locator('#cascades-sample').scrollIntoViewIfNeeded();
+    await page.screenshot({path: 'output/gramlot-cascades.png'});
     expect(errors).toEqual([]);
 });

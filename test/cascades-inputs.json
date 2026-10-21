@@ -1,0 +1,1324 @@
+[
+  {
+    "name": "cascade_chain_and_hooks",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ]
+  },
+  {
+    "name": "unchanged_key_no_child_hooks",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "label": "renamed"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ]
+  },
+  {
+    "name": "unchanged_first_relation_continues",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "other": "y"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.sibling",
+        "values": {
+          "id": "s",
+          "code": "x"
+        },
+        "save": "s"
+      }
+    ]
+  },
+  {
+    "name": "multiple_incoming_relations",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b",
+          "other": "y"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.sibling",
+        "values": {
+          "id": "s",
+          "code": "x"
+        },
+        "save": "s"
+      }
+    ]
+  },
+  {
+    "name": "no_referencing_rows",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      }
+    ]
+  },
+  {
+    "name": "primary_key_fanout",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "id": "p2"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.id_child",
+        "values": {
+          "id": "i1",
+          "code": "p"
+        },
+        "save": "i1"
+      },
+      {
+        "op": "insert",
+        "table": "app.id_child",
+        "values": {
+          "id": "i2",
+          "code": "p"
+        },
+        "save": "i2"
+      }
+    ]
+  },
+  {
+    "name": "explicit_old_record_required",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "b",
+          "other": "x"
+        }
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      }
+    ],
+    "fails": true,
+    "error": "requires old_record"
+  },
+  {
+    "name": "raise_referenced",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.restricted",
+        "values": {
+          "id": "r",
+          "code": "a"
+        },
+        "save": "r"
+      }
+    ],
+    "fails": true,
+    "error": "Record referenced in table"
+  },
+  {
+    "name": "raise_without_references",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      }
+    ]
+  },
+  {
+    "name": "ignore_relation",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.ignored",
+        "values": {
+          "id": "ignored",
+          "code": "a"
+        },
+        "save": "ignored"
+      }
+    ]
+  },
+  {
+    "name": "sqlite_cascade_precedes_application",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.native_child",
+        "values": {
+          "id": "native",
+          "code": "a"
+        },
+        "save": "native"
+      }
+    ]
+  },
+  {
+    "name": "mixed_sql_and_application",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.native_child",
+        "values": {
+          "id": "native",
+          "code": "a"
+        },
+        "save": "native"
+      }
+    ]
+  },
+  {
+    "name": "child_hook_failure_rollback",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "fail"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      }
+    ],
+    "fails": true,
+    "error": "cascade hook failure"
+  },
+  {
+    "name": "leaf_hook_failure_rollback",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "fail"
+        },
+        "save": "l"
+      }
+    ],
+    "fails": true,
+    "error": "cascade hook failure"
+  },
+  {
+    "name": "parent_after_hook_failure_rollback",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b",
+          "label": "fail"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ],
+    "fails": true,
+    "error": "cascade hook failure"
+  },
+  {
+    "name": "caught_failure_still_rolls_back",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p",
+        "catch": true
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.restricted",
+        "values": {
+          "id": "r",
+          "code": "a"
+        },
+        "save": "r"
+      }
+    ],
+    "fails": true
+  },
+  {
+    "name": "parent_hook_changes_key",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "label": "change_in_hook"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ]
+  },
+  {
+    "name": "draft_and_archived_children_included",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "draft": true,
+          "deleted": "archived"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      }
+    ]
+  },
+  {
+    "name": "null_new_reference",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": null
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ]
+  },
+  {
+    "name": "null_old_reference_not_matched",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": null,
+          "other": "x"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": null
+        },
+        "save": "c"
+      }
+    ]
+  },
+  {
+    "name": "partial_record_missing_reference",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "label": "partial"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ],
+    "fails": true,
+    "error": "'code'"
+  },
+  {
+    "name": "uniqueness_failure_rollback",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "taken"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      },
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "other",
+          "code": "taken",
+          "other": "z"
+        },
+        "save": "other"
+      }
+    ],
+    "fails": true,
+    "error": "UNIQUE constraint failed"
+  },
+  {
+    "name": "partitioned_child_same_company",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.partitioned",
+        "values": {
+          "id": "part",
+          "code": "a",
+          "company": "one"
+        },
+        "save": "part"
+      }
+    ],
+    "environment": {
+      "current_company": "one"
+    }
+  },
+  {
+    "name": "partitioned_child_other_company",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.partitioned",
+        "values": {
+          "id": "part",
+          "code": "a",
+          "company": "two"
+        },
+        "save": "part"
+      }
+    ],
+    "environment": {
+      "current_company": "one"
+    },
+    "fails": true
+  },
+  {
+    "name": "self_reference",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.self_node",
+        "values_from": "self",
+        "changes": {
+          "code": "b"
+        },
+        "old_from": "self"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.self_node",
+        "values": {
+          "id": "self",
+          "code": "a",
+          "parent_code": "a"
+        },
+        "save": "self"
+      }
+    ]
+  },
+  {
+    "name": "cyclic_relation_graph",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.self_node",
+        "values_from": "a",
+        "changes": {
+          "code": "c"
+        },
+        "old_from": "a"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.self_node",
+        "values": {
+          "id": "a",
+          "code": "a",
+          "parent_code": "b"
+        },
+        "save": "a"
+      },
+      {
+        "op": "insert",
+        "table": "app.self_node",
+        "values": {
+          "id": "b",
+          "code": "b",
+          "parent_code": "a"
+        },
+        "save": "b"
+      }
+    ]
+  },
+  {
+    "name": "mutated_old_record_matches_python",
+    "steps": [
+      {
+        "op": "update",
+        "table": "app.parent",
+        "values_from": "p",
+        "changes": {
+          "code": "b",
+          "label": "mutate_old"
+        },
+        "old_from": "p"
+      }
+    ],
+    "setup": [
+      {
+        "op": "insert",
+        "table": "app.parent",
+        "values": {
+          "id": "p",
+          "code": "a",
+          "other": "x",
+          "label": "parent"
+        },
+        "save": "p"
+      },
+      {
+        "op": "insert",
+        "table": "app.child",
+        "values": {
+          "id": "c",
+          "code": "a",
+          "label": "child"
+        },
+        "save": "c"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l",
+          "code": "a",
+          "label": "leaf"
+        },
+        "save": "l"
+      },
+      {
+        "op": "insert",
+        "table": "app.leaf",
+        "values": {
+          "id": "l2",
+          "code": "a"
+        },
+        "save": "l2"
+      }
+    ],
+    "fails": true,
+    "error": "FOREIGN KEY constraint failed"
+  }
+]

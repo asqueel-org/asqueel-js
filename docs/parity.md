@@ -106,5 +106,26 @@ sopravvivono alla cancellazione dei dettagli, con rollback del record di estensi
 
 Rigenerazione: `$PYTHON scripts/behaviors_oracle.py`. I test JS aggiungono richieste
 concorrenti sullo stesso adapter e riuso del numero dopo rollback. Non attestano
-concorrenza fra più schede browser, crash, audit o codec completi. Le azioni
-applicative `onUpdate` e quelle su relazioni composte restano fuori perimetro.
+concorrenza fra più schede browser, crash, audit o codec completi. Le azioni su relazioni composte restano fuori perimetro.
+
+
+## Cascade applicative onUpdate
+
+`examples/update_cascades.py` e `examples/update-cascades.js` dichiarano lo stesso
+modello con API indipendenti. `scripts/cascades_oracle.py` esegue 27 scenari sul
+Python fissato: JSON completo/migrate, record e vecchi snapshot, ordine degli hook
+con parent del trigger, SQL/parametri DML, dati dopo commit/rollback. Node e Bun
+confrontano sia le fixture sia il Python dal vivo; Chromium esegue le stesse
+operazioni e riapre IndexedDB dopo ogni caso.
+
+Sono coperti più livelli, più relazioni entranti, prima relazione invariata,
+PK modificata, più figli, autorelazioni e un grafo ciclico, NULL, draft/archiviati,
+partizioni rispettate o violate, `raise`/`ignore`, errori di unicità e degli hook,
+vecchio record assente, record parziale incompleto e mutazione del vecchio snapshot
+negli hook. Le FK SQLite con `ON UPDATE CASCADE` sono verificate separatamente:
+se hanno già aggiornato i figli, la ricerca applicativa sulla vecchia chiave non
+li ritrova e non invoca i loro hook, come Python.
+
+Rigenerazione: `$PYTHON scripts/cascades_oracle.py`. Le fixture non normalizzano
+via le scritture o gli eventi dei figli: una cascade svolta soltanto da SQLite
+non può passare per una cascade applicativa con hook.

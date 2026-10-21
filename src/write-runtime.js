@@ -2,7 +2,7 @@
 import {own, record as requireRecord} from './sql-expressions.js';
 import {compileWrite, keyColumns, keyValues, partition, guardPartition} from './write-compiler.js';
 import {behavior, lockBehaviors, behaviorTrigger, finishBehaviors, completeLinkedInsert} from './table-behaviors.js';
-import {checkRelatedCapabilities, deleteRelated, archiveRelated} from './related-writes.js';
+import {checkRelatedCapabilities, deleteRelated, archiveRelated, updateRelated} from './related-writes.js';
 import {RecordNotFoundError, UnsupportedFeatureError} from './query-errors.js';
 
 const events = ['onInserting', 'onInserted', 'onUpdating', 'onUpdated', 'onDeleting', 'onDeleted'];
@@ -211,6 +211,7 @@ export async function writeRecord(db, table, operation, input, options) {
     const rows = await db._executeCompiled(compileWrite(table, operation, sqlRecord, {...options, environment}));
     Object.assign(values, rows[0] ?? {});
     if (operation === 'insert') await completeLinkedInsert(db, table, values, beforeSql, options);
+    else await updateRelated(db, table, values, old);
     await fieldTriggers(db, table, operation === 'insert' ? 'onInserted' : 'onUpdated', values, operation === 'insert' ? {} : {old_record: old});
     await hook(context, operation === 'insert' ? 'trigger_onInserted' : 'trigger_onUpdated', values, operation === 'insert' ? {} : {old_record: old});
     return values;

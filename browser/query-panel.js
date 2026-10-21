@@ -81,6 +81,19 @@ export function queryPanel(view, database, getModel) {
             view.set('queryClass', '');
         } catch (error) { view.set('queryStatus', error.message); view.set('queryClass', 'error'); }
         finally { view.set('busy', false); }
+    }, async checkCascades() {
+        if (view.get('busy')) return;
+        view.set('busy', true);
+        view.set('queryStatus', 'Verifica cascade onUpdate su SQLite/IndexedDB…');
+        view.set('cascadeChecks', ''); view.set('cascadeSample', '');
+        try {
+            const result = await database.request('cascades-checks');
+            view.set('cascadeChecks', result.checks.map(s => '✓ ' + s).join('\n'));
+            view.set('cascadeSample', JSON.stringify(result.sample, null, 2));
+            view.set('queryStatus', `${result.checks.length} cicli cascade onUpdate identici a Python; persistenza verificata dopo riapertura.`);
+            view.set('queryClass', '');
+        } catch (error) { view.set('queryStatus', error.message); view.set('queryClass', 'error'); }
+        finally { view.set('busy', false); }
     }, invalidate() {
         view.set('queryStatus', 'Modello cambiato: ricompila la query.');
         view.set('queryRows', 'Risultati da aggiornare.'); view.set('querySQL', ''); view.set('queryParams', '');

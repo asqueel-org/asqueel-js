@@ -49,6 +49,8 @@ aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel b
 Gerarchie, `auto_counter` e `relative_index` aggiungono **39 scenari**: percorsi,
 spostamenti e cancellazione di sottoalberi, radici collegate, contatori per gruppo,
 rollback e riapertura IndexedDB. [Esempi e limiti](docs/playground.md#gerarchie-e-contatori-automatici).
+Le cascade applicative `onUpdate` su relazioni fisiche sono eseguite con hook e
+rollback atomico: **27 ulteriori scenari** confrontati con Python e nel browser.
 Codec completi, altre opzioni applicative e query avanzate restano da portare.
 
 ## API iniziale

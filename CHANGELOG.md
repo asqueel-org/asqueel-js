@@ -2,6 +2,11 @@
 
 ## Non rilasciato
 
+- Cascade applicative `onUpdate` su relazioni fisiche (`cascade`, `raise`, `ignore`):
+  aggiornamenti a catena, hook dei figli prima dell'after-hook del padre,
+  policy di partizione e rollback atomico. 27 scenari confrontati con Python
+  anche su SQLite WASM/IndexedDB, con pulsante dedicato nel playground.
+
 - Gerarchie e contatori automatici nel ciclo applicativo: percorsi, spostamenti,
   riordino, ereditarietà, radici collegate, cancellazione/archiviazione dei discendenti,
   `auto_counter` e `relative_index`. 39 scenari confrontati con Python, anche nel

@@ -201,7 +201,7 @@ rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
 Restano esclusi macro, sottoquery, relazioni inverse/virtualRelation, formule
 parametriche, selezioni di chiavi composte virtuali, codec applicativi, lock,
-scritture bulk/da selezione, azioni applicative `onUpdate` e su relazioni composte,
+scritture bulk/da selezione, azioni applicative su relazioni composte,
 e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
 Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
@@ -439,5 +439,49 @@ La coda serializza le richieste sullo stesso adapter; non è ancora una garanzia
 verificata per applicazioni con più schede aperte. Gli interi JS sicuri vengono
 passati come INTEGER SQLite in tutti e tre gli adapter, evitando differenze di
 affinità testuale. Restano esclusi audit, altre opzioni, azioni applicative
-`onUpdate`, relazioni composte e query gerarchiche avanzate (per esempio la
+su relazioni composte e query gerarchiche avanzate (per esempio la
 sottoquery virtuale `child_count`); i campi fisici di percorso sono già leggibili.
+
+
+## Cascade applicative onUpdate
+
+Una relazione su colonne fisiche può dichiarare `onUpdate: 'cascade'`, `'raise'`
+o `'ignore'`. Il ciclo scrive prima il padre, poi cerca i figli che referenziano
+il vecchio valore. Con `cascade` aggiorna ciascuno attraverso `table.update`,
+eseguendo protezioni, trigger di campo, hook di tabella ed eventuali ulteriori
+cascade nella stessa transazione. Gli after-hook dei figli precedono quelli del
+padre. Un errore, anche in un discendente, annulla tutte le scritture.
+
+```javascript
+child.column('parent_code').relation('app.parent.code', {
+    onUpdate: 'cascade',
+    onUpdate_sql: 'no action',
+    deferred: true,
+});
+// parent.code deve essere una chiave candidata (PK o UNIQUE).
+await db.table('app.parent').update({...oldParent, code: 'new'}, {
+    old_record: oldParent,
+});
+```
+
+`old_record` è necessario per le relazioni con `onUpdate` attivo; può essere
+riletto dal ciclo quando sono presenti protezioni/partizioni che lo richiedono.
+Conservare nel record i campi referenziati: nel contratto Python un campo omesso
+viene confrontato come NULL e può causare un errore se ci sono figli da aggiornare.
+Una relazione invariata viene saltata, senza interrompere le successive.
+`raise` rifiuta la modifica se trova figli; `ignore` non li aggiorna e lascia
+comunque agire gli eventuali vincoli SQL.
+
+La ricerca dei figli include draft, archiviati e tutte le partizioni; la scrittura
+di ciascun figlio applica però la partizione attiva. Un figlio esterno alla
+partizione può quindi far fallire e annullare l'intera operazione, come in Python.
+
+`onUpdate_sql` è distinto da `onUpdate`: il default delle FK è la cascade SQLite.
+Se SQLite ha già propagato il nuovo valore, la ricerca applicativa sulla vecchia
+chiave non trova figli e non esegue i loro hook. Usare `onUpdate_sql: 'no action'`
+e `deferred: true`, come nell'esempio, quando si desidera la propagazione tramite
+il ciclo applicativo mantenendo la verifica della FK al commit.
+
+**Verifica cascade onUpdate** esegue 27 scenari su database IndexedDB separati e
+mostra un esempio con padre, figli e nipoti, hook e SQL confrontati con Python.
+Le azioni su relazioni composte restano rifiutate esplicitamente.

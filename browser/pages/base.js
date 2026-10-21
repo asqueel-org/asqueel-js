@@ -37,7 +37,7 @@ export class PlaygroundPage extends Page {
             sqlPlan: 'Calcola il piano per leggere le istruzioni prima di applicarle.',
             queryExample: 'insert_person', queryInput: '', queryStatus: 'Compila per confrontare SQL e parametri.',
             queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
-            hookChecks: '', hookSample: '', behaviorChecks: '', behaviorSample: '',
+            hookChecks: '', hookSample: '', behaviorChecks: '', behaviorSample: '', cascadeChecks: '', cascadeSample: '',
         })) root.dataSetter({destination_path: path, value});
         const frame = root.div({class: 'playground', 'data-gramlot-page': name});
         const shell = frame.div({class: 'page-content'});

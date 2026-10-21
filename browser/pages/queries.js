@@ -20,6 +20,7 @@ export class QueryPage extends PlaygroundPage {
         action(buttons, 'Verifica query con Python', 'checkQueries', {id: 'query-test'});
         action(buttons, 'Verifica sys_fields e hook', 'checkHooks', {id: 'hooks-test'});
         action(buttons, 'Verifica gerarchie e contatori', 'checkBehaviors', {id: 'behaviors-test'});
+        action(buttons, 'Verifica cascade onUpdate', 'checkCascades', {id: 'cascades-test'});
         body.p('^queryStatus', {id: 'query-status', role: 'status', class: '^queryClass'});
         const compiled = detail(body, 'SQL JavaScript e parametri', 'querySQL', 'query-sql', true);
         compiled.pre('^queryParams', {id: 'query-params'});
@@ -30,6 +31,8 @@ export class QueryPage extends PlaygroundPage {
         detail(body, 'Esempio verificato: record, eventi e scritture degli hook', 'hookSample', 'hooks-sample');
         detail(body, 'Verifiche gerarchie e contatori', 'behaviorChecks', 'behaviors-checks', true);
         detail(body, 'Spostamento verificato: sottoalbero, posizioni e SQL', 'behaviorSample', 'behaviors-sample');
+        detail(body, 'Verifiche cascade applicative onUpdate', 'cascadeChecks', 'cascades-checks', true);
+        detail(body, 'Cascade verificata: figli, hook e SQL', 'cascadeSample', 'cascades-sample');
         body.p('SQL, parametri e risultati sono confrontati con Python 0.6.1 + fix #44. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano database separati. Le verifiche eseguono hook reali, gerarchie e contatori, anche con errori, rollback e riapertura di IndexedDB.', {class: 'db-note'});
     }
 }

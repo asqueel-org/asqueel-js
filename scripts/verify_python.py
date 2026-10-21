@@ -12,6 +12,7 @@ from query_oracle import query_oracle
 from query_features import feature_model
 from hooks_oracle import oracle as hooks_oracle
 from behaviors_oracle import oracle as behaviors_oracle
+from cascades_oracle import oracle as cascades_oracle
 
 inputs=json.loads((ROOT/'test/model-inputs.json').read_text())
 def isolated(case):
@@ -25,6 +26,8 @@ example_expected={name:dict(model=document(resolve_model(b)),migration=SqlMigrat
 queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'query-feature-inputs.json')}
 hooks = hooks_oracle()
 behaviors = behaviors_oracle()
+cascades = cascades_oracle()
+assert cascades == json.loads((ROOT / 'test/fixtures/cascades.json').read_text()), 'Cascade fixtures differ from live Python'
 assert behaviors == json.loads((ROOT / 'test/fixtures/behaviors.json').read_text()), 'Behavior fixtures differ from live Python'
 assert hooks == json.loads((ROOT / 'test/fixtures/hooks.json').read_text()), 'Hook fixtures differ from live Python'
 for name, filename in [('base', 'queries.json'), ('features', 'query-features.json')]:
@@ -48,3 +51,6 @@ for runtime in ('node','bun'):
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_behaviors.js')],cwd=ROOT,text=True))
     assert actual == behaviors, f'{runtime}: hierarchy/counter cycle differs from live Python'
     print(f'{runtime}: {len(behaviors["cases"])} hierarchy/counter cycles match live Python model, migrate, records, events, DML and stored rows')
+    actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_cascades.js')],cwd=ROOT,text=True))
+    assert actual == cascades, f'{runtime}: application onUpdate differs from live Python'
+    print(f'{runtime}: {len(cascades["cases"])} onUpdate cycles match live Python model, migrate, records, events, DML and stored rows')
