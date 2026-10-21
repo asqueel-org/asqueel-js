@@ -43470,7 +43470,7 @@
                               "tag": "column",
                               "attributes": {
                                 "dtype": "DHZ",
-                                "indexed": true,
+                                "indexed": false,
                                 "comment": "Customized",
                                 "name": "__ins_ts",
                                 "notnull": false,
@@ -43709,18 +43709,6 @@
                           "attributes": {},
                           "children": [
                             {
-                              "name": "item___ins_ts_key",
-                              "tag": "index",
-                              "attributes": {
-                                "columns": {
-                                  "__ins_ts": null
-                                }
-                              },
-                              "children": [],
-                              "signatureDefaults": [],
-                              "generated": true
-                            },
-                            {
                               "name": "item___del_ts_key",
                               "tag": "index",
                               "attributes": {
@@ -43880,18 +43868,6 @@
                   "relations": {},
                   "constraints": {},
                   "indexes": {
-                    "idx_86bc02fa": {
-                      "entity": "index",
-                      "entity_name": "idx_86bc02fa",
-                      "attributes": {
-                        "columns": {
-                          "__ins_ts": null
-                        },
-                        "index_name": "idx_86bc02fa"
-                      },
-                      "schema_name": "main",
-                      "table_name": "app_item"
-                    },
                     "idx_1e182c22": {
                       "entity": "index",
                       "entity_name": "idx_1e182c22",
@@ -71417,7 +71393,7 @@
                               "tag": "column",
                               "attributes": {
                                 "name": "__ins_ts",
-                                "indexed": true,
+                                "indexed": false,
                                 "notnull": false,
                                 "unique": false,
                                 "read_only": false,
@@ -71793,18 +71769,6 @@
                           "attributes": {},
                           "children": [
                             {
-                              "name": "item___ins_ts_key",
-                              "tag": "index",
-                              "attributes": {
-                                "columns": {
-                                  "__ins_ts": null
-                                }
-                              },
-                              "children": [],
-                              "signatureDefaults": [],
-                              "generated": true
-                            },
-                            {
                               "name": "item___del_ts_key",
                               "tag": "index",
                               "attributes": {
@@ -72105,18 +72069,6 @@
                   },
                   "constraints": {},
                   "indexes": {
-                    "idx_86bc02fa": {
-                      "entity": "index",
-                      "entity_name": "idx_86bc02fa",
-                      "attributes": {
-                        "columns": {
-                          "__ins_ts": null
-                        },
-                        "index_name": "idx_86bc02fa"
-                      },
-                      "schema_name": "main",
-                      "table_name": "app_item"
-                    },
                     "idx_1e182c22": {
                       "entity": "index",
                       "entity_name": "idx_1e182c22",

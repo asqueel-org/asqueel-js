@@ -4,6 +4,29 @@ import inputs from "./model-inputs.json" with { type: "json" };
 import fixtures from "./fixtures/resolved-model.json" with { type: "json" };
 import { evaluateModel, applySteps } from "./model-cases.js";
 import { SqlBuilder, DbModel, defineModel } from "../src/index.js";
+for (const field of ["__ins_ts", "__mod_ts", "__del_ts"])
+  for (const indexed of [undefined, false, true])
+    for (const extraFirst of [false, true])
+      test(`sysfield ${field}: indexed=${indexed}, extraFirst=${extraFirst}`, () => {
+        let t;
+        const b = defineModel((root) => {
+          t = root.db("demo").packages().package("app").table("item");
+          t.options().sys_fields();
+          if (extraFirst) t.column("name");
+          t.column(field, indexed === undefined ? {} : { indexed });
+        });
+        const check = () => {
+          const before = b.toSource();
+          const expected = indexed ?? true;
+          assert.equal(b.resolve().table("app.item").column(field).attributes.indexed, expected);
+          const physical = b.toMigration().root.schemas.main.tables.app_item;
+          assert.equal(Object.values(physical.indexes).some((i) => field in i.attributes.columns), expected);
+          assert.deepEqual(b.toSource(), before);
+        };
+        check();
+        if (!extraFirst) t.column("name");
+        check();
+      });
 for (const [i, c] of inputs.entries())
   test(`Python 0.6.1 complete model + migrate: ${c.name}`, () => {
     const diagnostics = {},

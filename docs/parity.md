@@ -1,13 +1,13 @@
 # Confronto con Python 0.6.1
 
-`test/fixtures/provenance.json` fissa core **0.6.1 / 210e0ce**, migration **0.3.1**
+`test/fixtures/provenance.json` fissa core **0.6.1 + fix #44 / 8a8ffd3**, migration **0.3.1**
 e genro-builders **0.29.0**. La CI fa checkout di quei commit, senza seguire `main`.
 Il verificatore rifiuta un checkout Python di un'altra versione.
 
-La release verificata è [v0.6.1](https://github.com/asqueel-org/asqueel/releases/tag/v0.6.1).
+Il riferimento include la correzione Python della [issue #44](https://github.com/asqueel-org/asqueel/issues/44), successiva alla release pubblicata v0.6.1.
 I 218 casi includono 14 regressioni aggiunte per gerarchie collegate, contatori e
 parent personalizzati, tipi delle chiavi del master, riferimenti tra package,
-rifiuti e il difetto residuo dei default `sys_fields` descritto in [model.md](model.md).
+rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.md).
 
 ```sh
 python3.12 -m venv .venv
