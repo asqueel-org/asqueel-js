@@ -5,8 +5,23 @@ import {defineModel} from '../src/index.js';
 import {browserSqlite, browserSqliteV2} from '../examples/browser-sqlite.js';
 import {diffSQLite, readSQLite, migrateSQLite} from '../src/sqlite.js';
 import {nativeSQLite as database} from './native-sqlite.js';
+import modelInputs from './model-inputs.json' with {type:'json'};
+import {evaluateModel} from './model-cases.js';
 
 const oracle = JSON.parse(readFileSync(new URL('./fixtures/sqlite.json', import.meta.url)));
+test('0.6.1 linked hierarchy creates both foreign keys and migrates idempotently', async () => {
+    const desired = evaluateModel(modelInputs.find(c => c.name === '061/linked_sysfields_master')).migration;
+    assert.ok(desired);
+    const db = database();
+    try {
+        await migrateSQLite(db, desired);
+        const tree = await db.query('PRAGMA foreign_key_list(app_item)');
+        const master = await db.query('PRAGMA foreign_key_list(app_master)');
+        assert.ok(tree.some(r => r.from === 'master_id' && r.table === 'app_master'));
+        assert.ok(master.some(r => r.from === 'root_item_id' && r.table === 'app_item' && r.on_delete === 'SET NULL'));
+        assert.deepEqual((await migrateSQLite(db, desired)).executed, []);
+    } finally { db.close(); }
+});
 test('SQLite models and live catalog equal independent Python migrations', async () => {
     const db = database();
     try {

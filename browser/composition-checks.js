@@ -78,7 +78,7 @@ export async function compositionChecks() {
     const passed = [];
     for (const [i,entry] of cases.entries()) {
         if (!equal(evaluateModel(inputs[i]), entry.expected)) throw new Error(`Composizione diversa da Python: ${entry.name}`);
-        passed.push(`Modello completo e migrate identici a Python 0.6.0: ${entry.name}`);
+        passed.push(`Modello completo e migrate identici a Python 0.6.1: ${entry.name}`);
     }
     const desired = evaluateModel(inputs.find(c => c.name === 'several_layers_preserve_order')).migration;
     const id = `asqueel-composition-test-${crypto.randomUUID()}`;

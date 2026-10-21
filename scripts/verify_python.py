@@ -27,5 +27,5 @@ for runtime in ('node','bun'):
     for r in rendered['examples'].values():StructureValidator().validate(r['migration'])
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_sqlite.js')],cwd=ROOT,text=True))
     assert actual=={n:{k:s[k] for k in ('desired','actual')} for n,s in sqlite.items()},f'{runtime}: SQLite migration/catalog differs'
-    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.0')
-print('Query SQL fixtures remain regression tests of the previous compiler; query parity with 0.6.0 is the next phase.')
+    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.1')
+print('Query SQL fixtures remain regression tests of the previous compiler; query parity with 0.6.1 is the next phase.')

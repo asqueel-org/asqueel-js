@@ -233,7 +233,7 @@ export class SqliteQueries {
         }
         if (Object.entries(table.a).some(([k,v])=>v!=null && v!==false &&
             (['draftField','logicalDeletionField','protectionColumn'].includes(k)||k.startsWith('partition_')))) {
-            throw new Error(`${name}: policy del modello 0.6.0 fuori perimetro query`);
+            throw new Error(`${name}: policy del modello 0.6.1 fuori perimetro query`);
         }
         for (const c of table.columns.values()) {
             if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');

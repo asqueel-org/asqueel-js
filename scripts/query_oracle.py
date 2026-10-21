@@ -1,4 +1,4 @@
-"""Historical query oracle for core 926000d (not compatible with Python 0.6.0).
+"""Historical query oracle for core 926000d (not compatible with Python 0.6.1).
 
 Kept as the recipe for the upcoming query-port phase; not used by export or CI.
 The corresponding frozen SQL regression fixture retains its separate provenance.

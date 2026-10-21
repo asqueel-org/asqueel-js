@@ -1,4 +1,4 @@
-/** Independent counterpart of the Python colgroup example on Python 0.6.0 case. */
+/** Independent counterpart of the Python colgroup example on Python 0.6.1 case. */
 export function groupedItems(root) {
     const app = root.db({name: 'composition', implementation: 'sqlite'})
         .packages().package({name: 'app', sqlschema: 'main'});

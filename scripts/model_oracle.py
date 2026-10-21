@@ -1,6 +1,6 @@
 """Full, unfiltered hierarchical snapshots from the pinned Python release.
 
-The old model_to_json encodes ResolvedModel, not 0.6.0's DbModel. This codec
+The old model_to_json encodes ResolvedModel, not 0.6.1's DbModel. This codec
 walks every object and every global relation; it never copies expected JS data.
 """
 import json
@@ -23,7 +23,7 @@ def document(model):
                     signatureDefaults=meta.get('signature_defaults', []) if n.tag == 'aliasColumn' else [], generated=n.structnode is None)
     edges = [dict(path=f'{p.label}.{t.label}.{r.label}', attributes=thaw(dict(r.attr)))
              for p in model.relations for t in p.value for r in t.value]
-    return dict(format='asqueel-model', version=1, reference='0.6.0',
+    return dict(format='asqueel-model', version=1, reference='0.6.1',
                 database=tree(model.db), namespaces=tree(model.obj), relations=edges)
 
 

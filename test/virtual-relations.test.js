@@ -9,7 +9,7 @@ test('virtualRelation declaration and complete model match Python across seriali
     assert.deepEqual(restored.toSource(),b.toSource());assert.deepEqual(restored.toJSON(),examples['virtual-relations'].model);
     assert.deepEqual(restored.toMigration(),examples['virtual-relations'].migration);
     const m=restored.resolve();assert.equal(m.relations.get('app.customer.@items').mode,'M');
-    assert.equal(m.relations.has('app.item.@selected'),false); // 0.6.0 preserves this as declaration data.
+    assert.equal(m.relations.has('app.item.@selected'),false); // 0.6.1 preserves this as declaration data.
     assert.equal(m.table('app.item').get('virtualRelation_selected').attributes.table,'app.customer');
 });
 test('virtual relation identity and nested ask ownership survive composition and resolution',()=>{

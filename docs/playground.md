@@ -218,16 +218,16 @@ La grammatica JSON fornisce firme, default e vincoli. `model-options.js` espande
 le opzioni e `model.js` costruisce la gerarchia e la proiezione fisica. Nessun hook
 applicativo viene eseguito dalla risoluzione.
 
-## Modello completo 0.6.0
+## Modello completo 0.6.1
 
 Il pannello «Modello risolto completo» mostra il JSON gerarchico. Gli esempi
 application, shop, groups, virtual-relations e queries hanno un riferimento Python
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-Le 18 query del PoC restano regressioni storiche, non parità query con la 0.6.0.
+Le 18 query del PoC restano regressioni storiche, non parità query con la 0.6.1.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
-0.6.0. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
+0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
 FK fisiche o eseguire JOIN. Vedi il [contratto del modello](model.md) per API,
 limiti del JSON portabile e differenze rispetto al vecchio riferimento.

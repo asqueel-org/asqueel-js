@@ -69,4 +69,4 @@ non sono ancora implementati. Sono responsabilità distinte, da aggiungere con
 contratti e verifiche dedicati.
 
 Il contratto fisico interno conserva il vocabolario `structure-1.0` del migratore;
-non è una seconda API pubblica del modello Python. Vedi [modello 0.6.0](model.md).
+non è una seconda API pubblica del modello Python. Vedi [modello 0.6.1](model.md).

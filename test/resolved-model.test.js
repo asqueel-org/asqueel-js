@@ -5,7 +5,7 @@ import fixtures from "./fixtures/resolved-model.json" with { type: "json" };
 import { evaluateModel, applySteps } from "./model-cases.js";
 import { SqlBuilder, DbModel, defineModel } from "../src/index.js";
 for (const [i, c] of inputs.entries())
-  test(`Python 0.6.0 complete model + migrate: ${c.name}`, () => {
+  test(`Python 0.6.1 complete model + migrate: ${c.name}`, () => {
     const diagnostics = {},
       actual = evaluateModel(c, diagnostics);
     assert.deepEqual(actual, fixtures[i].expected, JSON.stringify(diagnostics));
@@ -14,6 +14,29 @@ for (const [i, c] of inputs.entries())
       assert.deepEqual(restored.toJSON(), actual.model);
     }
   });
+test("0.6.1 linked hierarchy preserves navigation and generated hooks after JSON restore", () => {
+  const c = inputs.find((c) => c.name === "061/linked_cross_package"),
+    b = new SqlBuilder();
+  assert.ok(applySteps(b, c.layers[0]).every(Boolean));
+  const resolved = b.resolve();
+  for (const m of [resolved, DbModel.fromJSON(resolved.toJSON())]) {
+    const tree = m.table("app.item"),
+      master = m.table("other.master");
+    assert.equal(tree.column("@master_id.id"), master.column("id"));
+    assert.equal(master.column("@root_item_id.id"), tree.column("id"));
+    assert.equal(tree.attributes.hierarchical_linked_to, "other.master");
+    assert.equal(tree.column("position").dtype, "L");
+    assert.equal(
+      master.column("root_item_id").attributes.onInserting,
+      "insertLinkedHierarchicalRoot",
+    );
+    assert.deepEqual(m.toMigration(), b.toMigration());
+  }
+  assert.throws(
+    () => DbModel.fromJSON({ ...resolved.toJSON(), reference: "0.6.0" }),
+    /Unsupported model JSON/,
+  );
+});
 test("resolved objects preserve identity, navigation, aliases and owned JSON", () => {
   const c = inputs.find((c) => c.name === "060/alias_relation_inheritance"),
     b = new SqlBuilder();

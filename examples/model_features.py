@@ -1,4 +1,4 @@
-"""Python 0.6.0 counterparts, independently authored from the JS examples."""
+"""Python 0.6.1 counterparts, independently authored from the JS examples."""
 from asqueel import SqlBuilder
 
 def base():

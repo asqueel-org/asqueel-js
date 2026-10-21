@@ -63,7 +63,7 @@ function render() {
         const full=model.toJSON(),expectedModel=modelExamples[example.value]?.model;
         modelResult.textContent=JSON.stringify(full,null,2);
         const modelDelta=expectedModel?diff(full,expectedModel):[];
-        modelStatus.textContent=expectedModel?(modelDelta.length?`${modelDelta.length} differenze nel modello completo`:'Modello completo identico a Python 0.6.0'):'Modello completo JS · confronto migrate disponibile';
+        modelStatus.textContent=expectedModel?(modelDelta.length?`${modelDelta.length} differenze nel modello completo`:'Modello completo identico a Python 0.6.1'):'Modello completo JS · confronto migrate disponibile';
         json = JSON.stringify(structure, null, 2);
         showOutput();
         const schemas = Object.values(structure.root.schemas);

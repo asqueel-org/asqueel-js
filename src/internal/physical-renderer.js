@@ -119,7 +119,7 @@ export class PhysicalRenderer {
         this.renderTable(table),
       );
     }
-    // 0.6.0 also indexes the referenced non-primary key of physical FKs.
+    // 0.6.1 also indexes the referenced non-primary key of physical FKs.
     for (const table of this.tables.values())
       for (const { node } of table.relations) {
         if (attr(node).x_weak && !attr(node).foreign_key) continue;

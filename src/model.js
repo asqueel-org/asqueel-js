@@ -1,4 +1,4 @@
-// Hierarchical model, mechanically following Asqueel 0.6.0 object_tree*.py.
+// Hierarchical model, mechanically following Asqueel 0.6.1 object_tree*.py.
 import grammar from "./generated/grammar.json" with { type: "json" };
 import contract from "./generated/contract.json" with { type: "json" };
 import { defaults, readOptions } from "./options.js";
@@ -110,7 +110,7 @@ function prepare(builder) {
   root.children = root.children.filter((n) => n.tag !== "connection");
   if (own(root.attributes, "conninfo")) root.attributes.conninfo = "";
   delete root.attributes.connect_kwargs;
-  // 0.6.0 shares signature-default metadata between ordinary nodes of a tag.
+  // 0.6.1 shares signature-default metadata between ordinary nodes of a tag.
   // Preserve its observable override semantics (covered by differential cases).
   // Grouped/composed nodes own separate metadata dictionaries.
   const signatures = new Map(),
@@ -1001,7 +1001,7 @@ export class DbModel {
     return {
       format: "asqueel-model",
       version: 1,
-      reference: "0.6.0",
+      reference: "0.6.1",
       database: this.db.toJSON(),
       namespaces: this.obj.toJSON(),
       relations: this.relationEntries().map(([path, attributes]) => ({
@@ -1016,7 +1016,7 @@ export class DbModel {
     if (
       d.format !== "asqueel-model" ||
       d.version !== 1 ||
-      d.reference !== "0.6.0"
+      d.reference !== "0.6.1"
     )
       fail("Unsupported model JSON contract");
     // Restore the already-resolved graph without replaying expansions or registering edges twice.

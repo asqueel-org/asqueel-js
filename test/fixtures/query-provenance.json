@@ -1,5 +1,5 @@
 {
   "coreCommit": "926000dde5f7dbaa07d56aa4c5a4985bd8162c85",
   "buildersVersion": "0.28.1",
-  "status": "Historical compiler regression; not Python 0.6.0 query parity"
+  "status": "Historical compiler regression; not Python 0.6.1 query parity"
 }

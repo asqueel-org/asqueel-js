@@ -15,15 +15,16 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
       Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
 
-## 1. Modello dichiarativo portabile · riferimento Python 0.6.0
+## 1. Modello dichiarativo portabile · riferimento Python 0.6.1
 
-- [x] Riallineare grammatica, esempi e verificatore al commit pubblicato della 0.6.0.
+- [x] Riallineare grammatica, esempi e verificatore al commit pubblicato della 0.6.1.
 - [x] Contributi ordinati, conflitti, copie, reset e composizione indipendente.
 - [x] Modello gerarchico JS, colonne fisiche/virtuali e metadati completi delle opzioni.
 - [x] Colgroups, relazioni dirette/inverse, alias e dichiarazioni virtualRelation.
 - [x] Validazione strutturale, tipi, riferimenti, indici e nomi fisici.
 - [x] Esportazione/ripristino del JSON completo, con identità e navigazione.
 - [x] Confronti completi modello/migrate con Python, Node, Bun e browser.
+- [x] Gerarchie collegate al master e nomi personalizzati dei contatori della 0.6.1.
 - [x] Ritirare `subtable`, opzioni `partition`/`tenant` e vecchi attributi come in Python.
 
 Il contratto e i limiti portabili sono in [model.md](docs/model.md). Classi Python,

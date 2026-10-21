@@ -20729,5 +20729,1412 @@
         }
       ]
     ]
+  },
+  {
+    "name": "061/custom_counter",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/custom_parent_counter",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "parent": "ancestor_id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/custom_counter_scope",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position",
+            "scope": "ancestor_id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_sysfields_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.master.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_short_reference",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.master.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_serial_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "serial"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_serial4_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "serial4"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_sized_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "12"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_unnamed_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "I"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_missing_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_virtual_master",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "formulaColumn",
+          "attributes": {
+            "name": "id",
+            "sql_formula": "1",
+            "dtype": "I"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_conflicting_column",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "app.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.master",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "I"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "master_id",
+            "dtype": "B"
+          }
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/linked_cross_package",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id",
+            "name_long": "Tree"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name",
+            "linked_to": "other.master"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {
+            "field": "position"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "other"
+          }
+        },
+        {
+          "parent": "db.packages.other",
+          "tag": "table",
+          "attributes": {
+            "name": "master",
+            "pkey": "id",
+            "name_long": "Master"
+          }
+        },
+        {
+          "parent": "db.packages.other.tables.master",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.other.tables.master.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        }
+      ]
+    ]
+  },
+  {
+    "name": "061/sysfield_explicit_indexed_false",
+    "mode": "inline",
+    "layers": [
+      [
+        {
+          "parent": "",
+          "tag": "db",
+          "attributes": {
+            "name": "current",
+            "implementation": "sqlite"
+          }
+        },
+        {
+          "parent": "db",
+          "tag": "packages",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages",
+          "tag": "package",
+          "attributes": {
+            "name": "app"
+          }
+        },
+        {
+          "parent": "db.packages.app",
+          "tag": "table",
+          "attributes": {
+            "name": "item",
+            "pkey": "id"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "id",
+            "dtype": "A",
+            "size": "22"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "__ins_ts",
+            "indexed": false
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "column",
+          "attributes": {
+            "name": "name",
+            "dtype": "T"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item",
+          "tag": "options",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sys_fields",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "hierarchical",
+          "attributes": {
+            "columns": "name"
+          }
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "auto_counter",
+          "attributes": {}
+        },
+        {
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "broadcast",
+          "attributes": {
+            "columns": [
+              "name"
+            ]
+          }
+        }
+      ]
+    ]
   }
 ]

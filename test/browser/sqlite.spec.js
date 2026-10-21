@@ -49,6 +49,6 @@ test('group/formula example renders the exact Python migration JSON', async ({pa
 
 test('browser exposes and compares the complete hierarchical model',async({page})=>{
     await page.goto('/');await page.locator('#example').selectOption('application');
-    await expect(page.locator('#model-status')).toHaveText('Modello completo identico a Python 0.6.0');
+    await expect(page.locator('#model-status')).toHaveText('Modello completo identico a Python 0.6.1');
     expect(JSON.parse(await page.locator('#resolved-model').textContent())).toEqual(examples.application.model);
 });

@@ -23,16 +23,16 @@ Il playground apre un server su <http://127.0.0.1:8092>. JavaScript, worker e WA
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.0**:
+Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.1**:
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
 `recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
 i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
 sono confrontati indipendentemente con Python, anche nel playground.
 
-Le dichiarazioni ritirate in Python 0.6.0 (`subtable`, opzioni `partition` e `tenant`)
+Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Le query e l'esecuzione dei comportamenti applicativi
 sono il prossimo incremento: le fixture SQL esistenti restano regressioni del
-precedente compilatore, non una dichiarazione di parità query con la 0.6.0.
+precedente compilatore, non una dichiarazione di parità query con la 0.6.1.
 
 ## API iniziale
 

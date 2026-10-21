@@ -1,7 +1,7 @@
-# Modello risolto · Python 0.6.0
+# Modello risolto · Python 0.6.1
 
-Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.0**, commit
-`78c1dfb5812b76b5a2c7cb9253345fcb4a1d4f38`. La versione del codice di riferimento è fissata;
+Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.1**, commit
+`210e0cea24e07f2f5eb24889768aeb33eb964c80`. La versione del codice di riferimento è fissata;
 la grammatica JSON da sola non implementa espansioni, relazioni o migrazioni.
 
 ```js
@@ -40,13 +40,13 @@ Le colonne espongono `table`, `pkg`, `fullname`, `dtype`, `sqlname`, nomi descri
 
 `table.column('@relation.field')` segue le relazioni. Gli alias mantengono il riferimento
 `originalColumn` e sovrappongono gli attributi espliciti a quelli della destinazione.
-I cicli degli alias sono rifiutati quando si risolve il percorso, come nella 0.6.0.
+I cicli degli alias sono rifiutati quando si risolve il percorso, come nella 0.6.1.
 `model.relations` contiene gli attributi delle relazioni dirette e inverse, con chiavi
 `package.table.@name`. `table.relations.getNode(path)` espone una navigazione pigra.
 
 ## JSON completo
 
-Il formato è `asqueel-model`, versione `1`, riferimento `0.6.0`. Contiene:
+Il formato è `asqueel-model`, versione `1`, riferimento `0.6.1`. Contiene:
 
 - albero del database e albero dei namespace, in ordine;
 - **tutti** gli attributi e figli di ogni nodo, incluse opzioni, validazioni,
@@ -56,7 +56,7 @@ Il formato è `asqueel-model`, versione `1`, riferimento `0.6.0`. Contiene:
 
 Non serializza puntatori ai genitori, istanze operative `SqlTable`, callback o cache:
 le identità e i collegamenti vengono ricostruiti. Il codec Python storico `model_to_json`
-accetta ancora `ResolvedModel` e non il `DbModel` della 0.6.0; per questo l'oracolo usa
+accetta ancora `ResolvedModel` e non il `DbModel` della 0.6.1; per questo l'oracolo usa
 un attraversamento completo esplicito, senza elenchi di attributi da selezionare.
 
 ## Espansioni e confini
@@ -64,8 +64,11 @@ un attraversamento completo esplicito, senza elenchi di attributi da selezionare
 Sono incluse le espansioni strutturali di `sys_fields` (anche le cinque virtuali standard),
 `full_update`, `record_hash`, `audit`, `dynamic_fields`, `auto_counter`, `protection`,
 `hierarchical`, `attachments` e `relative_index`, con metadati, formule e nomi dei trigger.
-Le altre opzioni conservano le dichiarazioni. `system_records` e `release` attive,
-`hierarchical.linked_to` e `hierarchical.depth` sono rifiutate anche dalla 0.6.0.
+La 0.6.1 include `hierarchical.linked_to`: genera la chiave verso il master, il
+collegamento inverso alla radice e i nomi dei relativi hook. Sono ammessi anche
+nomi personalizzati per il campo contatore gerarchico. Le altre opzioni conservano
+le dichiarazioni. `system_records` e `release` attive e `hierarchical.depth`
+restano rifiutate dalla 0.6.1.
 
 `SqlDatabaseConfig` aggiunge le dichiarazioni di connessione e le opzioni del driver.
 Risolverlo non apre connessioni: i dati amministrativi non diventano tabelle o relazioni.
@@ -87,15 +90,23 @@ comportamenti sulle righe. Questo appartiene alla successiva fase delle query/ru
 - `subtable`, le opzioni `partition` e `tenant`, e attributi extra non dichiarati
   sono rimossi. Le partizioni si dichiarano con `partition_<campo>` sulla tabella.
   L'esempio gruppi usa una formula esplicita al posto di `subtable`.
-- `virtualRelation` resta un nodo di dichiarazione: nella 0.6.0 il registro gerarchico
+- `virtualRelation` resta un nodo di dichiarazione: nella 0.6.1 il registro gerarchico
   non ne costruisce gli archi. Non anticipiamo la futura compilazione delle query.
 
 ## Particolarità del riferimento
 
-La 0.6.0 condivide alcuni metadati dei default tra nodi dello stesso tag. Ciò può
+La 0.6.1 con Builders 0.29.0 condivide ancora alcuni metadati dei default tra nodi dello stesso tag. Ciò può
 influire sulla precedenza di un attributo esplicito, per esempio `indexed=False` su
 un campo di sistema preesistente. Il port riproduce il caso osservabile e lo mantiene
 nel corpus differenziale; cambiarlo richiede prima aggiornare il riferimento Python.
+Il caso `061/sysfield_explicit_indexed_false` riproduce il difetto anche sul tag
+pubblicato: `__ins_ts` con `indexed=False`, seguito da un'altra colonna, viene
+risolto con `indexed=True`. La dipendenza dichiarata dalla release è
+`genro-builders>=0.29.0,<0.30`; Builders 0.30.0 non è incluso in questo confronto.
+
+Il JSON mantiene la versione di formato `1`, ma dichiara il riferimento `0.6.1`.
+Il ripristino richiede questo riferimento: i vecchi snapshot `0.6.0` vanno rigenerati
+dalla ricetta, per applicare le nuove espansioni in modo esplicito.
 
 Il renderer Python ha inoltre due percorsi: i package/opzioni passano dal modello
 risolto; uno schema fisico semplice viene proiettato direttamente. `recipe.toMigration()`

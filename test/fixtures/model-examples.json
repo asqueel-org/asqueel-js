@@ -3,7 +3,7 @@
     "model": {
       "format": "asqueel-model",
       "version": 1,
-      "reference": "0.6.0",
+      "reference": "0.6.1",
       "database": {
         "name": "db",
         "tag": "db",
@@ -1301,7 +1301,7 @@
     "model": {
       "format": "asqueel-model",
       "version": 1,
-      "reference": "0.6.0",
+      "reference": "0.6.1",
       "database": {
         "name": "db",
         "tag": "db",
@@ -5005,7 +5005,7 @@
     "model": {
       "format": "asqueel-model",
       "version": 1,
-      "reference": "0.6.0",
+      "reference": "0.6.1",
       "database": {
         "name": "db",
         "tag": "db",
@@ -5243,7 +5243,7 @@
     "model": {
       "format": "asqueel-model",
       "version": 1,
-      "reference": "0.6.0",
+      "reference": "0.6.1",
       "database": {
         "name": "db",
         "tag": "db",
@@ -5674,7 +5674,7 @@
     "model": {
       "format": "asqueel-model",
       "version": 1,
-      "reference": "0.6.0",
+      "reference": "0.6.1",
       "database": {
         "name": "db",
         "tag": "db",

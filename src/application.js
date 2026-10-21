@@ -1,5 +1,5 @@
 // Compatibility view for the existing, deliberately limited query compiler.
-// All preparation now belongs to the public 0.6.0 hierarchical model.
+// All preparation now belongs to the public 0.6.1 hierarchical model.
 import { resolveModel } from "./model.js";
 export function projectApplication(
   builder,

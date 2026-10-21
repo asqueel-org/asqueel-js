@@ -1,4 +1,4 @@
-// Structural port of Asqueel 0.6.0 model_expansion.py. No hooks are executed.
+// Structural port of Asqueel 0.6.1 model_expansion.py. No hooks are executed.
 import { defaults } from "./options.js";
 import { names } from "./structures.js";
 const clone = structuredClone;
@@ -334,10 +334,8 @@ class Expansion {
   hierarchy() {
     const s = this.spec("hierarchical");
     if (!s) return;
-    if (s.linked_to || s.depth)
-      fail(
-        `${this.key}: hierarchical linked_to/depth is not available in Python 0.6.0`,
-      );
+    if (s.depth)
+      fail(`${this.key}: hierarchical depth is not available in Python 0.6.1`);
     if (
       this.table.attributes.pkey !== "id" ||
       this.node("id")?.attributes.size !== "22"
@@ -408,8 +406,6 @@ class Expansion {
         name_long: "!![en]H.Virtual node",
         ...legacy({ copyFromParent: true }),
       });
-    if (counter && counter.field !== "_row_count")
-      fail("hierarchical auto_counter field is not available");
     const fs = [];
     for (const item of typeof s.columns === "string"
       ? names(s.columns)
@@ -487,6 +483,52 @@ export function expandModelOptions(tables) {
   }
   for (const o of owners.values()) o.hierarchy();
   for (const o of owners.values()) {
+    const hierarchy = o.spec("hierarchical");
+    if (hierarchy?.linked_to) {
+      const master = target(o, hierarchy.linked_to),
+        pk = master.table.attributes.pkey,
+        column = pk ? master.node(pk) : null;
+      if (!column || column.tag !== "column")
+        fail(`${o.key}: linked hierarchy master needs a physical primary key`);
+      const a = column.attributes,
+        dtype = a.dtype || (a.size ? "A" : "T"),
+        name = master.table.attributes.name;
+      const col = o.add(
+        `${name}_${pk}`,
+        { serial: "L", serial4: "I" }[dtype] || dtype,
+        {
+          group: "_",
+          name_long: master.table.attributes.name_long ?? null,
+          ...legacy({ copyFromParent: true, fkeyToMaster: true }),
+        },
+        a.size ? { size: a.size } : {},
+      );
+      o.relation(col, `${master.key}.${pk}`, {
+        relation_name: o.table.attributes.name + "s",
+        onDuplicate: false,
+        deferred: true,
+        onDelete: "cascade",
+      });
+      const root = master.add(
+        `root_${o.table.attributes.name}_id`,
+        "A",
+        {
+          name_long: `${o.table.attributes.name_long ?? "None"} root`,
+          ...legacy({
+            onInserting: "insertLinkedHierarchicalRoot",
+            onUpdating: "updateLinkedHierarchicalRoot",
+          }),
+        },
+        { size: "22" },
+      );
+      master.relation(root, `${o.key}.id`, {
+        one_one: "*",
+        onDuplicate: false,
+        onDelete_sql: "setnull",
+        deferred: true,
+      });
+      o.tableDefault({ hierarchical_linked_to: master.key });
+    }
     const s = o.spec("attachments");
     if (!s) continue;
     const master = target(o, s.master),
