@@ -1,0 +1,139 @@
+[
+  {
+    "name": "many_traversal",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.amount"
+    }
+  },
+  {
+    "name": "count_argument",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr(count($id))"
+    }
+  },
+  {
+    "name": "unknown_aggregate",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr(median($amount))"
+    }
+  },
+  {
+    "name": "xml",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr(to_xml($id))"
+    }
+  },
+  {
+    "name": "empty_aggregate",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr()"
+    }
+  },
+  {
+    "name": "outer_alias",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr(count()) AS n"
+    }
+  },
+  {
+    "name": "order_without_aggr",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.order_by('$id')"
+    }
+  },
+  {
+    "name": "virtual_ask",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@asking.aggr(count())"
+    }
+  },
+  {
+    "name": "virtual_cycle",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@cycle_a.aggr(count())"
+    }
+  },
+  {
+    "name": "aggregate_in_where",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id",
+      "where": "@invoices.aggr(count())>0"
+    }
+  },
+  {
+    "name": "multi_scalar",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$multi_scalar"
+    }
+  },
+  {
+    "name": "cast_exists",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$cast_exists"
+    }
+  },
+  {
+    "name": "conflicting_options",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$conflicting_options"
+    }
+  },
+  {
+    "name": "unknown_option",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$unknown_option"
+    }
+  },
+  {
+    "name": "recursive",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$recursive"
+    }
+  },
+  {
+    "name": "legacy_json",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$legacy_json"
+    }
+  },
+  {
+    "name": "method_query",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$method_query"
+    }
+  }
+]

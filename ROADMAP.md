@@ -89,7 +89,9 @@ simulato durante la copia e migrazione idempotente dopo riapertura.
 
 - [ ] Inventario di ogni capacità Python con stato JS: supportata, da portare,
       non applicabile a SQLite o dipendente da servizi esterni.
-- [ ] Relazioni inverse, sottoquery, macro e colonne virtuali avanzate.
+- [x] Sottoquery scalari/EXISTS/subQueryColumn e aggregazioni su relazioni inverse
+      e virtuali, con binding locali, JSON e concatenazioni ordinate.
+- [ ] Restanti macro, callback e colonne virtuali dinamiche; metadati dei risultati.
 - [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
 - [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.
 - [ ] Documentazione applicativa, compatibilità e criteri della prima release.

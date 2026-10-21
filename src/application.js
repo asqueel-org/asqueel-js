@@ -1,4 +1,4 @@
-// Compatibility view for the existing, deliberately limited query compiler.
+// SQLite compiler view of the hierarchical model, including incoming relations.
 // All preparation now belongs to the public 0.6.1 hierarchical model.
 import { resolveModel } from "./model.js";
 export function projectApplication(
@@ -18,9 +18,11 @@ export function projectApplication(
     const map = (nodes) =>
       new Map((nodes?.values() || []).map((c) => [c.name, node(c)]));
     const relations = new Map();
+    for (const [name, relation] of t.relations.entries())
+      relations.set(name.replace(/^@/, ''), {kind: 'ordinary', joiner: structuredClone(relation.attributes.joiner)});
     for (const n of t.values())
       if (n.tag === "virtualRelation")
-        relations.set(n.attributes.name, { kind: "virtual" });
+        relations.set(n.attributes.name, { kind: "virtual", a: structuredClone(n.attributes) });
     const columns = map(t.columns);
     // Keep existing query guards for unimplemented lifecycle actions.
     for (const c of columns.values())

@@ -1,0 +1,490 @@
+[
+  {
+    "name": "seed_customer_0",
+    "request": {
+      "operation": "insert",
+      "table": "sq.customer",
+      "values": {
+        "id": 1,
+        "name": "Ada"
+      }
+    }
+  },
+  {
+    "name": "seed_customer_1",
+    "request": {
+      "operation": "insert",
+      "table": "sq.customer",
+      "values": {
+        "id": 2,
+        "name": "Empty"
+      }
+    }
+  },
+  {
+    "name": "seed_customer_2",
+    "request": {
+      "operation": "insert",
+      "table": "sq.customer",
+      "values": {
+        "id": 3,
+        "name": "Null"
+      }
+    }
+  },
+  {
+    "name": "seed_vat_3",
+    "request": {
+      "operation": "insert",
+      "table": "sq.vat",
+      "values": {
+        "id": 1,
+        "rate": 10
+      }
+    }
+  },
+  {
+    "name": "seed_vat_4",
+    "request": {
+      "operation": "insert",
+      "table": "sq.vat",
+      "values": {
+        "id": 2,
+        "rate": 20
+      }
+    }
+  },
+  {
+    "name": "seed_invoice_5",
+    "request": {
+      "operation": "insert",
+      "table": "sq.invoice",
+      "values": {
+        "id": 1,
+        "customer_id": 1,
+        "vat_id": 1,
+        "amount": 10,
+        "qty": 1,
+        "code": "a",
+        "region": "A"
+      }
+    }
+  },
+  {
+    "name": "seed_invoice_6",
+    "request": {
+      "operation": "insert",
+      "table": "sq.invoice",
+      "values": {
+        "id": 2,
+        "customer_id": 1,
+        "vat_id": 1,
+        "amount": 20,
+        "qty": 3,
+        "code": "",
+        "draft": true,
+        "region": "A"
+      }
+    }
+  },
+  {
+    "name": "seed_invoice_7",
+    "request": {
+      "operation": "insert",
+      "table": "sq.invoice",
+      "values": {
+        "id": 3,
+        "customer_id": 1,
+        "vat_id": 2,
+        "amount": 30,
+        "qty": 2,
+        "code": "z",
+        "deleted": "yesterday",
+        "region": "B"
+      }
+    }
+  },
+  {
+    "name": "seed_invoice_8",
+    "request": {
+      "operation": "insert",
+      "table": "sq.invoice",
+      "values": {
+        "id": 4,
+        "customer_id": 1,
+        "vat_id": 2,
+        "amount": 40,
+        "qty": 1,
+        "region": "B"
+      }
+    }
+  },
+  {
+    "name": "seed_invoice_9",
+    "request": {
+      "operation": "insert",
+      "table": "sq.invoice",
+      "values": {
+        "id": 5,
+        "customer_id": 3,
+        "qty": 1
+      }
+    }
+  },
+  {
+    "name": "seed_pair_10",
+    "request": {
+      "operation": "insert",
+      "table": "sq.pair",
+      "values": {
+        "code": "A",
+        "seq": 1
+      }
+    }
+  },
+  {
+    "name": "seed_pair_11",
+    "request": {
+      "operation": "insert",
+      "table": "sq.pair",
+      "values": {
+        "code": "A",
+        "seq": 2
+      }
+    }
+  },
+  {
+    "name": "seed_member_12",
+    "request": {
+      "operation": "insert",
+      "table": "sq.member",
+      "values": {
+        "id": 1,
+        "code": "A",
+        "seq": 1,
+        "amount": 5
+      }
+    }
+  },
+  {
+    "name": "seed_member_13",
+    "request": {
+      "operation": "insert",
+      "table": "sq.member",
+      "values": {
+        "id": 2,
+        "code": "A",
+        "seq": 1,
+        "amount": 6
+      }
+    }
+  },
+  {
+    "name": "scalar_and_exists",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$total,$has_big"
+    }
+  },
+  {
+    "name": "named_select_exists",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$big_total"
+    }
+  },
+  {
+    "name": "subquery_locals_and_formula_scope",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id + :offset AS outer_value,$local_total",
+      "sqlparams": {
+        "offset": 99,
+        "minimum": 999,
+        "s2_minimum": 100
+      }
+    }
+  },
+  {
+    "name": "nested_subquery",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$nested_total"
+    }
+  },
+  {
+    "name": "subquery_repeated_dependency",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$total,$twice_total",
+      "where": "$total > :limit",
+      "sqlparams": {
+        "limit": 50
+      }
+    }
+  },
+  {
+    "name": "cast_order_limit_offset",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$first_code"
+    }
+  },
+  {
+    "name": "subquery_column_aggregates",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$sub_count,$sub_codes,$sub_json,$scalar_max"
+    }
+  },
+  {
+    "name": "subquery_where_and_order",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id",
+      "where": "$has_big IS TRUE",
+      "order_by": "$total DESC"
+    }
+  },
+  {
+    "name": "subquery_default_policies_disabled",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$total",
+      "environment": {
+        "current_region": "A"
+      }
+    }
+  },
+  {
+    "name": "subquery_explicit_policies",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$visible_total",
+      "environment": {
+        "current_region": "A"
+      }
+    }
+  },
+  {
+    "name": "aggregate_basics",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(count(),sum($amount),avg($amount),min($amount),max($amount))"
+    }
+  },
+  {
+    "name": "aggregate_multiple_columns",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(sum($amount AS total,$qty AS quantity),avg(qty))"
+    }
+  },
+  {
+    "name": "aggregate_expressions",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(sum($amount * $qty) AS weighted,sum(CASE WHEN $qty>1 THEN $amount ELSE 0 END) AS conditional)"
+    }
+  },
+  {
+    "name": "aggregate_formula_local_scope",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id + :offset AS outer_value,@invoices.aggr(sum($adjusted) AS adjusted)",
+      "sqlparams": {
+        "offset": 99,
+        "f2_offset": 100
+      }
+    }
+  },
+  {
+    "name": "aggregate_nested_subquery",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(sum($tax_rate) AS tax_sum)"
+    }
+  },
+  {
+    "name": "aggregate_forward_join",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(sum(@vat_id.rate) AS rates)"
+    }
+  },
+  {
+    "name": "aggregate_joins",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(join($code, ',') AS plain,join($code, ';', '-') AS codes)"
+    }
+  },
+  {
+    "name": "aggregate_order_override",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.order_by('$id DESC').aggr(join($code, ',', '-') AS codes)"
+    }
+  },
+  {
+    "name": "aggregate_two_orders",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(join($code, ',') AS ascending),@invoices.order_by('$id DESC').aggr(join($code, ',') AS descending)"
+    }
+  },
+  {
+    "name": "aggregate_json",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(to_json($id,$amount,$code) AS rows)"
+    }
+  },
+  {
+    "name": "aggregate_json_order",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.order_by('$id DESC').aggr(to_json($id AS number,$adjusted,@vat_id.rate AS tax) AS rows)"
+    }
+  },
+  {
+    "name": "aggregate_json_star",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(to_json())"
+    }
+  },
+  {
+    "name": "aggregate_duplicate_alias",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "@invoices.aggr(count() AS result,sum($amount) AS result)",
+      "where": "$id=1"
+    }
+  },
+  {
+    "name": "forward_prefix_many",
+    "request": {
+      "operation": "select",
+      "table": "sq.invoice",
+      "columns": "$id,@customer_id.@invoices.aggr(count() AS siblings)",
+      "exclude_draft": false,
+      "exclude_logical_deleted": false
+    }
+  },
+  {
+    "name": "forward_prefix_subquery",
+    "request": {
+      "operation": "select",
+      "table": "sq.invoice",
+      "columns": "$id,@customer_id.total AS parent_total",
+      "exclude_draft": false,
+      "exclude_logical_deleted": false
+    }
+  },
+  {
+    "name": "composite_relation_aggregate",
+    "request": {
+      "operation": "select",
+      "table": "sq.pair",
+      "columns": "$key,@members.aggr(count() AS n,sum($amount) AS total)",
+      "order_by": "$seq"
+    }
+  },
+  {
+    "name": "derived_virtual",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@large.aggr(count() AS n,sum($amount) AS total)"
+    }
+  },
+  {
+    "name": "derived_virtual_chain",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@window.aggr(count() AS n,sum($amount) AS total)"
+    }
+  },
+  {
+    "name": "direct_virtual",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@direct.aggr(count() AS n,sum($amount) AS total)"
+    }
+  },
+  {
+    "name": "virtual_repeated_bindings",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id+:var_limit AS caller,@window.aggr(sum($adjusted) AS amount),@large.aggr(count() AS n)",
+      "sqlparams": {
+        "var_limit": 99,
+        "factor": 100
+      }
+    }
+  },
+  {
+    "name": "aggregate_with_outer_pagination",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,@invoices.aggr(count())",
+      "limit": 1,
+      "offset": 1
+    }
+  },
+  {
+    "name": "correlate_outer_formula",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$above_threshold"
+    }
+  },
+  {
+    "name": "subquery_environment",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$env_total",
+      "environment": {
+        "minimum": 25
+      }
+    }
+  },
+  {
+    "name": "subquery_field_parameter",
+    "request": {
+      "operation": "select",
+      "table": "sq.customer",
+      "columns": "$id,$field_parameter"
+    }
+  }
+]

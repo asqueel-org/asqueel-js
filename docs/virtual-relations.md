@@ -14,8 +14,12 @@ e del registro effettivamente prodotto dalla 0.6.1.
 Le dichiarazioni virtualRelation non generano foreign key nel JSON migrate.
 L'esempio del playground confronta modello e migrate con Python, applica la
 migrazione su SQLite WASM e verifica vincoli fisici e persistenza IndexedDB.
-La navigazione virtualRelation nelle query è rifiutata esplicitamente finché
-non sarà portato il compilatore.
+Il compilatore esegue le aggregazioni `@nome.aggr(...)` sulle virtualRelation:
+supporta derivazioni `relation`, filtri cumulativi, dichiarazioni dirette
+`table`/`condition` e `var_*` come espressioni del record origine. I risultati
+sono confrontati con Python anche su SQLite WASM, dopo riapertura IndexedDB.
+La navigazione come JOIN diretto e le aggregazioni con `ask` restano escluse.
+Vedi [sottoquery e aggregazioni](parity.md#sottoquery-e-aggregazioni-inverse).
 
 Attributi come `x_ui_color`, `inverse`, `order_by` e `limit` non appartengono alla
 firma attuale e non vengono accettati. Vedi [contratto completo](model.md).

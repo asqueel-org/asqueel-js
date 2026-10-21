@@ -1,0 +1,3110 @@
+{
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "subqueries"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "sq",
+          "tag": "package",
+          "attributes": {
+            "name": "sq",
+            "sqlprefix": true
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "customer",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "order_by": "$id",
+                    "name": "customer",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "name",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "name",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "threshold",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$id * :factor",
+                            "var_factor": 15,
+                            "name": "threshold",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "name": "total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "has_big",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "B",
+                            "exists": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id AND $amount>:minimum"
+                            },
+                            "var_minimum": 25,
+                            "name": "has_big",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "big_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "B",
+                            "sql_formula": "#found AND #sum > :limit",
+                            "var_limit": 40,
+                            "exists_found": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id AND $amount>25"
+                            },
+                            "select_sum": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "name": "big_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "local_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "var_minimum": 10,
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($adjusted)",
+                              "where": "$customer_id=#THIS.id AND $amount>:minimum",
+                              "sqlparams": {
+                                "minimum": 15
+                              }
+                            },
+                            "name": "local_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "visible_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id",
+                              "excludeDraft": true,
+                              "excludeLogicalDeleted": true,
+                              "ignorePartition": false
+                            },
+                            "name": "visible_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "first_code",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "$code",
+                              "where": "$customer_id=#THIS.id",
+                              "order_by": "$id DESC",
+                              "limit": 1,
+                              "offset": 1,
+                              "cast": "TEXT"
+                            },
+                            "name": "first_code",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "nested_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($tax_rate)",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "name": "nested_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "twice_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$total * 2",
+                            "name": "twice_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "above_threshold",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id AND $amount>#THIS.threshold"
+                            },
+                            "name": "above_threshold",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "env_total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id AND $amount>:env_minimum"
+                            },
+                            "name": "env_total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "field_parameter",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "SUM($amount)",
+                              "where": "$customer_id=#THIS.id AND $amount>:threshold",
+                              "sqlparams": {
+                                "threshold": "$qty"
+                              }
+                            },
+                            "name": "field_parameter",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "multi_scalar",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "$id,$amount",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "name": "multi_scalar",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "cast_exists",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "exists": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id",
+                              "cast": "TEXT"
+                            },
+                            "name": "cast_exists",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "conflicting_options",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "$id",
+                              "where": "$customer_id=#THIS.id",
+                              "excludeDraft": true,
+                              "exclude_draft": false
+                            },
+                            "name": "conflicting_options",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "unknown_option",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "sq.invoice",
+                              "columns": "$id",
+                              "where": "$customer_id=#THIS.id",
+                              "arbitrary": true
+                            },
+                            "name": "unknown_option",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "recursive",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "select": {
+                              "table": "sq.customer",
+                              "columns": "$recursive",
+                              "where": "$id=#THIS.id"
+                            },
+                            "name": "recursive",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "legacy_json",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "query": {
+                              "table": "sq.invoice",
+                              "columns": "$id",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "mode": "json",
+                            "name": "legacy_json"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "method_query",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "query": "unregistered",
+                            "name": "method_query"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_count",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "dtype": "L",
+                            "query": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id"
+                            },
+                            "aggr": "count()",
+                            "name": "sub_count"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_codes",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "query": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id",
+                              "order_by": "$id DESC"
+                            },
+                            "aggr": "join($code, ',', '-')",
+                            "name": "sub_codes"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "sub_json",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "query": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id",
+                              "order_by": "$id"
+                            },
+                            "aggr": "to_json($id,$amount)",
+                            "name": "sub_json"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "scalar_max",
+                          "tag": "subQueryColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "query": {
+                              "table": "sq.invoice",
+                              "where": "$customer_id=#THIS.id",
+                              "columns": "MAX($amount)"
+                            },
+                            "name": "scalar_max"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_large",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "relation": "@invoices",
+                        "condition": "$amount>:var_limit",
+                        "var_limit": "$threshold",
+                        "name": "large"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_window",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "relation": "@large",
+                        "condition": "$amount<:var_limit",
+                        "var_limit": "$id * 35",
+                        "name": "window"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_direct",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "table": "sq.invoice",
+                        "condition": "$customer_id=:var_customer AND $qty>:var_min",
+                        "var_customer": "$id",
+                        "var_min": "$id - 1",
+                        "name": "direct"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_asking",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "relation": "@invoices",
+                        "ask": {
+                          "fields": [
+                            {
+                              "name": "minimum",
+                              "dtype": "R"
+                            }
+                          ]
+                        },
+                        "name": "asking"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_cycle_a",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "relation": "@cycle_b",
+                        "name": "cycle_a"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtualRelation_cycle_b",
+                      "tag": "virtualRelation",
+                      "attributes": {
+                        "relation": "@cycle_a",
+                        "name": "cycle_b"
+                      },
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "vat",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "vat",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "rate",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "R",
+                            "name": "rate",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "invoice",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "order_by": "$id",
+                    "draftField": "draft",
+                    "logicalDeletionField": "deleted",
+                    "partition_region": "region",
+                    "name": "invoice",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "customer_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "customer_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "relation_name": "invoices",
+                                "to": "sq.customer.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "vat_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "vat_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "to": "sq.vat.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "R",
+                            "sqlname": "stored_amount",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "qty",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "qty",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "code",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "code",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "draft",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "B",
+                            "name": "draft",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "deleted",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "deleted",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "region",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "region",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "adjusted",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$amount + :offset",
+                            "var_offset": 5,
+                            "name": "adjusted",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "tax_rate",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "select": {
+                              "table": "sq.vat",
+                              "columns": "$rate",
+                              "where": "$id=#THIS.vat_id"
+                            },
+                            "name": "tax_rate",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "invoice_customer_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "customer_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "invoice_vat_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "vat_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "pair",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "code,seq",
+                    "name": "pair",
+                    "lookup": false,
+                    "deletable": true,
+                    "x_logical_pkey": "key"
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "code",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "code",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "seq",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "seq",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "composites",
+                      "tag": "composites",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "key",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "code,seq",
+                            "name": "key",
+                            "unique": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "member",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "member",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "code",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "code",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "seq",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "seq",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "amount",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "R",
+                            "name": "amount",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "composites",
+                      "tag": "composites",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "pair_key",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "code,seq",
+                            "name": "pair_key",
+                            "unique": false,
+                            "virtual": true
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "relation_name": "members",
+                                "to": "sq.pair.key",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "sq.invoice.@customer_id",
+        "attributes": {
+          "many_relation": "sq.invoice.customer_id",
+          "one_relation": "sq.customer.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "invoices",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "sq.invoice.@vat_id",
+        "attributes": {
+          "many_relation": "sq.invoice.vat_id",
+          "one_relation": "sq.vat.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "sq_invoice_vat_id",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "sq.customer.@invoices",
+        "attributes": {
+          "many_relation": "sq.invoice.customer_id",
+          "one_relation": "sq.customer.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      },
+      {
+        "path": "sq.vat.@sq_invoice_vat_id",
+        "attributes": {
+          "many_relation": "sq.invoice.vat_id",
+          "one_relation": "sq.vat.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      },
+      {
+        "path": "sq.member.@pair_key",
+        "attributes": {
+          "many_relation": "sq.member.pair_key",
+          "one_relation": "sq.pair.key",
+          "one_rel_name": "pair_key",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "virtual": true,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "members",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "sq.pair.@members",
+        "attributes": {
+          "many_relation": "sq.member.pair_key",
+          "one_relation": "sq.pair.key",
+          "one_rel_name": "pair_key",
+          "onUpdate_sql": "cascade",
+          "private_relation": false,
+          "case_insensitive": false,
+          "virtual": true,
+          "mode": "M"
+        }
+      }
+    ]
+  },
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "subqueries",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "sq_customer": {
+              "entity": "table",
+              "entity_name": "sq_customer",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_customer",
+                  "column_name": "id"
+                },
+                "name": {
+                  "entity": "column",
+                  "entity_name": "name",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_customer",
+                  "column_name": "name"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "sq_customer"
+            },
+            "sq_vat": {
+              "entity": "table",
+              "entity_name": "sq_vat",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_vat",
+                  "column_name": "id"
+                },
+                "rate": {
+                  "entity": "column",
+                  "entity_name": "rate",
+                  "attributes": {
+                    "dtype": "R"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_vat",
+                  "column_name": "rate"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "sq_vat"
+            },
+            "sq_invoice": {
+              "entity": "table",
+              "entity_name": "sq_invoice",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "id"
+                },
+                "customer_id": {
+                  "entity": "column",
+                  "entity_name": "customer_id",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "customer_id"
+                },
+                "vat_id": {
+                  "entity": "column",
+                  "entity_name": "vat_id",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "vat_id"
+                },
+                "stored_amount": {
+                  "entity": "column",
+                  "entity_name": "stored_amount",
+                  "attributes": {
+                    "dtype": "R"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "stored_amount"
+                },
+                "qty": {
+                  "entity": "column",
+                  "entity_name": "qty",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "qty"
+                },
+                "code": {
+                  "entity": "column",
+                  "entity_name": "code",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "code"
+                },
+                "draft": {
+                  "entity": "column",
+                  "entity_name": "draft",
+                  "attributes": {
+                    "dtype": "B"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "draft"
+                },
+                "deleted": {
+                  "entity": "column",
+                  "entity_name": "deleted",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "deleted"
+                },
+                "region": {
+                  "entity": "column",
+                  "entity_name": "region",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice",
+                  "column_name": "region"
+                }
+              },
+              "relations": {
+                "fk_ff4b2194": {
+                  "entity": "relation",
+                  "entity_name": "fk_ff4b2194",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "sq_customer",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "customer_id"
+                    ],
+                    "constraint_name": "fk_ff4b2194"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice"
+                },
+                "fk_eb994af1": {
+                  "entity": "relation",
+                  "entity_name": "fk_eb994af1",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "sq_vat",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "vat_id"
+                    ],
+                    "constraint_name": "fk_eb994af1"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_148ecb90": {
+                  "entity": "index",
+                  "entity_name": "idx_148ecb90",
+                  "attributes": {
+                    "columns": {
+                      "customer_id": null
+                    },
+                    "index_name": "idx_148ecb90"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice"
+                },
+                "idx_aed0a2cf": {
+                  "entity": "index",
+                  "entity_name": "idx_aed0a2cf",
+                  "attributes": {
+                    "columns": {
+                      "vat_id": null
+                    },
+                    "index_name": "idx_aed0a2cf"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_invoice"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "sq_invoice"
+            },
+            "sq_pair": {
+              "entity": "table",
+              "entity_name": "sq_pair",
+              "attributes": {
+                "pkeys": "code,seq"
+              },
+              "columns": {
+                "code": {
+                  "entity": "column",
+                  "entity_name": "code",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_pair",
+                  "column_name": "code"
+                },
+                "seq": {
+                  "entity": "column",
+                  "entity_name": "seq",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_pair",
+                  "column_name": "seq"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "sq_pair"
+            },
+            "sq_member": {
+              "entity": "table",
+              "entity_name": "sq_member",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member",
+                  "column_name": "id"
+                },
+                "code": {
+                  "entity": "column",
+                  "entity_name": "code",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member",
+                  "column_name": "code"
+                },
+                "seq": {
+                  "entity": "column",
+                  "entity_name": "seq",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member",
+                  "column_name": "seq"
+                },
+                "amount": {
+                  "entity": "column",
+                  "entity_name": "amount",
+                  "attributes": {
+                    "dtype": "R"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member",
+                  "column_name": "amount"
+                }
+              },
+              "relations": {
+                "fk_00e44736": {
+                  "entity": "relation",
+                  "entity_name": "fk_00e44736",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "sq_pair",
+                    "related_columns": [
+                      "code",
+                      "seq"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "code",
+                      "seq"
+                    ],
+                    "constraint_name": "fk_00e44736"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_04478280": {
+                  "entity": "index",
+                  "entity_name": "idx_04478280",
+                  "attributes": {
+                    "columns": {
+                      "code": null,
+                      "seq": null
+                    },
+                    "index_name": "idx_04478280"
+                  },
+                  "schema_name": "main",
+                  "table_name": "sq_member"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "sq_member"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "seed_customer_0",
+      "request": {
+        "operation": "insert",
+        "table": "sq.customer",
+        "values": {
+          "id": 1,
+          "name": "Ada"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_customer\"(\"id\",\"name\") VALUES (:id,:name)",
+        "params": {
+          "id": 1,
+          "name": "Ada"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_customer_1",
+      "request": {
+        "operation": "insert",
+        "table": "sq.customer",
+        "values": {
+          "id": 2,
+          "name": "Empty"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_customer\"(\"id\",\"name\") VALUES (:id,:name)",
+        "params": {
+          "id": 2,
+          "name": "Empty"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_customer_2",
+      "request": {
+        "operation": "insert",
+        "table": "sq.customer",
+        "values": {
+          "id": 3,
+          "name": "Null"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_customer\"(\"id\",\"name\") VALUES (:id,:name)",
+        "params": {
+          "id": 3,
+          "name": "Null"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_vat_3",
+      "request": {
+        "operation": "insert",
+        "table": "sq.vat",
+        "values": {
+          "id": 1,
+          "rate": 10
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_vat\"(\"id\",\"rate\") VALUES (:id,:rate)",
+        "params": {
+          "id": 1,
+          "rate": 10
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_vat_4",
+      "request": {
+        "operation": "insert",
+        "table": "sq.vat",
+        "values": {
+          "id": 2,
+          "rate": 20
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_vat\"(\"id\",\"rate\") VALUES (:id,:rate)",
+        "params": {
+          "id": 2,
+          "rate": 20
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_invoice_5",
+      "request": {
+        "operation": "insert",
+        "table": "sq.invoice",
+        "values": {
+          "id": 1,
+          "customer_id": 1,
+          "vat_id": 1,
+          "amount": 10,
+          "qty": 1,
+          "code": "a",
+          "region": "A"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_invoice\"(\"id\",\"customer_id\",\"vat_id\",\"stored_amount\",\"qty\",\"code\",\"region\") VALUES (:id,:customer_id,:vat_id,:amount,:qty,:code,:region)",
+        "params": {
+          "id": 1,
+          "customer_id": 1,
+          "vat_id": 1,
+          "amount": 10,
+          "qty": 1,
+          "code": "a",
+          "region": "A"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_invoice_6",
+      "request": {
+        "operation": "insert",
+        "table": "sq.invoice",
+        "values": {
+          "id": 2,
+          "customer_id": 1,
+          "vat_id": 1,
+          "amount": 20,
+          "qty": 3,
+          "code": "",
+          "draft": true,
+          "region": "A"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_invoice\"(\"id\",\"customer_id\",\"vat_id\",\"stored_amount\",\"qty\",\"code\",\"draft\",\"region\") VALUES (:id,:customer_id,:vat_id,:amount,:qty,:code,:draft,:region)",
+        "params": {
+          "id": 2,
+          "customer_id": 1,
+          "vat_id": 1,
+          "amount": 20,
+          "qty": 3,
+          "code": "",
+          "draft": true,
+          "region": "A"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_invoice_7",
+      "request": {
+        "operation": "insert",
+        "table": "sq.invoice",
+        "values": {
+          "id": 3,
+          "customer_id": 1,
+          "vat_id": 2,
+          "amount": 30,
+          "qty": 2,
+          "code": "z",
+          "deleted": "yesterday",
+          "region": "B"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_invoice\"(\"id\",\"customer_id\",\"vat_id\",\"stored_amount\",\"qty\",\"code\",\"deleted\",\"region\") VALUES (:id,:customer_id,:vat_id,:amount,:qty,:code,:deleted,:region)",
+        "params": {
+          "id": 3,
+          "customer_id": 1,
+          "vat_id": 2,
+          "amount": 30,
+          "qty": 2,
+          "code": "z",
+          "deleted": "yesterday",
+          "region": "B"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_invoice_8",
+      "request": {
+        "operation": "insert",
+        "table": "sq.invoice",
+        "values": {
+          "id": 4,
+          "customer_id": 1,
+          "vat_id": 2,
+          "amount": 40,
+          "qty": 1,
+          "region": "B"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_invoice\"(\"id\",\"customer_id\",\"vat_id\",\"stored_amount\",\"qty\",\"region\") VALUES (:id,:customer_id,:vat_id,:amount,:qty,:region)",
+        "params": {
+          "id": 4,
+          "customer_id": 1,
+          "vat_id": 2,
+          "amount": 40,
+          "qty": 1,
+          "region": "B"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_invoice_9",
+      "request": {
+        "operation": "insert",
+        "table": "sq.invoice",
+        "values": {
+          "id": 5,
+          "customer_id": 3,
+          "qty": 1
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_invoice\"(\"id\",\"customer_id\",\"qty\") VALUES (:id,:customer_id,:qty)",
+        "params": {
+          "id": 5,
+          "customer_id": 3,
+          "qty": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_pair_10",
+      "request": {
+        "operation": "insert",
+        "table": "sq.pair",
+        "values": {
+          "code": "A",
+          "seq": 1
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_pair\"(\"code\",\"seq\") VALUES (:code,:seq)",
+        "params": {
+          "code": "A",
+          "seq": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_pair_11",
+      "request": {
+        "operation": "insert",
+        "table": "sq.pair",
+        "values": {
+          "code": "A",
+          "seq": 2
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_pair\"(\"code\",\"seq\") VALUES (:code,:seq)",
+        "params": {
+          "code": "A",
+          "seq": 2
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_member_12",
+      "request": {
+        "operation": "insert",
+        "table": "sq.member",
+        "values": {
+          "id": 1,
+          "code": "A",
+          "seq": 1,
+          "amount": 5
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_member\"(\"id\",\"code\",\"seq\",\"amount\") VALUES (:id,:code,:seq,:amount)",
+        "params": {
+          "id": 1,
+          "code": "A",
+          "seq": 1,
+          "amount": 5
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_member_13",
+      "request": {
+        "operation": "insert",
+        "table": "sq.member",
+        "values": {
+          "id": 2,
+          "code": "A",
+          "seq": 1,
+          "amount": 6
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"sq_member\"(\"id\",\"code\",\"seq\",\"amount\") VALUES (:id,:code,:seq,:amount)",
+        "params": {
+          "id": 2,
+          "code": "A",
+          "seq": 1,
+          "amount": 6
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "scalar_and_exists",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$total,$has_big"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"total\",\n( EXISTS  ( SELECT 1 AS \"_1\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">:f2_minimum) )  ) AS \"has_big\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f2_minimum": 25
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 100.0,
+          "has_big": 1
+        },
+        {
+          "id": 2,
+          "total": null,
+          "has_big": 0
+        },
+        {
+          "id": 3,
+          "total": null,
+          "has_big": 0
+        }
+      ]
+    },
+    {
+      "name": "named_select_exists",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$big_total"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( EXISTS  ( SELECT 1 AS \"_1\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">25) )  AND  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  > :f1_limit ) AS \"big_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_limit": 40
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "big_total": 1
+        },
+        {
+          "id": 2,
+          "big_total": 0
+        },
+        {
+          "id": 3,
+          "big_total": 0
+        }
+      ]
+    },
+    {
+      "name": "subquery_locals_and_formula_scope",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id + :offset AS outer_value,$local_total",
+        "sqlparams": {
+          "offset": 99,
+          "minimum": 999,
+          "s2_minimum": 100
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" + :offset AS outer_value,\n(  ( SELECT SUM(( \"t0_t0\".\"stored_amount\" + :f3_offset )) AS \"SUM__adjusted_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">:_s2_minimum) )  ) AS \"local_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "offset": 99,
+          "minimum": 999,
+          "s2_minimum": 100,
+          "_s2_minimum": 15,
+          "f3_offset": 5
+        }
+      },
+      "rows": [
+        {
+          "outer_value": 100,
+          "local_total": 105.0
+        },
+        {
+          "outer_value": 101,
+          "local_total": null
+        },
+        {
+          "outer_value": 102,
+          "local_total": null
+        }
+      ]
+    },
+    {
+      "name": "nested_subquery",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$nested_total"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM((  ( SELECT \"t0_t0_t0\".\"rate\" AS \"rate\"\n FROM \"main\".\"sq_vat\" AS \"t0_t0_t0\"\nWHERE (\"t0_t0_t0\".\"id\"=\"t0_t0\".\"vat_id\") )  )) AS \"SUM__tax_rate_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"nested_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "nested_total": 60.0
+        },
+        {
+          "id": 2,
+          "nested_total": null
+        },
+        {
+          "id": 3,
+          "nested_total": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_repeated_dependency",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$total,$twice_total",
+        "where": "$total > :limit",
+        "sqlparams": {
+          "limit": 50
+        }
+      },
+      "compiled": {
+        "sql": "SELECT (  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"total\",\n( (  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) * 2 ) AS \"twice_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nWHERE ((  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) > :limit)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "limit": 50
+        }
+      },
+      "rows": [
+        {
+          "total": 100.0,
+          "twice_total": 200.0
+        }
+      ]
+    },
+    {
+      "name": "cast_order_limit_offset",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$first_code"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  CAST( ( SELECT \"t0_t0\".\"code\" AS \"code\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\" DESC\nLIMIT 1\nOFFSET 1 ) AS TEXT)  ) AS \"first_code\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "first_code": "z"
+        },
+        {
+          "id": 2,
+          "first_code": null
+        },
+        {
+          "id": 3,
+          "first_code": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_column_aggregates",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$sub_count,$sub_codes,$sub_json,$scalar_max"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"sub_count\",\n( (SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '-') AS value,\n',' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\" DESC) AS \"t0_t0_rows\") ) AS \"sub_codes\",\n( (SELECT json_group_array(json_object('id', \"t0_t0_rows\".\"id\", 'amount', \"t0_t0_rows\".\"amount\")) FROM (SELECT \"t0_t0\".\"id\" AS \"id\",\n\"t0_t0\".\"stored_amount\" AS \"amount\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") ) AS \"sub_json\",\n(  ( SELECT MAX(\"t0_t0\".\"stored_amount\") AS \"MAX__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"scalar_max\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "sub_count": 4,
+          "sub_codes": "-,z,-,a",
+          "sub_json": "[{\"id\":1,\"amount\":10.0},{\"id\":2,\"amount\":20.0},{\"id\":3,\"amount\":30.0},{\"id\":4,\"amount\":40.0}]",
+          "scalar_max": 40.0
+        },
+        {
+          "id": 2,
+          "sub_count": 0,
+          "sub_codes": "",
+          "sub_json": "[]",
+          "scalar_max": null
+        },
+        {
+          "id": 3,
+          "sub_count": 1,
+          "sub_codes": "-",
+          "sub_json": "[{\"id\":5,\"amount\":null}]",
+          "scalar_max": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_where_and_order",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id",
+        "where": "$has_big IS TRUE",
+        "order_by": "$total DESC"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nWHERE (( EXISTS  ( SELECT 1 AS \"_1\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">:f1_minimum) )  ) IS TRUE)\nORDER BY (  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) DESC",
+        "params": {
+          "f1_minimum": 25
+        }
+      },
+      "rows": [
+        {
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "subquery_default_policies_disabled",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$total",
+        "environment": {
+          "current_region": "A"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  ) AS \"total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 100.0
+        },
+        {
+          "id": 2,
+          "total": null
+        },
+        {
+          "id": 3,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_explicit_policies",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$visible_total",
+        "environment": {
+          "current_region": "A"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"region\" = :env_current_region) AND (\"t0_t0\".\"deleted\" IS NULL) AND ((\"t0_t0\".\"draft\" IS NULL OR \"t0_t0\".\"draft\" !=1)) )  ) AS \"visible_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_current_region": "A"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "visible_total": 10.0
+        },
+        {
+          "id": 2,
+          "visible_total": null
+        },
+        {
+          "id": 3,
+          "visible_total": null
+        }
+      ]
+    },
+    {
+      "name": "aggregate_basics",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(count(),sum($amount),avg($amount),min($amount),max($amount))"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_count\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_amount_sum\",\n ( SELECT AVG(\"t0_t0\".\"stored_amount\") AS \"AVG__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_amount_avg\",\n ( SELECT MIN(\"t0_t0\".\"stored_amount\") AS \"MIN__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_amount_min\",\n ( SELECT MAX(\"t0_t0\".\"stored_amount\") AS \"MAX__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_amount_max\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_invoices_count": 4,
+          "_invoices_amount_sum": 100.0,
+          "_invoices_amount_avg": 25.0,
+          "_invoices_amount_min": 10.0,
+          "_invoices_amount_max": 40.0
+        },
+        {
+          "id": 2,
+          "_invoices_count": 0,
+          "_invoices_amount_sum": null,
+          "_invoices_amount_avg": null,
+          "_invoices_amount_min": null,
+          "_invoices_amount_max": null
+        },
+        {
+          "id": 3,
+          "_invoices_count": 1,
+          "_invoices_amount_sum": null,
+          "_invoices_amount_avg": null,
+          "_invoices_amount_min": null,
+          "_invoices_amount_max": null
+        }
+      ]
+    },
+    {
+      "name": "aggregate_multiple_columns",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(sum($amount AS total,$qty AS quantity),avg(qty))"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"total\",\n ( SELECT SUM(\"t0_t0\".\"qty\") AS \"SUM__qty_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"quantity\",\n ( SELECT AVG(\"t0_t0\".\"qty\") AS \"AVG__qty_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_qty_avg\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 100.0,
+          "quantity": 7,
+          "_invoices_qty_avg": 1.75
+        },
+        {
+          "id": 2,
+          "total": null,
+          "quantity": null,
+          "_invoices_qty_avg": null
+        },
+        {
+          "id": 3,
+          "total": null,
+          "quantity": 1,
+          "_invoices_qty_avg": 1.0
+        }
+      ]
+    },
+    {
+      "name": "aggregate_expressions",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(sum($amount * $qty) AS weighted,sum(CASE WHEN $qty>1 THEN $amount ELSE 0 END) AS conditional)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\" * \"t0_t0\".\"qty\") AS \"SUM__amount____qty_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"weighted\",\n ( SELECT SUM(CASE WHEN \"t0_t0\".\"qty\">1 THEN \"t0_t0\".\"stored_amount\" ELSE 0 END) AS \"SUM_CASE_WHEN__qty_1_THEN__amount_ELSE_0_END_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"conditional\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "weighted": 170.0,
+          "conditional": 50.0
+        },
+        {
+          "id": 2,
+          "weighted": null,
+          "conditional": null
+        },
+        {
+          "id": 3,
+          "weighted": null,
+          "conditional": 0
+        }
+      ]
+    },
+    {
+      "name": "aggregate_formula_local_scope",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id + :offset AS outer_value,@invoices.aggr(sum($adjusted) AS adjusted)",
+        "sqlparams": {
+          "offset": 99,
+          "f2_offset": 100
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" + :offset AS outer_value,\n ( SELECT SUM(( \"t0_t0\".\"stored_amount\" + :_f2_offset )) AS \"SUM__adjusted_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"adjusted\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "offset": 99,
+          "f2_offset": 100,
+          "_f2_offset": 5
+        }
+      },
+      "rows": [
+        {
+          "outer_value": 100,
+          "adjusted": 120.0
+        },
+        {
+          "outer_value": 101,
+          "adjusted": null
+        },
+        {
+          "outer_value": 102,
+          "adjusted": null
+        }
+      ]
+    },
+    {
+      "name": "aggregate_nested_subquery",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(sum($tax_rate) AS tax_sum)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT SUM((  ( SELECT \"t0_t0_t0\".\"rate\" AS \"rate\"\n FROM \"main\".\"sq_vat\" AS \"t0_t0_t0\"\nWHERE (\"t0_t0_t0\".\"id\"=\"t0_t0\".\"vat_id\") )  )) AS \"SUM__tax_rate_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"tax_sum\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "tax_sum": 60.0
+        },
+        {
+          "id": 2,
+          "tax_sum": null
+        },
+        {
+          "id": 3,
+          "tax_sum": null
+        }
+      ]
+    },
+    {
+      "name": "aggregate_forward_join",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(sum(@vat_id.rate) AS rates)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT SUM(\"t0_t1\".\"rate\") AS \"SUM___vat_id_rate_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\n       LEFT JOIN \"main\".\"sq_vat\" AS \"t0_t1\" ON ((\"t0_t0\".\"vat_id\")=\"t0_t1\".\"id\")\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"rates\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "rates": 60.0
+        },
+        {
+          "id": 2,
+          "rates": null
+        },
+        {
+          "id": 3,
+          "rates": null
+        }
+      ]
+    },
+    {
+      "name": "aggregate_joins",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(join($code, ',') AS plain,join($code, ';', '-') AS codes)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '') AS value,\n',' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") AS \"plain\",\n(SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '-') AS value,\n';' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") AS \"codes\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "plain": "a,,z,",
+          "codes": "a;-;z;-"
+        },
+        {
+          "id": 2,
+          "plain": "",
+          "codes": ""
+        },
+        {
+          "id": 3,
+          "plain": "",
+          "codes": "-"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_order_override",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.order_by('$id DESC').aggr(join($code, ',', '-') AS codes)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '-') AS value,\n',' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\" DESC) AS \"t0_t0_rows\") AS \"codes\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "codes": "-,z,-,a"
+        },
+        {
+          "id": 2,
+          "codes": ""
+        },
+        {
+          "id": 3,
+          "codes": "-"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_two_orders",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(join($code, ',') AS ascending),@invoices.order_by('$id DESC').aggr(join($code, ',') AS descending)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '') AS value,\n',' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") AS \"ascending\",\n(SELECT COALESCE(group_concat(\"t0_t0_rows\".value, \"t0_t0_rows\".separator), '') FROM (SELECT COALESCE(NULLIF(CAST(\"t0_t0\".\"code\" AS text), ''), '') AS value,\n',' AS separator\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\" DESC) AS \"t0_t0_rows\") AS \"descending\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "ascending": "a,,z,",
+          "descending": ",z,,a"
+        },
+        {
+          "id": 2,
+          "ascending": "",
+          "descending": ""
+        },
+        {
+          "id": 3,
+          "ascending": "",
+          "descending": ""
+        }
+      ]
+    },
+    {
+      "name": "aggregate_json",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(to_json($id,$amount,$code) AS rows)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT json_group_array(json_object('id', \"t0_t0_rows\".\"id\", 'amount', \"t0_t0_rows\".\"amount\", 'code', \"t0_t0_rows\".\"code\")) FROM (SELECT \"t0_t0\".\"id\" AS \"id\",\n\"t0_t0\".\"stored_amount\" AS \"amount\",\n\"t0_t0\".\"code\" AS \"code\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") AS \"rows\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "rows": "[{\"id\":1,\"amount\":10.0,\"code\":\"a\"},{\"id\":2,\"amount\":20.0,\"code\":\"\"},{\"id\":3,\"amount\":30.0,\"code\":\"z\"},{\"id\":4,\"amount\":40.0,\"code\":null}]"
+        },
+        {
+          "id": 2,
+          "rows": "[]"
+        },
+        {
+          "id": 3,
+          "rows": "[{\"id\":5,\"amount\":null,\"code\":null}]"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_json_order",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.order_by('$id DESC').aggr(to_json($id AS number,$adjusted,@vat_id.rate AS tax) AS rows)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT json_group_array(json_object('number', \"t0_t0_rows\".\"number\", 'adjusted', \"t0_t0_rows\".\"adjusted\", 'tax', \"t0_t0_rows\".\"tax\")) FROM (SELECT \"t0_t0\".\"id\" AS number,\n( \"t0_t0\".\"stored_amount\" + :f2_offset ) AS \"adjusted\",\n\"t0_t1\".\"rate\" AS tax\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\n       LEFT JOIN \"main\".\"sq_vat\" AS \"t0_t1\" ON ((\"t0_t0\".\"vat_id\")=\"t0_t1\".\"id\")\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\" DESC) AS \"t0_t0_rows\") AS \"rows\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f2_offset": 5
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "rows": "[{\"number\":4,\"adjusted\":45.0,\"tax\":20.0},{\"number\":3,\"adjusted\":35.0,\"tax\":20.0},{\"number\":2,\"adjusted\":25.0,\"tax\":10.0},{\"number\":1,\"adjusted\":15.0,\"tax\":10.0}]"
+        },
+        {
+          "id": 2,
+          "rows": "[]"
+        },
+        {
+          "id": 3,
+          "rows": "[{\"number\":5,\"adjusted\":null,\"tax\":null}]"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_json_star",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(to_json())"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(SELECT json_group_array(json_object('id', \"t0_t0_rows\".\"id\", 'customer_id', \"t0_t0_rows\".\"customer_id\", 'vat_id', \"t0_t0_rows\".\"vat_id\", 'amount', \"t0_t0_rows\".\"amount\", 'qty', \"t0_t0_rows\".\"qty\", 'code', \"t0_t0_rows\".\"code\", 'draft', \"t0_t0_rows\".\"draft\", 'deleted', \"t0_t0_rows\".\"deleted\", 'region', \"t0_t0_rows\".\"region\")) FROM (SELECT \"t0_t0\".\"id\" AS \"id\",\n\"t0_t0\".\"customer_id\" AS \"customer_id\",\n\"t0_t0\".\"vat_id\" AS \"vat_id\",\n\"t0_t0\".\"stored_amount\" AS \"amount\",\n\"t0_t0\".\"qty\" AS \"qty\",\n\"t0_t0\".\"code\" AS \"code\",\n\"t0_t0\".\"draft\" AS \"draft\",\n\"t0_t0\".\"deleted\" AS \"deleted\",\n\"t0_t0\".\"region\" AS \"region\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\")\nORDER BY \"t0_t0\".\"id\") AS \"t0_t0_rows\") AS \"_invoices_json\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "_invoices_json": "[{\"id\":1,\"customer_id\":1,\"vat_id\":1,\"amount\":10.0,\"qty\":1,\"code\":\"a\",\"draft\":null,\"deleted\":null,\"region\":\"A\"},{\"id\":2,\"customer_id\":1,\"vat_id\":1,\"amount\":20.0,\"qty\":3,\"code\":\"\",\"draft\":1,\"deleted\":null,\"region\":\"A\"},{\"id\":3,\"customer_id\":1,\"vat_id\":2,\"amount\":30.0,\"qty\":2,\"code\":\"z\",\"draft\":null,\"deleted\":\"yesterday\",\"region\":\"B\"},{\"id\":4,\"customer_id\":1,\"vat_id\":2,\"amount\":40.0,\"qty\":1,\"code\":null,\"draft\":null,\"deleted\":null,\"region\":\"B\"}]"
+        },
+        {
+          "id": 2,
+          "_invoices_json": "[]"
+        },
+        {
+          "id": 3,
+          "_invoices_json": "[{\"id\":5,\"customer_id\":3,\"vat_id\":null,\"amount\":null,\"qty\":1,\"code\":null,\"draft\":null,\"deleted\":null,\"region\":null}]"
+        }
+      ]
+    },
+    {
+      "name": "aggregate_duplicate_alias",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr(count() AS result,sum($amount) AS result)",
+        "where": "$id=1"
+      },
+      "compiled": {
+        "sql": "SELECT  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"result\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nWHERE (\"t0\".\"id\"=1)\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "result": 100.0
+        }
+      ]
+    },
+    {
+      "name": "forward_prefix_many",
+      "request": {
+        "operation": "select",
+        "table": "sq.invoice",
+        "columns": "$id,@customer_id.@invoices.aggr(count() AS siblings)",
+        "exclude_draft": false,
+        "exclude_logical_deleted": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t1_t0\"\nWHERE (\"t1_t0\".\"customer_id\"=\"t1\".\"id\") )  AS \"siblings\"\n FROM \"main\".\"sq_invoice\" AS \"t0\"\n       LEFT JOIN \"main\".\"sq_customer\" AS \"t1\" ON ((\"t0\".\"customer_id\")=\"t1\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "siblings": 4
+        },
+        {
+          "id": 2,
+          "siblings": 4
+        },
+        {
+          "id": 3,
+          "siblings": 4
+        },
+        {
+          "id": 4,
+          "siblings": 4
+        },
+        {
+          "id": 5,
+          "siblings": 1
+        }
+      ]
+    },
+    {
+      "name": "forward_prefix_subquery",
+      "request": {
+        "operation": "select",
+        "table": "sq.invoice",
+        "columns": "$id,@customer_id.total AS parent_total",
+        "exclude_draft": false,
+        "exclude_logical_deleted": false
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t1_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t1_t0\"\nWHERE (\"t1_t0\".\"customer_id\"=\"t1\".\"id\") )  ) AS parent_total\n FROM \"main\".\"sq_invoice\" AS \"t0\"\n       LEFT JOIN \"main\".\"sq_customer\" AS \"t1\" ON ((\"t0\".\"customer_id\")=\"t1\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "parent_total": 100.0
+        },
+        {
+          "id": 2,
+          "parent_total": 100.0
+        },
+        {
+          "id": 3,
+          "parent_total": 100.0
+        },
+        {
+          "id": 4,
+          "parent_total": 100.0
+        },
+        {
+          "id": 5,
+          "parent_total": null
+        }
+      ]
+    },
+    {
+      "name": "composite_relation_aggregate",
+      "request": {
+        "operation": "select",
+        "table": "sq.pair",
+        "columns": "$key,@members.aggr(count() AS n,sum($amount) AS total)",
+        "order_by": "$seq"
+      },
+      "compiled": {
+        "sql": "SELECT ( '[' ||  '\"' ||  \"t0\".\"code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  ) AS \"key\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_member\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"code\"=\"t0\".\"code\" AND \"t0_t0\".\"seq\"=\"t0\".\"seq\") )  AS \"n\",\n ( SELECT SUM(\"t0_t0\".\"amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_member\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"code\"=\"t0\".\"code\" AND \"t0_t0\".\"seq\"=\"t0\".\"seq\") )  AS \"total\"\n FROM \"main\".\"sq_pair\" AS \"t0\"\nORDER BY \"t0\".\"seq\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "key": "[\"A\", 1]",
+          "n": 2,
+          "total": 11.0
+        },
+        {
+          "key": "[\"A\", 2]",
+          "n": 0,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "derived_virtual",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@large.aggr(count() AS n,sum($amount) AS total)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f2_factor )))) )  AS \"n\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f2_factor )))) )  AS \"total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f2_factor": 15
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "n": 3,
+          "total": 90.0
+        },
+        {
+          "id": 2,
+          "n": 0,
+          "total": null
+        },
+        {
+          "id": 3,
+          "n": 0,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "derived_virtual_chain",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@window.aggr(count() AS n,sum($amount) AS total)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f3_factor ))) AND (\"t0_t0\".\"stored_amount\"<(\"t0\".\"id\" * 35))) )  AS \"n\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f3_factor ))) AND (\"t0_t0\".\"stored_amount\"<(\"t0\".\"id\" * 35))) )  AS \"total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f3_factor": 15
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "n": 2,
+          "total": 50.0
+        },
+        {
+          "id": 2,
+          "n": 0,
+          "total": null
+        },
+        {
+          "id": 3,
+          "n": 0,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "direct_virtual",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@direct.aggr(count() AS n,sum($amount) AS total)"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=(\"t0\".\"id\") AND \"t0_t0\".\"qty\">(\"t0\".\"id\" - 1))) )  AS \"n\",\n ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=(\"t0\".\"id\") AND \"t0_t0\".\"qty\">(\"t0\".\"id\" - 1))) )  AS \"total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "n": 4,
+          "total": 100.0
+        },
+        {
+          "id": 2,
+          "n": 0,
+          "total": null
+        },
+        {
+          "id": 3,
+          "n": 0,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "virtual_repeated_bindings",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id+:var_limit AS caller,@window.aggr(sum($adjusted) AS amount),@large.aggr(count() AS n)",
+        "sqlparams": {
+          "var_limit": 99,
+          "factor": 100
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\"+:var_limit AS caller,\n ( SELECT SUM(( \"t0_t0\".\"stored_amount\" + :f5_offset )) AS \"SUM__adjusted_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f3_factor ))) AND (\"t0_t0\".\"stored_amount\"<(\"t0\".\"id\" * 35))) )  AS \"amount\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE ((\"t0_t0\".\"customer_id\"=\"t0\".\"id\") AND (\"t0_t0\".\"stored_amount\">(( \"t0\".\"id\" * :f3_factor )))) )  AS \"n\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "var_limit": 99,
+          "factor": 100,
+          "f3_factor": 15,
+          "f5_offset": 5
+        }
+      },
+      "rows": [
+        {
+          "caller": 100,
+          "amount": 60.0,
+          "n": 3
+        },
+        {
+          "caller": 101,
+          "amount": null,
+          "n": 0
+        },
+        {
+          "caller": 102,
+          "amount": null,
+          "n": 0
+        }
+      ]
+    },
+    {
+      "name": "aggregate_with_outer_pagination",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,@invoices.aggr(count())",
+        "limit": 1,
+        "offset": 1
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n ( SELECT COUNT(*) AS \"COUNT___\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\") )  AS \"_invoices_count\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"\nLIMIT 1\nOFFSET 1",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 2,
+          "_invoices_count": 0
+        }
+      ]
+    },
+    {
+      "name": "correlate_outer_formula",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$above_threshold"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">( \"t0\".\"id\" * :f1_factor )) )  ) AS \"above_threshold\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_factor": 15
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "above_threshold": 90.0
+        },
+        {
+          "id": 2,
+          "above_threshold": null
+        },
+        {
+          "id": 3,
+          "above_threshold": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_environment",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$env_total",
+        "environment": {
+          "minimum": 25
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">:env_minimum) )  ) AS \"env_total\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "env_minimum": 25
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "env_total": 70.0
+        },
+        {
+          "id": 2,
+          "env_total": null
+        },
+        {
+          "id": 3,
+          "env_total": null
+        }
+      ]
+    },
+    {
+      "name": "subquery_field_parameter",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id,$field_parameter"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n(  ( SELECT SUM(\"t0_t0\".\"stored_amount\") AS \"SUM__amount_\"\n FROM \"main\".\"sq_invoice\" AS \"t0_t0\"\nWHERE (\"t0_t0\".\"customer_id\"=\"t0\".\"id\" AND \"t0_t0\".\"stored_amount\">\"t0_t0\".\"qty\") )  ) AS \"field_parameter\"\n FROM \"main\".\"sq_customer\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "field_parameter": 100.0
+        },
+        {
+          "id": 2,
+          "field_parameter": null
+        },
+        {
+          "id": 3,
+          "field_parameter": null
+        }
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "name": "many_traversal",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.amount"
+      },
+      "rejected": true
+    },
+    {
+      "name": "count_argument",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr(count($id))"
+      },
+      "rejected": true
+    },
+    {
+      "name": "unknown_aggregate",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr(median($amount))"
+      },
+      "rejected": true
+    },
+    {
+      "name": "xml",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr(to_xml($id))"
+      },
+      "rejected": true
+    },
+    {
+      "name": "empty_aggregate",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr()"
+      },
+      "rejected": true
+    },
+    {
+      "name": "outer_alias",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.aggr(count()) AS n"
+      },
+      "rejected": true
+    },
+    {
+      "name": "order_without_aggr",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@invoices.order_by('$id')"
+      },
+      "rejected": true
+    },
+    {
+      "name": "virtual_ask",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@asking.aggr(count())"
+      },
+      "rejected": true
+    },
+    {
+      "name": "virtual_cycle",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "@cycle_a.aggr(count())"
+      },
+      "rejected": true
+    },
+    {
+      "name": "aggregate_in_where",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$id",
+        "where": "@invoices.aggr(count())>0"
+      },
+      "rejected": true
+    },
+    {
+      "name": "multi_scalar",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$multi_scalar"
+      },
+      "rejected": true
+    },
+    {
+      "name": "cast_exists",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$cast_exists"
+      },
+      "rejected": true
+    },
+    {
+      "name": "conflicting_options",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$conflicting_options"
+      },
+      "rejected": true
+    },
+    {
+      "name": "unknown_option",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$unknown_option"
+      },
+      "rejected": true
+    },
+    {
+      "name": "recursive",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$recursive"
+      },
+      "rejected": true
+    },
+    {
+      "name": "legacy_json",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$legacy_json"
+      },
+      "rejected": true
+    },
+    {
+      "name": "method_query",
+      "request": {
+        "operation": "select",
+        "table": "sq.customer",
+        "columns": "$method_query"
+      },
+      "rejected": true
+    }
+  ]
+}

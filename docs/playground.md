@@ -200,7 +200,7 @@ questa particolarità è riprodotta. Passare testi utente tramite parametri, non
 come frammenti di espressione. Collisioni nei nomi generati per liste vengono
 rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
-Restano esclusi altre macro, sottoquery, relazioni inverse/virtualRelation,
+Restano fuori dal perimetro altre macro, navigazione diretta attraverso relazioni molti,
 callback applicative delle formule e dell'ambiente, codec applicativi, lock,
 scritture bulk/da selezione, azioni applicative su relazioni composte,
 e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
@@ -208,10 +208,11 @@ Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
 
-**Verifica query con Python** esegue dieci gruppi di controlli in un database
-IndexedDB separato: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
+**Verifica query con Python** esegue quattordici gruppi di controlli in database
+IndexedDB separati: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
 helper e transazioni, 28 casi aggiuntivi, 32 casi di formule parametrizzate/chiavi
-composte e rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
+composte, 48 casi di sottoquery/aggregazioni e 17 query rifiutate,
+con rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
@@ -376,11 +377,12 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 92 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+I 140 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
-FK fisiche o eseguire JOIN. Vedi il [contratto del modello](model.md) per API,
+FK fisiche. Le aggregazioni dichiarative vengono eseguite come sottoquery correlate;
+la navigazione come JOIN diretto resta esclusa. Vedi il [contratto del modello](model.md) per API,
 limiti del JSON portabile e differenze rispetto al vecchio riferimento.
 
 Il look usa gli stessi temi `gramlot-base`, `gramlot-compact` e `gramlot-index`
@@ -441,8 +443,9 @@ La coda serializza le richieste sullo stesso adapter; non è ancora una garanzia
 verificata per applicazioni con più schede aperte. Gli interi JS sicuri vengono
 passati come INTEGER SQLite in tutti e tre gli adapter, evitando differenze di
 affinità testuale. Restano esclusi audit, altre opzioni, azioni applicative
-su relazioni composte e query gerarchiche avanzate (per esempio la
-sottoquery virtuale `child_count`); i campi fisici di percorso sono già leggibili.
+su relazioni composte e macro gerarchiche avanzate. I campi fisici di percorso
+sono leggibili; il compilatore supporta ora le sottoquery dichiarative, mentre
+il corpus gerarchico dedicato resta concentrato sul ciclo di scrittura.
 
 
 ## Cascade applicative onUpdate
@@ -487,3 +490,16 @@ il ciclo applicativo mantenendo la verifica della FK al commit.
 **Verifica cascade onUpdate** esegue 27 scenari su database IndexedDB separati e
 mostra un esempio con padre, figli e nipoti, hook e SQL confrontati con Python.
 Le azioni su relazioni composte restano rifiutate esplicitamente.
+
+## Sottoquery e aggregazioni inverse nel browser
+
+**Verifica query con Python** include 48 casi di sottoquery e aggregazioni e 17
+configurazioni rifiutate. Il worker crea un database separato, confronta SQL e
+parametri con l'oracolo Python e poi esegue realmente ogni richiesta su SQLite
+WASM. Dopo la riapertura IndexedDB ripete tutte le SELECT e confronta i risultati.
+I dettagli compaiono in **Verifiche query nel browser**; il totale è di 140 query.
+
+Le ricette indipendenti e la semantica di correlazione, binding e filtri sono in
+[parity.md](parity.md#sottoquery-e-aggregazioni-inverse). Il confronto browser usa
+fixture Python salvate; `npm run verify:python` rigenera i risultati in memoria dal
+riferimento fissato e li confronta con Node e Bun.

@@ -51,8 +51,9 @@ rigenera automaticamente il riferimento.
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
 0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
-I 32 casi base, i 28 casi aggiuntivi e i 32 casi di letture calcolate confrontano il JSON completo dei tre modelli,
-il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le tre ricette hanno
+I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate e i 48 casi
+di sottoquery/aggregazioni confrontano il JSON completo dei quattro modelli,
+il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le quattro ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
 
@@ -84,8 +85,8 @@ lo esegue su SQLite WASM e ripete tutte le nuove SELECT dopo la riapertura Index
 Il sorgente del compilatore e dei binding della revisione fissata è stato confrontato
 con il tag Python `v0.6.3`: nessuna differenza; il pin dell'oracolo non è cambiato.
 
-Questo incremento non implementa sottoquery, aggregazioni sulle relazioni inverse,
-`virtualRelation`, altre macro o metodi applicativi `sql_formula_*`/`env_*`.
+Le sottoquery e le aggregazioni inverse/virtuali sono descritte sotto.
+Restano da portare altre macro e metodi applicativi `sql_formula_*`/`env_*`.
 `#ENV` supporta snapshot JSON scalari e sequenze; oggetti strutturati richiedono
 un contratto di conversione e sono rifiutati. La serializzazione SQL delle colonne
 composte riproduce Python, senza introdurre un diverso codec JSON.
@@ -152,3 +153,50 @@ li ritrova e non invoca i loro hook, come Python.
 Rigenerazione: `$PYTHON scripts/cascades_oracle.py`. Le fixture non normalizzano
 via le scritture o gli eventi dei figli: una cascade svolta soltanto da SQLite
 non può passare per una cascade applicativa con hook.
+
+## Sottoquery e aggregazioni inverse
+
+`examples/subqueries.js` e `examples/subqueries.py` definiscono indipendentemente
+il corpus `test/subquery-inputs.json`: 48 casi, inclusa la preparazione dei dati,
+confrontano modello completo, migrate JSON, SQL esatto, parametri e risultati SQLite.
+`test/subquery-errors.json` verifica inoltre 17 rifiuti di compilazione: si confronta
+il rifiuto, non il testo localizzato dell'eccezione. Il riferimento resta il commit
+0.6.1 + fix #44; compiler, binding, aggregazioni e adapter SQLite sono invariati nel
+tag 0.6.3 verificato.
+
+Sono portati `formulaColumn(select=...)`, `exists=...`, i placeholder nominati
+`select_*`/`exists_*` e `subQueryColumn(query=..., aggr=...)`. `#THIS` correla al
+record proprietario anche attraverso formule e JOIN. Ogni sottoquery ha alias e
+parametri locali separati; le formule interne ereditano l'ambiente corretto.
+Le policy dei figli seguono Python: di default includono draft e cancellati logici
+e ignorano la partizione, salvo opzioni esplicite nella dichiarazione.
+
+Esempio di proiezione:
+
+```js
+await queries.table('sq.customer').query({
+    columns: '$id,@invoices.aggr(count() AS n,sum($amount) AS total)',
+    order_by: '$id'
+}).fetch();
+```
+
+`aggr()` usa sottoquery correlate: più figli non duplicano il record principale.
+Supporta count(), sum/avg/min/max con espressioni e più argomenti, `join` con
+separatore/placeholder e `to_json` con valori SQLite nativi. Per join e JSON si
+applica l'ordine della tabella figlia o un override esplicito:
+
+```js
+columns: "$id,@invoices.order_by('$id DESC').aggr(join($code, ',', '-') AS codes)"
+```
+
+Sono coperti insiemi vuoti, NULL, formule e JOIN nei figli, SELECT annidate,
+cast/limit/offset, nomi di parametro in conflitto, prefissi di relazioni dirette,
+correlazioni composte e `virtualRelation` derivate o dirette con `var_*` come
+espressioni del record origine. Tutte le SELECT del corpus sono rieseguite dopo
+chiusura e riapertura del database IndexedDB.
+
+Come Python SQLite, il compilatore rifiuta navigazione diretta attraverso relazioni
+molti, aggr fuori da una proiezione autonoma, count con argomenti, XML, vecchi mode
+JSON/XML delle subQueryColumn e virtualRelation con ask. I metodi Python che generano
+sottoquery richiedono un futuro equivalente JS: qui sono accettate definizioni dati,
+non callback. Restano fuori le altre macro e i JOIN con condizioni personalizzate.

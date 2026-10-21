@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Sottoquery scalari ed EXISTS, select_*/exists_* nelle formule, subQueryColumn
+  dichiarative e aggregazioni inverse/virtuali `aggr()` (count/sum/avg/min/max,
+  join ordinato e to_json). Scope dei parametri e alias SQL allineati a Python,
+  anche con formule correlate, annidamenti e chiavi composte. 48 casi indipendenti
+  e 17 rifiuti confrontati su Node, Bun e SQLite WASM, con riapertura IndexedDB.
+
 - Compilatore di lettura: formule annidate con parametri locali `var_*`/`var_kwargs`,
   `#THIS`, `#ENV` da snapshot e lettura delle colonne composte, anche come pkey
   automatica. Ordine dei binding e collisioni allineati a Python; 32 nuovi casi
