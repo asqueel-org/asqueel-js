@@ -17,6 +17,7 @@ usare gli exporter e controllare le differenze. La procedura è in
 
 ```sh
 npm ci
+npm run update:tools
 npm run check
 npm run test:bun
 npx playwright install chromium
@@ -28,6 +29,16 @@ Python dal vivo. Testare sui driver reali: la sola uguaglianza del SQL non basta
 I test browser usano database temporanei propri e non devono cancellare dati
 applicativi. Non committare `node_modules`, bundle, database o output dei test.
 
+## Dipendenze interne
+
+I tool Genro e Gramlot hanno soltanto una versione minima: non aggiungere limiti
+superiori per nascondere regressioni. La CI esegue tutte le suite dopo
+`npm run update:tools`, aggiornando anche Bag e TYTX transitivi dal registry.
+Il lockfile resta utile per riprodurre una verifica; `npm ci` da solo non verifica
+la compatibilità con gli ultimi tool. Anche la parità Python usa le ultime
+dipendenze Genro pubblicate, mantenendo i commit di riferimento degli oracoli.
+Le incompatibilità vanno corrette invece di ripristinare vecchi vincoli.
+
 ## Scelte iniziali
 
 Per il playground seguire la guida Gramlot
@@ -37,7 +48,7 @@ Nel workspace dell'autore il riferimento è
 Usare `Page.main` per Source, `Logic` nominata, `node.GET/SET` per Data,
 binding `value='^path'` (con `live: true` per gli input nativi) e `button` con
 `dataController` per le azioni. `html_button` è per comportamento HTML nativo;
-non esegue controller figli. Verificare sempre le API sulla versione npm fissata:
+non esegue controller figli. Verificare sempre le API sull’ultima versione npm pubblicata:
 la guida distingue esplicitamente il contratto di sviluppo da quello pubblicato.
 
 - ESM JavaScript; dichiarazioni TypeScript quando il contratto pubblico si stabilizza.

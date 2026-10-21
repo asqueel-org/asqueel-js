@@ -55,6 +55,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         run: git merge-base --is-ancestor HEAD origin/main
       - run: npm ci
+      - run: npm run update:tools
       - name: Pack once and verify the installed archive
         run: |
           mkdir dist
