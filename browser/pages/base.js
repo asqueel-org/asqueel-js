@@ -25,7 +25,7 @@ export function databaseControls(parent, {seed = false, checks = false} = {}) {
 }
 export class PlaygroundPage extends Page {
     static css_theme = 'gramlot-base';
-    static css = ['/style.css'];
+    static css = ['/themes/gramlot-compact/theme.css', '/style.css'];
     static devices = ['desktop', 'tablet', 'phone'];
     main(root) {
         const name = this.constructor.section;

@@ -17,11 +17,11 @@ export default editorCollection(Base => class extends Base {
             state: EditorState.create({extensions: [basicSetup, EditorView.lineWrapping,
                 this.configuration.of([]),
                 EditorView.theme({
-                    '&': {height: 'var(--editor-height, 55vh)', fontSize: '12px', backgroundColor: '#fff'},
-                    '.cm-scroller': {overflow: 'auto', fontFamily: 'ui-monospace, SFMono-Regular, Consolas, monospace', lineHeight: '1.7'},
+                    '&': {height: 'var(--editor-height, 55vh)', fontSize: '12px', backgroundColor: 'var(--gramlot-surface)', color: 'var(--gramlot-ink)'},
+                    '.cm-scroller': {overflow: 'auto', fontFamily: 'var(--gramlot-font-code, monospace)', lineHeight: '1.5'},
                     '.cm-content': {padding: '14px 0'},
-                    '.cm-gutters': {backgroundColor: '#f6f9f6', color: '#78908b', border: 'none'},
-                    '&.cm-focused': {outline: '2px solid #3a9279', outlineOffset: '-2px'},
+                    '.cm-gutters': {backgroundColor: 'var(--gramlot-surface-subtle)', color: 'var(--gramlot-text-secondary)', border: 'none'},
+                    '&.cm-focused': {outline: '2px solid var(--gramlot-focus-ring)', outlineOffset: '-2px'},
                 }),
                 EditorView.updateListener.of(update => {
                     if (update.docChanged && !this.projecting && !this.control.disabled && !this.control.readOnly) {

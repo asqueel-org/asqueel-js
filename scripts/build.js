@@ -8,4 +8,5 @@ await build({entryPoints: ['browser/app.js', 'browser/logic.js', 'browser/index-
 await build({entryPoints: ['browser/page-worker.js'], bundle: true,
     format: 'iife', outdir: 'browser/dist', platform: 'browser', logLevel: 'info'});
 await copyFile('node_modules/wa-sqlite/dist/wa-sqlite-async.wasm', 'browser/dist/wa-sqlite-async.wasm');
-await cp('node_modules/@gramlot/gramlot/themes/gramlot-base', 'browser/themes/gramlot-base', {recursive: true});
+for (const theme of ['gramlot-base', 'gramlot-compact', 'gramlot-index'])
+    await cp(`node_modules/@gramlot/gramlot/themes/${theme}`, `browser/themes/${theme}`, {recursive: true});

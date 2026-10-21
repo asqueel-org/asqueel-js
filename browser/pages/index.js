@@ -3,7 +3,7 @@ import {Bag, IndexPage} from '@gramlot/gramlot/page';
 export class PlaygroundIndex extends IndexPage {
     static title = 'Asqueel JS · Playground';
     static css_theme = 'gramlot-base';
-    static css = ['/style.css'];
+    static css = ['/themes/gramlot-compact/theme.css', '/themes/gramlot-index/theme.css', '/style.css'];
     static devices = ['desktop', 'tablet', 'phone'];
     static initialSection = 'models';
     static compact = false;
@@ -18,9 +18,8 @@ export class PlaygroundIndex extends IndexPage {
         super.main(root);
     }
     top(pane) {
-        pane.setAttr({height: '64px', padding: '12px 20px', class: 'index-brand'});
-        pane.h1('Asqueel JS');
-        pane.p('Playground · modello, migrazioni e query');
+        pane.setAttr({height: '42px', class: 'gallery-toolbar'});
+        pane.h1('Asqueel JS · Playground');
     }
     left(pane) {
         super.left(pane);
