@@ -24,7 +24,7 @@ export function databaseControls(parent, {seed = false, checks = false} = {}) {
     parent.p('^dbRows', {id: 'db-rows'});
 }
 export class PlaygroundPage extends Page {
-    static css_theme = false;
+    static css_theme = 'gramlot-base';
     static css = ['/style.css'];
     static devices = ['desktop', 'tablet', 'phone'];
     main(root) {
@@ -39,21 +39,6 @@ export class PlaygroundPage extends Page {
             queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
         })) root.dataSetter({destination_path: path, value});
         const frame = root.div({class: 'playground', 'data-gramlot-page': name});
-        const sidebar = frame.aside({class: 'page-sidebar'});
-        sidebar.p('ASQUEEL JS', {class: 'eyebrow'});
-        sidebar.h2('Playground');
-        const nav = sidebar.nav({'aria-label': 'Playground', class: 'page-nav'});
-        for (const [key, label, description] of [
-            ['models', 'Modello', 'Editor JavaScript e confronto JSON'],
-            ['sqlite', 'Migrazioni SQLite', 'Piano SQL e database locale'],
-            ['queries', 'Query', 'Inserimento e lettura dei dati'],
-        ]) {
-            const link = nav.a({href: `?page=${key}`, 'aria-label': label, 'aria-disabled': '^busy', connect_onclick: 'playground.navigate',
-                ...(key === name ? {'aria-current': 'page'} : {})});
-            link.strong(label);
-            link.small(description);
-        }
-        sidebar.p('Tre pagine Gramlot. Una bozza condivisa e un database nel browser.', {class: 'nav-note'});
         const shell = frame.div({class: 'page-content'});
         const header = shell.header();
         const title = header.div();

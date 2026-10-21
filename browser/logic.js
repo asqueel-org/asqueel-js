@@ -10,7 +10,14 @@ const sourceOf = recipe => {
 
 export class Logic {
     async start(node) {
-        this.view = {get: key => node.GET(key), set: (key, value) => node.SET(key, value)};
+        this.view = {get: key => node.GET(key), set: (key, value) => {
+            node.SET(key, value);
+            if (key === 'busy' && value === false && this.pendingDraft) {
+                const draft = this.pendingDraft;
+                this.pendingDraft = null;
+                this.receiveDraft(draft);
+            }
+        }};
         let example = 'queries', source;
         try {
             const selected = localStorage.getItem('asqueel-example');
@@ -30,6 +37,10 @@ export class Logic {
         }, () => this.view.get('example'));
         this.queries = queryPanel(this.view, this.db, () => defineModel(new Function('root', this.view.get('source'))));
         this.page.abort.signal.addEventListener('abort', () => this.db.dispose(), {once: true});
+        window.addEventListener('storage', event => {
+            if (event.key !== DRAFT || !event.newValue) return;
+            try { this.receiveDraft(JSON.parse(event.newValue)); } catch {}
+        }, {signal: this.page.abort.signal});
         this.view.set('busy', false);
         await this.db.run('inspect');
         this.view.set('ready', true);
@@ -40,8 +51,13 @@ export class Logic {
             localStorage.setItem(DRAFT, JSON.stringify({example: this.view.get('example'), source: this.view.get('source')}));
         } catch {} // Browsing without localStorage still supports the live page.
     }
-    navigate(node, event) {
-        if (!this.view || this.view.get('busy')) event.preventDefault();
+    receiveDraft(draft) {
+        if (!draft || !Object.hasOwn(examples, draft.example) || typeof draft.source !== 'string') return;
+        if (this.view.get('busy')) { this.pendingDraft = draft; return; }
+        if (draft.source === this.view.get('source') && draft.example === this.view.get('example')) return;
+        this.view.set('example', draft.example);
+        this.view.set('source', draft.source);
+        this.render(); this.db?.invalidate(); this.queries?.invalidate();
     }
     selectExample() {
         this.restore();

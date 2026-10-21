@@ -17,7 +17,9 @@ npm run example -- --application
 npm run browser
 ```
 
-Aprire <http://127.0.0.1:8092>. Il playground è composto da tre pagine **Gramlot**:
+Aprire <http://127.0.0.1:8092>. La root è una **IndexPage Gramlot**, con albero di
+navigazione, pannello laterale ridimensionabile/richiudibile e schede persistenti.
+Le tre pagine vengono aperte in iframe dalla shell:
 
 - **Modello** (`?page=models`, pagina iniziale): editor, JSON migrate JavaScript/Python,
   JSON completo del modello, download e verifiche di composizione.
@@ -28,7 +30,11 @@ Aprire <http://127.0.0.1:8092>. Il playground è composto da tre pagine **Gramlo
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
-un reload. **Ripristina esempio** sostituisce la bozza con la ricetta originale.
+un reload. Le pagine già aperte ricevono le modifiche tramite l'evento `storage`;
+se una pagina sta eseguendo un'operazione, le applica al termine. Cambiare scheda
+conserva editor, cronologia e risultati. Ricaricare la shell ricrea le schede,
+riaprendo la pagina indicata nell'URL; restano la bozza e i dati SQLite.
+**Ripristina esempio** sostituisce la bozza con la ricetta originale.
 Senza localStorage disponibile la pagina funziona, ma non conserva la bozza.
 Il confronto usa l'oracolo salvato dell'esempio originale: non esegue Python sul
 codice modificato nell'editor.
@@ -37,8 +43,10 @@ Le dichiarazioni sono in `browser/pages/`: classi `Page` con elementi Source,
 binding `^path` e azioni nominate. `browser/logic.js` esporta la `Logic` che aggiorna
 la Data Bag; i servizi SQLite/query non manipolano il DOM. Gramlot serverless
 esegue la Page in un worker dedicato, distinto dal worker SQLite. La pagina HTML
-contiene soltanto il contenitore e il bootstrap. Le versioni npm fissate sono
-`@gramlot/gramlot@0.3.7` e `@gramlot/gramlot-serverless@0.2.14`, solo per il playground.
+contiene soltanto il contenitore e il bootstrap. La shell richiede almeno
+`@gramlot/gramlot@0.3.8` e `@gramlot/gramlot-serverless@0.2.15`, solo per il playground.
+Queste sono anche le versioni verificate in questo aggiornamento; non sono previsti
+limiti superiori. Usare `npm run update:tools` prima delle verifiche sugli ultimi tool.
 
 L'authoring segue [Writing pages (GC-095)](https://github.com/gramlot-org/gramlot/blob/main/docs/public/095-writing-pages.md):
 `dataSetter` inizializza Data, `_onStart` avvia la Logic, `node.GET/SET` accede
@@ -51,12 +59,20 @@ Il gruppo nominato `playground` viene registrato dal nostro host serverless.
 Il download conserva direttamente il JSON migrate: `utl.inout.download` è per
 rami Bag, non per questo documento JSON già serializzato.
 
-Il menu laterale distingue le tre pagine e diventa compatto su telefono.
+La shell usa `IndexPage`/`FramePage`, `IndexLogic`, una Bag di navigazione e le
+collection ufficiali `layout` e `tree`. Le regioni top/left/bottom personalizzano
+il contenuto dell'applicazione; il coordinatore Gramlot gestisce i pannelli remoti
+e il `tabContainer`. Su telefono la navigazione parte chiusa e si apre dal drawer.
+Il tema `gramlot-base` è servito localmente per root e iframe. Il build ESM con
+chunk condivisi evita copie separate del runtime e delle classi Bag nello stesso
+documento. Le stesse collection sono registrate nel server per richieste iniziali
+e frammenti remoti.
 Gli editor JavaScript e JSON offrono evidenziazione della sintassi, numeri di riga,
 ricerca e annulla/ripeti. CodeMirror è incluso nei bundle locali, senza CDN;
 la sua collection è in `browser/editors.js`, con grammatica separata per il worker.
-I risultati JSON restano pannelli di sola lettura. La navigazione usa URL separati:
-non è ancora la shell `IndexPage` con schede persistenti del contratto Gramlot in sviluppo.
+I risultati JSON restano pannelli di sola lettura. Gli URL pubblici `?page=…` aprono
+la shell sulla pagina richiesta e seguono la navigazione (anche Indietro).
+Il parametro interno `&embedded=1` carica soltanto una pagina figlia.
 
 ## Migrare nel browser
 

@@ -51,6 +51,12 @@ binding `value='^path'` (con `live: true` per gli input nativi) e `button` con
 non esegue controller figli. Verificare sempre le API sull’ultima versione npm pubblicata:
 la guida distingue esplicitamente il contratto di sviluppo da quello pubblicato.
 
+La shell usa l'`IndexPage` corrente, con Bag di navigazione e collection `layout`
+e `tree`; mantenere i region hook e il coordinatore standard. Le collection e
+la Logic browser condividono il runtime tramite i chunk ESM. Verificare sempre
+anche il passaggio fra schede già aperte: iframe, editor e connessioni rimangono
+vivi, mentre la bozza condivisa si aggiorna tramite `storage`.
+
 - ESM JavaScript; dichiarazioni TypeScript quando il contratto pubblico si stabilizza.
 - Un package, con export separati per i driver dei tre runtime.
 - Dipendenze e lockfile rivisti insieme; nessun processo Python a runtime.
