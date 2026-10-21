@@ -1,0 +1,131 @@
+name: Build and publish npm package
+
+on:
+  push:
+    tags: ['v*']
+  pull_request:
+    paths:
+      - '.github/workflows/publish.yml'
+      - 'scripts/check-package.mjs'
+      - 'scripts/package-smoke.mjs'
+      - 'scripts/verify-published.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - name: Verify release metadata
+        run: |
+          node --input-type=module <<'JS'
+          import assert from 'node:assert/strict';
+          import p from './package.json' with {type: 'json'};
+          import lock from './package-lock.json' with {type: 'json'};
+          assert.equal(p.name, '@asqueel/asqueel-js');
+          assert.equal(p.private, undefined);
+          assert.equal(p.publishConfig.access, 'public');
+          assert.equal(lock.version, p.version);
+          assert.equal(lock.packages[''].version, p.version);
+          if (process.env.GITHUB_REF_TYPE === 'tag') {
+            assert.match(p.version, /^\d+\.\d+\.\d+$/);
+            assert.equal(process.env.GITHUB_REF_NAME, `v${p.version}`);
+          }
+          JS
+      - name: Require a commit integrated into main
+        if: startsWith(github.ref, 'refs/tags/')
+        run: git merge-base --is-ancestor HEAD origin/main
+      - run: npm ci
+      - name: Pack once and verify the installed archive
+        run: |
+          mkdir dist
+          npm pack --ignore-scripts --json --pack-destination dist > pack.json
+          node scripts/check-package.mjs dist/*.tgz
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: npm-package
+          path: |
+            dist/*.tgz
+            pack.json
+
+  publish:
+    needs: build
+    if: github.repository == 'asqueel-org/asqueel-js' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment:
+      name: release
+      url: https://www.npmjs.com/package/@asqueel/asqueel-js
+    permissions:
+      contents: write
+      actions: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Require successful main CI for this exact commit
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const workflows = ['ci.yml', 'python-parity.yml'];
+            for (let attempt = 0; attempt < 90; attempt++) {
+              let ready = true;
+              for (const workflow_id of workflows) {
+                const {data} = await github.rest.actions.listWorkflowRuns({
+                  ...context.repo, workflow_id, head_sha: context.sha,
+                  branch: 'main', event: 'push', per_page: 1,
+                });
+                const run = data.workflow_runs[0];
+                if (run?.status === 'completed' && run.conclusion !== 'success') {
+                  throw new Error(`${workflow_id}: ${run.conclusion}; rerun/fix CI before publishing`);
+                }
+                ready &&= run?.conclusion === 'success';
+              }
+              if (ready) return;
+              core.info('Waiting for main CI on the tagged commit');
+              await new Promise(resolve => setTimeout(resolve, 10000));
+            }
+            throw new Error('Main CI did not succeed within 15 minutes');
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.14'
+      - run: npm install --global npm@11.21.0
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: npm-package
+      - name: Publish the verified archive with OIDC
+        run: npm publish dist/*.tgz --access public --ignore-scripts
+      - name: Verify registry integrity and installed package
+        run: |
+          node scripts/verify-published.mjs pack.json
+          npm ci --ignore-scripts
+          node scripts/check-package.mjs "$(node -p 'const p=require("./package.json"); p.name+"@"+p.version')"
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" || gh release create "$GITHUB_REF_NAME" \
+            --verify-tag --title "Asqueel JS ${GITHUB_REF_NAME#v}" --generate-notes
