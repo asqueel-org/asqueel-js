@@ -1,7 +1,7 @@
 # Modello risolto · Python 0.6.1
 
 Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.1**, commit
-`210e0cea24e07f2f5eb24889768aeb33eb964c80`. La versione del codice di riferimento è fissata;
+`8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988` (correzione #44 successiva alla release). La versione del codice di riferimento è fissata;
 la grammatica JSON da sola non implementa espansioni, relazioni o migrazioni.
 
 ```js
@@ -95,14 +95,13 @@ comportamenti sulle righe. Questo appartiene alla successiva fase delle query/ru
 
 ## Particolarità del riferimento
 
-La 0.6.1 con Builders 0.29.0 condivide ancora alcuni metadati dei default tra nodi dello stesso tag. Ciò può
-influire sulla precedenza di un attributo esplicito, per esempio `indexed=False` su
-un campo di sistema preesistente. Il port riproduce il caso osservabile e lo mantiene
-nel corpus differenziale; cambiarlo richiede prima aggiornare il riferimento Python.
-Il caso `061/sysfield_explicit_indexed_false` riproduce il difetto anche sul tag
-pubblicato: `__ins_ts` con `indexed=False`, seguito da un'altra colonna, viene
-risolto con `indexed=True`. La dipendenza dichiarata dalla release è
-`genro-builders>=0.29.0,<0.30`; Builders 0.30.0 non è incluso in questo confronto.
+Il riferimento include la correzione Python della [issue #44](https://github.com/asqueel-org/asqueel/issues/44).
+I default omessi appartengono a ogni singola dichiarazione: `indexed=False` su un
+campo di sistema resta esplicito anche dopo l'aggiunta di una colonna estranea.
+Il caso `061/sysfield_explicit_indexed_false` conserva questa regressione nel corpus
+differenziale, confrontando modello completo e migrazione. Un valore omesso continua
+a ricevere il default di `sys_fields`. La release PyPI 0.6.1 contiene ancora il difetto;
+il confronto usa il commit corretto fissato in `provenance.json`, con Builders 0.29.0.
 
 Il JSON mantiene la versione di formato `1`, ma dichiara il riferimento `0.6.1`.
 Il ripristino richiede questo riferimento: i vecchi snapshot `0.6.0` vanno rigenerati

@@ -80,7 +80,6 @@ function snapshot(n, schemas) {
       n.children.map((c) => snapshot(c, schemas)),
     ),
     defaults: d,
-    isolatedMetadata: Object.keys(meta).length > 0,
   };
 }
 function prepare(builder) {
@@ -110,22 +109,6 @@ function prepare(builder) {
   root.children = root.children.filter((n) => n.tag !== "connection");
   if (own(root.attributes, "conninfo")) root.attributes.conninfo = "";
   delete root.attributes.connect_kwargs;
-  // 0.6.1 shares signature-default metadata between ordinary nodes of a tag.
-  // Preserve its observable override semantics (covered by differential cases).
-  // Grouped/composed nodes own separate metadata dictionaries.
-  const signatures = new Map(),
-    nodes = [];
-  const collect = (n) => {
-    nodes.push(n);
-    if (!n.isolatedMetadata && n.defaults.length)
-      signatures.set(n.tag, n.defaults);
-    n.children.forEach(collect);
-  };
-  collect(root);
-  for (const n of nodes)
-    if (!n.isolatedMetadata && signatures.has(n.tag))
-      n.defaults = signatures.get(n.tag);
-
   const optionView = (n) => ({
     tag: n.tag,
     a: n.attributes,
