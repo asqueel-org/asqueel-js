@@ -50,7 +50,9 @@ di una transazione e verificare che nessuna scrittura resti; rileggere dopo relo
 - [ ] Primo avvio online, chiusura, riapertura senza rete e CRUD completo.
 - [ ] Coordinare aggiornamento degli asset e versione dello schema locale.
 - [x] Importazione CSV/JSON/TYTX tramite sql_insert, con parità Python e verifiche browser.
-- [ ] Esportazione dei dati e gestione esplicita degli errori di quota.
+- [x] Snapshot Python → browser → Python: SourceBag anche parziale e dati TYTX,
+  con confronto modello/migrate/catalogo/valori e ritorno reale del browser a Python.
+- [ ] Gestione esplicita degli errori di quota durante import/export e persistenza.
 - [ ] Verificare più schede aperte e richieste concorrenti attraverso l'API worker.
 - [ ] Verificare Chromium, Firefox e WebKit; dichiarare solo i browser verificati.
 

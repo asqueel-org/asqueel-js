@@ -136,3 +136,9 @@ Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 
 Le regole di sviluppo sono in [CONTRIBUTING.md](CONTRIBUTING.md), i confini dei
 componenti in [architettura](docs/architecture.md). Licenza Apache-2.0.
+
+## Trasferimento offline
+
+[Bag sorgente e snapshot TYTX](docs/transfers.md): Python → SQLite nel browser →
+Python, con selezione di package/tabelle, conservazione di struttura e valori e
+verifica reale su IndexedDB. La sincronizzazione resta al layer applicativo.

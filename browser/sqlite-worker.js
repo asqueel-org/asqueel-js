@@ -1,3 +1,5 @@
+import {transferChecks} from './transfer-checks.js';
+import {importTransfer, exportTransfer} from '../src/transfer.js';
 import {importChecks} from './import-checks.js';
 import {parseDateExpression} from '@gramlot/gramlot';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
@@ -12,6 +14,7 @@ import {modelFromQuerySource} from '../src/queries.js';
 import {SqlBuilder} from '../src/index.js';
 
 const DATABASE = 'asqueel-js-playground-v1';
+let transferDatabase, transferBuilder;
 let db, queue = Promise.resolve();
 async function inspect() {
     const structure = await readSQLite(db);
@@ -22,6 +25,22 @@ async function inspect() {
     return {structure, rows};
 }
 async function dispatch(type, desired) {
+    if (type === 'transfer-checks') return transferChecks();
+    if (type === 'transfer-load') {
+        const bundle = JSON.parse(await desired.file.text());
+        const databaseName = 'asqueel-transfer-' + crypto.randomUUID();
+        const next = await openBrowserSQLite(databaseName);
+        try {
+            const result = await importTransfer(next, bundle);
+            if (transferDatabase) await transferDatabase.close();
+            transferDatabase = next; transferBuilder = result.builder;
+            return {databaseName, counts:result.counts, model:transferBuilder.toJSON(), structure:await readSQLite(next)};
+        } catch (error) { await next.close(); throw error; }
+    }
+    if (type === 'transfer-export') {
+        if (!transferDatabase) throw new Error('Carica prima uno snapshot Python');
+        return exportTransfer(transferDatabase, transferBuilder);
+    }
     if (type === 'composition-checks') return compositionChecks();
     if (type === 'checks') return browserChecks();
     if (type === 'query-checks') return queryChecks();

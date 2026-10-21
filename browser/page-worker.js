@@ -1,12 +1,13 @@
 import {GramlotWorkerServer} from '@gramlot/gramlot-serverless/gramlot-worker-server';
 import {ModelPage} from './pages/models.js';
 import {SQLitePage} from './pages/sqlite.js';
+import {TransferPage} from './pages/transfer.js';
 import {QueryPage} from './pages/queries.js';
 import {editorCollection} from './editors-definition.js';
 import {PlaygroundIndex} from './pages/index.js';
 import layout from '@gramlot/gramlot/components/layout';
 import tree from '@gramlot/gramlot/components/tree';
-const pages = {models: ModelPage, sqlite: SQLitePage, queries: QueryPage};
+const pages = {models: ModelPage, sqlite: SQLitePage, queries: QueryPage, transfer: TransferPage};
 const section = new URL(self.location.href).searchParams.get('page') || 'models';
 const embedded = new URL(self.location.href).searchParams.get('embedded') === '1';
 PlaygroundIndex.initialSection = Object.hasOwn(pages, section) ? section : 'models';

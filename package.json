@@ -8,7 +8,8 @@
     "./sqlite": "./src/sqlite.js",
     "./adapters/node": "./src/adapters/node-sqlite.js",
     "./adapters/bun": "./src/adapters/bun-sqlite.js",
-    "./adapters/browser": "./src/adapters/browser-sqlite.js"
+    "./adapters/browser": "./src/adapters/browser-sqlite.js",
+    "./transfer": "./src/transfer.js"
   },
   "scripts": {
     "export:python": "${PYTHON:-python3} scripts/export_python.py",
@@ -64,7 +65,8 @@
     "docs",
     "ROADMAP.md",
     "CHANGELOG.md",
-    "RELEASING.md"
+    "RELEASING.md",
+    "python"
   ],
   "publishConfig": {
     "access": "public"

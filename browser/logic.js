@@ -1,3 +1,4 @@
+import {transferPanel} from './transfer-panel.js';
 import {defineModel} from '../src/index.js';
 import {examples, modelExamples, diff} from './recipes.js';
 import {sqlitePanel} from './sqlite-panel.js';
@@ -35,6 +36,7 @@ export class Logic {
             if (!this.view.get('json')) throw new Error('Correggi il modello prima di migrare');
             return JSON.parse(this.view.get('json'));
         }, () => this.view.get('example'));
+        this.transfers = transferPanel(this.view, this.db);
         this.queries = queryPanel(this.view, this.db, () => defineModel(new Function('root', this.view.get('source'))));
         this.page.abort.signal.addEventListener('abort', () => this.db.dispose(), {once: true});
         window.addEventListener('storage', event => {
@@ -124,6 +126,14 @@ export class Logic {
         this.view.set('importFileName', this.selectedImportFile?.name ?? 'Nessun file selezionato');
     }
     importFile() { return this.queries.importFile(this.selectedImportFile); }
+    selectTransferFile(node, event) {
+        this.selectedTransferFile = event.target.files?.[0] ?? null;
+        this.view.set('transferFileName', this.selectedTransferFile?.name ?? 'Nessun file selezionato');
+    }
+    checkTransfers() { return this.transfers.check(); }
+    downloadTransferExample() { return this.transfers.example(); }
+    loadTransfer() { return this.transfers.load(this.selectedTransferFile); }
+    downloadTransfer() { return this.transfers.download(); }
     checkImports() { return this.queries.checkImports(); }
     checkQueries() { return this.queries.execute(true); }
     checkCascades() { return this.queries.checkCascades(); }

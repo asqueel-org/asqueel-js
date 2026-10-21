@@ -2,6 +2,13 @@
 
 ## Non rilasciato
 
+- Trasferimento Python → browser → Python: vera SourceBag TYTX completa o
+  selezionata per package/tabelle, snapshot di record TYTX, caricamento atomico
+  con NULL espliciti e export dal database locale. Confronto del modello completo,
+  migrate, catalogo e valori su Node, Bun e SQLite WASM/IndexedDB; ricevitore
+  Python verificato sui bundle restituiti dal browser. Pagina Gramlot dedicata;
+  nessun motore di sincronizzazione.
+
 - Import CSV/JSON/TYTX tramite `table.sql_insert`, con lettura incrementale,
   blocchi di 1.000 record, adattamento dal modello e chiavi automatiche.
   Semantica SQL diretta senza trigger, come Python, e transazioni atomiche JS.

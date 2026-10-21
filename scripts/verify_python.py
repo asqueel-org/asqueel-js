@@ -79,3 +79,6 @@ for runtime in ('node','bun'):
                     row[key] = float(row[key])
     assert actual == imports, f'{runtime}: file import SQL, parameters, results or rollback differ from live Python'
     print(f'{runtime}: {len(imports["cases"])} CSV/JSON/TYTX imports match live Python SQL, parameters, rows and rollback')
+
+from verify_transfers import verify as verify_transfers
+verify_transfers()

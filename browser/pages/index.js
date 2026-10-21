@@ -9,7 +9,7 @@ export class PlaygroundIndex extends IndexPage {
     static compact = false;
     static get navigation() {
         const navigation = new Bag();
-        for (const [key, title] of [['models', 'Modello'], ['sqlite', 'Migrazioni SQLite'], ['queries', 'Query']])
+        for (const [key, title] of [['models', 'Modello'], ['sqlite', 'Migrazioni SQLite'], ['queries', 'Query'], ['transfer', 'Trasferimento offline']])
             navigation.setItem(key, null, {title, url: `?page=${key}&embedded=1`});
         return navigation;
     }

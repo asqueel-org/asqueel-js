@@ -369,3 +369,23 @@ sono indipendenti (`examples/import_records.py` e `examples/import-records.js`).
 Il corpus usa blocchi oltre le 1.000 righe, file malformati, duplicati e fallimenti
 dopo un blocco già scritto. Il browser confronta gli stessi risultati e riapre
 IndexedDB. I limiti e il contratto delle transazioni sono in [Importazione](import.md).
+
+## Trasferimento della sorgente e degli snapshot
+
+`scripts/transfer_oracle.py` esporta una SourceBag Python TYTX, con modello
+completo, selezioni per package/tabelle, modello senza dati, colgroups,
+virtualRelation e sys_fields (compresi package vuoti richiesti). Le sette prove
+confrontano modello completo, migrate JSON, catalogo SQLite e valori fisici.
+I casi con dati modificano un documento e inseriscono una riga offline;
+verificano anche NULL con default SQL, booleani, decimali, Unicode, nomi SQL
+personalizzati, testo con suffissi TYTX e date con offset/microsecondi.
+La precisione delle date è confrontata anche con i valori Python originali,
+prima della serializzazione. Selezioni sconosciute, dipendenze mancanti e
+collisioni di nomi SQL sono rifiutate.
+
+Node e Bun inviano i bundle esportati al ricevitore Python su un database nuovo.
+I test Playwright fanno lo stesso lavoro in SQLite WASM, riaprono IndexedDB e
+salvano **gli effettivi bundle del browser** in `output/browser-transfer-returns.json`.
+`verify_transfers.py --browser output/browser-transfer-returns.json` li carica
+con Python e verifica anche i tipi TYTX decodificati. Non è un confronto simulato
+né un servizio di sincronizzazione. API e limiti: [Trasferimenti](transfers.md).
