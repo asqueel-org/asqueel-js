@@ -34,8 +34,8 @@ applicativi. Non committare `node_modules`, bundle, database o output dei test.
 - Un package, con export separati per i driver dei tre runtime.
 - Dipendenze e lockfile rivisti insieme; nessun processo Python a runtime.
 - Le funzionalità non supportate producono errori espliciti prima delle scritture.
-- Nessuna pubblicazione automatica npm finché i criteri della prima release
-  non sono completati; il package rimane `private: true`.
+- Pubblicazioni pubbliche esplicite: verificare il tarball installato seguendo
+  [RELEASING.md](RELEASING.md). La serie 0.1.x resta sperimentale.
 
 Il playground esegue codice del suo editor: è uno strumento di sviluppo locale,
 non una sandbox per eseguire codice di utenti non fidati.
