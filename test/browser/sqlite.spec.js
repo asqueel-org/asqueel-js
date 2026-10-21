@@ -67,7 +67,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await page.goto('/?page=models');
     await ready(page, 'models');
     const source = "root.db({name: 'draft', implementation: 'sqlite'}).packages().package('app').table({name: 'item', pkey: 'id'}).column({name: 'id', dtype: 'I'});";
-    await page.locator('#model').fill(source);
+    await page.locator('#model').getByRole('textbox').fill(source);
     await expect(page.locator('#download').getByRole('button')).toBeDisabled();
     await page.locator('#render').click();
     await expect(page.locator('#status')).toContainText('1 tabelle');
@@ -85,9 +85,9 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await expect(page.locator('#sql-plan')).toContainText('app_item');
     await page.getByRole('link', {name: 'Modello', exact: true}).click();
     await ready(page, 'models');
-    await expect(page.locator('#model')).toHaveValue(source);
+    await expect(page.locator('#model').getByRole('textbox')).toHaveText(source);
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
-    await page.locator('#model').fill('not valid JavaScript {');
+    await page.locator('#model').getByRole('textbox').fill('not valid JavaScript {');
     await page.locator('#render').click();
     await expect(page.locator('#status')).toHaveClass('error');
     await expect(page.locator('#download').getByRole('button')).toBeDisabled();
@@ -134,4 +134,38 @@ test('Gramlot model page fits a phone viewport', async ({page}) => {
     await expect(page.getByRole('link', {name: 'Migrazioni SQLite', exact: true})).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
     await page.screenshot({path: 'output/gramlot-mobile.png'});
+});
+
+test('CodeMirror binds edits, undo and JSON queries without external assets', async ({page}) => {
+    const errors = [], external = [];
+    page.on('pageerror', error => errors.push(error.message));
+    page.on('request', request => {
+        if (new URL(request.url()).origin !== 'http://127.0.0.1:8093') external.push(request.url());
+    });
+    await page.goto('/?page=models');
+    await ready(page, 'models');
+    const editor = page.locator('#model').getByRole('textbox');
+    await expect(page.locator('#model .cm-lineNumbers')).toBeVisible();
+    const original = await page.evaluate(() => window.gramlot.data.getItem('source'));
+    await editor.fill('// Modello modificato\n' + original);
+    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Modello modificato\n' + original);
+    await editor.press('ControlOrMeta+z');
+    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe(original);
+    await editor.press('ControlOrMeta+Shift+z');
+    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Modello modificato\n' + original);
+    // The same busy Data used by SQLite commands makes the real editor non-editable.
+    await page.evaluate(() => window.gramlot.data.setItem('busy', true));
+    await expect(editor).toHaveAttribute('contenteditable', 'false');
+    await page.evaluate(() => window.gramlot.data.setItem('busy', false));
+    await expect(editor).toHaveAttribute('contenteditable', 'true');
+    await page.getByRole('link', {name: 'Query', exact: true}).click();
+    await ready(page, 'queries');
+    const request = JSON.parse(await page.evaluate(() => window.gramlot.data.getItem('queryInput')));
+    request.values.id = 99;
+    await page.locator('#query-input').getByRole('textbox').fill(JSON.stringify(request, null, 2));
+    await page.getByRole('button', {name: 'Compila query', exact: true}).click();
+    await expect(page.locator('#query-params')).toContainText('99');
+    await page.screenshot({path: 'output/gramlot-queries.png'});
+    expect(errors).toEqual([]);
+    expect(external).toEqual([]);
 });

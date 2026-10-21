@@ -38,16 +38,28 @@ export class PlaygroundPage extends Page {
             queryExample: 'insert_person', queryInput: '', queryStatus: 'Compila per confrontare SQL e parametri.',
             queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
         })) root.dataSetter({destination_path: path, value});
-        const shell = root.div({class: 'playground', 'data-gramlot-page': name});
+        const frame = root.div({class: 'playground', 'data-gramlot-page': name});
+        const sidebar = frame.aside({class: 'page-sidebar'});
+        sidebar.p('ASQUEEL JS', {class: 'eyebrow'});
+        sidebar.h2('Playground');
+        const nav = sidebar.nav({'aria-label': 'Playground', class: 'page-nav'});
+        for (const [key, label, description] of [
+            ['models', 'Modello', 'Editor JavaScript e confronto JSON'],
+            ['sqlite', 'Migrazioni SQLite', 'Piano SQL e database locale'],
+            ['queries', 'Query', 'Inserimento e lettura dei dati'],
+        ]) {
+            const link = nav.a({href: `?page=${key}`, 'aria-label': label, 'aria-disabled': '^busy', connect_onclick: 'playground.navigate',
+                ...(key === name ? {'aria-current': 'page'} : {})});
+            link.strong(label);
+            link.small(description);
+        }
+        sidebar.p('Tre pagine Gramlot. Una bozza condivisa e un database nel browser.', {class: 'nav-note'});
+        const shell = frame.div({class: 'page-content'});
         const header = shell.header();
         const title = header.div();
         title.p('ASQUEEL JS / GRAMLOT', {class: 'eyebrow'});
         title.h1({models: 'Il modello, per intero.', sqlite: 'Dal modello al database.', queries: 'Dati locali, query verificabili.'}[name]);
         title.p('Modelli JavaScript · riferimento Python 0.6.1 · SQLite persistito su IndexedDB');
-        const nav = shell.nav({'aria-label': 'Playground', class: 'page-nav'});
-        for (const [key, label] of [['models', 'Modello'], ['sqlite', 'Migrazioni SQLite'], ['queries', 'Query']])
-            nav.a(label, {href: `?page=${key}`, 'aria-disabled': '^busy', connect_onclick: 'playground.navigate',
-                ...(key === name ? {'aria-current': 'page'} : {})});
         const toolbar = shell.div({class: 'toolbar'});
         toolbar.html_label('Esempio', {for: 'example'});
         const select = toolbar.select({id: 'example', value: '^example', disabled: '^busy', connect_onchange: 'playground.selectExample'});

@@ -7,7 +7,7 @@ export class ModelPage extends PlaygroundPage {
         const editor = grid.section();
         editor.h2('Modello JavaScript');
         editor.p('La variabile root è già disponibile. Il codice viene eseguito localmente.', {class: 'hint'});
-        editor.textarea({id: 'model', value: '^source', live: true, spellcheck: false, 'aria-label': 'Modello JavaScript', disabled: '^busy', connect_oninput: 'playground.editModel'});
+        editor.codeEditor({id: 'model', value: '^source', language: 'javascript', label: 'Modello JavaScript', disabled: '^busy', connect_onchange: 'playground.editModel'});
         const output = grid.section();
         const heading = output.h2();
         heading.html_label('Migrazione', {for: 'output'});

@@ -13,7 +13,7 @@ export class QueryPage extends PlaygroundPage {
         body.html_label('Richiesta', {for: 'query-example'});
         const select = body.select({id: 'query-example', value: '^queryExample', disabled: '^busy', connect_onchange: 'playground.selectQuery'});
         for (const [value, label] of Object.entries(queryLabels)) select.option(label, {value});
-        body.textarea({id: 'query-input', value: '^queryInput', live: true, spellcheck: false, 'aria-label': 'Richiesta query JSON', disabled: '^busy', connect_oninput: 'playground.editQuery'});
+        body.codeEditor({id: 'query-input', value: '^queryInput', language: 'json', label: 'Richiesta query JSON', disabled: '^busy', connect_onchange: 'playground.editQuery'});
         const buttons = body.div({class: 'db-actions'});
         action(buttons, 'Compila query', 'compileQuery', {id: 'query-compile'});
         action(buttons, 'Esegui query', 'executeQuery', {id: 'query-run'});

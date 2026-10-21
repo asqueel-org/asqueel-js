@@ -42,12 +42,21 @@ contiene soltanto il contenitore e il bootstrap. Le versioni npm fissate sono
 
 L'authoring segue [Writing pages (GC-095)](https://github.com/gramlot-org/gramlot/blob/main/docs/public/095-writing-pages.md):
 `dataSetter` inizializza Data, `_onStart` avvia la Logic, `node.GET/SET` accede
-ai valori e `live: true` aggiorna gli editor durante la digitazione. Le azioni
+ai valori. Gli editor CodeMirror 6 usano una collection locale Gramlot con
+`value: '^path'`: ogni modifica viene trasferita a Data dal `ComponentControl`,
+senza textarea nascosti o scritture Data duplicate. Le azioni
 usano `button` con un `dataController` figlio; i parametri passano al controller,
 senza recuperarli dal DOM. Gli eventi nativi restano per select, editor e link.
 Il gruppo nominato `playground` viene registrato dal nostro host serverless.
 Il download conserva direttamente il JSON migrate: `utl.inout.download` è per
 rami Bag, non per questo documento JSON già serializzato.
+
+Il menu laterale distingue le tre pagine e diventa compatto su telefono.
+Gli editor JavaScript e JSON offrono evidenziazione della sintassi, numeri di riga,
+ricerca e annulla/ripeti. CodeMirror è incluso nei bundle locali, senza CDN;
+la sua collection è in `browser/editors.js`, con grammatica separata per il worker.
+I risultati JSON restano pannelli di sola lettura. La navigazione usa URL separati:
+non è ancora la shell `IndexPage` con schede persistenti del contratto Gramlot in sviluppo.
 
 ## Migrare nel browser
 

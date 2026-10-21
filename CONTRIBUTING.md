@@ -35,7 +35,7 @@ Per il playground seguire la guida Gramlot
 Nel workspace dell'autore il riferimento è
 `/Users/gporcari/Sviluppo/gramlot/gramlot/docs/public/095-writing-pages.md`.
 Usare `Page.main` per Source, `Logic` nominata, `node.GET/SET` per Data,
-binding `value='^path'` con `live: true` per gli editor e `button` con
+binding `value='^path'` (con `live: true` per gli input nativi) e `button` con
 `dataController` per le azioni. `html_button` è per comportamento HTML nativo;
 non esegue controller figli. Verificare sempre le API sulla versione npm fissata:
 la guida distingue esplicitamente il contratto di sviluppo da quello pubblicato.
