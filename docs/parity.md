@@ -52,8 +52,8 @@ rigenera automaticamente il riferimento.
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
 0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
 I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
-di sottoquery/aggregazioni e i 31 casi callback confrontano il JSON completo dei
-cinque modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le cinque ricette hanno
+di sottoquery/aggregazioni, i 33 casi callback e i 46 casi macro confrontano il JSON completo dei
+sei modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sei ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
 
@@ -260,8 +260,49 @@ le callback devono essere deterministiche per l'ambiente corrente.
 
 `examples/compiler_callbacks.py` e `examples/compiler-callbacks.js` contengono
 ricette e funzioni indipendenti. L'oracolo esegue veri metodi Python associati a
-`SqlTable`: 31 casi verificano JSON, SQL, parametri, dati e ordine delle chiamate;
+`SqlTable`: 33 casi verificano JSON, SQL, parametri, dati e ordine delle chiamate;
 23 casi verificano i rifiuti; tre compilazioni consecutive verificano la cache.
 Node, Bun e il worker browser eseguono le funzioni JS, con rilettura SQLite dopo
 riapertura IndexedDB. Il browser importa moduli JS: non serializza né valuta codice
 ricevuto nel JSON. Il confronto dal vivo rigenera l'oracolo dalla revisione Python fissata.
+
+
+## Macro TEMPLATE e IN_RANGE
+
+`#TEMPLATE` è espansa in colonne, WHERE, ORDER BY, GROUP BY, HAVING e formule,
+anche quando la formula viene restituita da una callback. L'output SQLite usa
+`COALESCE(CAST(... AS TEXT), '')` e concatenazioni `||`, esattamente come Python:
+un valore NULL contribuisce testo vuoto. I placeholder sono nominati, possono
+ripetersi e accettano nomi Unicode. `$$` indica il dollaro letterale e `''` un
+apostrofo all'interno del template SQL.
+
+```js
+const rows = await query.table('app.person').query({
+    columns: "#TEMPLATE('${n} (${c})', $name AS n, @city_id.name AS c) AS label",
+    where: '#IN_RANGE($amount,:low,:high)',
+    sqlparams: {low: 10, high: 20},
+}).fetch();
+```
+
+`#IN_RANGE` è espansa nel WHERE e nelle formule. Gli estremi sono inclusivi;
+`null` elimina il relativo limite. Con entrambi gli estremi assenti il predicato
+è vero anche per un valore NULL; con almeno un estremo presente un valore NULL
+mantiene la logica SQL a tre valori e viene escluso dal WHERE. Un intervallo
+invertito non seleziona righe. Operandi e contesti ammessi seguono la grammatica
+Python: campi, riferimenti a relazioni, parametri e identificatori semplici,
+non espressioni arbitrarie come `$amount + 1` dentro la macro.
+
+Il confronto usa `examples/query_macros.py` e `examples/query-macros.js`, scritti
+indipendentemente: 46 casi eseguono SQL su SQLite e confrontano modello completo,
+JSON migrate, SQL esatto, parametri e risultati. Coprono NULL, quoting, Unicode,
+parametri, formule composte, relazioni, aggregazioni, sottoquery, filtri e conteggi.
+Altri due casi nel corpus callback verificano entrambe le macro generate da metodi.
+18 usi non validi sono rifiutati come Python: argomenti mancanti, duplicati o non
+usati, sintassi incompleta, template direttamente annidati e IN_RANGE fuori dai
+contesti ammessi. Come Python, anche un marcatore non risolto come `#tag` nel
+testo letterale del template viene rifiutato. Il browser riesegue tutte le SELECT dopo riapertura IndexedDB.
+
+Il porting conserva l'ordine di espansione Python. I template direttamente annidati
+negli argomenti sono rifiutati dal riferimento; le formule che richiamano altre
+formule contenenti template sono invece supportate. `#PERIOD` e `#BAG/#BAGCOLS`
+restano incrementi separati.

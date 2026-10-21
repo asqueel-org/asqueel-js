@@ -349,5 +349,29 @@
       "order_by": "$id",
       "environment": {}
     }
+  },
+  {
+    "name": "callback_template",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$invalid",
+      "order_by": "$id",
+      "environment": {
+        "invalid": "#TEMPLATE('${n}', $amount AS n)"
+      }
+    }
+  },
+  {
+    "name": "callback_range",
+    "request": {
+      "operation": "select",
+      "table": "app.owner",
+      "columns": "$id,$invalid",
+      "order_by": "$id",
+      "environment": {
+        "invalid": "#IN_RANGE($amount,10,20)"
+      }
+    }
   }
 ]

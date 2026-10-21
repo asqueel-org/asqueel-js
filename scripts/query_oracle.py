@@ -18,6 +18,7 @@ from browser_queries import query_model
 from query_features import feature_model
 from read_formulas import read_model
 from subqueries import subquery_model
+from query_macros import macro_model
 from compiler_callbacks import callback_model, callback_methods
 from asqueel import UnsupportedFeatureError
 from asqueel.environment import SqlEnvironment
@@ -127,3 +128,7 @@ if __name__ == "__main__":
     callbacks = query_oracle(callback_model(), 'callback-inputs.json', 'callback-errors.json', callback_methods)
     (ROOT / 'test/fixtures/callbacks.json').write_text(json.dumps(callbacks, indent=2, ensure_ascii=False) + '\n')
     print(f"Python: {len(callbacks['cases'])} callback cases and {len(callbacks['errors'])} rejected queries.")
+
+    macros = query_oracle(macro_model(), 'macro-inputs.json', 'macro-errors.json')
+    (ROOT / 'test/fixtures/macros.json').write_text(json.dumps(macros, indent=2, ensure_ascii=False) + '\n')
+    print(f"Python: {len(macros['cases'])} macro cases and {len(macros['errors'])} rejected queries.")

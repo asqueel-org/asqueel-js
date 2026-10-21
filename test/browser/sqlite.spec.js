@@ -22,7 +22,7 @@ test('sys_fields and hooks execute like Python, roll back and survive IndexedDB 
 });
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
-for (const [command, expected] of [['checks', 7], ['query-checks', 19], ['composition-checks', compositionCases.length + 3]]) {
+for (const [command, expected] of [['checks', 7], ['query-checks', 23], ['composition-checks', compositionCases.length + 3]]) {
     test(`browser SQLite: ${command}`, async ({page}) => {
         await leaf(page);
         const checks = await page.evaluate(type => new Promise((resolve, reject) => {
@@ -146,19 +146,22 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('171 query confrontate con Python', {timeout: 30000});
+    await expect(page.locator('#query-status')).toContainText('219 query confrontate con Python', {timeout: 30000});
     await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
     await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
     await expect(page.locator('#query-checks')).toContainText('48 sottoquery/aggregazioni');
     await expect(page.locator('#query-checks')).toContainText('17 query rifiutate');
     await expect(page.locator('#query-checks')).toContainText('sottoquery e aggregazioni ancora identiche a Python');
-    await expect(page.locator('#query-checks')).toContainText('31 casi callback');
+    await expect(page.locator('#query-checks')).toContainText('33 casi callback');
     await expect(page.locator('#query-checks')).toContainText('23 callback non valide');
     await expect(page.locator('#query-checks')).toContainText('callback dinamiche ancora identiche a Python');
+    await expect(page.locator('#query-checks')).toContainText('46 casi #TEMPLATE/#IN_RANGE');
+    await expect(page.locator('#query-checks')).toContainText('18 macro non valide');
+    await expect(page.locator('#query-checks')).toContainText('#TEMPLATE e #IN_RANGE ancora identiche a Python');
     await page.getByText('Verifiche query nel browser', {exact: true}).click();
     await page.locator('#query-checks').scrollIntoViewIfNeeded();
     await page.locator('#query-checks').evaluate(element => { element.scrollTop = element.scrollHeight; });
-    await page.screenshot({path: 'output/gramlot-callbacks.png'});
+    await page.screenshot({path: 'output/gramlot-macros.png'});
     expect(errors).toEqual([]);
 });
 

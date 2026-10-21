@@ -1,0 +1,167 @@
+[
+  {
+    "name": "missing_argument",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}', $name AS b)"
+    }
+  },
+  {
+    "name": "unused_argument",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}', $name AS a, $id AS b)"
+    }
+  },
+  {
+    "name": "missing_as",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}', $name)"
+    }
+  },
+  {
+    "name": "duplicate_name",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}', $name AS a, $id AS a)"
+    }
+  },
+  {
+    "name": "not_literal",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE($name AS a)"
+    }
+  },
+  {
+    "name": "unclosed",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}', $name AS a"
+    }
+  },
+  {
+    "name": "literal_dollar",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('$x')"
+    }
+  },
+  {
+    "name": "bad_placeholder",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${bad-name}')"
+    }
+  },
+  {
+    "name": "nested_template",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${x}', #TEMPLATE('${y}', $name AS y) AS x)"
+    }
+  },
+  {
+    "name": "empty_arguments",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE()"
+    }
+  },
+  {
+    "name": "quoted_alias",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${x}', $name AS \"x\")"
+    }
+  },
+  {
+    "name": "range_in_columns",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_in_order_by",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "order_by": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_in_group_by",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "group_by": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_in_having",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "having": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_expression_operand",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "where": "#IN_RANGE($amount + 1,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "template_invalid_where",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "where": "#TEMPLATE('${missing}') = 'x'"
+    }
+  },
+  {
+    "name": "macro_marker_in_literal",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('#tag') AS label"
+    }
+  }
+]

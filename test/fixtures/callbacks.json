@@ -1816,6 +1816,72 @@
         "app.owner.dynamic_b",
         "app.owner.dynamic_method"
       ]
+    },
+    {
+      "name": "callback_template",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$invalid",
+        "order_by": "$id",
+        "environment": {
+          "invalid": "#TEMPLATE('${n}', $amount AS n)"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( (COALESCE(CAST((\"t0\".\"amount\") AS TEXT), '')) ) AS \"invalid\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "invalid": "10"
+        },
+        {
+          "id": 2,
+          "invalid": "20"
+        },
+        {
+          "id": 3,
+          "invalid": "30"
+        }
+      ],
+      "events": [
+        "app.owner.invalid"
+      ]
+    },
+    {
+      "name": "callback_range",
+      "request": {
+        "operation": "select",
+        "table": "app.owner",
+        "columns": "$id,$invalid",
+        "order_by": "$id",
+        "environment": {
+          "invalid": "#IN_RANGE($amount,10,20)"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( ((\"t0\".\"amount\">=10 AND \"t0\".\"amount\"<=20 AND 10 IS NOT NULL AND 20 IS NOT NULL) OR (10 IS NULL AND 20 IS NOT NULL AND \"t0\".\"amount\"<=20) OR (10 IS NOT NULL AND 20 IS NULL AND \"t0\".\"amount\">=10) OR (10 IS NULL AND 20 IS NULL)) ) AS \"invalid\"\n FROM \"main\".\"owner\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "invalid": 1
+        },
+        {
+          "id": 2,
+          "invalid": 1
+        },
+        {
+          "id": 3,
+          "invalid": 0
+        }
+      ],
+      "events": [
+        "app.owner.invalid"
+      ]
     }
   ],
   "errors": [

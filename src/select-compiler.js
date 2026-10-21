@@ -1,3 +1,4 @@
+import {expandTemplates, expandInRange} from './query-macros.js';
 import {CompilerMethods} from './compiler-methods.js';
 import {names} from './structures.js';
 import {IDENT, q, record, columnName, tableSQL, tokens, split, projectionAlias, fieldReference} from './sql-expressions.js';
@@ -135,7 +136,7 @@ class Context {
             }
             return `'${environmentText(this.environment[key]).replaceAll("'", "''")}'`;
         });
-        formula = this.expandMany(formula, table, false);
+        formula = this.expandMany(expandTemplates(formula), table, false);
         formula = bindings.substitute(formula);
         for (const [name, sub] of subqueries) {
             let sql = this.subquery(sub.definition, table, alias, bindings, sub.exists, mode);
@@ -143,7 +144,7 @@ class Context {
             const token = this.protect(sql);
             formula = formula.replace(new RegExp('#' + name + '\\b', 'g'), () => token);
         }
-        formula = this.thisFields(formula, table, alias);
+        formula = expandInRange(this.thisFields(formula, table, alias));
         return `( ${this.expression(formula, table, alias)} )`;
     }
     knownTable(name, owner = this.table, context = 'sottoquery') {
@@ -300,6 +301,9 @@ class Context {
         return returnTarget ? {table, alias} : this.field(table, alias, parts.at(-1));
     }
     expression(text, table = this.table, alias = this.baseAlias, references = null) {
+        // Python checks unresolved macros in the authored text, including literals.
+        const macro = /#[A-Za-z_]\w*/.exec(text);
+        if (macro) throw new UnsupportedFeatureError(`Macro SQL non supportata: ${macro[0]}`);
         split(text);
         references ??= this.resolveReferences([text], table, alias);
         // Python's legacy discover/substitute also resolves references inside SQL literals.
@@ -376,16 +380,17 @@ function selectPlan(context, request) {
     if (distinct != null && typeof distinct !== 'boolean') throw new Error('distinct deve essere booleano');
     for (const [name, value] of Object.entries({limit, offset})) if (value != null && (!Number.isSafeInteger(value) || value < 0)) throw new Error(`${name} deve essere un intero non negativo`);
     const aggregate = Boolean(distinct || request.group_by), count = request.operation === 'count';
-    const group = request.group_by === '*' ? null : request.group_by;
+    const group = expandTemplates(request.group_by === '*' ? null : request.group_by);
     let columns = request.columns ?? '*';
     if (Array.isArray(columns)) columns = columns.join(',');
+    columns = expandTemplates(columns);
     columns = split(columns).map(c => context.expandMany(c, table, true)).join(',');
-    let ordering = request.order_by ?? (!aggregate && !context.parent ? table.a.order_by : null);
+    let ordering = expandTemplates(request.order_by ?? (!aggregate && !context.parent ? table.a.order_by : null));
     if (count) { ordering = null; columns = group || (distinct ? columns : 'count(*) AS "gnr_row_count"'); }
     else if (addPkeyColumn && table.a.pkey && !aggregate) columns += `,$${table.a.x_logical_pkey || table.a.pkey} AS "pkey"`;
     if (table.a.logicalDeletionField && request.exclude_logical_deleted === 'mark' && !aggregate && !count) columns += `,$${table.a.logicalDeletionField} AS "_isdeleted"`;
     // Field-valued WHERE parameters retain their original values in compiled kwargs, as in Python.
-    let where = request.where;
+    let where = expandInRange(expandTemplates(request.where));
     for (const text of [where, ordering, group, request.having]) context.expandMany(text, table);
     if (where) for (const [name, value] of Object.entries(context.bindings.embedValues)) {
         if (/^[A-Za-z_]\w*$/.test(name) && typeof value === 'string' &&
@@ -394,7 +399,7 @@ function selectPlan(context, request) {
     }
     where = context.policies(request, where);
     columns = context.expandColumns(columns, bagFields);
-    let having = request.having, groupValue;
+    let having = expandTemplates(request.having), groupValue;
     [columns, where, ordering, groupValue, having] = [columns, where, ordering, group, having].map(text => text ? context.bindings.substitute(text) : text);
     const references = context.resolveReferences([columns, where, ordering, groupValue, having]);
     const projected = context.projections(columns, bagFields, references);

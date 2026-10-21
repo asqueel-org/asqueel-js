@@ -93,7 +93,8 @@ simulato durante la copia e migrazione idempotente dopo riapertura.
       e virtuali, con binding locali, JSON e concatenazioni ordinate.
 - [x] Callback formula/env/subquery e colonne virtuali dinamiche, cache per ambiente,
       SQL/risultati/chiamate confrontati con Python anche nel browser.
-- [ ] Restanti macro e metadati dei risultati.
+- [x] #TEMPLATE e #IN_RANGE, con SQL/parametri/risultati identici a Python anche su WASM.
+- [ ] #PERIOD, #BAG/#BAGCOLS e metadati dei risultati.
 - [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
 - [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.
 - [ ] Documentazione applicativa, compatibilità e criteri della prima release.

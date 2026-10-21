@@ -1,3 +1,4 @@
+import {macroChecks} from './macro-checks.js';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {browserQueries} from '../examples/browser-queries.js';
@@ -52,6 +53,7 @@ export async function queryChecks() {
         checks.push(...await readChecks());
         checks.push(...await subqueryChecks());
         checks.push(...await callbackChecks());
+        checks.push(...await macroChecks());
         return checks;
     } finally {
         await db.close();

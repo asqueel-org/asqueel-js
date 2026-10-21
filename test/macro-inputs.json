@@ -1,0 +1,547 @@
+[
+  {
+    "name": "city_1",
+    "request": {
+      "operation": "insert",
+      "table": "macro.city",
+      "values": {
+        "id": 1,
+        "name": "Roma"
+      }
+    }
+  },
+  {
+    "name": "city_2",
+    "request": {
+      "operation": "insert",
+      "table": "macro.city",
+      "values": {
+        "id": 2,
+        "name": "L'Aquila"
+      }
+    }
+  },
+  {
+    "name": "person_1",
+    "request": {
+      "operation": "insert",
+      "table": "macro.person",
+      "values": {
+        "id": 1,
+        "name": "Ada",
+        "surname": "Lovelace",
+        "city_id": 1,
+        "amount": 10,
+        "low_bound": 10,
+        "high_bound": 20
+      }
+    }
+  },
+  {
+    "name": "person_2",
+    "request": {
+      "operation": "insert",
+      "table": "macro.person",
+      "values": {
+        "id": 2,
+        "name": "Bob",
+        "amount": 20,
+        "city_id": 2,
+        "high_bound": 20
+      }
+    }
+  },
+  {
+    "name": "person_3",
+    "request": {
+      "operation": "insert",
+      "table": "macro.person",
+      "values": {
+        "id": 3,
+        "name": "O'Reilly",
+        "amount": 30,
+        "low_bound": 31
+      }
+    }
+  },
+  {
+    "name": "person_4",
+    "request": {
+      "operation": "insert",
+      "table": "macro.person",
+      "values": {
+        "id": 4,
+        "low_bound": 0,
+        "high_bound": 40
+      }
+    }
+  },
+  {
+    "name": "person_5",
+    "request": {
+      "operation": "insert",
+      "table": "macro.person",
+      "values": {
+        "id": 5
+      }
+    }
+  },
+  {
+    "name": "line_1",
+    "request": {
+      "operation": "insert",
+      "table": "macro.line",
+      "values": {
+        "id": 1,
+        "person_id": 1,
+        "amount": 5
+      }
+    }
+  },
+  {
+    "name": "line_2",
+    "request": {
+      "operation": "insert",
+      "table": "macro.line",
+      "values": {
+        "id": 2,
+        "person_id": 1,
+        "amount": 18
+      }
+    }
+  },
+  {
+    "name": "line_3",
+    "request": {
+      "operation": "insert",
+      "table": "macro.line",
+      "values": {
+        "id": 3,
+        "person_id": 2,
+        "amount": 10
+      }
+    }
+  },
+  {
+    "name": "formula_and_relation",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,$label,$priced",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "formula_environment",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,$caption",
+      "order_by": "$id",
+      "environment": {
+        "prefix": "It's: "
+      }
+    }
+  },
+  {
+    "name": "template_literals",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('') AS empty,#TEMPLATE('literal (text), it''s fine') AS literal,#TEMPLATE('$$ ${n} $$', $name AS n) AS dollars",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "template_repeated",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${n}/${n}', $name AS n) AS label",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "template_adjacent",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${a}${b}', $name AS a, $surname AS b) AS label",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "template_multiple",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${x}', $name AS x) AS name,#TEMPLATE('${x}', $amount AS x) AS amount",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "template_case_newlines",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE  ( '${n}',\n upper($name) aS n ) AS label",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "template_expressions",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${n}=${v}', coalesce($name, 'nobody') AS n, ($amount + :extra) AS v) AS label",
+      "order_by": "$id",
+      "sqlparams": {
+        "extra": 2
+      }
+    }
+  },
+  {
+    "name": "template_bound_quotes",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${x}', :text AS x) AS label",
+      "order_by": "$id",
+      "sqlparams": {
+        "text": "' ); #TEMPLATE( NOT SQL"
+      }
+    }
+  },
+  {
+    "name": "template_where",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#TEMPLATE('${n}!', $name AS n) = :label",
+      "sqlparams": {
+        "label": "Ada!"
+      }
+    }
+  },
+  {
+    "name": "template_order",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,#TEMPLATE('${n}', $name AS n) AS label",
+      "order_by": "#TEMPLATE('${n}', $name AS n) DESC,$id"
+    }
+  },
+  {
+    "name": "template_group_having",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${c}', @city_id.name AS c) AS city,COUNT(*) AS n",
+      "order_by": "city",
+      "group_by": "#TEMPLATE('${c}', @city_id.name AS c)",
+      "having": "#TEMPLATE('${n}', COUNT(*) AS n) != '0'"
+    }
+  },
+  {
+    "name": "template_distinct",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${c}', @city_id.name AS c) AS city",
+      "order_by": "city",
+      "distinct": true
+    }
+  },
+  {
+    "name": "range_formulas",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,$within,$within_fields,$range_label",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "range_None_None",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": null,
+        "high": null
+      }
+    }
+  },
+  {
+    "name": "range_None_20",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": null,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_20_None",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 20,
+        "high": null
+      }
+    }
+  },
+  {
+    "name": "range_10_20",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_20_20",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 20,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_30_10",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 30,
+        "high": 10
+      }
+    }
+  },
+  {
+    "name": "range_0_0",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 0,
+        "high": 0
+      }
+    }
+  },
+  {
+    "name": "range_-5_15",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": -5,
+        "high": 15
+      }
+    }
+  },
+  {
+    "name": "range_fields",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,$low_bound,$high_bound)"
+    }
+  },
+  {
+    "name": "range_bare_fields",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE(amount,low_bound,high_bound)"
+    }
+  },
+  {
+    "name": "range_relation",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE(@city_id.id,:low,:high)",
+      "sqlparams": {
+        "low": 1,
+        "high": 1
+      }
+    }
+  },
+  {
+    "name": "range_whitespace",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE ( $amount , :low , :high ) \nAND $id>0",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "range_multiple",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high) OR #IN_RANGE($id,:low_id,:high_id)",
+      "sqlparams": {
+        "low": 20,
+        "high": 20,
+        "low_id": 5,
+        "high_id": 5
+      }
+    }
+  },
+  {
+    "name": "range_formula_where",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($within,:low,:high)",
+      "sqlparams": {
+        "low": 1,
+        "high": 1
+      }
+    }
+  },
+  {
+    "name": "range_embedded_field",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": "$low_bound",
+        "high": "$high_bound"
+      }
+    }
+  },
+  {
+    "name": "range_env",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:env_low,:env_high)",
+      "environment": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "combined_where",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,#TEMPLATE('${n}', $label AS n) AS label",
+      "order_by": "$id",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "subquery_macros",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,$first_label",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "inverse_aggregate_formula",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "$id,@lines.aggr(join($label,';'))",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "range_count",
+    "request": {
+      "operation": "count",
+      "table": "macro.person",
+      "where": "#IN_RANGE($amount,:low,:high)",
+      "sqlparams": {
+        "low": 10,
+        "high": 20
+      }
+    }
+  },
+  {
+    "name": "related_formulas",
+    "request": {
+      "operation": "select",
+      "table": "macro.line",
+      "columns": "$id,@person_id.label,@person_id.within",
+      "order_by": "$id"
+    }
+  },
+  {
+    "name": "unicode_template_names",
+    "request": {
+      "operation": "select",
+      "table": "macro.person",
+      "columns": "#TEMPLATE('${città}: ${名字}', @city_id.name AS città, $name AS 名字) AS label",
+      "order_by": "$id"
+    }
+  }
+]

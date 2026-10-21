@@ -1,3 +1,5 @@
+import {queryMacros} from '../examples/query-macros.js';
+import macroOracle from '../test/fixtures/macros.json' with {type: 'json'};
 import {compilerCallbacks, compilerMethods, callbackCacheProbe} from '../examples/compiler-callbacks.js';
 import callbackOracle from '../test/fixtures/callbacks.json' with {type: 'json'};
 import {defineModel} from '../src/index.js';
@@ -12,7 +14,7 @@ import features from '../test/fixtures/query-features.json' with {type: 'json'};
 import {nativeSQLite} from '../test/native-sqlite.js';
 import {migrateSQLite} from '../src/sqlite.js';
 const result = {};
-for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features', queryFeatures, features], ['reads', readFormulas, reads], ['subqueries', subqueries, subqueryOracle], ['callbacks', compilerCallbacks, callbackOracle]]) {
+for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features', queryFeatures, features], ['reads', readFormulas, reads], ['subqueries', subqueries, subqueryOracle], ['callbacks', compilerCallbacks, callbackOracle], ['macros', queryMacros, macroOracle]]) {
     const model = defineModel(recipe), db = nativeSQLite();
     try {
         if (oracle.ddl) { for (const sql of oracle.ddl) await db.execute(sql); }

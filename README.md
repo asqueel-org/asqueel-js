@@ -42,16 +42,19 @@ sono confrontati indipendentemente con Python, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
-relazioni dirette anche composte, aggregazioni e policy dichiarative: **171 casi**
+relazioni dirette anche composte, aggregazioni e policy dichiarative: **219 casi**
 confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
 Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
 `#THIS`, `#ENV` da snapshot e proiezione/filtro delle colonne composte.
+`#TEMPLATE` compone testi con valori NULL trattati come stringhe vuote;
+`#IN_RANGE` gestisce intervalli inclusivi con estremi facoltativi. **46 casi** dedicati
+verificano SQL e risultati, anche nel browser.
 Sottoquery scalari, `EXISTS`, `subQueryColumn` e aggregazioni `aggr()` sulle relazioni
 inverse/virtuali producono SQL correlato: conteggi, sum/avg/min/max, concatenazioni
 ordinate e JSON, senza moltiplicare i record principali. Il corpus include anche
 17 configurazioni rifiutate come in Python.
 Le callback sincrone `sql_formula_*`, `subquery_*`, `env_*` e `formulaColumn_*`
-sono registrate in `queries(adapter, {methods})`: **31 nuovi casi** confrontano
+sono registrate in `queries(adapter, {methods})`: **33 casi** confrontano
 anche l'ordine delle chiamate, con 23 errori attesi e cache per ambiente.
 [Esempi e contratto](docs/parity.md#callback-dinamiche-del-compilatore).
 `sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
@@ -109,7 +112,7 @@ npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
 La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 171 casi query
+completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 219 casi query
 confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 

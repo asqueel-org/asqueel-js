@@ -2,5 +2,5 @@
   "coreCommit": "8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988",
   "coreVersion": "0.6.1 + fix #44",
   "buildersVersion": "0.29.0",
-  "status": "171 deterministic QueryCompiler/WriteCompiler cases: full model, migrate JSON, SQL, parameters and real SQLite results; 31 callback cases also compare method calls, 23 errors and environment caching. Not complete application-runtime parity."
+  "status": "219 deterministic QueryCompiler/WriteCompiler cases: full model, migrate JSON, SQL, parameters and real SQLite results; 33 callback cases also compare method calls, 23 errors and environment caching. 46 TEMPLATE/IN_RANGE cases and 18 rejected macro usages. Not complete application-runtime parity."
 }

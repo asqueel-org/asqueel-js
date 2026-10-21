@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Macro #TEMPLATE e #IN_RANGE portate dal compiler Python, con concatenazione
+  SQLite compatibile con NULL, nomi Unicode e intervalli inclusivi/aperti.
+  46 casi dedicati e due casi callback confrontano SQL, parametri e risultati;
+  18 usi non validi sono rifiutati come Python. Verificati anche su WASM e dopo
+  riapertura IndexedDB.
+
 - Callback sincrone del compilatore (`sql_formula_*`, `subquery_*`, `env_*`,
   `formulaColumn_*`) nel registro runtime `methods`, con risoluzione del proprietario,
   attributi locali e cache per ambiente allineati a Python. 31 nuovi casi verificano
