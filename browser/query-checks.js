@@ -6,6 +6,7 @@ import oracle from '../test/fixtures/queries.json' with {type: 'json'};
 import featureOracle from '../test/fixtures/query-features.json' with {type: 'json'};
 import {queryFeatures} from '../examples/query-features.js';
 import {queryRuntimeChecks} from '../test/query-runtime-checks.js';
+import {readChecks} from './read-checks.js';
 
 export async function queryChecks() {
     const id = `asqueel-query-test-${crypto.randomUUID()}`, checks = [];
@@ -46,6 +47,7 @@ export async function queryChecks() {
         const related = oracle.cases.find(c => c.name === 'related_notes');
         if (!equal(await compiler.execute(related.request), related.rows)) throw new Error('Rilettura dopo riapertura fallita');
         checks.push('Riapertura IndexedDB: SELECT con relazione restituisce gli stessi dati');
+        checks.push(...await readChecks());
         return checks;
     } finally {
         await db.close();

@@ -1,0 +1,348 @@
+[
+  {
+    "name": "seed_currency_0",
+    "request": {
+      "operation": "insert",
+      "table": "read.currency",
+      "values": {
+        "id": "EUR",
+        "factor": 1
+      }
+    }
+  },
+  {
+    "name": "seed_currency_1",
+    "request": {
+      "operation": "insert",
+      "table": "read.currency",
+      "values": {
+        "id": "USD",
+        "factor": 1.5
+      }
+    }
+  },
+  {
+    "name": "seed_item_0",
+    "request": {
+      "operation": "insert",
+      "table": "read.item",
+      "values": {
+        "id": 1,
+        "price": 10,
+        "qty": 2,
+        "currency_id": "EUR",
+        "other_currency_id": "USD"
+      }
+    }
+  },
+  {
+    "name": "seed_item_1",
+    "request": {
+      "operation": "insert",
+      "table": "read.item",
+      "values": {
+        "id": 2,
+        "price": 20,
+        "qty": 3,
+        "currency_id": "USD"
+      }
+    }
+  },
+  {
+    "name": "seed_item_2",
+    "request": {
+      "operation": "insert",
+      "table": "read.item",
+      "values": {
+        "id": 3,
+        "qty": 1
+      }
+    }
+  },
+  {
+    "name": "seed_composite_0",
+    "request": {
+      "operation": "insert",
+      "table": "read.composite",
+      "values": {
+        "code": "A",
+        "seq": 1,
+        "flag": true,
+        "day": "2026-10-21",
+        "legacy_int": 7
+      }
+    }
+  },
+  {
+    "name": "seed_composite_1",
+    "request": {
+      "operation": "insert",
+      "table": "read.composite",
+      "values": {
+        "code": "B",
+        "seq": 2
+      }
+    }
+  },
+  {
+    "name": "local_parameter",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$adjusted"
+    }
+  },
+  {
+    "name": "nested_scopes",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$discounted,$adjusted"
+    }
+  },
+  {
+    "name": "repeated_formula_reuses_scope",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$adjusted AS first,$adjusted AS second",
+      "where": "$adjusted > :minimum",
+      "sqlparams": {
+        "minimum": 10
+      },
+      "order_by": "$adjusted,$id"
+    }
+  },
+  {
+    "name": "caller_parameter_shadowed",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$adjusted",
+      "where": "$price > :rate",
+      "sqlparams": {
+        "rate": 15
+      }
+    }
+  },
+  {
+    "name": "allocated_name_collision",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$adjusted",
+      "where": "$price > :f1_rate",
+      "sqlparams": {
+        "f1_rate": 15,
+        "_f1_rate": 1
+      }
+    }
+  },
+  {
+    "name": "this_fields_and_formula",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$total"
+    }
+  },
+  {
+    "name": "this_related_formula",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$converted,$converted_alias"
+    }
+  },
+  {
+    "name": "formula_on_two_join_aliases",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,@currency_id.adjusted AS first,@other_currency_id.adjusted AS second"
+    }
+  },
+  {
+    "name": "owner_and_target_parameter_scopes",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$adjusted,@currency_id.adjusted,$discounted"
+    }
+  },
+  {
+    "name": "local_collection",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$selected,$empty_selection"
+    }
+  },
+  {
+    "name": "local_field_like_string_is_literal",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$literal"
+    }
+  },
+  {
+    "name": "var_kwargs_mapping",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$kwargs"
+    }
+  },
+  {
+    "name": "environment_primary",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id,$label",
+      "environment": {
+        "currency": "l'euro",
+        "fallback_currency": "USD"
+      }
+    }
+  },
+  {
+    "name": "environment_fallback",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$label",
+      "environment": {
+        "fallback_currency": "USD"
+      }
+    }
+  },
+  {
+    "name": "environment_null_is_present",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$label",
+      "environment": {
+        "currency": null,
+        "fallback_currency": "USD"
+      }
+    }
+  },
+  {
+    "name": "environment_bool",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$env_value",
+      "environment": {
+        "value": true
+      }
+    }
+  },
+  {
+    "name": "environment_number",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$env_value",
+      "environment": {
+        "value": 42
+      }
+    }
+  },
+  {
+    "name": "environment_sequence",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$env_value",
+      "environment": {
+        "value": [
+          "A",
+          null,
+          false,
+          2
+        ]
+      }
+    }
+  },
+  {
+    "name": "environment_empty",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$env_value",
+      "environment": {
+        "value": ""
+      }
+    }
+  },
+  {
+    "name": "formula_where_only",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$id",
+      "where": "$adjusted >= :min",
+      "sqlparams": {
+        "min": 20
+      }
+    }
+  },
+  {
+    "name": "formula_group_having",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$qty,SUM($adjusted) AS amount",
+      "group_by": "$qty",
+      "having": "SUM($adjusted)>:min",
+      "sqlparams": {
+        "min": 0
+      },
+      "order_by": "$qty"
+    }
+  },
+  {
+    "name": "formula_distinct",
+    "request": {
+      "operation": "select",
+      "table": "read.item",
+      "columns": "$adjusted",
+      "distinct": true,
+      "order_by": "$adjusted"
+    }
+  },
+  {
+    "name": "composite_projection",
+    "request": {
+      "operation": "select",
+      "table": "read.composite",
+      "columns": "$key,$typed,$key_alias",
+      "order_by": "$seq"
+    }
+  },
+  {
+    "name": "composite_auto_pkey",
+    "request": {
+      "operation": "select",
+      "table": "read.composite",
+      "columns": "$code,$seq",
+      "addPkeyColumn": true,
+      "order_by": "$seq"
+    }
+  },
+  {
+    "name": "composite_filter",
+    "request": {
+      "operation": "select",
+      "table": "read.composite",
+      "columns": "$key",
+      "where": "$key=:key",
+      "sqlparams": {
+        "key": "[\"A\", 1]"
+      }
+    }
+  }
+]

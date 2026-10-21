@@ -161,7 +161,8 @@ del worker.
 
 Il compilatore segue Python 0.6.1 + fix #44 per il sottoinsieme verificato:
 INSERT/UPDATE/DELETE per chiave primaria anche composta, RETURNING automatico dei
-default SQL, `sql_value` e colonne generate; SELECT di campi, formule/alias semplici,
+default SQL, `sql_value` e colonne generate; SELECT di campi, alias, colonne composte
+e formule annidate con parametri locali (`var_*`, `var_kwargs`), `#THIS` e `#ENV`,
 relazioni dirette anche composte, GROUP BY/HAVING/DISTINCT, IN/NOT IN, ordine e
 paginazione. Draft e logical deletion filtrano le letture; `environment` esplicito
 fornisce valori `current_*`/`allowed_*` per le partizioni e parametri `:env_*`.
@@ -199,17 +200,18 @@ questa particolarità è riprodotta. Passare testi utente tramite parametri, non
 come frammenti di espressione. Collisioni nei nomi generati per liste vengono
 rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 
-Restano esclusi macro, sottoquery, relazioni inverse/virtualRelation, formule
-parametriche, selezioni di chiavi composte virtuali, codec applicativi, lock,
+Restano esclusi altre macro, sottoquery, relazioni inverse/virtualRelation,
+callback applicative delle formule e dell'ambiente, codec applicativi, lock,
 scritture bulk/da selezione, azioni applicative su relazioni composte,
 e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
 Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
 
-**Verifica query con Python** esegue sette gruppi di controlli in un database
+**Verifica query con Python** esegue dieci gruppi di controlli in un database
 IndexedDB separato: modello/migrate, 32 compilazioni/esecuzioni base, rollback,
-helper e transazioni, 28 casi aggiuntivi e rilettura dopo riapertura. Gli oracoli
+helper e transazioni, 28 casi aggiuntivi, 32 casi di formule parametrizzate/chiavi
+composte e rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
@@ -374,7 +376,7 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 60 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+I 92 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre

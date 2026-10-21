@@ -1,0 +1,38 @@
+"""Independent Python recipe for the computed-read parity corpus."""
+from asqueel import SqlBuilder
+
+
+def read_model():
+    builder = SqlBuilder()
+    pkg = builder.source.db('reading', implementation='sqlite').packages().package('read')
+    currency = pkg.table('currency', pkey='id')
+    currency.column('id', dtype='T')
+    currency.column('factor', dtype='R', sqlname='conversion_factor')
+    currency.formulaColumn('adjusted', dtype='R', sql_formula='$factor * :rate', var_rate=2)
+    item = pkg.table('item', pkey='id', order_by='$id')
+    item.column('id', dtype='L')
+    item.column('price', dtype='R', sqlname='unit_price')
+    item.column('qty', dtype='L')
+    item.column('currency_id', dtype='T').relation('currency.id')
+    item.column('other_currency_id', dtype='T').relation('currency.id')
+    item.formulaColumn('adjusted', dtype='R', sql_formula='$price * :rate', var_rate=1.2)
+    item.formulaColumn('discounted', dtype='R', sql_formula='$adjusted - :rate', var_rate=3)
+    item.formulaColumn('total', dtype='R', sql_formula='#THIS.adjusted * #THIS.qty')
+    item.formulaColumn('converted', dtype='R', sql_formula='#THIS.price * #THIS.@currency_id.adjusted')
+    item.aliasColumn('converted_alias', relation_path='converted')
+    item.formulaColumn('selected', dtype='L', sql_formula='CASE WHEN $id IN :ids THEN 1 ELSE 0 END', var_ids=[1, 3])
+    item.formulaColumn('empty_selection', dtype='L', sql_formula='CASE WHEN $id IN :ids THEN 1 ELSE 0 END', var_ids=[])
+    item.formulaColumn('literal', dtype='T', sql_formula=':text', var_text='$price')
+    item.formulaColumn('label', dtype='T', sql_formula='#ENV(currency,fallback_currency)')
+    item.formulaColumn('env_value', dtype='T', sql_formula='#ENV(value)')
+    item.formulaColumn('kwargs', dtype='R', sql_formula='$price + :offset', var_kwargs={'offset': 4})
+    composite = pkg.table('composite', pkey='key')
+    composite.column('code', dtype='T', sqlname='stored_code')
+    composite.column('seq', dtype='L')
+    composite.column('flag', dtype='B')
+    composite.column('day', dtype='D')
+    composite.column('legacy_int', dtype='I')
+    composite.compositeColumn('key', columns='code,seq')
+    composite.compositeColumn('typed', columns='flag,day,legacy_int')
+    composite.aliasColumn('key_alias', relation_path='key')
+    return builder

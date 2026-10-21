@@ -51,8 +51,8 @@ rigenera automaticamente il riferimento.
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
 0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
-I 32 casi base e i 28 casi aggiuntivi confrontano il JSON completo dei due modelli,
-il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le due ricette hanno
+I 32 casi base, i 28 casi aggiuntivi e i 32 casi di letture calcolate confrontano il JSON completo dei tre modelli,
+il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le tre ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
 
@@ -66,6 +66,29 @@ e tre gli adapter; non sono un porting completo del runtime applicativo Python.
 
 Rigenerazione degli oracoli query: `PYTHON=.reference/venv-current/bin/python`,
 quindi `$PYTHON scripts/query_oracle.py`. Le fixture non vanno modificate a mano.
+
+### Letture calcolate
+
+`examples/read-formulas.js` e `examples/read_formulas.py` dichiarano indipendentemente
+tre tabelle per `test/read-inputs.json`. I 32 casi includono il popolamento e
+verificano formule annidate, riuso del binding su più clausole, collisioni con i
+parametri del chiamante, due JOIN verso la stessa tabella, collezioni locali anche
+vuote, stringhe locali simili a riferimenti di campo, `var_kwargs`, `#THIS` e `#ENV`
+con fallback, apostrofi, NULL, booleani e sequenze. Le colonne composte sono lette,
+filtrate e aggiunte automaticamente come pkey, mantenendo il formato SQL Python
+(inclusi i suffissi di tipo e la propagazione dei NULL).
+
+`test/fixtures/reads.json` è generato esclusivamente da Python. Il confronto dal vivo
+esegue lo stesso corpus anche con Node e Bun. Il pulsante **Verifica query con Python**
+lo esegue su SQLite WASM e ripete tutte le nuove SELECT dopo la riapertura IndexedDB.
+Il sorgente del compilatore e dei binding della revisione fissata è stato confrontato
+con il tag Python `v0.6.3`: nessuna differenza; il pin dell'oracolo non è cambiato.
+
+Questo incremento non implementa sottoquery, aggregazioni sulle relazioni inverse,
+`virtualRelation`, altre macro o metodi applicativi `sql_formula_*`/`env_*`.
+`#ENV` supporta snapshot JSON scalari e sequenze; oggetti strutturati richiedono
+un contratto di conversione e sono rifiutati. La serializzazione SQL delle colonne
+composte riproduce Python, senza introdurre un diverso codec JSON.
 
 
 ## Ciclo applicativo sys_fields e hook

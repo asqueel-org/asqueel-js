@@ -22,7 +22,7 @@ test('sys_fields and hooks execute like Python, roll back and survive IndexedDB 
 });
 
 // Real worker, WASM and IndexedDB. No fake adapter or intercepted SQLite calls.
-for (const [command, expected] of [['checks', 7], ['query-checks', 7], ['composition-checks', compositionCases.length + 3]]) {
+for (const [command, expected] of [['checks', 7], ['query-checks', 10], ['composition-checks', compositionCases.length + 3]]) {
     test(`browser SQLite: ${command}`, async ({page}) => {
         await leaf(page);
         const checks = await page.evaluate(type => new Promise((resolve, reject) => {
@@ -146,7 +146,12 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('60 query confrontate con Python');
+    await expect(page.locator('#query-status')).toContainText('92 query confrontate con Python');
+    await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
+    await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
+    await page.getByText('Verifiche query nel browser', {exact: true}).click();
+    await page.locator('#query-checks').scrollIntoViewIfNeeded();
+    await page.screenshot({path: 'output/gramlot-read-compiler.png'});
     expect(errors).toEqual([]);
 });
 

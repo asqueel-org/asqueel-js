@@ -1,0 +1,1791 @@
+{
+  "model": {
+    "format": "asqueel-model",
+    "version": 1,
+    "reference": "0.6.1",
+    "database": {
+      "name": "db",
+      "tag": "db",
+      "attributes": {
+        "implementation": "sqlite",
+        "name": "reading"
+      },
+      "children": [],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "namespaces": {
+      "name": "packages",
+      "tag": "packages",
+      "attributes": {},
+      "children": [
+        {
+          "name": "read",
+          "tag": "package",
+          "attributes": {
+            "name": "read",
+            "sqlprefix": true
+          },
+          "children": [
+            {
+              "name": "tables",
+              "tag": "tables",
+              "attributes": {},
+              "children": [
+                {
+                  "name": "currency",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "name": "currency",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "factor",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "R",
+                            "sqlname": "conversion_factor",
+                            "name": "factor",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "adjusted",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$factor * :rate",
+                            "var_rate": 2,
+                            "name": "adjusted",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "item",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "id",
+                    "order_by": "$id",
+                    "name": "item",
+                    "lookup": false,
+                    "deletable": true
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "price",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "R",
+                            "sqlname": "unit_price",
+                            "name": "price",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "qty",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "qty",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "currency_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "currency_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "to": "read.currency.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "other_currency_id",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "name": "other_currency_id",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [
+                            {
+                              "name": "relation_0",
+                              "tag": "relation",
+                              "attributes": {
+                                "to": "read.currency.id",
+                                "foreign_key": true,
+                                "x_canonical": true,
+                                "deferred": false,
+                                "deferrable": false,
+                                "initially_deferred": false,
+                                "indexed": true,
+                                "one_one": false,
+                                "case_insensitive": false
+                              },
+                              "children": [],
+                              "signatureDefaults": [],
+                              "generated": false
+                            }
+                          ],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "adjusted",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$price * :rate",
+                            "var_rate": 1.2,
+                            "name": "adjusted",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "discounted",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$adjusted - :rate",
+                            "var_rate": 3,
+                            "name": "discounted",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "total",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "#THIS.adjusted * #THIS.qty",
+                            "name": "total",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "converted",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "#THIS.price * #THIS.@currency_id.adjusted",
+                            "name": "converted",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "converted_alias",
+                          "tag": "aliasColumn",
+                          "attributes": {
+                            "relation_path": "converted",
+                            "name": "converted_alias",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [
+                            "static"
+                          ],
+                          "generated": false
+                        },
+                        {
+                          "name": "selected",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "L",
+                            "sql_formula": "CASE WHEN $id IN :ids THEN 1 ELSE 0 END",
+                            "var_ids": [
+                              1,
+                              3
+                            ],
+                            "name": "selected",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "empty_selection",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "L",
+                            "sql_formula": "CASE WHEN $id IN :ids THEN 1 ELSE 0 END",
+                            "var_ids": [],
+                            "name": "empty_selection",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "literal",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "sql_formula": ":text",
+                            "var_text": "$price",
+                            "name": "literal",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "label",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "sql_formula": "#ENV(currency,fallback_currency)",
+                            "name": "label",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "env_value",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "T",
+                            "sql_formula": "#ENV(value)",
+                            "name": "env_value",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "kwargs",
+                          "tag": "formulaColumn",
+                          "attributes": {
+                            "dtype": "R",
+                            "sql_formula": "$price + :offset",
+                            "var_kwargs": {
+                              "offset": 4
+                            },
+                            "name": "kwargs",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "item_currency_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "currency_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        },
+                        {
+                          "name": "item_other_currency_id_key",
+                          "tag": "index",
+                          "attributes": {
+                            "columns": "other_currency_id"
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": true
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                },
+                {
+                  "name": "composite",
+                  "tag": "table",
+                  "attributes": {
+                    "pkey": "code,seq",
+                    "name": "composite",
+                    "lookup": false,
+                    "deletable": true,
+                    "x_logical_pkey": "key"
+                  },
+                  "children": [
+                    {
+                      "name": "columns",
+                      "tag": "columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "code",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "T",
+                            "sqlname": "stored_code",
+                            "name": "code",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "seq",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "L",
+                            "name": "seq",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "flag",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "B",
+                            "name": "flag",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "day",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "D",
+                            "name": "day",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "legacy_int",
+                          "tag": "column",
+                          "attributes": {
+                            "dtype": "I",
+                            "name": "legacy_int",
+                            "notnull": false,
+                            "unique": false,
+                            "indexed": false,
+                            "read_only": false,
+                            "unmodifiable": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "composites",
+                      "tag": "composites",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "key",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "code,seq",
+                            "name": "key",
+                            "unique": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        },
+                        {
+                          "name": "typed",
+                          "tag": "compositeColumn",
+                          "attributes": {
+                            "columns": "flag,day,legacy_int",
+                            "name": "typed",
+                            "unique": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "virtual_columns",
+                      "tag": "virtual_columns",
+                      "attributes": {},
+                      "children": [
+                        {
+                          "name": "key_alias",
+                          "tag": "aliasColumn",
+                          "attributes": {
+                            "relation_path": "key",
+                            "name": "key_alias",
+                            "static": false
+                          },
+                          "children": [],
+                          "signatureDefaults": [
+                            "static"
+                          ],
+                          "generated": false
+                        }
+                      ],
+                      "signatureDefaults": [],
+                      "generated": false
+                    },
+                    {
+                      "name": "indexes",
+                      "tag": "indexes",
+                      "attributes": {},
+                      "children": [],
+                      "signatureDefaults": [],
+                      "generated": true
+                    }
+                  ],
+                  "signatureDefaults": [],
+                  "generated": false
+                }
+              ],
+              "signatureDefaults": [],
+              "generated": false
+            }
+          ],
+          "signatureDefaults": [],
+          "generated": false
+        }
+      ],
+      "signatureDefaults": [],
+      "generated": false
+    },
+    "relations": [
+      {
+        "path": "read.item.@currency_id",
+        "attributes": {
+          "many_relation": "read.item.currency_id",
+          "one_relation": "read.currency.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "read_item_currency_id",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "read.item.@other_currency_id",
+        "attributes": {
+          "many_relation": "read.item.other_currency_id",
+          "one_relation": "read.currency.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "O",
+          "foreignkey": true,
+          "relation_name": "read_item_other_currency_id",
+          "resolver_kwargs": {}
+        }
+      },
+      {
+        "path": "read.currency.@read_item_currency_id",
+        "attributes": {
+          "many_relation": "read.item.currency_id",
+          "one_relation": "read.currency.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      },
+      {
+        "path": "read.currency.@read_item_other_currency_id",
+        "attributes": {
+          "many_relation": "read.item.other_currency_id",
+          "one_relation": "read.currency.id",
+          "onUpdate_sql": "cascade",
+          "private_relation": true,
+          "case_insensitive": false,
+          "mode": "M"
+        }
+      }
+    ]
+  },
+  "desired": {
+    "root": {
+      "entity": "db",
+      "entity_name": "reading",
+      "schemas": {
+        "main": {
+          "entity": "schema",
+          "entity_name": "main",
+          "tables": {
+            "read_currency": {
+              "entity": "table",
+              "entity_name": "read_currency",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_currency",
+                  "column_name": "id"
+                },
+                "conversion_factor": {
+                  "entity": "column",
+                  "entity_name": "conversion_factor",
+                  "attributes": {
+                    "dtype": "R"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_currency",
+                  "column_name": "conversion_factor"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "read_currency"
+            },
+            "read_item": {
+              "entity": "table",
+              "entity_name": "read_item",
+              "attributes": {
+                "pkeys": "id"
+              },
+              "columns": {
+                "id": {
+                  "entity": "column",
+                  "entity_name": "id",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item",
+                  "column_name": "id"
+                },
+                "unit_price": {
+                  "entity": "column",
+                  "entity_name": "unit_price",
+                  "attributes": {
+                    "dtype": "R"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item",
+                  "column_name": "unit_price"
+                },
+                "qty": {
+                  "entity": "column",
+                  "entity_name": "qty",
+                  "attributes": {
+                    "dtype": "L"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item",
+                  "column_name": "qty"
+                },
+                "currency_id": {
+                  "entity": "column",
+                  "entity_name": "currency_id",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item",
+                  "column_name": "currency_id"
+                },
+                "other_currency_id": {
+                  "entity": "column",
+                  "entity_name": "other_currency_id",
+                  "attributes": {
+                    "dtype": "T"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item",
+                  "column_name": "other_currency_id"
+                }
+              },
+              "relations": {
+                "fk_d1506ec7": {
+                  "entity": "relation",
+                  "entity_name": "fk_d1506ec7",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "read_currency",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "currency_id"
+                    ],
+                    "constraint_name": "fk_d1506ec7"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item"
+                },
+                "fk_9814ef47": {
+                  "entity": "relation",
+                  "entity_name": "fk_9814ef47",
+                  "attributes": {
+                    "related_schema": "main",
+                    "related_table": "read_currency",
+                    "related_columns": [
+                      "id"
+                    ],
+                    "constraint_type": "FOREIGN KEY",
+                    "on_update": "CASCADE",
+                    "columns": [
+                      "other_currency_id"
+                    ],
+                    "constraint_name": "fk_9814ef47"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item"
+                }
+              },
+              "constraints": {},
+              "indexes": {
+                "idx_ff066bd3": {
+                  "entity": "index",
+                  "entity_name": "idx_ff066bd3",
+                  "attributes": {
+                    "columns": {
+                      "currency_id": null
+                    },
+                    "index_name": "idx_ff066bd3"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item"
+                },
+                "idx_db815629": {
+                  "entity": "index",
+                  "entity_name": "idx_db815629",
+                  "attributes": {
+                    "columns": {
+                      "other_currency_id": null
+                    },
+                    "index_name": "idx_db815629"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_item"
+                }
+              },
+              "schema_name": "main",
+              "table_name": "read_item"
+            },
+            "read_composite": {
+              "entity": "table",
+              "entity_name": "read_composite",
+              "attributes": {
+                "pkeys": "stored_code,seq"
+              },
+              "columns": {
+                "stored_code": {
+                  "entity": "column",
+                  "entity_name": "stored_code",
+                  "attributes": {
+                    "dtype": "T",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_composite",
+                  "column_name": "stored_code"
+                },
+                "seq": {
+                  "entity": "column",
+                  "entity_name": "seq",
+                  "attributes": {
+                    "dtype": "L",
+                    "notnull": "_auto_"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_composite",
+                  "column_name": "seq"
+                },
+                "flag": {
+                  "entity": "column",
+                  "entity_name": "flag",
+                  "attributes": {
+                    "dtype": "B"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_composite",
+                  "column_name": "flag"
+                },
+                "day": {
+                  "entity": "column",
+                  "entity_name": "day",
+                  "attributes": {
+                    "dtype": "D"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_composite",
+                  "column_name": "day"
+                },
+                "legacy_int": {
+                  "entity": "column",
+                  "entity_name": "legacy_int",
+                  "attributes": {
+                    "dtype": "I"
+                  },
+                  "schema_name": "main",
+                  "table_name": "read_composite",
+                  "column_name": "legacy_int"
+                }
+              },
+              "relations": {},
+              "constraints": {},
+              "indexes": {},
+              "schema_name": "main",
+              "table_name": "read_composite"
+            }
+          },
+          "schema_name": "main"
+        }
+      },
+      "extensions": {},
+      "event_triggers": {}
+    }
+  },
+  "cases": [
+    {
+      "name": "seed_currency_0",
+      "request": {
+        "operation": "insert",
+        "table": "read.currency",
+        "values": {
+          "id": "EUR",
+          "factor": 1
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_currency\"(\"id\",\"conversion_factor\") VALUES (:id,:factor)",
+        "params": {
+          "id": "EUR",
+          "factor": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_currency_1",
+      "request": {
+        "operation": "insert",
+        "table": "read.currency",
+        "values": {
+          "id": "USD",
+          "factor": 1.5
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_currency\"(\"id\",\"conversion_factor\") VALUES (:id,:factor)",
+        "params": {
+          "id": "USD",
+          "factor": 1.5
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_item_0",
+      "request": {
+        "operation": "insert",
+        "table": "read.item",
+        "values": {
+          "id": 1,
+          "price": 10,
+          "qty": 2,
+          "currency_id": "EUR",
+          "other_currency_id": "USD"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_item\"(\"id\",\"unit_price\",\"qty\",\"currency_id\",\"other_currency_id\") VALUES (:id,:price,:qty,:currency_id,:other_currency_id)",
+        "params": {
+          "id": 1,
+          "price": 10,
+          "qty": 2,
+          "currency_id": "EUR",
+          "other_currency_id": "USD"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_item_1",
+      "request": {
+        "operation": "insert",
+        "table": "read.item",
+        "values": {
+          "id": 2,
+          "price": 20,
+          "qty": 3,
+          "currency_id": "USD"
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_item\"(\"id\",\"unit_price\",\"qty\",\"currency_id\") VALUES (:id,:price,:qty,:currency_id)",
+        "params": {
+          "id": 2,
+          "price": 20,
+          "qty": 3,
+          "currency_id": "USD"
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_item_2",
+      "request": {
+        "operation": "insert",
+        "table": "read.item",
+        "values": {
+          "id": 3,
+          "qty": 1
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_item\"(\"id\",\"qty\") VALUES (:id,:qty)",
+        "params": {
+          "id": 3,
+          "qty": 1
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_composite_0",
+      "request": {
+        "operation": "insert",
+        "table": "read.composite",
+        "values": {
+          "code": "A",
+          "seq": 1,
+          "flag": true,
+          "day": "2026-10-21",
+          "legacy_int": 7
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_composite\"(\"stored_code\",\"seq\",\"flag\",\"day\",\"legacy_int\") VALUES (:code,:seq,:flag,:day,:legacy_int)",
+        "params": {
+          "code": "A",
+          "seq": 1,
+          "flag": true,
+          "day": "2026-10-21",
+          "legacy_int": 7
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "seed_composite_1",
+      "request": {
+        "operation": "insert",
+        "table": "read.composite",
+        "values": {
+          "code": "B",
+          "seq": 2
+        }
+      },
+      "compiled": {
+        "sql": "INSERT INTO \"main\".\"read_composite\"(\"stored_code\",\"seq\") VALUES (:code,:seq)",
+        "params": {
+          "code": "B",
+          "seq": 2
+        }
+      },
+      "rows": []
+    },
+    {
+      "name": "local_parameter",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$adjusted"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"unit_price\" * :f1_rate ) AS \"adjusted\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "adjusted": 12.0
+        },
+        {
+          "id": 2,
+          "adjusted": 24.0
+        },
+        {
+          "id": 3,
+          "adjusted": null
+        }
+      ]
+    },
+    {
+      "name": "nested_scopes",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$discounted,$adjusted"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( ( \"t0\".\"unit_price\" * :f2_rate ) - :f1_rate ) AS \"discounted\",\n( \"t0\".\"unit_price\" * :f2_rate ) AS \"adjusted\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 3,
+          "f2_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "discounted": 9.0,
+          "adjusted": 12.0
+        },
+        {
+          "id": 2,
+          "discounted": 21.0,
+          "adjusted": 24.0
+        },
+        {
+          "id": 3,
+          "discounted": null,
+          "adjusted": null
+        }
+      ]
+    },
+    {
+      "name": "repeated_formula_reuses_scope",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$adjusted AS first,$adjusted AS second",
+        "where": "$adjusted > :minimum",
+        "sqlparams": {
+          "minimum": 10
+        },
+        "order_by": "$adjusted,$id"
+      },
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"unit_price\" * :f1_rate ) AS first,\n( \"t0\".\"unit_price\" * :f1_rate ) AS second\n FROM \"main\".\"read_item\" AS \"t0\"\nWHERE (( \"t0\".\"unit_price\" * :f1_rate ) > :minimum)\nORDER BY ( \"t0\".\"unit_price\" * :f1_rate ),\"t0\".\"id\"",
+        "params": {
+          "minimum": 10,
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "first": 12.0,
+          "second": 12.0
+        },
+        {
+          "first": 24.0,
+          "second": 24.0
+        }
+      ]
+    },
+    {
+      "name": "caller_parameter_shadowed",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$adjusted",
+        "where": "$price > :rate",
+        "sqlparams": {
+          "rate": 15
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"unit_price\" * :f1_rate ) AS \"adjusted\"\n FROM \"main\".\"read_item\" AS \"t0\"\nWHERE (\"t0\".\"unit_price\" > :rate)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "rate": 15,
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "id": 2,
+          "adjusted": 24.0
+        }
+      ]
+    },
+    {
+      "name": "allocated_name_collision",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$adjusted",
+        "where": "$price > :f1_rate",
+        "sqlparams": {
+          "f1_rate": 15,
+          "_f1_rate": 1
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"unit_price\" * :__f1_rate ) AS \"adjusted\"\n FROM \"main\".\"read_item\" AS \"t0\"\nWHERE (\"t0\".\"unit_price\" > :f1_rate)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 15,
+          "_f1_rate": 1,
+          "__f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "adjusted": 24.0
+        }
+      ]
+    },
+    {
+      "name": "this_fields_and_formula",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$total"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( ( \"t0\".\"unit_price\" * :f1_rate ) * \"t0\".\"qty\" ) AS \"total\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "total": 24.0
+        },
+        {
+          "id": 2,
+          "total": 72.0
+        },
+        {
+          "id": 3,
+          "total": null
+        }
+      ]
+    },
+    {
+      "name": "this_related_formula",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$converted,$converted_alias"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"unit_price\" * ( \"t1\".\"conversion_factor\" * :f1_rate ) ) AS \"converted\",\n( \"t0\".\"unit_price\" * ( \"t1\".\"conversion_factor\" * :f1_rate ) ) AS \"converted_alias\"\n FROM \"main\".\"read_item\" AS \"t0\"\n       LEFT JOIN \"main\".\"read_currency\" AS \"t1\" ON ((\"t0\".\"currency_id\")=\"t1\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "converted": 20.0,
+          "converted_alias": 20.0
+        },
+        {
+          "id": 2,
+          "converted": 60.0,
+          "converted_alias": 60.0
+        },
+        {
+          "id": 3,
+          "converted": null,
+          "converted_alias": null
+        }
+      ]
+    },
+    {
+      "name": "formula_on_two_join_aliases",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,@currency_id.adjusted AS first,@other_currency_id.adjusted AS second"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t1\".\"conversion_factor\" * :f1_rate ) AS first,\n( \"t2\".\"conversion_factor\" * :f2_rate ) AS second\n FROM \"main\".\"read_item\" AS \"t0\"\n       LEFT JOIN \"main\".\"read_currency\" AS \"t1\" ON ((\"t0\".\"currency_id\")=\"t1\".\"id\")\n       LEFT JOIN \"main\".\"read_currency\" AS \"t2\" ON ((\"t0\".\"other_currency_id\")=\"t2\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 2,
+          "f2_rate": 2
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "first": 2.0,
+          "second": 3.0
+        },
+        {
+          "id": 2,
+          "first": 3.0,
+          "second": null
+        },
+        {
+          "id": 3,
+          "first": null,
+          "second": null
+        }
+      ]
+    },
+    {
+      "name": "owner_and_target_parameter_scopes",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$adjusted,@currency_id.adjusted,$discounted"
+      },
+      "compiled": {
+        "sql": "SELECT ( \"t0\".\"unit_price\" * :f1_rate ) AS \"adjusted\",\n( \"t1\".\"conversion_factor\" * :f3_rate ) AS \"_currency_id_adjusted\",\n( ( \"t0\".\"unit_price\" * :f1_rate ) - :f2_rate ) AS \"discounted\"\n FROM \"main\".\"read_item\" AS \"t0\"\n       LEFT JOIN \"main\".\"read_currency\" AS \"t1\" ON ((\"t0\".\"currency_id\")=\"t1\".\"id\")\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_rate": 1.2,
+          "f2_rate": 3,
+          "f3_rate": 2
+        }
+      },
+      "rows": [
+        {
+          "adjusted": 12.0,
+          "_currency_id_adjusted": 2.0,
+          "discounted": 9.0
+        },
+        {
+          "adjusted": 24.0,
+          "_currency_id_adjusted": 3.0,
+          "discounted": 21.0
+        },
+        {
+          "adjusted": null,
+          "_currency_id_adjusted": null,
+          "discounted": null
+        }
+      ]
+    },
+    {
+      "name": "local_collection",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$selected,$empty_selection"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( CASE WHEN \"t0\".\"id\" IN (:f1_ids0,:f1_ids1)  THEN 1 ELSE 0 END ) AS \"selected\",\n( CASE WHEN \"t0\".\"id\" IN ()  THEN 1 ELSE 0 END ) AS \"empty_selection\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_ids0": 1,
+          "f1_ids1": 3
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "selected": 1,
+          "empty_selection": 0
+        },
+        {
+          "id": 2,
+          "selected": 0,
+          "empty_selection": 0
+        },
+        {
+          "id": 3,
+          "selected": 1,
+          "empty_selection": 0
+        }
+      ]
+    },
+    {
+      "name": "local_field_like_string_is_literal",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$literal"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( :f1_text ) AS \"literal\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_text": "$price"
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "literal": "$price"
+        },
+        {
+          "id": 2,
+          "literal": "$price"
+        },
+        {
+          "id": 3,
+          "literal": "$price"
+        }
+      ]
+    },
+    {
+      "name": "var_kwargs_mapping",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$kwargs"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( \"t0\".\"unit_price\" + :f1_offset ) AS \"kwargs\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "f1_offset": 4
+        }
+      },
+      "rows": [
+        {
+          "id": 1,
+          "kwargs": 14.0
+        },
+        {
+          "id": 2,
+          "kwargs": 24.0
+        },
+        {
+          "id": 3,
+          "kwargs": null
+        }
+      ]
+    },
+    {
+      "name": "environment_primary",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id,$label",
+        "environment": {
+          "currency": "l'euro",
+          "fallback_currency": "USD"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n( 'l''euro' ) AS \"label\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "id": 1,
+          "label": "l'euro"
+        },
+        {
+          "id": 2,
+          "label": "l'euro"
+        },
+        {
+          "id": 3,
+          "label": "l'euro"
+        }
+      ]
+    },
+    {
+      "name": "environment_fallback",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$label",
+        "environment": {
+          "fallback_currency": "USD"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( 'USD' ) AS \"label\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "label": "USD"
+        },
+        {
+          "label": "USD"
+        },
+        {
+          "label": "USD"
+        }
+      ]
+    },
+    {
+      "name": "environment_null_is_present",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$label",
+        "environment": {
+          "currency": null,
+          "fallback_currency": "USD"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( '' ) AS \"label\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "label": ""
+        },
+        {
+          "label": ""
+        },
+        {
+          "label": ""
+        }
+      ]
+    },
+    {
+      "name": "environment_bool",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$env_value",
+        "environment": {
+          "value": true
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( 'True' ) AS \"env_value\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "env_value": "True"
+        },
+        {
+          "env_value": "True"
+        },
+        {
+          "env_value": "True"
+        }
+      ]
+    },
+    {
+      "name": "environment_number",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$env_value",
+        "environment": {
+          "value": 42
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( '42' ) AS \"env_value\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "env_value": "42"
+        },
+        {
+          "env_value": "42"
+        },
+        {
+          "env_value": "42"
+        }
+      ]
+    },
+    {
+      "name": "environment_sequence",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$env_value",
+        "environment": {
+          "value": [
+            "A",
+            null,
+            false,
+            2
+          ]
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( 'A,,False,2' ) AS \"env_value\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "env_value": "A,,False,2"
+        },
+        {
+          "env_value": "A,,False,2"
+        },
+        {
+          "env_value": "A,,False,2"
+        }
+      ]
+    },
+    {
+      "name": "environment_empty",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$env_value",
+        "environment": {
+          "value": ""
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( '' ) AS \"env_value\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY \"t0\".\"id\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "env_value": ""
+        },
+        {
+          "env_value": ""
+        },
+        {
+          "env_value": ""
+        }
+      ]
+    },
+    {
+      "name": "formula_where_only",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$id",
+        "where": "$adjusted >= :min",
+        "sqlparams": {
+          "min": 20
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"read_item\" AS \"t0\"\nWHERE (( \"t0\".\"unit_price\" * :f1_rate ) >= :min)\nORDER BY \"t0\".\"id\"",
+        "params": {
+          "min": 20,
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "id": 2
+        }
+      ]
+    },
+    {
+      "name": "formula_group_having",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$qty,SUM($adjusted) AS amount",
+        "group_by": "$qty",
+        "having": "SUM($adjusted)>:min",
+        "sqlparams": {
+          "min": 0
+        },
+        "order_by": "$qty"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"qty\" AS \"qty\",\nSUM(( \"t0\".\"unit_price\" * :f1_rate )) AS amount\n FROM \"main\".\"read_item\" AS \"t0\"\nGROUP BY \"t0\".\"qty\"\nHAVING SUM(( \"t0\".\"unit_price\" * :f1_rate ))>:min\nORDER BY \"t0\".\"qty\"",
+        "params": {
+          "min": 0,
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "qty": 2,
+          "amount": 12.0
+        },
+        {
+          "qty": 3,
+          "amount": 24.0
+        }
+      ]
+    },
+    {
+      "name": "formula_distinct",
+      "request": {
+        "operation": "select",
+        "table": "read.item",
+        "columns": "$adjusted",
+        "distinct": true,
+        "order_by": "$adjusted"
+      },
+      "compiled": {
+        "sql": "SELECT DISTINCT ( \"t0\".\"unit_price\" * :f1_rate ) AS \"adjusted\"\n FROM \"main\".\"read_item\" AS \"t0\"\nORDER BY ( \"t0\".\"unit_price\" * :f1_rate )",
+        "params": {
+          "f1_rate": 1.2
+        }
+      },
+      "rows": [
+        {
+          "adjusted": null
+        },
+        {
+          "adjusted": 12.0
+        },
+        {
+          "adjusted": 24.0
+        }
+      ]
+    },
+    {
+      "name": "composite_projection",
+      "request": {
+        "operation": "select",
+        "table": "read.composite",
+        "columns": "$key,$typed,$key_alias",
+        "order_by": "$seq"
+      },
+      "compiled": {
+        "sql": "SELECT ( '[' ||  '\"' ||  \"t0\".\"stored_code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  ) AS \"key\",\n( '[' || \"t0\".\"flag\" ||', '|| '\"' ||  \"t0\".\"day\" || '::D\"'  ||', '|| '\"' ||  \"t0\".\"legacy_int\" || '::I\"'  || ']'  ) AS \"typed\",\n( '[' ||  '\"' ||  \"t0\".\"stored_code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  ) AS \"key_alias\"\n FROM \"main\".\"read_composite\" AS \"t0\"\nORDER BY \"t0\".\"seq\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "key": "[\"A\", 1]",
+          "typed": "[1, \"2026-10-21::D\", \"7::I\"]",
+          "key_alias": "[\"A\", 1]"
+        },
+        {
+          "key": "[\"B\", 2]",
+          "typed": null,
+          "key_alias": "[\"B\", 2]"
+        }
+      ]
+    },
+    {
+      "name": "composite_auto_pkey",
+      "request": {
+        "operation": "select",
+        "table": "read.composite",
+        "columns": "$code,$seq",
+        "addPkeyColumn": true,
+        "order_by": "$seq"
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"stored_code\" AS \"code\",\n\"t0\".\"seq\" AS \"seq\",\n( '[' ||  '\"' ||  \"t0\".\"stored_code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  ) AS \"pkey\"\n FROM \"main\".\"read_composite\" AS \"t0\"\nORDER BY \"t0\".\"seq\"",
+        "params": {}
+      },
+      "rows": [
+        {
+          "code": "A",
+          "seq": 1,
+          "pkey": "[\"A\", 1]"
+        },
+        {
+          "code": "B",
+          "seq": 2,
+          "pkey": "[\"B\", 2]"
+        }
+      ]
+    },
+    {
+      "name": "composite_filter",
+      "request": {
+        "operation": "select",
+        "table": "read.composite",
+        "columns": "$key",
+        "where": "$key=:key",
+        "sqlparams": {
+          "key": "[\"A\", 1]"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT ( '[' ||  '\"' ||  \"t0\".\"stored_code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  ) AS \"key\"\n FROM \"main\".\"read_composite\" AS \"t0\"\nWHERE (( '[' ||  '\"' ||  \"t0\".\"stored_code\" || '\"'  ||', '||\"t0\".\"seq\" || ']'  )=:key)",
+        "params": {
+          "key": "[\"A\", 1]"
+        }
+      },
+      "rows": [
+        {
+          "key": "[\"A\", 1]"
+        }
+      ]
+    }
+  ]
+}

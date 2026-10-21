@@ -42,8 +42,10 @@ sono confrontati indipendentemente con Python, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
-relazioni dirette anche composte, aggregazioni e policy dichiarative: **60 casi**
+relazioni dirette anche composte, aggregazioni e policy dichiarative: **92 casi**
 confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
+Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
+`#THIS`, `#ENV` da snapshot e proiezione/filtro delle colonne composte.
 `sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
 aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel browser.
 Gerarchie, `auto_counter` e `relative_index` aggiungono **39 scenari**: percorsi,
@@ -99,7 +101,7 @@ npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
 La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 60 casi query
+completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 92 casi query
 confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 

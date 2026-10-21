@@ -68,6 +68,8 @@ sola non soddisfa questo traguardo.
 - [x] `auto_counter` per gruppo e `relative_index`, con rollback e verifica IndexedDB.
 - [x] Cascade applicative `onUpdate` su colonne fisiche, hook annidati, raise/ignore e rollback.
 - [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
+- [x] Letture calcolate: parametri locali delle formule, #THIS, #ENV da snapshot,
+      colonne composte e pkey composta aggiunta alla SELECT; confronto Python e browser.
 
 Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python
 scelto; orologio, identità e generatore ID controllabili. Controllare il Python

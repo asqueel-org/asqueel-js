@@ -14,6 +14,7 @@ from asqueel_migration import SqlMigrator
 from asqueel_migration.adapters.sqlite_adapter import SqliteDatabase
 from browser_queries import query_model
 from query_features import feature_model
+from read_formulas import read_model
 from asqueel.environment import SqlEnvironment
 from model_oracle import document
 
@@ -70,3 +71,6 @@ if __name__ == "__main__":
     features = query_oracle(feature_model(), 'query-feature-inputs.json')
     (ROOT / 'test/fixtures/query-features.json').write_text(json.dumps(features, indent=2, ensure_ascii=False) + '\n')
     print(f"Python: {len(features['cases'])} additional feature cases compiled and executed on SQLite.")
+    reads = query_oracle(read_model(), 'read-inputs.json')
+    (ROOT / 'test/fixtures/reads.json').write_text(json.dumps(reads, indent=2, ensure_ascii=False) + '\n')
+    print(f"Python: {len(reads['cases'])} computed-read cases compiled and executed on SQLite.")

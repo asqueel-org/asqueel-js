@@ -2,6 +2,12 @@
 
 ## Non rilasciato
 
+- Compilatore di lettura: formule annidate con parametri locali `var_*`/`var_kwargs`,
+  `#THIS`, `#ENV` da snapshot e lettura delle colonne composte, anche come pkey
+  automatica. Ordine dei binding e collisioni allineati a Python; 32 nuovi casi
+  confrontano modello/migrate, SQL esatto, parametri e risultati su SQLite reale,
+  inclusa la riapertura di IndexedDB nel browser.
+
 - Cascade applicative `onUpdate` su relazioni fisiche (`cascade`, `raise`, `ignore`):
   aggiornamenti a catena, hook dei figli prima dell'after-hook del padre,
   policy di partizione e rollback atomico. 27 scenari confrontati con Python

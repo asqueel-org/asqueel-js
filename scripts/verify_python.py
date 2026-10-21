@@ -10,6 +10,7 @@ from model_oracle import document
 from asqueel import resolve_model,SqlMigrationRenderer
 from query_oracle import query_oracle
 from query_features import feature_model
+from read_formulas import read_model
 from hooks_oracle import oracle as hooks_oracle
 from behaviors_oracle import oracle as behaviors_oracle
 from cascades_oracle import oracle as cascades_oracle
@@ -23,14 +24,15 @@ fixtures=json.loads((ROOT/'test/fixtures/resolved-model.json').read_text())
 assert expected == [r['expected'] for r in fixtures], 'Checked-in full-model fixtures differ from live Python'
 models,sqlite=examples()
 example_expected={name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()}
-queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'query-feature-inputs.json')}
+queries = {'base': query_oracle(), 'features': query_oracle(feature_model(), 'query-feature-inputs.json'),
+           'reads': query_oracle(read_model(), 'read-inputs.json')}
 hooks = hooks_oracle()
 behaviors = behaviors_oracle()
 cascades = cascades_oracle()
 assert cascades == json.loads((ROOT / 'test/fixtures/cascades.json').read_text()), 'Cascade fixtures differ from live Python'
 assert behaviors == json.loads((ROOT / 'test/fixtures/behaviors.json').read_text()), 'Behavior fixtures differ from live Python'
 assert hooks == json.loads((ROOT / 'test/fixtures/hooks.json').read_text()), 'Hook fixtures differ from live Python'
-for name, filename in [('base', 'queries.json'), ('features', 'query-features.json')]:
+for name, filename in [('base', 'queries.json'), ('features', 'query-features.json'), ('reads', 'reads.json')]:
     assert queries[name] == json.loads((ROOT / 'test/fixtures' / filename).read_text()), f'{filename} differs from live Python'
 for runtime in ('node','bun'):
     rendered=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_models.js')],cwd=ROOT,text=True))

@@ -2,27 +2,90 @@ import {names} from './structures.js';
 import {IDENT, q, record, columnName, tableSQL, tokens, split, projectionAlias, fieldReference} from './sql-expressions.js';
 import {prepareParameters} from './sql-parameters.js';
 
+// Portable subset of Python's legacy _to_text used by #ENV.
+function environmentText(value) {
+    if (Array.isArray(value)) return value.map(environmentText).join(',');
+    if (value == null) return '';
+    if (typeof value === 'boolean') return value ? 'True' : 'False';
+    if (typeof value === 'object') throw new Error('Valore #ENV non portabile');
+    return String(value);
+}
+
 /** SQLite SELECT clauses ported from the hierarchical Python 0.6.1 compiler. */
 class Context {
     constructor(tables, table, parameters, environment) {
         this.tables = tables; this.table = table; this.params = structuredClone(record(parameters ?? {}));
         this.environment = environment; this.joins = new Map(); this.active = new Set();
+        this.formulaBindings = new Map(); this.bindingCounter = 0;
+        this.bindingNames = new Set(Object.keys(this.params));
+        this.resolvedColumns = new Map();
     }
     field(table, alias, name) {
-        if (name === 'pkey') name = table.a.pkey;
+        if (name === 'pkey') name = table.a.x_logical_pkey || table.a.pkey;
         const column = table.columns.get(name);
         if (column) return `${q(alias)}.${q(columnName(column))}`;
-        const virtual = table.virtual.get(name);
+        const virtual = table.virtual.get(name) ?? table.composites.get(name);
         if (!virtual) throw new Error(`Colonna sconosciuta: ${table.key}.${name}`);
         const key = `${table.key}.${name}`;
+        const resolvedKey = `${key}.${alias}`;
+        if (this.resolvedColumns.has(resolvedKey)) return this.resolvedColumns.get(resolvedKey);
         if (this.active.has(key)) throw new Error(`Formula o alias ciclico: ${key}`);
         this.active.add(key);
         try {
-            if (virtual.a.relation_path) return this.expression(/^[$@]/.test(virtual.a.relation_path) ? virtual.a.relation_path : '$' + virtual.a.relation_path, table, alias);
-            if (virtual.a.sql_formula == null || virtual.children.length || Object.keys(virtual.a).some(k => k.startsWith('var_')))
+            const remember = sql => { this.resolvedColumns.set(resolvedKey, sql); return sql; };
+            if (virtual.a.relation_path) return remember(this.expression(/^[$@]/.test(virtual.a.relation_path) ? virtual.a.relation_path : '$' + virtual.a.relation_path, table, alias));
+            if (virtual.tag === 'compositeColumn') return remember(`( ${this.expression(this.compositeFormula(table, virtual), table, alias)} )`);
+            if (typeof virtual.a.sql_formula !== 'string' || virtual.children.length
+                || Object.keys(virtual.a).some(k => /^(select|exists)(_|$)/.test(k)))
                 throw new Error(`Formula con parametri, sottoquery o comportamento non supportato: ${key}`);
-            return `( ${this.expression(virtual.a.sql_formula, table, alias)} )`;
+            let formula = virtual.a.sql_formula.replace(/#ENV\(([^,)]+)(,[^),]+)?\)/g, (_, name, fallback) => {
+                const key = [name, fallback?.slice(1)].find(k => k != null && Object.hasOwn(this.environment, k));
+                if (key == null) throw new Error(`${table.key}.${virtual.a.name}: #ENV(${name}) senza valore; callback env non supportate`);
+                return `'${environmentText(this.environment[key]).replaceAll("'", "''")}'`;
+            });
+            // Bind the authored formula before expanding dependencies, each with its own scope.
+            formula = this.bindFormula(formula, virtual, `${key}.${alias}`);
+            formula = formula.replace(/#THIS\.([\w.@]+)/g, (_, path) => path.includes('.')
+                ? this.related(path, table, alias) : this.field(table, alias, path));
+            return remember(`( ${this.expression(formula, table, alias)} )`);
         } finally { this.active.delete(key); }
+    }
+    compositeFormula(table, column) {
+        const chunks = names(column.a.columns).map(name => {
+            const dtype = table.columns.get(name).a.dtype;
+            if (['A', 'C', 'T'].includes(dtype)) return ` '"' ||  $${name} || '"' `;
+            if (['L', 'F', 'R', 'B'].includes(dtype)) return `$${name}`;
+            return ` '"' ||  $${name} || '::${dtype}"' `;
+        });
+        return "'[' || " + chunks.join(" ||', '||") + " || ']' ";
+    }
+    bindFormula(formula, column, key) {
+        if (!this.formulaBindings.has(key)) {
+            const values = {...(column.a.var_kwargs ?? {})};
+            for (const [name, value] of Object.entries(column.a))
+                if (name.startsWith('var_') && name !== 'var_kwargs') values[name.slice(4)] = value;
+            const bindings = new Map();
+            const entries = Object.entries(values);
+            if (entries.length) {
+                for (const [name] of entries) this.bindingNames.add(name);
+                const namespace = `f${++this.bindingCounter}_`;
+                for (const [name, value] of entries) {
+                    let bound = namespace + name;
+                    while (this.bindingNames.has(bound)) bound = '_' + bound;
+                    this.bindingNames.add(bound);
+                    bindings.set(name, {bound, value});
+                }
+            }
+            this.formulaBindings.set(key, bindings);
+        }
+        const bindings = this.formulaBindings.get(key);
+        // Same text substitution boundary as Python SqlBindings, including quoted literals.
+        return formula.replace(/(:)(\w+)(\W|$)/g, (match, colon, name, suffix) => {
+            const binding = bindings.get(name);
+            if (!binding) return match;
+            this.params[binding.bound] = structuredClone(binding.value);
+            return colon + binding.bound + suffix;
+        });
     }
     related(path, table, alias) {
         const parts = path.replaceAll('@', '').split('.');
@@ -51,6 +114,7 @@ class Context {
     }
     expression(text, table = this.table, alias = 't0') {
         split(text);
+        this.resolveReferences([text], table, alias);
         // Python's legacy discover/substitute also resolves references inside SQL literals.
         const replaceFields = text => text.replace(new RegExp(`\\$(${IDENT})|@(${IDENT}(?:\\.@?${IDENT})+)`, 'g'),
             (_, field, path) => field ? this.field(table, alias, field) : this.related(path, table, alias));
@@ -63,16 +127,34 @@ class Context {
             return replaceFields(token.text).replace(/\bILIKE\b/gi, 'LIKE');
         }).join('');
     }
-    projections(columns, bagFields) {
+    resolveReferences(expressions, table = this.table, alias = 't0') {
+        // Python discovers local fields before relation paths in each clause,
+        // then resolves the combined ordered dictionary across all clauses.
+        const refs = new Map();
+        for (const text of expressions.filter(Boolean)) {
+            for (const match of text.matchAll(new RegExp(`\\$(${IDENT})`, 'g')))
+                refs.set(match[1], {field: match[1]});
+            for (const match of text.matchAll(new RegExp(`@(${IDENT}(?:\\.@?${IDENT})+)`, 'g')))
+                refs.set(('@' + match[1]).replace(/\W/g, '_'), {path: match[1]});
+        }
+        for (const ref of refs.values()) {
+            if (ref.field) this.field(table, alias, ref.field);
+            else this.related(ref.path, table, alias);
+        }
+    }
+    expandColumns(columns, bagFields) {
         if (Array.isArray(columns)) columns = columns.join(',');
         if (typeof columns !== 'string' || !columns.trim()) throw new Error('SELECT richiede colonne');
         columns = columns.replaceAll('  ', ' ').replaceAll('\n', '').replaceAll(' as ', ' AS ').replaceAll(' ,', ',');
-        const expanded = split(columns).flatMap(raw => {
+        return split(columns).flatMap(raw => {
             if (raw === '*') return [...this.table.columns].filter(([, c]) => bagFields || c.a.dtype !== 'X').map(([n]) => '$' + n)
                 .concat([...this.table.virtual].filter(([, c]) => c.a.static).map(([n]) => '$' + n));
             if (raw.startsWith('*')) throw new Error('Wildcard avanzato non supportato');
             return [raw];
-        });
+        }).join(',');
+    }
+    projections(columns, bagFields) {
+        const expanded = split(this.expandColumns(columns, bagFields));
         const entries = new Map();
         for (const raw of expanded) {
             const [value, explicit] = projectionAlias(raw);
@@ -113,7 +195,7 @@ export function compileSelect(tables, table, request) {
     let columns = request.columns ?? '*';
     let ordering = request.order_by ?? (!aggregate ? table.a.order_by : null);
     if (count) { ordering = null; columns = group || (distinct ? columns : 'count(*) AS "gnr_row_count"'); }
-    else if (addPkeyColumn && table.a.pkey && !aggregate) columns += `,$${table.a.pkey} AS "pkey"`;
+    else if (addPkeyColumn && table.a.pkey && !aggregate) columns += `,$${table.a.x_logical_pkey || table.a.pkey} AS "pkey"`;
     if (table.a.logicalDeletionField && request.exclude_logical_deleted === 'mark' && !aggregate && !count) columns += `,$${table.a.logicalDeletionField} AS "_isdeleted"`;
     // Field-valued WHERE parameters retain their original values in compiled kwargs, as in Python.
     let where = request.where;
@@ -122,8 +204,10 @@ export function compileSelect(tables, table, request) {
             (value.startsWith('$') && (table.columns.has(value.slice(1)) || table.virtual.has(value.slice(1))) || value.startsWith('@')))
             where = where.replace(new RegExp(`:${name}(\\W|$)`, 'g'), (_, suffix) => value + suffix);
     }
-    const projected = context.projections(columns, bagFields);
     where = context.policies(request, where);
+    columns = context.expandColumns(columns, bagFields);
+    context.resolveReferences([columns, where, ordering, group, request.having]);
+    const projected = context.projections(columns, bagFields);
     const clauses = [['WHERE', where], ['ORDER BY', ordering], ['GROUP BY', group], ['HAVING', request.having]];
     const resolved = new Map(clauses.map(([name, text]) => [name, text ? context.expression(text) : null]));
     let sql = `SELECT ${distinct ? 'DISTINCT ' : ''}${projected}\n FROM ${tableSQL(table)} AS "t0"`;
