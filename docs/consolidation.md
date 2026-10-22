@@ -1,26 +1,15 @@
-# Consolidamento 0.2.0
+# Consolidamento e unificazione 0.2.0
 
-Il candidato riunisce i 15 commit presenti su main dopo v0.1.1, il commit locale
-`a9a140a` sull'HTML autonomo e il lavoro locale sulla demo assemblea. Include anche
-la correzione Python 0.6.4 dei binding SQL, portata nella gestione dei parametri JS.
-Non include il nuovo formato modello v2 né modifica il formato dei bundle esportati.
+Il candidato riunisce i porting già presenti su main, l’HTML autonomo e il lavoro
+locale sulla demo assemblea con l’unificazione del modello. Riferimento Python
+0.7.0: commit `02ca1e7c8a66dc9140bc76baf3185c1283cae9f8`, verificato prima del porting JS.
+Include la correzione dei binding SQL (#35), il modello JSON ufficiale v2 e
+l’esecuzione sulla stessa istanza `DbModel`.
 
-Verifiche del 22 ottobre 2026:
+Le fixture assemblea v1–v4 restano nei test degli upgrade dei bundle SourceBag.
+I vecchi JSON del modello v1 devono invece essere riesportati dalla ricetta.
+Safari e dispositivi fisici restano fuori dalla qualificazione automatica.
+DB Manager è fuori perimetro. I candidati precedenti non vanno pubblicati.
 
-- 940 test Node e 940 Bun.
-- 29 scenari browser, 2 HTML autonomi e 8 assemblea offline. Un'asserzione sul
-  conteggio query è stata aggiornata da 350 a 352; lo scenario è poi passato.
-- Parità live contro il commit Python 31ca251: 218 casi strutturali,
-  204 modelli completi, 201 documenti migration, 5 esempi indipendenti,
-  2 migrazioni SQLite, 352 query/CRUD, 26 cicli hook, 39 gerarchie/contatori,
-  27 cascade, 49 import e 86 azioni della demo assemblea.
-- Tarball installato in una directory vuota: import pubblici, migrazione,
-  34 casi SQL/CRUD Python e seconda migrazione su Node e Bun.
-
-Le vecchie fixture assemblea v1–v4 restano nei test degli upgrade. Le bozze non
-salvate non diventano persistenti implicitamente. Safari e dispositivi fisici
-restano fuori dalla qualificazione automatica di questa release.
-
-Il candidato precedente nel worktree `unified-model-js`, anch'esso marcato 0.2.0,
-è superato e non deve essere pubblicato. Dopo questo consolidamento il lavoro di
-unificazione va aggiornato sulla nuova base e deve usare una versione successiva.
+Verifiche combinate in corso: Node, Bun, browser, HTML autonomi, assemblea,
+parità Python e installazione del tarball in un progetto vuoto.

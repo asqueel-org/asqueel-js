@@ -1,6 +1,6 @@
 # Importazione CSV, JSON e TYTX
 
-`table.sql_insert(source, options)` porta il contratto di Python 0.6.1 + fix #44
+`table.sql_insert(source, options)` porta il contratto di Python 0.7.0
 (`SqlTable.sql_insert`, `table_io.read_records`, `adaptRecord`). L'importazione è
 SQL diretta: non esegue trigger di campo/tabella, contatori, gerarchie o cascade.
 Per il ciclo applicativo completo resta disponibile `table.insert(record)`.

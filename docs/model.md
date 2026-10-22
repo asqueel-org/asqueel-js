@@ -1,7 +1,7 @@
-# Modello risolto · Python 0.6.4
+# Modello risolto · Python 0.7.0
 
-Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.1**, commit
-`8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988` (correzione #44 successiva alla release). La versione del codice di riferimento è fissata;
+Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.7.0**, commit
+`02ca1e7c8a66dc9140bc76baf3185c1283cae9f8` (release in preparazione). La versione del codice di riferimento è fissata;
 la grammatica JSON da sola non implementa espansioni, relazioni o migrazioni.
 
 ```js
@@ -40,13 +40,13 @@ Le colonne espongono `table`, `pkg`, `fullname`, `dtype`, `sqlname`, nomi descri
 
 `table.column('@relation.field')` segue le relazioni. Gli alias mantengono il riferimento
 `originalColumn` e sovrappongono gli attributi espliciti a quelli della destinazione.
-I cicli degli alias sono rifiutati quando si risolve il percorso, come nella 0.6.1.
+I cicli degli alias sono rifiutati quando si risolve il percorso, come nella 0.7.0.
 `model.relations` contiene gli attributi delle relazioni dirette e inverse, con chiavi
 `package.table.@name`. `table.relations.getNode(path)` espone una navigazione pigra.
 
 ## JSON completo
 
-Il formato è `asqueel-model`, versione `1`, riferimento `0.6.1`. Contiene:
+Il formato è `asqueel-model`, versione `2`, condiviso con il codec ufficiale Python. Contiene:
 
 - albero del database e albero dei namespace, in ordine;
 - **tutti** gli attributi e figli di ogni nodo, incluse opzioni, validazioni,
@@ -55,20 +55,26 @@ Il formato è `asqueel-model`, versione `1`, riferimento `0.6.1`. Contiene:
 - origine degli indici generati e default degli alias necessari al ripristino.
 
 Non serializza puntatori ai genitori, istanze operative `SqlTable`, callback o cache:
-le identità e i collegamenti vengono ricostruiti. Il codec Python storico `model_to_json`
-accetta ancora `ResolvedModel` e non il `DbModel` della 0.6.1; per questo l'oracolo usa
-un attraversamento completo esplicito, senza elenchi di attributi da selezionare.
+le identità e i collegamenti vengono ricostruiti attraverso lo stesso costruttore.
+Connessioni e relativi default sono esclusi. Il registro delle relazioni viene
+verificato rispetto alle dichiarazioni. Il formato precedente è rifiutato: occorre
+riesportare dalla ricetta con la versione nuova.
+
+`restored.queries(adapter, runtime)` compila ed esegue direttamente il modello
+caricato. Ricette e JSON confluiscono nello stesso `DbModel`; transazioni, hook e
+importazioni conservano quella stessa istanza. Le viste interne del compilatore
+leggono gli attributi del modello, senza ricostruire una copia semantica.
 
 ## Espansioni e confini
 
 Sono incluse le espansioni strutturali di `sys_fields` (anche le cinque virtuali standard),
 `full_update`, `record_hash`, `audit`, `dynamic_fields`, `auto_counter`, `protection`,
 `hierarchical`, `attachments` e `relative_index`, con metadati, formule e nomi dei trigger.
-La 0.6.1 include `hierarchical.linked_to`: genera la chiave verso il master, il
+La 0.7.0 include `hierarchical.linked_to`: genera la chiave verso il master, il
 collegamento inverso alla radice e i nomi dei relativi hook. Sono ammessi anche
 nomi personalizzati per il campo contatore gerarchico. Le altre opzioni conservano
 le dichiarazioni. `system_records` e `release` attive e `hierarchical.depth`
-restano rifiutate dalla 0.6.1.
+restano rifiutate dalla 0.7.0.
 
 `SqlDatabaseConfig` aggiunge le dichiarazioni di connessione e le opzioni del driver.
 Risolverlo non apre connessioni: i dati amministrativi non diventano tabelle o relazioni.
@@ -91,7 +97,7 @@ La risoluzione delle dichiarazioni di default, validazione, cifratura e trigger
 - `subtable`, le opzioni `partition` e `tenant`, e attributi extra non dichiarati
   sono rimossi. Le partizioni si dichiarano con `partition_<campo>` sulla tabella.
   L'esempio gruppi usa una formula esplicita al posto di `subtable`.
-- `virtualRelation` resta un nodo di dichiarazione: nella 0.6.1 il registro gerarchico
+- `virtualRelation` resta un nodo di dichiarazione: nella 0.7.0 il registro gerarchico
   non ne costruisce gli archi. Non anticipiamo la futura compilazione delle query.
 
 ## Particolarità del riferimento
@@ -101,10 +107,10 @@ I default omessi appartengono a ogni singola dichiarazione: `indexed=False` su u
 campo di sistema resta esplicito anche dopo l'aggiunta di una colonna estranea.
 Il caso `061/sysfield_explicit_indexed_false` conserva questa regressione nel corpus
 differenziale, confrontando modello completo e migrazione. Un valore omesso continua
-a ricevere il default di `sys_fields`. La release PyPI 0.6.1 contiene ancora il difetto;
+a ricevere il default di `sys_fields`. La release PyPI 0.7.0 contiene ancora il difetto;
 il confronto usa il commit corretto fissato in `provenance.json`, con Builders 0.29.0.
 
-Il JSON mantiene la versione di formato `1`, ma dichiara il riferimento `0.6.1`.
+Il JSON mantiene la versione di formato `1`, ma dichiara il riferimento `0.7.0`.
 Il ripristino richiede questo riferimento: i vecchi snapshot `0.6.0` vanno rigenerati
 dalla ricetta, per applicare le nuove espansioni in modo esplicito.
 

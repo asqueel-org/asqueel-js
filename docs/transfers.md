@@ -8,7 +8,7 @@ inviare e come applicare quelli restituiti. Non serve eseguire Python nel browse
 
 Il modulo `python/asqueel_transfer.py` usa Asqueel, genro-builders, genro-bag e
 TYTX già disponibili nell’applicazione Python. Il riferimento verificato è
-Asqueel 0.6.4, come il resto del porting.
+Asqueel 0.7.0, come il resto del porting.
 
 ```python
 from asqueel_transfer import export_transfer

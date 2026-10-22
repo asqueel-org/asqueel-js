@@ -1,8 +1,4 @@
-"""Full, unfiltered hierarchical snapshots from the pinned Python release.
-
-The old model_to_json encodes ResolvedModel, not 0.6.1's DbModel. This codec
-walks every object and every global relation; it never copies expected JS data.
-"""
+"""Full hierarchical snapshots using the official pinned Python codec."""
 import json
 import sys
 import subprocess
@@ -11,20 +7,12 @@ from copy import deepcopy
 from python_reference import ROOT
 from asqueel import SqlBuilder, SqlDatabaseConfig, resolve_model, SqlMigrationRenderer
 from asqueel.configuration import _owned_handler
-from asqueel.model_sections import thaw
 from asqueel_migration.exceptions import SqlValidationError
 
 
 def document(model):
-    def tree(n):
-        meta = n.structnode.attr.get('_meta', {}) if n.structnode is not None else {}
-        return dict(name=n.name, tag=n.tag, attributes=thaw(n.attributes),
-                    children=[tree(c) for c in n.values()],
-                    signatureDefaults=meta.get('signature_defaults', []) if n.tag == 'aliasColumn' else [], generated=n.structnode is None)
-    edges = [dict(path=f'{p.label}.{t.label}.{r.label}', attributes=thaw(dict(r.attr)))
-             for p in model.relations for t in p.value for r in t.value]
-    return dict(format='asqueel-model', version=1, reference='0.6.1',
-                database=tree(model.db), namespaces=tree(model.obj), relations=edges)
+    from asqueel import model_to_json
+    return json.loads(model_to_json(model))
 
 
 def apply(builder, steps):

@@ -2,8 +2,7 @@
   "shop": {
     "model": {
       "format": "asqueel-model",
-      "version": 1,
-      "reference": "0.6.1",
+      "version": 2,
       "database": {
         "name": "db",
         "tag": "db",
@@ -25,15 +24,20 @@
                 },
                 "children": [],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           }
         ],
-        "signatureDefaults": [],
-        "generated": false
+        "signatureDefaults": [
+          "implementation"
+        ],
+        "generated": false,
+        "physicalColumn": false
       },
       "namespaces": {
         "name": "schemas",
@@ -81,8 +85,14 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "code",
@@ -98,8 +108,13 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -115,12 +130,19 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -128,7 +150,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -145,7 +168,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer_code_key",
@@ -156,15 +180,21 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "region",
@@ -195,8 +225,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "code",
@@ -212,12 +249,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "composites",
@@ -233,12 +278,16 @@
                               "unique": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -246,7 +295,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -254,19 +304,26 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           },
           {
             "name": "sales",
@@ -308,8 +365,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "customer_id",
@@ -339,12 +403,26 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "country",
@@ -360,8 +438,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "region_code",
@@ -377,8 +462,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "year",
@@ -393,8 +485,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "number",
@@ -409,8 +508,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "issued",
@@ -425,8 +531,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "amount",
@@ -443,12 +556,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "composites",
@@ -479,12 +600,22 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "number_key",
@@ -496,11 +627,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "constraints",
@@ -517,11 +650,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -537,7 +672,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "ix_invoice_date",
@@ -551,7 +687,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_customer_id_key",
@@ -561,11 +698,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -582,16 +721,24 @@
                               "static": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "static"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "invoice_row",
@@ -621,8 +768,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "invoice_id",
@@ -652,12 +806,27 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "description",
@@ -673,8 +842,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "sku",
@@ -689,8 +865,14 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "quantity",
@@ -706,12 +888,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -719,7 +909,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -736,7 +927,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_row_invoice_id_key",
@@ -746,27 +938,36 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           }
         ],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "relations": [
         {
@@ -1300,8 +1501,7 @@
   "application": {
     "model": {
       "format": "asqueel-model",
-      "version": 1,
-      "reference": "0.6.1",
+      "version": 2,
       "database": {
         "name": "db",
         "tag": "db",
@@ -1310,8 +1510,11 @@
           "implementation": "sqlite"
         },
         "children": [],
-        "signatureDefaults": [],
-        "generated": false
+        "signatureDefaults": [
+          "implementation"
+        ],
+        "generated": false,
+        "physicalColumn": false
       },
       "namespaces": {
         "name": "packages",
@@ -1367,12 +1570,24 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "ins",
+                              "upd",
+                              "user_ins",
+                              "ldel",
+                              "draft",
+                              "group",
+                              "group_name",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -1398,7 +1613,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -1414,7 +1630,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -1429,7 +1646,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -1446,7 +1664,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -1461,7 +1680,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__syscode",
@@ -1478,7 +1698,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -1493,12 +1714,19 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -1519,7 +1747,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -1535,7 +1764,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -1551,7 +1781,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -1567,7 +1798,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -1583,11 +1815,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -1604,7 +1838,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___del_ts_key",
@@ -1616,7 +1851,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___mod_ts_key",
@@ -1628,7 +1864,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___syscode_key",
@@ -1639,15 +1876,21 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "category",
@@ -1688,8 +1931,21 @@
                               "syscode": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "ins",
+                              "upd",
+                              "user_ins",
+                              "user_upd",
+                              "ldel",
+                              "draft",
+                              "group",
+                              "group_name",
+                              "enabled",
+                              "syscode"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "hierarchical",
@@ -1702,8 +1958,13 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "parent",
+                              "virtual_roots",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "auto_counter",
@@ -1713,12 +1974,17 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "field",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -1744,7 +2010,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -1760,7 +2027,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -1775,7 +2043,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -1792,7 +2061,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -1807,7 +2077,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_user",
@@ -1823,7 +2094,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_row_count",
@@ -1838,7 +2110,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "parent_id",
@@ -1872,11 +2145,13 @@
                                 },
                                 "children": [],
                                 "signatureDefaults": [],
-                                "generated": false
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "root_id",
@@ -1907,11 +2182,13 @@
                                 },
                                 "children": [],
                                 "signatureDefaults": [],
-                                "generated": false
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "hierarchical_description",
@@ -1925,7 +2202,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_parent_h_description",
@@ -1939,7 +2217,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "hierarchical_pkey",
@@ -1954,7 +2233,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_parent_h_pkey",
@@ -1967,7 +2247,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_h_count",
@@ -1980,7 +2261,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_parent_h_count",
@@ -1993,7 +2275,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "description",
@@ -2008,12 +2291,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -2034,7 +2325,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -2050,7 +2342,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -2066,7 +2359,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -2082,7 +2376,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -2098,7 +2393,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "child_count",
@@ -2117,7 +2413,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "hlevel",
@@ -2131,7 +2428,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "_h_sortcol",
@@ -2146,11 +2444,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -2167,7 +2467,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "category___del_ts_key",
@@ -2179,7 +2480,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "category___mod_ts_key",
@@ -2191,7 +2493,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "category_hierarchical_pkey_key",
@@ -2202,7 +2505,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "category_parent_id_key",
@@ -2212,7 +2516,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "category_root_id_key",
@@ -2222,23 +2527,31 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           },
           {
             "name": "sales",
@@ -2262,7 +2575,8 @@
                     },
                     "children": [],
                     "signatureDefaults": [],
-                    "generated": false
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "type_money",
@@ -2274,11 +2588,13 @@
                     },
                     "children": [],
                     "signatureDefaults": [],
-                    "generated": false
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               },
               {
                 "name": "tables",
@@ -2325,8 +2641,20 @@
                               "syscode": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "ins",
+                              "upd",
+                              "user_ins",
+                              "user_upd",
+                              "ldel",
+                              "group",
+                              "group_name",
+                              "enabled",
+                              "syscode"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "full_update",
@@ -2336,8 +2664,12 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "field",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "record_hash",
@@ -2348,8 +2680,13 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "field",
+                              "algorithm",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "audit",
@@ -2360,8 +2697,12 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "version_field",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "dynamic_fields",
@@ -2370,8 +2711,11 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "protection",
@@ -2381,8 +2725,11 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "broadcast",
@@ -2392,12 +2739,16 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -2423,7 +2774,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -2439,7 +2791,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -2454,7 +2807,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -2471,7 +2825,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -2486,7 +2841,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_user",
@@ -2502,7 +2858,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__is_draft",
@@ -2518,7 +2875,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__full_mod_ts",
@@ -2533,7 +2891,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__rec_md5",
@@ -2549,7 +2908,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__version",
@@ -2565,7 +2925,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "df_fields",
@@ -2578,7 +2939,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "df_fbcolumns",
@@ -2590,7 +2952,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "df_custom_templates",
@@ -2603,7 +2966,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "df_colswidth",
@@ -2615,7 +2979,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__protection_tag",
@@ -2631,7 +2996,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "customer_id",
@@ -2663,12 +3029,27 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "amount",
@@ -2684,8 +3065,15 @@
                               "size": "14,2"
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "document",
@@ -2700,12 +3088,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -2726,7 +3122,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -2742,7 +3139,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -2758,7 +3156,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -2774,7 +3173,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -2790,7 +3190,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protected_by_tag",
@@ -2804,11 +3205,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -2825,7 +3228,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___del_ts_key",
@@ -2837,7 +3241,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___mod_ts_key",
@@ -2849,7 +3254,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___is_draft_key",
@@ -2861,7 +3267,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___full_mod_ts_key",
@@ -2873,7 +3280,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_customer_id_key",
@@ -2883,15 +3291,21 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "invoice_row",
@@ -2928,8 +3342,16 @@
                               "syscode": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "draft",
+                              "group",
+                              "group_name",
+                              "enabled",
+                              "syscode"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "auto_counter",
@@ -2940,12 +3362,17 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "field",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -2971,7 +3398,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_row_count",
@@ -2988,7 +3416,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "invoice_id",
@@ -3020,12 +3449,27 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "amount",
@@ -3041,12 +3485,20 @@
                               "size": "14,2"
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -3067,7 +3519,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -3083,7 +3536,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -3099,7 +3553,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -3115,7 +3570,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -3131,11 +3587,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -3150,23 +3608,31 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           },
           {
             "name": "docs",
@@ -3190,11 +3656,13 @@
                     },
                     "children": [],
                     "signatureDefaults": [],
-                    "generated": false
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               },
               {
                 "name": "tables",
@@ -3233,8 +3701,11 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "sys_fields",
@@ -3254,7 +3725,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "auto_counter",
@@ -3266,11 +3738,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -3296,7 +3770,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -3312,7 +3787,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -3327,7 +3803,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -3344,7 +3821,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -3359,7 +3837,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_user",
@@ -3375,7 +3854,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "_row_count",
@@ -3392,7 +3872,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "filepath",
@@ -3407,7 +3888,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "filepath_hash",
@@ -3419,7 +3901,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "filepath_original_name",
@@ -3431,7 +3914,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "external_url",
@@ -3443,7 +3927,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "description",
@@ -3455,7 +3940,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "mimetype",
@@ -3467,7 +3953,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "text_content",
@@ -3479,7 +3966,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "info",
@@ -3491,7 +3979,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "is_foreign_document",
@@ -3504,7 +3993,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "maintable_id",
@@ -3534,15 +4024,18 @@
                                 },
                                 "children": [],
                                 "signatureDefaults": [],
-                                "generated": false
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -3563,7 +4056,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -3579,7 +4073,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -3595,7 +4090,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -3611,7 +4107,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -3627,7 +4124,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "adapted_url",
@@ -3641,7 +4139,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "fileurl",
@@ -3656,7 +4155,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "missing_file",
@@ -3669,7 +4169,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "full_external_url",
@@ -3682,11 +4183,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -3703,7 +4206,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_file___del_ts_key",
@@ -3715,7 +4219,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_file___mod_ts_key",
@@ -3727,7 +4232,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_file_maintable_id_key",
@@ -3737,27 +4243,38 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
-            "signatureDefaults": [],
-            "generated": false
+            "signatureDefaults": [
+              "sqlprefix"
+            ],
+            "generated": false,
+            "physicalColumn": false
           }
         ],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "relations": [
         {
@@ -5004,8 +5521,7 @@
   "groups": {
     "model": {
       "format": "asqueel-model",
-      "version": 1,
-      "reference": "0.6.1",
+      "version": 2,
       "database": {
         "name": "db",
         "tag": "db",
@@ -5015,7 +5531,8 @@
         },
         "children": [],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "namespaces": {
         "name": "packages",
@@ -5052,7 +5569,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -5072,8 +5590,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -5088,8 +5613,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "city",
@@ -5106,12 +5638,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "colgroup_details",
@@ -5124,7 +5664,8 @@
                         },
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -5142,12 +5683,16 @@
                               "static": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "static"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -5155,23 +5700,33 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
-            "signatureDefaults": [],
-            "generated": false
+            "signatureDefaults": [
+              "sqlprefix"
+            ],
+            "generated": false,
+            "physicalColumn": false
           }
         ],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "relations": []
     },
@@ -5242,8 +5797,7 @@
   "virtual-relations": {
     "model": {
       "format": "asqueel-model",
-      "version": 1,
-      "reference": "0.6.1",
+      "version": 2,
       "database": {
         "name": "db",
         "tag": "db",
@@ -5253,7 +5807,8 @@
         },
         "children": [],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "namespaces": {
         "name": "packages",
@@ -5290,7 +5845,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -5310,8 +5866,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -5326,8 +5889,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "customer_id",
@@ -5358,16 +5928,32 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtualRelation_selected",
@@ -5392,7 +5978,8 @@
                         },
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -5400,7 +5987,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -5415,15 +6003,21 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "customer",
@@ -5453,8 +6047,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -5471,12 +6072,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -5484,7 +6093,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -5492,23 +6102,33 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
-            "signatureDefaults": [],
-            "generated": false
+            "signatureDefaults": [
+              "sqlprefix"
+            ],
+            "generated": false,
+            "physicalColumn": false
           }
         ],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "relations": [
         {
@@ -5673,8 +6293,7 @@
   "queries": {
     "model": {
       "format": "asqueel-model",
-      "version": 1,
-      "reference": "0.6.1",
+      "version": 2,
       "database": {
         "name": "db",
         "tag": "db",
@@ -5684,7 +6303,8 @@
         },
         "children": [],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "namespaces": {
         "name": "packages",
@@ -5739,12 +6359,25 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "ins",
+                              "upd",
+                              "user_ins",
+                              "user_upd",
+                              "ldel",
+                              "draft",
+                              "group",
+                              "group_name",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -5770,7 +6403,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -5786,7 +6420,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -5801,7 +6436,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -5818,7 +6454,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -5833,7 +6470,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_user",
@@ -5849,7 +6487,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__syscode",
@@ -5866,7 +6505,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -5881,8 +6521,14 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "email",
@@ -5897,12 +6543,19 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -5923,7 +6576,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -5939,7 +6593,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -5955,7 +6610,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -5971,7 +6627,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -5987,11 +6644,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -6008,7 +6667,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___del_ts_key",
@@ -6020,7 +6680,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___mod_ts_key",
@@ -6032,7 +6693,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer___syscode_key",
@@ -6043,7 +6705,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "customer_email_key",
@@ -6055,23 +6718,33 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
-            "signatureDefaults": [],
-            "generated": false
+            "signatureDefaults": [
+              "sqlprefix"
+            ],
+            "generated": false,
+            "physicalColumn": false
           },
           {
             "name": "sales",
@@ -6094,11 +6767,13 @@
                     },
                     "children": [],
                     "signatureDefaults": [],
-                    "generated": false
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               },
               {
                 "name": "tables",
@@ -6142,8 +6817,20 @@
                               "syscode": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "id",
+                              "ins",
+                              "upd",
+                              "user_ins",
+                              "user_upd",
+                              "ldel",
+                              "group",
+                              "group_name",
+                              "enabled",
+                              "syscode"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "audit",
@@ -6154,12 +6841,17 @@
                               "enabled": true
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "version_field",
+                              "enabled"
+                            ],
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "columns",
@@ -6185,7 +6877,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_ts",
@@ -6201,7 +6894,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__del_ts",
@@ -6216,7 +6910,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_ts",
@@ -6233,7 +6928,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__ins_user",
@@ -6248,7 +6944,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__mod_user",
@@ -6264,7 +6961,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__is_draft",
@@ -6280,7 +6978,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "__version",
@@ -6296,7 +6995,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "customer_id",
@@ -6328,12 +7028,27 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "amount",
@@ -6350,12 +7065,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -6376,7 +7099,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__protecting_reasons",
@@ -6392,7 +7116,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_protected_row",
@@ -6408,7 +7133,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__invalid_reasons",
@@ -6424,7 +7150,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           },
                           {
                             "name": "__is_invalid_row",
@@ -6440,11 +7167,13 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": false
+                            "generated": false,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -6461,7 +7190,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___del_ts_key",
@@ -6473,7 +7203,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___mod_ts_key",
@@ -6485,7 +7216,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice___is_draft_key",
@@ -6497,7 +7229,8 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           },
                           {
                             "name": "invoice_customer_id_key",
@@ -6507,23 +7240,33 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
-            "signatureDefaults": [],
-            "generated": false
+            "signatureDefaults": [
+              "sqlprefix"
+            ],
+            "generated": false,
+            "physicalColumn": false
           },
           {
             "name": "notes",
@@ -6567,8 +7310,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "name",
@@ -6584,8 +7334,14 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "active",
@@ -6601,12 +7357,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -6614,7 +7378,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -6622,11 +7387,16 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   },
                   {
                     "name": "memo",
@@ -6656,8 +7426,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "person_id",
@@ -6687,12 +7464,27 @@
                                   "case_insensitive": false
                                 },
                                 "children": [],
-                                "signatureDefaults": [],
-                                "generated": false
+                                "signatureDefaults": [
+                                  "deferred",
+                                  "deferrable",
+                                  "initially_deferred",
+                                  "indexed",
+                                  "one_one",
+                                  "case_insensitive"
+                                ],
+                                "generated": false,
+                                "physicalColumn": false
                               }
                             ],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "body",
@@ -6707,8 +7499,15 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           },
                           {
                             "name": "amount",
@@ -6724,12 +7523,20 @@
                               "unmodifiable": false
                             },
                             "children": [],
-                            "signatureDefaults": [],
-                            "generated": false
+                            "signatureDefaults": [
+                              "notnull",
+                              "unique",
+                              "indexed",
+                              "read_only",
+                              "unmodifiable"
+                            ],
+                            "generated": false,
+                            "physicalColumn": true
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": false
+                        "generated": false,
+                        "physicalColumn": false
                       },
                       {
                         "name": "virtual_columns",
@@ -6737,7 +7544,8 @@
                         "attributes": {},
                         "children": [],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       },
                       {
                         "name": "indexes",
@@ -6752,27 +7560,36 @@
                             },
                             "children": [],
                             "signatureDefaults": [],
-                            "generated": true
+                            "generated": true,
+                            "physicalColumn": false
                           }
                         ],
                         "signatureDefaults": [],
-                        "generated": true
+                        "generated": true,
+                        "physicalColumn": false
                       }
                     ],
-                    "signatureDefaults": [],
-                    "generated": false
+                    "signatureDefaults": [
+                      "lookup",
+                      "deletable"
+                    ],
+                    "generated": false,
+                    "physicalColumn": false
                   }
                 ],
                 "signatureDefaults": [],
-                "generated": false
+                "generated": false,
+                "physicalColumn": false
               }
             ],
             "signatureDefaults": [],
-            "generated": false
+            "generated": false,
+            "physicalColumn": false
           }
         ],
         "signatureDefaults": [],
-        "generated": false
+        "generated": false,
+        "physicalColumn": false
       },
       "relations": [
         {

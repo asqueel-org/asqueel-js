@@ -38,9 +38,10 @@ export function modelFromQuerySource(source, Builder) {
 
 export class SqliteQueries {
     constructor(builder, adapter = null, scope = null, runtime = {}) {
-        builder.toMigration();
-        this.builder = builder;
-        this.tables = projectApplication(builder, builder.constructor, {withModel: true}).tables;
+        const application = projectApplication(builder, builder.constructor, {withModel: true});
+        this.model = application.model;
+        this.model.toMigration();
+        this.tables = application.tables;
         this.adapter = adapter;
         this.scope = scope;
         this.runtime = runtime;
@@ -86,7 +87,7 @@ export class SqliteQueries {
                     .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
         }
         if (write && [...table.columns.values()].some(c => c.children.some(n =>
-            Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Hook di relazione non implementati');
+            ['onDelete', 'onUpdate'].some(k => n.a[k] != null) || Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Hook di relazione non implementati');
         return table;
     }
     compile(request) {
@@ -145,7 +146,7 @@ export class SqliteQueries {
         return this._inScope(async () => {
             const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
                 environment: structuredClone(options.environment ?? this.environment()), trigger: this.scope.trigger};
-            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            const db = new SqliteQueries(this.model, this.adapter, child, this.runtime);
             try {
                 const result = await writeRecord(db, db.resolveTable(name, false), operation, values, options);
                 child.active = false;
@@ -160,7 +161,7 @@ export class SqliteQueries {
         return this._inScope(async () => {
             const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
                 environment: this.environment(), trigger: this.scope.trigger};
-            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            const db = new SqliteQueries(this.model, this.adapter, child, this.runtime);
             try {
                 const result = await sqlInsert(db, db.resolveTable(name, false), source, options);
                 await child.tail;
@@ -176,7 +177,7 @@ export class SqliteQueries {
         if (this.scope || state.transaction) throw new TransactionStateError('Transazioni annidate non ancora supportate');
         return enqueue(state, async () => {
             const scope = {active: true, tail: Promise.resolve(), environment: this.environment()};
-            const tx = new SqliteQueries(this.builder, this.adapter, scope, this.runtime);
+            const tx = new SqliteQueries(this.model, this.adapter, scope, this.runtime);
             await this.adapter.execute('BEGIN IMMEDIATE');
             state.transaction = scope;
             try {

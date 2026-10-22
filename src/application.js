@@ -1,5 +1,5 @@
 // SQLite compiler view of the hierarchical model, including incoming relations.
-// All preparation now belongs to the public 0.6.1 hierarchical model.
+// All preparation now belongs to the public 0.7.0 hierarchical model.
 import { resolveModel } from "./model.js";
 export function projectApplication(
   builder,
@@ -11,7 +11,7 @@ export function projectApplication(
   const node = (n) => ({
     tag: n.tag,
     label: n.name,
-    a: structuredClone(n.attributes),
+    a: n.attributes,
     children: n.values().map(node),
   });
   for (const t of model.tables.values()) {
@@ -19,25 +19,16 @@ export function projectApplication(
       new Map((nodes?.values() || []).map((c) => [c.name, node(c)]));
     const relations = new Map();
     for (const [name, relation] of t.relations.entries())
-      relations.set(name.replace(/^@/, ''), {kind: 'ordinary', joiner: structuredClone(relation.attributes.joiner)});
+      relations.set(name.replace(/^@/, ''), {kind: 'ordinary', joiner: relation.attributes.joiner});
     for (const n of t.values())
       if (n.tag === "virtualRelation")
-        relations.set(n.attributes.name, { kind: "virtual", a: structuredClone(n.attributes) });
+        relations.set(n.attributes.name, { kind: "virtual", a: n.attributes });
     const columns = map(t.columns);
-    // Keep existing query guards for unimplemented lifecycle actions.
-    for (const c of columns.values())
-      for (const r of c.children)
-        if (r.tag === "relation") {
-          for (const [a, old] of [
-            ["onDelete", "x_app_on_delete"],
-            ["onUpdate", "x_app_on_update"],
-          ])
-            if (r.a[a] != null) r.a[old] = r.a[a];
-        }
     tables.set(t.fullname, {
+      model: t,
       key: t.fullname,
       namespace: t.pkg.name,
-      a: structuredClone(t.attributes),
+      a: t.attributes,
       sqlname: t.sqlname,
       sqlschema: t.sqlschema,
       columns,
@@ -47,7 +38,7 @@ export function projectApplication(
       options: new Map(
         (t.options?.values() || []).map((o) => [
           o.name,
-          { tag: o.tag, spec: structuredClone(o.attributes) },
+          { tag: o.tag, spec: o.attributes },
         ]),
       ),
       declarations: t
@@ -56,7 +47,7 @@ export function projectApplication(
         .map((n) => ({
           kind: n.tag,
           name: n.name,
-          attributes: structuredClone(n.attributes),
+          attributes: n.attributes,
         })),
       mapColumns: (names) => names.map((n) => t.columns.get(n).sqlname),
     });

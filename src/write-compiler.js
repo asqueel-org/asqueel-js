@@ -73,6 +73,13 @@ function predicate(table, values, params, policy) {
     }
     return where;
 }
+function binding(name, data) {
+    if (/^[A-Za-z_]\w*$/u.test(name)) return `:${name}`;
+    let parameter = `__write_${Object.keys(data).length}`;
+    while (own(data, parameter)) parameter += '_';
+    data[parameter] = data[name];
+    return `:${parameter}`;
+}
 function returning(table, data, insert) {
     const selected = [...table.columns].filter(([name, {a}]) => a.sql_value != null || own(a, 'sql_generatedExpression')
         || insert && data[name] == null && (own(a, 'sql_default') || ['serial', 'serial4'].includes(a.dtype)));
@@ -86,14 +93,14 @@ export function compileWrite(table, operation, values, {pkey, old_record, enviro
         guardPartition(table, data, policy, true);
         const entries = Object.entries(data).filter(([name, value]) => table.columns.has(name) && (value != null || table.columns.get(name).a.sql_value != null));
         const columns = entries.map(([name]) => q(columnName(table.columns.get(name))));
-        const parameters = entries.map(([name]) => table.columns.get(name).a.sql_value ? table.columns.get(name).a.sql_value + '\n' : `:${name}`);
+        const parameters = entries.map(([name]) => table.columns.get(name).a.sql_value ? table.columns.get(name).a.sql_value + '\n' : binding(name, data));
         sql = `INSERT INTO ${tableSQL(table)}` + (entries.length ? `(${columns.join(',')}) VALUES (${parameters.join(',')})` : ' DEFAULT VALUES');
         if (returningRows) sql += returning(table, data, true);
     } else if (operation === 'update') {
         guardPartition(table, data, policy, false);
         const assignments = Object.keys(data).filter(name => table.columns.has(name)).map(name => {
             const column = table.columns.get(name);
-            return `${q(columnName(column))}=` + (column.a.sql_value ? column.a.sql_value + '\n' : `:${name}`);
+            return `${q(columnName(column))}=` + (column.a.sql_value ? column.a.sql_value + '\n' : binding(name, data));
         });
         if (!assignments.length) throw new Error('UPDATE richiede almeno una colonna');
         const keys = old_record && Object.keys(old_record).length ? keyColumns(table).map(n => required(old_record, n))

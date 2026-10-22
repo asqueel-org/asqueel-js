@@ -1,10 +1,10 @@
-# Confronto con Python 0.6.4
+# Confronto con Python 0.7.0
 
-`test/fixtures/provenance.json` fissa core **0.6.4 / 31ca251**, migration **0.3.1**
-e genro-builders **0.29.0**. La CI fa checkout di quei commit, senza seguire `main`.
+`test/fixtures/provenance.json` fissa core **0.7.0 / 02ca1e7**, migration **0.3.1**
+e genro-builders **0.30.0**. La CI fa checkout di quei commit, senza seguire `main`.
 Il verificatore rifiuta un checkout Python di un'altra versione.
 
-Il riferimento include la correzione dei parametri SQL della issue #35, oltre ai fix già pubblicati nella 0.6.3.
+Il riferimento è la revisione verificata della release Python 0.7.0 in preparazione.
 I 218 casi includono 14 regressioni aggiunte per gerarchie collegate, contatori e
 parent personalizzati, tipi delle chiavi del master, riferimenti tra package,
 rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.md).
@@ -12,7 +12,7 @@ rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.m
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r scripts/requirements-parity.txt
-ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.6.4 \
+ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.7.0 \
 ASQUEEL_MIGRATION_ROOT=/percorso/asqueel-migration \
 PYTHON=.venv/bin/python npm run verify:python
 ```
@@ -31,13 +31,14 @@ risolti. Python e JavaScript li eseguono indipendentemente. Il confronto include
 accettazione/rifiuto delle chiamate e della composizione, **tutti** i nodi e attributi
 del modello gerarchico, registro delle relazioni completo e JSON migrate.
 I casi precedenti di contributi, gruppi, subtables e virtualRelation sono conservati
-come scenari aggiornati o verifiche dei rifiuti della 0.6.1; si aggiungono casi specifici
+come scenari aggiornati o verifiche dei rifiuti della 0.7.0; si aggiungono casi specifici
 del nuovo contratto. Il corpus comprende configurazione, opzioni, alias e relazioni,
 indici, metadati semantici, policy, default SQL, rimappature e casi invalidi.
 
 Ogni caso Python gira in un processo separato per isolare i metadati del framework.
-`model_oracle.py` attraversa direttamente il `DbModel`: non usa il vecchio codec dei
-descrittori e non ritaglia un sottoinsieme di attributi. Gli indici e le formule
+`model_oracle.py` usa direttamente `model_to_json` della release Python. Non esiste
+un secondo codec di confronto. Ogni modello esportato da Node e Bun viene anche
+ricaricato con `model_from_json` Python e confrontato integralmente. Gli indici e le formule
 sintetizzati sono confrontati come tutti gli altri nodi. Il test di round-trip importa
 lo stesso JSON in JS e verifica che non perda informazioni.
 
@@ -50,8 +51,8 @@ rigenera automaticamente il riferimento.
 ## Query e CRUD: stesso riferimento
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
-0.6.4, fissata anche in `test/fixtures/query-provenance.json`.
-I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
+0.7.0, fissata anche in `test/fixtures/query-provenance.json`.
+I 34 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
 di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il JSON completo dei
 sette modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sette ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
@@ -161,8 +162,7 @@ il corpus `test/subquery-inputs.json`: 48 casi, inclusa la preparazione dei dati
 confrontano modello completo, migrate JSON, SQL esatto, parametri e risultati SQLite.
 `test/subquery-errors.json` verifica inoltre 17 rifiuti di compilazione: si confronta
 il rifiuto, non il testo localizzato dell'eccezione. Il riferimento resta il commit
-0.6.4; compiler, binding, aggregazioni e adapter SQLite sono invariati nel
-tag 0.6.3 verificato.
+0.7.0 fissato nella provenienza, incluso il nuovo formato JSON unificato.
 
 Sono portati `formulaColumn(select=...)`, `exists=...`, i placeholder nominati
 `select_*`/`exists_*` e `subQueryColumn(query=..., aggr=...)`. `#THIS` correla al
@@ -400,11 +400,10 @@ sono rifiutati da Python e JS con rollback dei record precedenti, anche su WASM.
 Il database di staging conserva le Bag in TYTX: il confronto riguarda il valore
 tipizzato, non la formattazione XML del writer applicativo Python.
 
-## Contratto conservato nel consolidamento 0.2.0
+## Contratto unificato nel consolidamento 0.2.0
 
-La provenienza attiva è Python **0.6.4**, commit `31ca251`, registrata nei tre file
-`*-provenance.json`. Il campo `reference: "0.6.1"` del documento modello v1 resta
-intenzionalmente invariato: identifica il formato già accettato dalla serie 0.1,
-non la revisione usata per queste verifiche. Cambiarlo renderebbe il decoder
-incompatibile con i documenti già esportati. Il formato ufficiale v2 e il percorso
-unificato sono riservati alla release successiva.
+La provenienza attiva è Python **0.7.0**, commit `02ca1e7`, registrata nei tre file
+`*-provenance.json`. Il documento modello usa il formato ufficiale `asqueel-model`
+versione 2. I vecchi JSON v1 richiedono una nuova esportazione dalla ricetta.
+I bundle SourceBag/TYTX seguono il loro contratto di trasferimento e vengono
+verificati separatamente nei test di ritorno Python e negli upgrade dei workspace.

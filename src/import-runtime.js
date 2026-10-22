@@ -7,7 +7,7 @@ import {adaptRecord, sqliteImportRecord} from './import-values.js';
 export async function adaptImportRecord(db, table, values) {
     const custom = db.runtime.hooks?.[table.key]?.adaptRecord;
     if (!custom) return adaptRecord(table, values);
-    return record(await custom.call({db, fullname: table.key, model: db.builder.resolve().table(table.key),
+    return record(await custom.call({db, fullname: table.key, model: db.model.table(table.key),
         adaptRecord: data => adaptRecord(table, data)}, values));
 }
 export async function sqlInsert(db, table, source, options) {

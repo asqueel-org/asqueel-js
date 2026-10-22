@@ -1,7 +1,7 @@
 import {scalar} from './sql-expressions.js';
 import {parameterMatches, substituteParameters} from './parameter-tokens.js';
 
-/** SQLite preparation ported from Python 0.6.4's adapter, including unused kwargs. */
+/** SQLite preparation ported from Python 0.7.0's adapter, including unused kwargs. */
 export function prepareParameters(sql, values = {}, environment = {}) {
     const params = Object.assign(Object.create(null), structuredClone(values));
     sql = sql.replaceAll('\\:', '\x01');

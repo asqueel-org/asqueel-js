@@ -4,15 +4,24 @@
 
 - Riuniti i porting già presenti su main, l'export HTML e la demo assemblea offline:
   86 operazioni confrontate con Python, upgrade dei workspace, verbali e interfaccia
-  aggiornata. Il formato del modello resta quello della serie 0.1.
-- Parità aggiornata al consolidamento Python 0.6.4: stringhe, identificatori e
+  aggiornata. Il formato del modello diventa quello ufficiale Python v2.
+- Parità aggiornata al consolidamento Python 0.7.0: stringhe, identificatori e
   commenti SQL non generano parametri; scope formula, collezioni e parametri
-  adiacenti seguono lo stesso comportamento. 940 test su Node e Bun.
+  adiacenti seguono lo stesso comportamento.
 
 - Export Gramlot in un unico HTML apribile con `file://`, con worker e SQLite WASM
   incorporati. Caricamento modello/dati, CRUD, riavvio Chromium senza rete ed export
   confrontato con Python; persistenza Bag/blob e isolamento dei workspace per percorso.
   L'adapter browser accetta opzionalmente i byte WASM senza fetch esterno.
+
+- Unificazione con Python 0.7.0: formato `asqueel-model` versione 2 e codec
+  ufficiale come unico riferimento. Il formato precedente richiede una nuova
+  esportazione dalla ricetta.
+- Modello JSON direttamente eseguibile con `model.queries(adapter)`. Ricette,
+  transazioni, hook, importazioni e cascata usano la stessa istanza del modello;
+  le viste del compilatore non copiano gli attributi semantici.
+- Parità completa dei corpus esistenti aggiornata al commit Python 02ca1e7,
+  compresa la rilettura in Python dei modelli prodotti da Node e Bun.
 
 - Ciclo offline completo nel playground: cache versionata di app/Gramlot/WASM,
   workspace persistente con Bag sorgente, editor CRUD sul modello caricato e

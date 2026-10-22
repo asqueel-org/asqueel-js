@@ -7,7 +7,7 @@ from python_reference import ROOT,CORE
 from asqueel_migration import StructureValidator
 from export_python import examples
 from model_oracle import document
-from asqueel import resolve_model,SqlMigrationRenderer
+from asqueel import resolve_model,SqlMigrationRenderer,model_from_json
 from query_oracle import query_oracle
 from query_features import feature_model
 from read_formulas import read_model
@@ -49,12 +49,16 @@ for runtime in ('node','bun'):
     rendered=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_models.js')],cwd=ROOT,text=True))
     assert rendered['cases']==expected, f'{runtime}: complete model or migration differs from live Python'
     assert rendered['examples']==example_expected,f'{runtime}: independently authored examples differ from live Python'
+    for r in [*rendered['cases'], *rendered['examples'].values()]:
+        if 'model' in r:
+            restored = model_from_json(json.dumps(r['model']))
+            assert document(restored) == r['model'], f'{runtime}: official Python JSON round trip differs'
     for r in rendered['cases']:
         if 'migration' in r:StructureValidator().validate(r['migration'])
     for r in rendered['examples'].values():StructureValidator().validate(r['migration'])
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_sqlite.js')],cwd=ROOT,text=True))
     assert actual=={n:{k:s[k] for k in ('desired','actual')} for n,s in sqlite.items()},f'{runtime}: SQLite migration/catalog differs'
-    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.4')
+    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.7.0')
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_queries.js')],cwd=ROOT,text=True))
     assert actual == queries, f'{runtime}: query model, SQL, parameters or SQLite results differ from live Python'
     print(f'{runtime}: {sum(len(q["cases"]) for q in queries.values())} query/CRUD cases match live Python SQL, parameters and SQLite results')

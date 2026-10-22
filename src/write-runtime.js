@@ -88,7 +88,7 @@ async function reread(db, table, pkey) {
 function hookContext(db, table) {
     return Object.assign(Object.create(null), db.runtime.hooks?.[table.key] ?? {}, {
         db, fullname: table.key, currentUser: db.environment().user ?? null,
-        currentTrigger: db.scope.trigger, model: db.builder.resolve().table(table.key),
+        currentTrigger: db.scope.trigger, model: db.model.table(table.key),
     });
 }
 async function hook(context, name, values, kwargs = {}, required = false) {

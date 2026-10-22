@@ -1,4 +1,5 @@
-// Hierarchical model, mechanically following Asqueel 0.6.1 object_tree*.py.
+// Hierarchical model, mechanically following Asqueel 0.7.0 object_tree*.py.
+import { SqliteQueries } from "./queries.js";
 import grammar from "./generated/grammar.json" with { type: "json" };
 import contract from "./generated/contract.json" with { type: "json" };
 import { defaults, readOptions } from "./options.js";
@@ -396,6 +397,7 @@ export class ModelNode {
     this.signatureDefaults =
       fragment.defaults || fragment.signatureDefaults || [];
     this.generated = fragment.generated || false;
+    this.physicalColumn = fragment.physicalColumn ?? (fragment.tag === "column");
     this.children = new Map();
     if (["package", "schema"].includes(this.tag))
       Object.defineProperty(this, "table", {
@@ -677,10 +679,10 @@ export class ModelNode {
     return {
       name: this.name,
       tag: this.tag,
-      attributes: copy(this.attributes),
+      attributes: portableModelValue(this.attributes),
       children: this.values().map((c) => c.toJSON()),
-      signatureDefaults:
-        this.tag === "aliasColumn" ? [...this.signatureDefaults] : [],
+      signatureDefaults: [...this.signatureDefaults],
+      physicalColumn: this.physicalColumn,
       generated: this.generated,
     };
   }
@@ -744,6 +746,41 @@ export class RelationTree {
     return [...this.entries().keys()];
   }
 }
+function portableModelValue(value) {
+  if (value === null || ["string", "boolean"].includes(typeof value)) return value;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (Array.isArray(value)) return value.map(portableModelValue);
+  if (value && typeof value === "object" && [Object.prototype, null].includes(Object.getPrototypeOf(value)))
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, portableModelValue(v)]));
+  fail("Model export requires symbolic JSON data");
+}
+function sameModelData(a, b) {
+  if (a === b) return true;
+  if (!a || !b || typeof a !== "object" || typeof b !== "object" || Array.isArray(a) !== Array.isArray(b)) return false;
+  const keys = Object.keys(a);
+  return keys.length === Object.keys(b).length && keys.every(k => own(b, k) && sameModelData(a[k], b[k]));
+}
+function modelDatabaseJSON(database) {
+  const data = database.toJSON();
+  delete data.attributes.conninfo;
+  delete data.attributes.connect_kwargs;
+  data.signatureDefaults = data.signatureDefaults.filter(k => !["conninfo", "connect_kwargs"].includes(k));
+  return data;
+}
+function validateModelNode(n) {
+  if (!n || typeof n !== "object" ||
+      Object.keys(n).sort().join() !== "attributes,children,generated,name,physicalColumn,signatureDefaults,tag" ||
+      typeof n.name !== "string" || typeof n.tag !== "string" ||
+      !n.attributes || Array.isArray(n.attributes) || typeof n.attributes !== "object" ||
+      !Array.isArray(n.children) || !Array.isArray(n.signatureDefaults) ||
+      n.signatureDefaults.some(v => typeof v !== "string") ||
+      typeof n.generated !== "boolean" || typeof n.physicalColumn !== "boolean")
+    fail("Invalid hierarchical model node");
+  if (["x_table_class", "conninfo", "connect_kwargs"].some(k => own(n.attributes, k)))
+    fail("Runtime classes and connection configuration are not model data");
+  n.children.forEach(validateModelNode);
+}
+
 export class DbModel {
   constructor(fragment) {
     this.implementation = fragment.attributes.implementation || "sqlite";
@@ -983,9 +1020,8 @@ export class DbModel {
   toJSON() {
     return {
       format: "asqueel-model",
-      version: 1,
-      reference: "0.6.1",
-      database: this.db.toJSON(),
+      version: 2,
+      database: modelDatabaseJSON(this.db),
       namespaces: this.obj.toJSON(),
       relations: this.relationEntries().map(([path, attributes]) => ({
         path,
@@ -994,29 +1030,28 @@ export class DbModel {
     };
   }
   static fromJSON(document) {
-    const d =
-      typeof document === "string" ? JSON.parse(document) : copy(document);
-    if (
-      d.format !== "asqueel-model" ||
-      d.version !== 1 ||
-      d.reference !== "0.6.1"
-    )
+    const d = typeof document === "string" ? JSON.parse(document) : copy(document);
+    if (!d || d.format !== "asqueel-model" || d.version !== 2 ||
+        Object.keys(d).sort().join() !== "database,format,namespaces,relations,version")
       fail("Unsupported model JSON contract");
-    // Restore the already-resolved graph without replaying expansions or registering edges twice.
-    const model = Object.create(DbModel.prototype);
-    model.implementation = d.database.attributes.implementation || "sqlite";
-    model.relations = new Map(d.relations.map((r) => [r.path, r.attributes]));
-    model.db = new ModelNode(d.database, model);
-    model.obj = new ModelNode(d.namespaces, model);
-    model.name = model.db.attributes.name || model.db.name;
+    validateModelNode(d.database);
+    validateModelNode(d.namespaces);
+    if (d.database.tag !== "db" || !["schemas", "packages"].includes(d.namespaces.tag))
+      fail("Expected a database and its namespaces");
+    const model = new DbModel({...d.database, children: [...d.database.children, d.namespaces]});
+    if (!sameModelData(model.toJSON().relations, d.relations))
+      fail("Relation registry does not match the model declarations");
     return model;
+  }
+  queries(adapter = null, runtime = {}) {
+    return new SqliteQueries(this, adapter, null, runtime);
   }
   toMigration() {
     return projectModel(this).toMigration();
   }
 }
 export function resolveModel(builder) {
-  return new DbModel(prepare(builder));
+  return builder instanceof DbModel ? builder : new DbModel(prepare(builder));
 }
 export function modelToJSON(model) {
   return model.toJSON();

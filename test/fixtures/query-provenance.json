@@ -1,6 +1,6 @@
 {
-  "coreCommit": "31ca251daa2b8ccd300459731d5cb6b373fb1de2",
-  "coreVersion": "0.6.4",
+  "coreCommit": "02ca1e7c8a66dc9140bc76baf3185c1283cae9f8",
+  "coreVersion": "0.7.0",
   "buildersVersion": "0.30.0",
   "status": "350 deterministic QueryCompiler/WriteCompiler cases: full model, migrate JSON, SQL, parameters and real SQLite results; 33 callback cases also compare method calls, 23 errors and environment caching. 46 TEMPLATE/IN_RANGE cases and 18 rejected macro usages. 131 PERIOD cases and 27 rejected usages using the injected Gramlot date parser. Not complete application-runtime parity.",
   "periodParserTestedVersions": {

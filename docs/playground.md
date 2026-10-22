@@ -26,7 +26,7 @@ Le tre pagine vengono aperte in iframe dalla shell:
 - **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
   catalogo, riapertura e verifiche SQLite.
 - **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
-  con le fixture Python 0.6.4.
+  con le fixture Python 0.7.0.
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
@@ -159,7 +159,7 @@ genera un LEFT JOIN. Il worker ricostruisce il modello da dati e ricompila la
 richiesta prima dell'esecuzione: il SQL mostrato viene verificato contro quello
 del worker.
 
-Il compilatore segue Python 0.6.4 per il sottoinsieme verificato:
+Il compilatore segue Python 0.7.0 per il sottoinsieme verificato:
 INSERT/UPDATE/DELETE per chiave primaria anche composta, RETURNING automatico dei
 default SQL, `sql_value` e colonne generate; SELECT di campi, alias, colonne composte
 e formule annidate con parametri locali (`var_*`, `var_kwargs`), `#THIS` e `#ENV`,
@@ -221,7 +221,7 @@ Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
 ## sys_fields e hook applicativi
 
-`table.insert/update/delete` eseguono il ciclo di Python 0.6.4:
+`table.insert/update/delete` eseguono il ciclo di Python 0.7.0:
 protezioni/default, assegnazione della chiave, validazione, trigger di campo,
 hook di tabella, SQL, trigger di campo e hook successivi. L'ordine di draft e
 contatori segue quello specifico di INSERT/UPDATE/DELETE. I callback dei contatori
@@ -373,17 +373,17 @@ La grammatica JSON fornisce firme, default e vincoli. `model-options.js` espande
 le opzioni e `model.js` costruisce la gerarchia e la proiezione fisica. Nessun hook
 applicativo viene eseguito dalla risoluzione.
 
-## Modello completo 0.6.1
+## Modello completo 0.7.0
 
 Il pannello «Modello risolto completo» mostra il JSON gerarchico. Gli esempi
 application, shop, groups, virtual-relations e queries hanno un riferimento Python
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 352 casi query usano lo stesso riferimento 0.6.4 del modello.
+I 352 casi query usano lo stesso riferimento 0.7.0 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
-0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
+0.7.0. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
 FK fisiche. Le aggregazioni dichiarative vengono eseguite come sottoquery correlate;
 la navigazione come JOIN diretto resta esclusa. Vedi il [contratto del modello](model.md) per API,
 limiti del JSON portabile e differenze rispetto al vecchio riferimento.

@@ -1,7 +1,7 @@
 # Pubblicare Asqueel JS
 
-Package npm pubblico: `@asqueel/asqueel-js`. Candidato di consolidamento: `0.2.0`.
-La serie 0.x è sperimentale; non dichiara parità completa con Python.
+Package npm pubblico: `@asqueel/asqueel-js`. Candidato corrente: `0.2.0` (Python 0.7.0).
+Il pacchetto è sperimentale; non dichiara parità completa con Python.
 La provenienza del confronto del modello rimane fissata in
 `test/fixtures/provenance.json`, indipendentemente dalla versione npm.
 
@@ -71,11 +71,10 @@ bundle. Vedere
 
 ## Consolidamento 0.2.0
 
-Pubblicare prima Asqueel Python 0.6.4; il commit `31ca251` deve essere accessibile
+Pubblicare prima Asqueel Python 0.7.0; il commit `02ca1e7` deve essere accessibile
 su GitHub per la CI di parità. Questa release include tutti i porting già su main,
-export HTML e demo assemblea. Non include il formato modello v2 né l'unificazione
-preparata separatamente: quel candidato 0.2.0 precedente è superato e non va pubblicato.
-L'unificazione JS richiederà una nuova versione successiva a questo consolidamento.
+export HTML, demo assemblea e unificazione sul formato modello v2.
+I candidati 0.2.0 precedenti sono superati e non vanno pubblicati.
 
 Oltre alla suite ordinaria, eseguire `npm run test:file`, `npm run test:assembly`
 e `npm run verify:python`. I vecchi workspace della demo sono provati attraverso

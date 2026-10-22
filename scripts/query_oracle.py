@@ -1,4 +1,4 @@
-"""Independent SQL/parameter/result oracle against the pinned Python 0.6.4 + #44."""
+"""Independent SQL/parameter/result oracle against the pinned Python 0.7.0."""
 import json
 from datetime import date
 from pathlib import Path

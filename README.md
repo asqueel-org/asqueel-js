@@ -34,16 +34,18 @@ tra le pagine e conservata al reload. JavaScript, worker e WASM
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.4**:
+Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.7.0**:
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
 `recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
 i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
-sono confrontati indipendentemente con Python, anche nel playground.
+sono confrontati indipendentemente con Python, anche nel playground. Il formato
+JSON versione 2 è condiviso con il codec ufficiale Python; `model.queries(adapter)`
+usa direttamente il modello caricato, anche per transazioni e hook.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
 relazioni dirette anche composte, aggregazioni e policy dichiarative: **352 casi**
-confrontano SQL, parametri e risultati con lo stesso Python 0.6.4.
+confrontano SQL, parametri e risultati con lo stesso Python 0.7.0.
 Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
 `#THIS`, `#ENV` da snapshot e proiezione/filtro delle colonne composte.
 `#TEMPLATE` compone testi con valori NULL trattati come stringhe vuote;

@@ -1,4 +1,4 @@
-"""Export the pinned 0.6.1 grammar, contract, full models and migration JSON."""
+"""Export the pinned 0.7.0 grammar, contract, full models and migration JSON."""
 import importlib.metadata
 import json
 import runpy
@@ -35,5 +35,5 @@ def main():
     write('test/fixtures/model-examples.json',{name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()})
     write('test/fixtures/sqlite.json',sqlite)
     export_models()
-    print('Exported Python 0.6.4 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
+    print('Exported Python 0.7.0 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
 if __name__=='__main__':main()
