@@ -1,3 +1,4 @@
+import {sourceBagToTytx} from '@genrojs/builders';
 import {importTransfer, exportTransfer, readTransfer} from '../src/transfer.js';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {transferSnapshot} from '../test/transfer-runner.js';
@@ -19,16 +20,17 @@ function metadata(name, value) {
     });
 }
 
-export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite, workspaceName = 'asqueel-offline-workspace-v1'} = {}) {
+export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite, workspaceName = 'asqueel-offline-workspace-v1',
+    inspect = transferSnapshot, action, upgrade} = {}) {
     // Reopen per operation under one cross-tab lock; no stale connection/model after replacement.
     return navigator.locks.request(workspaceName, async () => {
         if (type === 'transfer-load') {
-            const bundle = JSON.parse(await desired.file.text());
+            const bundle = JSON.parse(desired.text);
             const databaseName = 'asqueel-transfer-' + crypto.randomUUID();
             const db = await openSQLite(databaseName);
             try {
                 const {builder, counts} = await importTransfer(db, bundle);
-                const snapshot = await transferSnapshot(db, builder);
+                const snapshot = await inspect(db, builder);
                 await db.close();
                 await metadata(workspaceName, {databaseName, format:bundle.format, version:bundle.version, source:bundle.source});
                 return {databaseName, counts, ...snapshot};
@@ -43,11 +45,20 @@ export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite,
             if (type === 'transfer-resume') return null;
             throw new Error('Carica prima uno snapshot Python');
         }
-        const builder = readTransfer({...saved, data:{}});
+        let builder = readTransfer({...saved, data:{}});
         const db = await openSQLite(saved.databaseName);
         try {
+            const updated = await upgrade?.(db, builder);
+            if (updated) {
+                await metadata(workspaceName, {...saved, source:sourceBagToTytx(updated.source)});
+                builder = updated;
+            }
             if (type === 'transfer-export') return await exportTransfer(db, builder);
-            let compiled, records;
+            let compiled, records, actionResult;
+            if (type === 'workspace-action') {
+                if (!action) throw new Error('Azioni applicative non configurate');
+                actionResult = await action(db, builder, desired);
+            }
             if (type === 'transfer-edit') {
                 const request = desired.request;
                 if (!['insert', 'update', 'delete', 'select'].includes(request.operation))
@@ -56,7 +67,8 @@ export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite,
                 compiled = compiler.compile(request);
                 records = await compiler.execute(request);
             }
-            return {databaseName:saved.databaseName, ...await transferSnapshot(db, builder), compiled, records};
+            return {databaseName:saved.databaseName, ...await inspect(db, builder), compiled, records,
+                ...(actionResult === undefined ? {} : {actionResult})};
         } finally { await db.close(); }
     });
 }

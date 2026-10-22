@@ -8,7 +8,7 @@ inviare e come applicare quelli restituiti. Non serve eseguire Python nel browse
 
 Il modulo `python/asqueel_transfer.py` usa Asqueel, genro-builders, genro-bag e
 TYTX già disponibili nell’applicazione Python. Il riferimento verificato è
-Asqueel 0.6.1 + fix #44, come il resto del porting.
+Asqueel 0.6.4, come il resto del porting.
 
 ```python
 from asqueel_transfer import export_transfer
@@ -217,5 +217,21 @@ scaricato viene poi verificato dal ricevitore Python. Il test controlla zero ric
 HTTP/HTTPS e l'isolamento tra percorsi. Una seconda prova conserva Bag annidate,
 attributi, blob, vuoti e NULL dopo reload da `file://`.
 
-La disponibilità di IndexedDB e Web Locks da `file://` è verificata su Chromium;
-Firefox e WebKit non sono qualificati per questo profilo.
+Anche **Safari desktop 27.0.1** è stato verificato con l'automazione MCP ufficiale:
+caricamento, CRUD, chiusura e riapertura della scheda, recupero da IndexedDB e ritorno
+accettato da Python con gli stessi confronti completi. Il test ha evidenziato un
+`NotReadableError` leggendo un `File` trasferito al worker Blob; la pagina ora legge
+il file e passa il testo al worker.
+
+```sh
+# Dopo build:file, su macOS con Safari 27+ e automazione remota abilitata:
+python3 scripts/test_safari_file.py
+.reference/venv-current/bin/python scripts/transfer_oracle.py \
+  --verify-return output/safari-transfer-returns.json
+```
+
+La prova Safari riapre la scheda nella stessa sessione automatizzata: non verifica
+il riavvio completo del processo né la rete fisicamente disconnessa. MCP fornisce i
+byte Python al normale input file e acquisisce il Blob prodotto dall'export: il
+selettore file del sistema e il download salvato su disco restano da verificare.
+Il caso Bag/blob su Safari, Firefox e i tablet non sono ancora qualificati.

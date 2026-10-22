@@ -26,7 +26,7 @@ Le tre pagine vengono aperte in iframe dalla shell:
 - **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
   catalogo, riapertura e verifiche SQLite.
 - **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
-  con le fixture Python 0.6.1 + fix #44.
+  con le fixture Python 0.6.4.
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
@@ -159,7 +159,7 @@ genera un LEFT JOIN. Il worker ricostruisce il modello da dati e ricompila la
 richiesta prima dell'esecuzione: il SQL mostrato viene verificato contro quello
 del worker.
 
-Il compilatore segue Python 0.6.1 + fix #44 per il sottoinsieme verificato:
+Il compilatore segue Python 0.6.4 per il sottoinsieme verificato:
 INSERT/UPDATE/DELETE per chiave primaria anche composta, RETURNING automatico dei
 default SQL, `sql_value` e colonne generate; SELECT di campi, alias, colonne composte
 e formule annidate con parametri locali (`var_*`, `var_kwargs`), `#THIS` e `#ENV`,
@@ -221,7 +221,7 @@ Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
 ## sys_fields e hook applicativi
 
-`table.insert/update/delete` eseguono il ciclo di Python 0.6.1 + fix #44:
+`table.insert/update/delete` eseguono il ciclo di Python 0.6.4:
 protezioni/default, assegnazione della chiave, validazione, trigger di campo,
 hook di tabella, SQL, trigger di campo e hook successivi. L'ordine di draft e
 contatori segue quello specifico di INSERT/UPDATE/DELETE. I callback dei contatori
@@ -380,7 +380,7 @@ application, shop, groups, virtual-relations e queries hanno un riferimento Pyth
 completo; il messaggio di parità del modello è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
 modello/migrate e prove reali su database IndexedDB temporanei.
-I 350 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+I 352 casi query usano lo stesso riferimento 0.6.4 del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
 0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
@@ -518,7 +518,7 @@ l'oracolo Python, insieme a 23 rifiuti attesi e al ciclo della cache per ambient
 Tutte le SELECT vengono rieseguite dopo chiusura e riapertura di IndexedDB.
 
 I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
-350 casi query e 27 gruppi di verifiche. Per registrare le proprie funzioni vedere
+352 casi query e 27 gruppi di verifiche. Per registrare le proprie funzioni vedere
 [il contratto delle callback](parity.md#callback-dinamiche-del-compilatore).
 
 
@@ -528,7 +528,7 @@ I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
 18 rifiuti attesi e due casi aggiuntivi di macro restituite dalle callback.
 Il worker compila ed esegue le query su SQLite WASM, confronta SQL, parametri e
 risultati con Python e ripete le SELECT dopo riapertura IndexedDB. Il totale è di
-350 casi query e 27 gruppi di verifiche, visibili in **Verifiche query nel browser**.
+352 casi query e 27 gruppi di verifiche, visibili in **Verifiche query nel browser**.
 
 Sono coperti testi e NULL, apostrofi, Unicode, estremi inclusivi e assenti, formule,
 relazioni, aggregazioni e sottoquery. [Sintassi e limiti](parity.md#macro-template-e-in_range).
@@ -546,7 +546,7 @@ La preview e l'esecuzione ordinaria dell'editor usano `parseDateExpression`
 esportato da Gramlot. Per una richiesta personalizzata inserire
 `environment: {locale: "it-IT", workdate: "2026-10-21"}` e, su un campo data del
 proprio modello, `where: "#PERIOD($issued,period)"` con
-`sqlparams: {period: "mese scorso"}`. Il totale è di 350 casi query e 27 gruppi
+`sqlparams: {period: "mese scorso"}`. Il totale è di 352 casi query e 27 gruppi
 di verifiche; gli esempi modificati non generano un nuovo oracolo Python.
 Vedere [il contratto del runtime](parity.md#period-e-parser-delle-date-naturali).
 

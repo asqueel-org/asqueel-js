@@ -13,10 +13,10 @@ for path, module, variable in ((CORE, "asqueel", "ASQUEEL_PYTHON_ROOT"),
 sys.path[:0] = [str(CORE / "src"), str(MIGRATION / "src"), str(ROOT / "examples")]
 
 import tomllib
-if tomllib.loads((CORE / "pyproject.toml").read_text())["project"]["version"] != "0.6.1":
-    raise RuntimeError("Model parity requires the pinned Asqueel 0.6.1 reference; refusing an older checkout")
+if tomllib.loads((CORE / "pyproject.toml").read_text())["project"]["version"] != "0.6.4":
+    raise RuntimeError("Model parity requires the pinned Asqueel 0.6.4 reference; refusing an older checkout")
 
-# A release number alone is insufficient: a different 0.6.1 commit is a different oracle.
+# A release number alone is insufficient: a different 0.6.4 commit is a different oracle.
 import json
 import subprocess
 expected = json.loads((ROOT / "test/fixtures/provenance.json").read_text())

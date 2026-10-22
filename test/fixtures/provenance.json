@@ -1,8 +1,8 @@
 {
-  "coreCommit": "8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988",
+  "coreCommit": "31ca251daa2b8ccd300459731d5cb6b373fb1de2",
   "migrationCommit": "8c4dbf00572659b6be87e1d7d3d12d7c8d088514",
   "migrationVersion": "0.3.1",
-  "buildersVersion": "0.29.0",
+  "buildersVersion": "0.30.0",
   "bagVersion": "0.28.0",
-  "coreVersion": "0.6.1"
+  "coreVersion": "0.6.4"
 }

@@ -31,6 +31,10 @@ export class Logic {
         this.view.set('example', example);
         this.view.set('source', source ?? sourceOf(examples[example].recipe));
         this.render();
+        // A worker created before service-worker control may keep fetching WASM
+        // directly from the network, even after the page reports offline readiness.
+        await window.offlineReady.catch(() => {});
+        if (this.page.abort.signal.aborted) return;
         this.db = sqlitePanel(this.view, () => {
             this.render();
             if (!this.view.get('json')) throw new Error('Correggi il modello prima di migrare');

@@ -2,7 +2,7 @@
 
 | Area | Disponibile | Passo successivo |
 | --- | --- | --- |
-| Modello portabile 0.6.1 | Grammatica JSON, contributi, package/configurazione, opzioni complete, gerarchia, relazioni, alias, codec e confronto integrale | Equivalenti JS per classi/callback e caricamento di package Python |
+| Modello portabile 0.6.4 | Grammatica JSON, contributi, package/configurazione, opzioni complete, gerarchia, relazioni, alias, codec e confronto integrale | Equivalenti JS per classi/callback e caricamento di package Python |
 | Composizione | Contributi ordinati, ripetizioni, override, reset, copie, modelli indipendenti e colgroups | Estensioni applicative oltre il contratto JSON |
 | Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, aggiunta di colonne nullable e indici non univoci | Ricostruzioni, alter/drop, CHECK e altri oggetti |
 | Scritture | INSERT/UPDATE/DELETE per chiave anche composta, default/sql_value/RETURNING automatico, transazioni e rollback | Bulk/selection writes e codec completi |
@@ -13,7 +13,7 @@
 | Browser | SQLite WASM in worker, IndexedDB, riapertura, coda e Web Locks nel playground | API worker pubblica e prove crash/quota/concorrenza |
 | Offline | Dati locali persistiti | Cache degli asset e riapertura dell'app senza rete |
 | Node/Bun | Adapter e stessa suite di contratti | API applicativa stabile e codec delle righe |
-| Parità | JSON completo/migrate 0.6.1 + fix #44, cataloghi SQLite, 350 casi query e 26 cicli sys_fields/hook e 39 gerarchie/contatori e 27 onUpdate reali | Restanti capacità del compilatore e ciclo applicativo |
+| Parità | JSON completo/migrate 0.6.4, cataloghi SQLite, 352 casi query e 26 cicli sys_fields/hook e 39 gerarchie/contatori e 27 onUpdate reali | Restanti capacità del compilatore e ciclo applicativo |
 
 Il [modello dichiarativo](model.md) è distinto dall'esecuzione delle sue opzioni:
 `sys_fields` genera colonne e metadati e viene eseguito da `table.insert/update/delete`:

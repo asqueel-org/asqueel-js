@@ -35,5 +35,5 @@ def main():
     write('test/fixtures/model-examples.json',{name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()})
     write('test/fixtures/sqlite.json',sqlite)
     export_models()
-    print('Exported Python 0.6.1 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
+    print('Exported Python 0.6.4 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
 if __name__=='__main__':main()

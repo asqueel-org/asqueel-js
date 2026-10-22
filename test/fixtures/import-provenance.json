@@ -1,6 +1,6 @@
 {
-  "coreCommit": "8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988",
-  "coreVersion": "0.6.1 + fix #44",
+  "coreCommit": "31ca251daa2b8ccd300459731d5cb6b373fb1de2",
+  "coreVersion": "0.6.4",
   "sources": [
     "application_table.py:sql_insert/adaptRecord/_assign_keys",
     "table_io.py:read_records",
@@ -8,5 +8,6 @@
   ],
   "javascriptTytxTestedVersion": "0.16.3",
   "cases": 49,
-  "contract": "SQL-level import without triggers; caller-owned transaction in Python, whole-import or caller transaction in JS; SQLite binding values compared after civil/decimal encoding."
+  "contract": "SQL-level import without triggers; caller-owned transaction in Python, whole-import or caller transaction in JS; SQLite binding values compared after civil/decimal encoding.",
+  "buildersVersion": "0.30.0"
 }

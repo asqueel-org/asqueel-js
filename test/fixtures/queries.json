@@ -2071,14 +2071,71 @@
       "compiled": {
         "sql": "SELECT \"t0\".\"id\" AS \"id\",\n':literal \"t0\".\"id\"; --' AS literal\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" = :id)",
         "params": {
-          "id": 201,
-          "literal": null
+          "id": 201
         }
       },
       "rows": [
         {
           "id": 201,
           "literal": ":literal \"t0\".\"id\"; --"
+        }
+      ]
+    },
+    {
+      "name": "literal_parameter_collection",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,'IN :ids' AS literal,':env_secret' AS env_literal",
+        "where": "$id IN :ids",
+        "sqlparams": {
+          "ids": [
+            201
+          ]
+        },
+        "environment": {
+          "secret": "must-not-bind"
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n'IN :ids' AS literal,\n':env_secret' AS env_literal\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\" IN (:ids0) )",
+        "params": {
+          "ids0": 201
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "literal": "IN :ids",
+          "env_literal": ":env_secret"
+        }
+      ]
+    },
+    {
+      "name": "adjacent_parameters",
+      "request": {
+        "operation": "select",
+        "table": "notes.memo",
+        "columns": "$id,'doc:xyz' || :xyz AS literal",
+        "where": "$id=:a+:b",
+        "sqlparams": {
+          "xyz": "bound",
+          "a": 200,
+          "b": 1
+        }
+      },
+      "compiled": {
+        "sql": "SELECT \"t0\".\"id\" AS \"id\",\n'doc:xyz' || :xyz AS literal\n FROM \"main\".\"q_memo\" AS \"t0\"\nWHERE (\"t0\".\"id\"=:a+:b)",
+        "params": {
+          "xyz": "bound",
+          "a": 200,
+          "b": 1
+        }
+      },
+      "rows": [
+        {
+          "id": 201,
+          "literal": "doc:xyzbound"
         }
       ]
     },

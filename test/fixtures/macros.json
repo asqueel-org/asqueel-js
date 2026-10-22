@@ -1966,8 +1966,8 @@
       "compiled": {
         "sql": "SELECT \"t0\".\"id\" AS \"id\"\n FROM \"main\".\"macro_person\" AS \"t0\"\nWHERE (((\"t0\".\"amount\">=:env_low AND \"t0\".\"amount\"<=:env_high AND :env_low IS NOT NULL AND :env_high IS NOT NULL) OR (:env_low IS NULL AND :env_high IS NOT NULL AND \"t0\".\"amount\"<=:env_high) OR (:env_low IS NOT NULL AND :env_high IS NULL AND \"t0\".\"amount\">=:env_low) OR (:env_low IS NULL AND :env_high IS NULL)))\nORDER BY \"t0\".\"id\"",
         "params": {
-          "env_high": 20,
-          "env_low": 10
+          "env_low": 10,
+          "env_high": 20
         }
       },
       "rows": [

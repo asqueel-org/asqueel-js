@@ -148,7 +148,7 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('350 query confrontate con Python', {timeout: 30000});
+    await expect(page.locator('#query-status')).toContainText('352 query confrontate con Python', {timeout: 30000});
     await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
     await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
     await expect(page.locator('#query-checks')).toContainText('48 sottoquery/aggregazioni');

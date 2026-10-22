@@ -35,7 +35,9 @@ export function transferPanel(view, database) {
         example: () => download(oracle.find(e=>e.name==='tables').bundle,'python-snapshot.json'),
         load: file => run(async () => {
             if(!file) throw new Error('Seleziona uno snapshot JSON esportato da Python');
-            const result=await database.request('transfer-load',{file});
+            // Safari file: pages cannot reliably read a cloned File inside a Blob worker.
+            const text=await file.text();
+            const result=await database.request('transfer-load',{text});
             view.set('transferSample',JSON.stringify(result,null,2));
             view.set('transferStatus',`Snapshot caricato in IndexedDB: ${Object.entries(result.counts).map(([name,count])=>name+': '+count+' record').join(', ')}.`);
         }),

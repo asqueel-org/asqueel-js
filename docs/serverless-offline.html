@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How Gramlot and Asqueel-JS transfer Python models and typed records into an offline browser, including a single HTML file, and return the results to Python.">
+<title>Serverless data applications · Gramlot &amp; Asqueel-JS</title>
+<style>
+:root{--ink:#183344;--muted:#536978;--teal:#0c7066;--light:#e9f4f0;--line:#d7e2e5;--paper:#fff;--bg:#f3f5f4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--teal);text-underline-offset:3px}a:focus-visible{outline:3px solid #ca8821;outline-offset:4px}.wrap{max-width:1120px;margin:auto;padding:0 32px}.mast{background:var(--ink);color:white;padding:58px 0 46px;border-top:6px solid #6ac7ae}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:#a5ddce}h1{font-size:clamp(34px,5vw,57px);line-height:1.1;letter-spacing:-.035em;max-width:840px;margin:18px 0}h2{font-size:29px;line-height:1.2;letter-spacing:-.02em;margin:0 0 20px}h3{font-size:19px;line-height:1.4;margin:0 0 9px}p{margin:0 0 16px}.lead{max-width:810px;font-size:20px;color:#d8e6e8}.meta{font-size:13px;color:#b9d0d7;margin-top:26px}.meta code{color:var(--ink)}.nav{background:white;border-bottom:1px solid var(--line)}.nav .wrap{display:flex;gap:24px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px}.nav a{font-size:14px;font-weight:650;text-decoration:none}main{padding-top:32px!important;padding-bottom:40px!important}.section{background:var(--paper);padding:34px;margin-bottom:22px;border:1px solid var(--line);border-radius:12px;scroll-margin-top:20px}.number{font:700 12px/1.4 system-ui;letter-spacing:.12em;color:var(--teal);display:block;margin-bottom:10px}.callout{border-left:4px solid var(--teal);background:var(--light);padding:18px 22px;margin:22px 0}.callout p:last-child{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.card{border:1px solid var(--line);border-radius:8px;padding:23px}.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--teal);background:var(--light);padding:3px 9px;border-radius:4px;margin-bottom:12px}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin:26px 0}.flow article{background:#f4f7f8;border:1px solid var(--line);padding:20px;border-radius:8px;min-height:164px}.flow h3{font-size:17px}.flow p{font-size:14px;margin:0;color:var(--muted)}.arrow{color:var(--teal);font-size:24px}.caption{font-size:14px;color:var(--muted)}.steps{padding-left:24px}.steps li{padding-left:5px;margin:13px 0}.steps strong{color:var(--teal)}ul{padding-left:22px}li{margin:7px 0}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px;text-align:left}th,td{vertical-align:top;border-bottom:1px solid var(--line);padding:14px 12px}th{background:#eff4f5;font-size:13px}th:first-child,td:first-child{padding-left:16px}code{font: .88em/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}p code,li code,td code{background:#edf1f3;padding:2px 4px;border-radius:3px}pre{background:#132d3a;color:#e5f3ef;padding:20px;border-radius:8px;overflow:auto;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.small{font-size:14px;color:var(--muted)}.evidence{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.evidence span{border:1px solid var(--line);padding:8px 12px;border-radius:6px;font-size:14px}.evidence strong{color:var(--teal)}footer{padding:10px 0 40px;font-size:13px;color:var(--muted)}.section>:last-child{margin-bottom:0}
+@media(max-width:740px){.wrap{padding-left:18px;padding-right:18px}.mast{padding-top:35px;padding-bottom:30px}.lead{font-size:18px}.section{padding:24px 20px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow article{min-height:0}.arrow{text-align:center;transform:rotate(90deg)}.nav .wrap{gap:12px 20px}h2{font-size:25px}th,td{min-width:140px}}
+@media print{body{background:white;font-size:11pt}.wrap{max-width:none;padding:0}.mast{color:var(--ink);background:white;border-top:3px solid var(--teal);padding:20px 0}.eyebrow,.lead,.meta{color:var(--muted)}h1{font-size:32pt}.nav{display:none}.section{padding:22px 0;border:0;border-top:1px solid var(--line);border-radius:0}.grid,.flow{break-inside:avoid}h2,h3{break-after:avoid}pre,.callout,tr{break-inside:avoid}pre{background:#eff4f5;color:var(--ink)}a{color:var(--ink)}footer{padding:0}main{padding-top:0!important}.table-wrap{overflow:visible}th,td{min-width:0}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+<div class="eyebrow">Gramlot + Asqueel-JS · Implementation report</div>
+<h1>Serverless data applications</h1>
+<p class="lead">Take a Python data model into the browser, work without a connection, and bring typed records back to Python.</p>
+<p class="meta">21 October 2026 · Based on <code>a9a140a</code>, with a local Safari compatibility fix · Chromium and Safari desktop checks</p>
+</div></header>
+<nav class="nav" aria-label="Document sections"><div class="wrap"><a href="#scenario">Use case</a><a href="#architecture">Architecture</a><a href="#delivery">Two delivery modes</a><a href="#evidence">What we verified</a><a href="#tablets">Tablets</a><a href="#reproduce">Try it</a></div></nav>
+<main class="wrap">
+<section class="section" id="scenario">
+<span class="number">01 / THE USE CASE</span><h2>Collect orders where the network cannot follow</h2>
+<p>A business application runs in Python, uses Gramlot for its frontend, and keeps its main database on the server. A salesperson needs to visit customers without a reliable connection. They only need a small working set: selected customers, products, prices, and their own orders.</p>
+<ol class="steps">
+<li><strong>Prepare the working set.</strong> The application selects the relevant model declarations and records. Python exports the source Bag and typed data.</li>
+<li><strong>Load it locally.</strong> Asqueel-JS reconstructs the model and creates the corresponding SQLite tables in the browser.</li>
+<li><strong>Work offline.</strong> The user creates orders and order lines, reads reference data, and edits their records. Work survives closing and reopening the browser.</li>
+<li><strong>Return the work.</strong> The browser exports a typed snapshot. The Python application receives it through a file or, when connectivity returns, an application endpoint.</li>
+<li><strong>Apply it to the business database.</strong> Application code decides which returned records to insert or update and acknowledges completion.</li>
+</ol>
+<div class="callout"><p><strong>The assumption is simple:</strong> the user owns the records they are working on during the offline session. Record selection, ownership, permissions and write-back belong to the application. This work supplies model transfer, local execution, persistence and a verified return format.</p></div>
+<p class="small">The current deliverable is a transfer playground with a JSON query editor. A customer-facing order-entry screen and its server-side write-back endpoint are the next application layer, not features already delivered by this demonstration.</p>
+</section>
+<section class="section" id="architecture">
+<span class="number">02 / HOW IT WORKS</span><h2>The model travels; Python does not run in the browser</h2>
+<div class="flow" role="group" aria-label="Python exports source and data to browser SQLite; browser returns a typed snapshot to Python">
+<article><h3>Python application</h3><p>Asqueel source Bag<br>Selected tables and records<br>TYTX export</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>Browser application</h3><p>Gramlot interface and worker<br>Asqueel-JS model and queries<br>SQLite WASM + IndexedDB</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>Python receiver</h3><p>Decode the returned snapshot<br>Validate structure and values<br>Application-controlled write-back</p></article>
+</div>
+<p><strong>Gramlot</strong> runs the page through its browser/worker environment. <strong>Asqueel-JS</strong> rebuilds the transferred model, renders migrations and compiles queries. <strong>SQLite compiled to WebAssembly</strong> actually executes the SQL. Its files are persisted through an IndexedDB-backed VFS; IndexedDB is the storage layer, not a substitute SQL engine.</p>
+<p>The transfer envelope contains a real <strong>SourceBag serialized as TYTX</strong>, plus TYTX record streams keyed by qualified table name. The source can cover the full model, selected packages, or selected tables. Required relation targets must be included; the exporter does not silently remove relations or fetch extra server records.</p>
+<p>The Python exporter produces a SQLite-compatible projection of supported declarations: database implementation becomes SQLite and package schemas map to <code>main</code>. It preserves SQL names and detects collisions. The original Python builder remains unchanged. Connection settings, Python table classes and executable Python functions are not transported.</p>
+<div class="grid">
+<article class="card"><h3>Typed values, not just JSON strings</h3><p>TYTX preserves the distinctions needed by the transfer: booleans, dates and times, decimal representations, text, NULL, nested Bags and binary data. Bag node labels, tags and attributes are retained; empty Bags, empty blobs and NULL remain distinct.</p><p class="small">SQLite still has its own numeric limits. Transporting a Decimal does not make SQLite NUMERIC an arbitrary-precision decimal store. Unsupported or unsafe values are rejected within the supported transfer contract.</p></article>
+<article class="card"><h3>Durable local workspace</h3><p>The browser stores both the SQLite database and the source needed to reconstruct its builder. On reopening, it reads existing records rather than importing the initial data again.</p><p class="small">The HTML itself is never rewritten. Data lives in the browser profile. In the single-file demo, different file paths select separate workspaces; use export/import to move work to another path or device.</p></article>
+</div>
+<p style="margin-top:20px">Import loads snapshot records in a transaction with explicit NULL values and a final foreign-key check. A data failure rolls back imported rows; schema migration is a preceding transaction. The Python receiver used in verification imports into an empty staging SQLite database. It does <strong>not</strong> merge a snapshot automatically into the remote business database.</p>
+<p class="small">Python reference: Asqueel 0.6.1 with the pinned fix for issue #44. This report describes the tested transfer path; it is not a claim of complete Python/JavaScript feature parity. The demo query editor performs direct compiler writes; required application hooks must be provided through the appropriate JavaScript application API.</p>
+</section>
+<section class="section" id="delivery">
+<span class="number">03 / DELIVERY</span><h2>Two ways to run without a live server</h2>
+<div class="grid">
+<article class="card"><span class="pill">HOSTED OFFLINE APP</span><h3>Open once, then work offline</h3><p>Serve the application over HTTPS, or localhost for development. A versioned service worker caches the HTML, JavaScript, Gramlot themes, workers and SQLite WASM. Once the app reports that it is ready, the user can disconnect and reopen the same address.</p><p>No reachable server or local server process is needed while working offline. New asset versions wait for old application tabs to close.</p><p class="small">This is the basis for PWA delivery. The evidence here covers cache-based offline startup; a complete Home Screen installation flow and tablet qualification remain product work.</p></article>
+<article class="card"><span class="pill">SINGLE HTML FILE</span><h3>Open directly with <code>file://</code></h3><p>The official Gramlot exporter packages the page, logic, runtime and styles into one HTML document. We also embed the SQLite worker and WASM bytes. Workers start from in-memory Blob URLs.</p><p>The resulting file is approximately <strong>5.9 MB</strong>. It needs no companion files, service worker, local server or initial online visit. Loading data and exporting results use ordinary file controls.</p><p class="small">Verified on desktop Chromium. Reopen the same file path using the same browser profile to recover the existing workspace.</p></article>
+</div>
+<p class="caption" style="margin-top:20px">Here, “serverless” means that the client can execute the application locally. A Python server can still prepare data beforehand and receive it afterwards; no cloud function platform is required.</p>
+</section>
+<section class="section" id="evidence">
+<span class="number">04 / EVIDENCE</span><h2>A complete cycle, executed rather than simulated</h2>
+<p>The single-file test copies <em>only the exported HTML</em> into a separate temporary folder and launches a fresh Chromium profile with networking disabled from the start. It loads a Python snapshot, reads and changes records through the page controls, inserts an order line, inserts and deletes a temporary row, and verifies the result.</p>
+<p>It then terminates Chromium completely, starts a new process with the same profile, reopens the local file while still offline, and downloads the resulting snapshot. No external HTTP, HTTPS or companion-file request is permitted during the main cycle. Python then imports the actual downloaded file.</p>
+<div class="table-wrap"><table><caption class="small" style="text-align:left;padding-bottom:10px">What is compared across the round trip</caption><thead><tr><th scope="col">Layer</th><th scope="col">Comparison</th></tr></thead><tbody>
+<tr><th scope="row">Resolved model</th><td>Complete model JSON, including the transferred structure and metadata.</td></tr>
+<tr><th scope="row">Migration</th><td>The JSON rendered for migration, not only a table count.</td></tr>
+<tr><th scope="row">Database</th><td>The actual SQLite catalog and stored row values before and after edits.</td></tr>
+<tr><th scope="row">Python return</th><td>The exported snapshot is reimported and checked against the expected result, including decoded TYTX types.</td></tr>
+<tr><th scope="row">Bag and blob case</th><td>A separate single-file test checks nested Bag content and binary values, including empty and NULL values, after an offline reload.</td></tr>
+</tbody></table></div>
+<div class="evidence" aria-label="Verification totals"><span><strong>2</strong> single-file browser tests</span><span><strong>28</strong> hosted-browser regression tests</span><span><strong>909</strong> Node tests</span><span><strong>909</strong> Bun tests</span></div>
+<p class="small">These totals are the passing results for implementation <code>a9a140a</code>. After the Safari fix, the two single-file tests and six hosted transfer tests were rerun successfully. Physical Android tablets, iPads and Firefox remain untested. The tests demonstrate the data path and persistence, not an already implemented automatic synchronization service.</p>
+<h3 style="margin-top:24px">Real Safari 27.0.1: local HTML round trip</h3>
+<p>The HTML was also tested in desktop Safari through Apple's built-in MCP automation. Python model and data loaded into SQLite; update, insert, delete and select worked. After closing and reopening the application tab, IndexedDB restored the workspace. The complete model, migration JSON, SQLite catalog and values matched the Python reference. Python then accepted the actual exported snapshot, including its TYTX types.</p>
+<p>The test exposed a Safari limitation: reading a File after sending it to a Blob worker failed with <code>NotReadableError</code>, although reading it in the page succeeded. The page now reads the selected file and sends its text to the worker.</p>
+<p class="small">Scope: the application tab was reopened within one automation session; a full Safari process restart and physically disconnected networking were not tested. The automation supplied Python file bytes to the normal file input and captured the Blob produced by the export button; the OS file picker and saved download were not validated. This Safari case covers ordinary records; the separate Bag/blob test above ran in Chromium.</p>
+</section>
+<section class="section" id="tablets">
+<span class="number">05 / TABLETS</span><h2>Could this run on a tablet?</h2>
+<div class="callout"><p><strong>Yes, the architecture is suitable for a tablet application.</strong> The recommended next delivery route is an HTTPS-hosted offline app, with a Home Screen/PWA experience where supported. This is a feasibility assessment, not a tablet compatibility certification.</p></div>
+<p>The required platform features include WebAssembly, workers, IndexedDB and Web Locks. WebKit documents Web Locks in Safari 15.4, including worker use; this supports the feasibility of the design on iPadOS, but does not prove this SQLite VFS and application combination on a real iPad. <a href="https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/">WebKit: Safari 15.4 web APIs</a>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Target</th><th scope="col">Recommended route</th><th scope="col">Current evidence</th></tr></thead><tbody>
+<tr><th scope="row">Desktop Chromium</th><td>Hosted offline app or the single HTML file.</td><td>Both round trips tested, including full browser restart.</td></tr>
+<tr><th scope="row">Desktop Safari 27.0.1</th><td>Single HTML opened with file://.</td><td>Load, CRUD, application-tab reopen and Python return verified after the File-to-worker fix. Full browser restart remains to be tested.</td></tr>
+<tr><th scope="row">Android tablet</th><td>HTTPS app, followed by offline use and optional installation.</td><td>Candidate for device testing. Desktop Chromium results alone do not qualify Android or its file-opening workflow.</td></tr>
+<tr><th scope="row">iPad</th><td>Safari HTTPS app, then Add to Home Screen where appropriate.</td><td>Candidate for device testing. Direct local HTML opening is not a validated deployment route for this application.</td></tr>
+</tbody></table></div>
+<p style="margin-top:20px">Apple documents adding websites as Home Screen apps on iPad. Installability and offline functionality are separate: a Home Screen icon does not by itself cache the application or its data. The offline assets and workspace must be prepared in the context in which the user will actually work. <a href="https://support.apple.com/en-gb/guide/ipad/ipad8f1f7a29/ipados">Apple: websites as iPad apps</a>; <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable">MDN: installable PWAs</a>.</p>
+<h3 style="margin-top:24px">The next tablet acceptance test</h3>
+<p>Use a real Android tablet and a real iPad: prepare the app and data, enable airplane mode, enter orders with the touch UI, force-close and reopen, then export or reconnect and send the records back to Python. Check file selection/sharing, background suspension and storage persistence in the chosen browser or installed-app context.</p>
+<p class="small">The product should expose export and recovery actions and handle storage failures. WebKit describes persistent-storage requests and eviction policy; persistence should be validated rather than assumed from the presence of IndexedDB. <a href="https://webkit.org/blog/14403/updates-to-storage-policy/">WebKit: storage policy</a>.</p>
+</section>
+<section class="section" id="reproduce">
+<span class="number">06 / REPRODUCE &amp; EXTEND</span><h2>Try the single-file workflow</h2>
+<p>From the <code>asqueel-js</code> repository, with its dependencies installed:</p>
+<pre><code>npm run build:file
+# Open output/asqueel-offline.html in Chromium using file://
+
+npm run test:file
+.reference/venv-current/bin/python scripts/transfer_oracle.py \
+  --verify-return output/file-transfer-returns.json</code></pre>
+<p class="small">The final command requires the repository’s configured, pinned Python reference environment. The browser does not run Python; that command verifies the file the browser returned.</p>
+<p>To repeat the Safari check on macOS with Safari 27 or newer and remote automation enabled:</p>
+<pre><code>python3 scripts/test_safari_file.py
+.reference/venv-current/bin/python scripts/transfer_oracle.py \
+  --verify-return output/safari-transfer-returns.json</code></pre>
+<p>In the page, download the Python example, select it, and choose <strong>Carica in SQLite locale</strong> (load locally). Execute a JSON request, close the browser and reopen the same HTML file. Choose <strong>Esporta snapshot per Python</strong> to download the result.</p>
+<pre><code>{
+  "operation": "update",
+  "table": "work.document",
+  "values": {"id": "d1", "title": "Modificato offline"}
+}</code></pre>
+<p>This is the update used in the parity scenario; the automated test also inserts a related line and exercises reading and deletion. Arbitrary user edits are exported normally, but are not expected to match that fixed test scenario.</p>
+<h3>From the demonstration to order collection</h3>
+<p>Build Gramlot customer, product and order forms on top of the local model. Let the Python application select the initial working set and register the returned orders according to its own business rules. Add explicit “prepared for offline work” and “submitted” states, then qualify the chosen devices. The model-transfer and storage mechanisms demonstrated here can remain the same.</p>
+</section>
+</main>
+<footer class="wrap"><p>Implementation: <a href="https://github.com/asqueel-org/asqueel-js">Asqueel-JS</a> · Packaging: <a href="https://github.com/gramlot-org/gramlot-js-server/tree/main/serverless">Gramlot serverless</a><br>This document is self-contained HTML: no external scripts, fonts or styles are needed to read it offline. Reference links require connectivity.</p></footer>
+</body>
+</html>

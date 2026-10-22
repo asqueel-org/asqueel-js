@@ -1,10 +1,10 @@
-# Confronto con Python 0.6.1
+# Confronto con Python 0.6.4
 
-`test/fixtures/provenance.json` fissa core **0.6.1 + fix #44 / 8a8ffd3**, migration **0.3.1**
+`test/fixtures/provenance.json` fissa core **0.6.4 / 31ca251**, migration **0.3.1**
 e genro-builders **0.29.0**. La CI fa checkout di quei commit, senza seguire `main`.
 Il verificatore rifiuta un checkout Python di un'altra versione.
 
-Il riferimento include la correzione Python della [issue #44](https://github.com/asqueel-org/asqueel/issues/44), successiva alla release pubblicata v0.6.1.
+Il riferimento include la correzione dei parametri SQL della issue #35, oltre ai fix già pubblicati nella 0.6.3.
 I 218 casi includono 14 regressioni aggiunte per gerarchie collegate, contatori e
 parent personalizzati, tipi delle chiavi del master, riferimenti tra package,
 rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.md).
@@ -12,7 +12,7 @@ rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.m
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r scripts/requirements-parity.txt
-ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.6.1 \
+ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.6.4 \
 ASQUEEL_MIGRATION_ROOT=/percorso/asqueel-migration \
 PYTHON=.venv/bin/python npm run verify:python
 ```
@@ -50,7 +50,7 @@ rigenera automaticamente il riferimento.
 ## Query e CRUD: stesso riferimento
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
-0.6.1 + fix #44, fissata anche in `test/fixtures/query-provenance.json`.
+0.6.4, fissata anche in `test/fixtures/query-provenance.json`.
 I 32 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
 di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il JSON completo dei
 sette modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sette ricette hanno
@@ -161,7 +161,7 @@ il corpus `test/subquery-inputs.json`: 48 casi, inclusa la preparazione dei dati
 confrontano modello completo, migrate JSON, SQL esatto, parametri e risultati SQLite.
 `test/subquery-errors.json` verifica inoltre 17 rifiuti di compilazione: si confronta
 il rifiuto, non il testo localizzato dell'eccezione. Il riferimento resta il commit
-0.6.1 + fix #44; compiler, binding, aggregazioni e adapter SQLite sono invariati nel
+0.6.4; compiler, binding, aggregazioni e adapter SQLite sono invariati nel
 tag 0.6.3 verificato.
 
 Sono portati `formulaColumn(select=...)`, `exists=...`, i placeholder nominati
@@ -399,3 +399,12 @@ con offset e la proprietà dei byte restituiti dall’adapter. Otto input non va
 sono rifiutati da Python e JS con rollback dei record precedenti, anche su WASM.
 Il database di staging conserva le Bag in TYTX: il confronto riguarda il valore
 tipizzato, non la formattazione XML del writer applicativo Python.
+
+## Contratto conservato nel consolidamento 0.2.0
+
+La provenienza attiva è Python **0.6.4**, commit `31ca251`, registrata nei tre file
+`*-provenance.json`. Il campo `reference: "0.6.1"` del documento modello v1 resta
+intenzionalmente invariato: identifica il formato già accettato dalla serie 0.1,
+non la revisione usata per queste verifiche. Cambiarlo renderebbe il decoder
+incompatibile con i documenti già esportati. Il formato ufficiale v2 e il percorso
+unificato sono riservati alla release successiva.

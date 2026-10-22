@@ -34,7 +34,7 @@ tra le pagine e conservata al reload. JavaScript, worker e WASM
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.1**:
+Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.4**:
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
 `recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
 i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
@@ -42,8 +42,8 @@ sono confrontati indipendentemente con Python, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
-relazioni dirette anche composte, aggregazioni e policy dichiarative: **350 casi**
-confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
+relazioni dirette anche composte, aggregazioni e policy dichiarative: **352 casi**
+confrontano SQL, parametri e risultati con lo stesso Python 0.6.4.
 Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
 `#THIS`, `#ENV` da snapshot e proiezione/filtro delle colonne composte.
 `#TEMPLATE` compone testi con valori NULL trattati come stringhe vuote;
@@ -120,7 +120,7 @@ npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
 La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 350 casi query
+completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 352 casi query
 confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 
@@ -148,3 +148,9 @@ Per provare il trasferimento offline anche senza server e senza un primo accesso
 `npm run build:file` produce **`output/asqueel-offline.html`**, esportato da Gramlot e
 apribile direttamente con `file://` in Chromium. Include SQLite WASM e conserva modello
 e dati nel profilo browser. Dettagli e verifiche in [Trasferimenti](docs/transfers.md).
+
+English illustrated overview: [Serverless data applications — Gramlot & Asqueel-JS](docs/serverless-offline.html), including the verified offline workflows and tablet deployment considerations.
+
+Scenario in italiano: [L’assemblea condominiale offline](docs/assemblea-condominiale-offline.html), dalla preparazione dei dati in Python al ritorno di votazioni e verbale nel gestionale.
+
+PoC eseguibile: **`npm run build:assembly`**, poi aprire `output/assemblea-offline.html`. Schede per costituzione, ordine del giorno, lavori e verbale; stack per ogni punto e drawer dei partecipanti. Appello di 24 partecipanti, deleghe, ordine del giorno modificabile, cinque allegati di fantasia, interventi con autore e orario, pulsante amministratore e inserimento nel verbale, voti e verbale con barra strumenti fissa, tema Mimi scuro e salvataggio SQLite, con confronto Python e riavvio offline verificato in Chromium. [Istruzioni e limiti](docs/assembly.md).

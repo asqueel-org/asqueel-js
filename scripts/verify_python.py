@@ -54,7 +54,7 @@ for runtime in ('node','bun'):
     for r in rendered['examples'].values():StructureValidator().validate(r['migration'])
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_sqlite.js')],cwd=ROOT,text=True))
     assert actual=={n:{k:s[k] for k in ('desired','actual')} for n,s in sqlite.items()},f'{runtime}: SQLite migration/catalog differs'
-    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.1')
+    print(f'{runtime}: {len(expected)} complete-model/migrate cases, {len(models)} independently authored examples, 2 real SQLite migrations match Python 0.6.4')
     actual=json.loads(subprocess.check_output([runtime,str(ROOT/'scripts/render_queries.js')],cwd=ROOT,text=True))
     assert actual == queries, f'{runtime}: query model, SQL, parameters or SQLite results differ from live Python'
     print(f'{runtime}: {sum(len(q["cases"]) for q in queries.values())} query/CRUD cases match live Python SQL, parameters and SQLite results')
@@ -82,3 +82,9 @@ for runtime in ('node','bun'):
 
 from verify_transfers import verify as verify_transfers
 verify_transfers()
+
+from assembly_oracle import generate as assembly_oracle
+assembly = assembly_oracle()
+assert assembly == json.loads((ROOT/'test/fixtures/assembly.json').read_text()), 'Assembly fixtures differ from live Python'
+assert {k:assembly[k] for k in ('bundle','initial','reads')} == json.loads((ROOT/'examples/assembly-seed.json').read_text()), 'Assembly seed differs from live Python'
+print(f'Assembly: {len(assembly["steps"])} actions, SQL and calculations match live Python')

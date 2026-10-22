@@ -1,4 +1,4 @@
-# Modello risolto · Python 0.6.1
+# Modello risolto · Python 0.6.4
 
 Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.6.1**, commit
 `8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988` (correzione #44 successiva alla release). La versione del codice di riferimento è fissata;

@@ -1,6 +1,13 @@
 # Changelog
 
-## Non rilasciato
+## 0.2.0 — Candidato di consolidamento
+
+- Riuniti i porting già presenti su main, l'export HTML e la demo assemblea offline:
+  86 operazioni confrontate con Python, upgrade dei workspace, verbali e interfaccia
+  aggiornata. Il formato del modello resta quello della serie 0.1.
+- Parità aggiornata al consolidamento Python 0.6.4: stringhe, identificatori e
+  commenti SQL non generano parametri; scope formula, collezioni e parametri
+  adiacenti seguono lo stesso comportamento. 940 test su Node e Bun.
 
 - Export Gramlot in un unico HTML apribile con `file://`, con worker e SQLite WASM
   incorporati. Caricamento modello/dati, CRUD, riavvio Chromium senza rete ed export

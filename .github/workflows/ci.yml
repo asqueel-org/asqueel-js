@@ -51,8 +51,11 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run test:browser
       - run: npm run test:file
+      - run: npm run test:assembly
       - uses: actions/upload-artifact@v7.0.2
         if: failure()
         with:
           name: browser-failures
-          path: test-results/
+          path: |
+            test-results/
+            output/assembly-test-results/

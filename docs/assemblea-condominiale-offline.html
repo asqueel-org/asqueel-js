@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Come gestire un’assemblea condominiale senza connessione con Gramlot e Asqueel-JS: preparazione dei dati in Python, lavoro locale e restituzione dei risultati.">
+<title>L’assemblea condominiale offline · Gramlot e Asqueel-JS</title>
+<style>
+:root{--ink:#183344;--muted:#536978;--teal:#0c7066;--light:#e9f4f0;--line:#d7e2e5;--paper:#fff;--bg:#f3f5f4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--teal);text-underline-offset:3px}a:focus-visible{outline:3px solid #ca8821;outline-offset:4px}.wrap{max-width:1120px;margin:auto;padding:0 32px}.mast{background:var(--ink);color:white;padding:58px 0 46px;border-top:6px solid #6ac7ae}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:#a5ddce}h1{font-size:clamp(34px,5vw,57px);line-height:1.1;letter-spacing:-.035em;max-width:840px;margin:18px 0}h2{font-size:29px;line-height:1.2;letter-spacing:-.02em;margin:0 0 20px}h3{font-size:19px;line-height:1.4;margin:0 0 9px}p{margin:0 0 16px}.lead{max-width:810px;font-size:20px;color:#d8e6e8}.meta{font-size:13px;color:#b9d0d7;margin-top:26px}.meta code{color:var(--ink)}.nav{background:white;border-bottom:1px solid var(--line)}.nav .wrap{display:flex;gap:24px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px}.nav a{font-size:14px;font-weight:650;text-decoration:none}main{padding-top:32px!important;padding-bottom:40px!important}.section{background:var(--paper);padding:34px;margin-bottom:22px;border:1px solid var(--line);border-radius:12px;scroll-margin-top:20px}.number{font:700 12px/1.4 system-ui;letter-spacing:.12em;color:var(--teal);display:block;margin-bottom:10px}.callout{border-left:4px solid var(--teal);background:var(--light);padding:18px 22px;margin:22px 0}.callout p:last-child{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.card{border:1px solid var(--line);border-radius:8px;padding:23px}.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--teal);background:var(--light);padding:3px 9px;border-radius:4px;margin-bottom:12px}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin:26px 0}.flow article{background:#f4f7f8;border:1px solid var(--line);padding:20px;border-radius:8px;min-height:164px}.flow h3{font-size:17px}.flow p{font-size:14px;margin:0;color:var(--muted)}.arrow{color:var(--teal);font-size:24px}.caption{font-size:14px;color:var(--muted)}.steps{padding-left:24px}.steps li{padding-left:5px;margin:13px 0}.steps strong{color:var(--teal)}ul{padding-left:22px}li{margin:7px 0}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px;text-align:left}th,td{vertical-align:top;border-bottom:1px solid var(--line);padding:14px 12px}th{background:#eff4f5;font-size:13px}th:first-child,td:first-child{padding-left:16px}code{font: .88em/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}p code,li code,td code{background:#edf1f3;padding:2px 4px;border-radius:3px}pre{background:#132d3a;color:#e5f3ef;padding:20px;border-radius:8px;overflow:auto;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.small{font-size:14px;color:var(--muted)}.evidence{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.evidence span{border:1px solid var(--line);padding:8px 12px;border-radius:6px;font-size:14px}.evidence strong{color:var(--teal)}footer{padding:10px 0 40px;font-size:13px;color:var(--muted)}.section>:last-child{margin-bottom:0}
+@media(max-width:740px){.wrap{padding-left:18px;padding-right:18px}.mast{padding-top:35px;padding-bottom:30px}.lead{font-size:18px}.section{padding:24px 20px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow article{min-height:0}.arrow{text-align:center;transform:rotate(90deg)}.nav .wrap{gap:12px 20px}h2{font-size:25px}th,td{min-width:140px}}
+@media print{body{background:white;font-size:11pt}.wrap{max-width:none;padding:0}.mast{color:var(--ink);background:white;border-top:3px solid var(--teal);padding:20px 0}.eyebrow,.lead,.meta{color:var(--muted)}h1{font-size:32pt}.nav{display:none}.section{padding:22px 0;border:0;border-top:1px solid var(--line);border-radius:0}.grid,.flow{break-inside:avoid}h2,h3{break-after:avoid}pre,.callout,tr{break-inside:avoid}pre{background:#eff4f5;color:var(--ink)}a{color:var(--ink)}footer{padding:0}main{padding-top:0!important}.table-wrap{overflow:visible}th,td{min-width:0}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+<div class="eyebrow">Gramlot + Asqueel-JS · Scenario applicativo</div>
+<h1>L’assemblea condominiale, anche senza connessione</h1>
+<p class="lead">Preparare i dati in ufficio, gestire presenze e votazioni sul posto, riportare verbale e risultati nel gestionale.</p>
+<p class="meta">21 ottobre 2026 · Proposta applicativa basata sul trasferimento Python → browser → Python già verificato</p>
+</div></header>
+<nav class="nav" aria-label="Sezioni del documento"><div class="wrap">
+<a href="#scenario">Lo scenario</a><a href="#ciclo">Prima, durante, dopo</a><a href="#modello">Dati e modello</a><a href="#calcoli">Voti e calcoli</a><a href="#serverless">L’app serverless</a><a href="#realizzazione">Cosa realizzare</a>
+</div></nav>
+<main class="wrap">
+<section class="section" id="scenario">
+<span class="number">01 / LO SCENARIO</span><h2>Un’assemblea, un insieme di dati circoscritto</h2>
+<p>Il gestionale dell’amministratore lavora in Python, usa Gramlot per l’interfaccia e conserva i dati nel database centrale. L’assemblea si svolge in una sala in cui la connessione è assente o poco affidabile. Chi verbalizza deve comunque consultare i documenti, registrare i presenti, raccogliere i voti e redigere le delibere.</p>
+<p>Prima della riunione si prepara un pacchetto dedicato a quella assemblea: anagrafiche necessarie, unità, tabelle millesimali, ordine del giorno, dati di bilancio e documenti selezionati. È un insieme relativamente piccolo, con una versione iniziale precisa e un periodo di lavoro ben delimitato.</p>
+<div class="callout"><p><strong>L’unità di lavoro è l’assemblea.</strong> Il gestionale affida a un operatore i suoi record per la durata della sessione. L’operatore lavora in locale e restituisce un risultato coerente a fine riunione. Assegnazione del lavoro e acquisizione finale sono gestite dall’applicazione.</p></div>
+<p class="small">È disponibile una demo Gramlot con schede per le fasi dell’assemblea, drawer dei partecipanti, discussione, votazione e blocco di verbale per ogni punto. Cinque documenti di fantasia sono già inclusi; le regole pertinenti alle decisioni reali restano da aggiungere.</p>
+</section>
+<section class="section" id="ciclo">
+<span class="number">02 / IL CICLO OPERATIVO</span><h2>Preparare, svolgere, restituire</h2>
+<div class="flow" role="group" aria-label="Il gestionale Python prepara i dati; il browser gestisce l’assemblea; Python acquisisce i risultati">
+<article><h3>Prima · in ufficio</h3><p>Selezione dell’assemblea<br>Bag sorgente del modello<br>Dati e documenti necessari</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>Durante · sul posto</h3><p>Interfaccia Gramlot<br>Query Asqueel-JS<br>SQLite locale e salvataggio</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>Dopo · nel gestionale</h3><p>Export dei risultati<br>Verifica in Python<br>Acquisizione e conferma</p></article>
+</div>
+<ol class="steps">
+<li><strong>Preparare il pacchetto.</strong> Il server esporta la Bag sorgente, anche limitata alle tabelle utili, e i record in formato TYTX. Include le dipendenze del modello e i dati collegati necessari. I documenti che serviranno in sala vengono scaricati prima di partire.</li>
+<li><strong>Aprire e controllare l’app.</strong> Il browser ricostruisce il modello, crea il database SQLite e importa i dati. L’operatore verifica assemblea, data, partecipanti e disponibilità degli allegati.</li>
+<li><strong>Gestire la riunione.</strong> Si registrano presenze e deleghe, ingressi e uscite, votazioni, note e delibere. L’app aggiorna le viste e salva i record nel database locale.</li>
+<li><strong>Riprendere il lavoro.</strong> Alla riapertura dello stesso workspace si recuperano i dati già modificati. Il pacchetto iniziale si usa per preparare il lavoro; la ripresa deve leggere il database esistente.</li>
+<li><strong>Restituire e acquisire.</strong> L’app esporta dati e allegati. Il gestionale Python li verifica, li associa all’assemblea e applica le proprie regole di acquisizione. Una conferma indica che il lavoro è stato ricevuto.</li>
+</ol>
+<p>Il ritorno può avvenire tramite un file oppure, quando torna la connessione, attraverso un comando dell’applicazione. Un identificativo del pacchetto e della restituzione permette al gestionale di riconoscere un invio ripetuto.</p>
+</section>
+<section class="section" id="modello">
+<span class="number">03 / DATI E MODELLO</span><h2>Portare in sala ciò che serve</h2>
+<p>Il modello può nascere in Python. La sua dichiarazione viaggia come <strong>Bag sorgente</strong>; Asqueel-JS la usa per ricostruire le tabelle e le relazioni supportate nel database locale. Il database centrale può restare sul proprio motore: il pacchetto trasferito usa la proiezione compatibile con SQLite.</p>
+<div class="table-wrap"><table><caption class="small" style="text-align:left;padding-bottom:10px">Una possibile organizzazione dei dati</caption><thead><tr><th scope="col">Gruppo</th><th scope="col">Contenuto</th><th scope="col">Uso durante l’assemblea</th></tr></thead><tbody>
+<tr><th scope="row">Assemblea e ordine del giorno</th><td>Identificativi, data, punti da discutere e riferimenti ai documenti.</td><td>Guidare la riunione e collegare ogni votazione al suo argomento.</td></tr>
+<tr><th scope="row">Persone, unità e millesimi</th><td>Soggetti interessati, unità, titolarità e tabelle pertinenti.</td><td>Consultare i dati e determinare i pesi secondo le regole applicative.</td></tr>
+<tr><th scope="row">Presenze e deleghe</th><td>Partecipazione, rappresentanza, ingressi e uscite.</td><td>Ricostruire chi partecipa a ciascuna votazione.</td></tr>
+<tr><th scope="row">Votazioni e delibere</th><td>Proposta, aventi diritto, pesi utilizzati, voti ed esito calcolato.</td><td>Registrare le decisioni e conservarne la base di calcolo.</td></tr>
+<tr><th scope="row">Verbale e allegati</th><td>Testo, note strutturate, documenti e file prodotti.</td><td>Comporre il verbale e restituire la documentazione finale.</td></tr>
+</tbody></table></div>
+<div class="grid" style="margin-top:24px">
+<article class="card"><h3>Bag per contenuti strutturati</h3><p>Una Bag può contenere sezioni del verbale, note e attributi aggiuntivi. TYTX conserva la struttura e i tipi supportati nel passaggio tra Python e JavaScript.</p></article>
+<article class="card"><h3>Blob per i documenti</h3><p>PDF, immagini e altri file possono essere trasportati come dati binari. Per consultarli offline occorre portarne i byte: un collegamento al documento sul server richiede ancora la rete.</p></article>
+</div>
+<p class="small" style="margin-top:18px">La selezione dei dati resta applicativa: scegliere alcune tabelle non determina automaticamente quali record e allegati servono. Per documenti voluminosi vanno considerate dimensione del pacchetto e capacità del dispositivo.</p>
+</section>
+<section class="section" id="calcoli">
+<span class="number">04 / VOTI E CALCOLI</span><h2>Condividere le formule, conservare il contesto</h2>
+<p>Totali dei millesimi, riepiloghi delle presenze e aggregazioni dei voti possono essere espressi tramite le formule dichiarative e le query supportate dal compiler. La stessa dichiarazione può così essere interpretata in Python e in JavaScript, confrontando SQL e risultati sui casi dell’applicazione.</p>
+<p><strong>Le funzioni Python non vengono tradotte automaticamente.</strong> Le regole per deleghe, partecipazione, quorum ed esiti devono essere definite e validate nel layer applicativo. Se richiedono codice procedurale, quel codice deve essere disponibile anche in JavaScript oppure ricondotto alle dichiarazioni condivise supportate.</p>
+<div class="callout"><p><strong>Ogni votazione conserva la propria fotografia.</strong> Si registrano i partecipanti e i rappresentati, i pesi effettivamente usati e la versione della regola applicata. Un ingresso successivo aggiorna la situazione corrente senza alterare retroattivamente la base di una votazione già chiusa.</p></div>
+<h3>Un esempio puramente aritmetico</h3>
+<p>In una votazione vengono registrati 420 millesimi favorevoli, 180 contrari e 60 astenuti: il totale rappresentato è 660. Se successivamente entra una persona che porta altri 20 millesimi, la situazione corrente diventa 680; il riepilogo della votazione precedente conserva i suoi 660.</p>
+<p class="small">Questi numeri illustrano la conservazione dello stato e i conteggi. La determinazione del quorum e dell’esito richiede le regole pertinenti alla specifica decisione, compresi gli eventuali conteggi per soggetto. Il modello deve distinguere persone, unità e quote.</p>
+</section>
+<section class="section" id="serverless">
+<span class="number">05 / L’APP SERVERLESS</span><h2>Il lavoro avviene nel browser</h2>
+<p>Gramlot fornisce l’interfaccia. Asqueel-JS ricostruisce il modello e compila le query. SQLite, eseguito tramite WebAssembly, legge e scrive i dati; IndexedDB conserva il database nel browser. Durante la sessione locale non occorre un server applicativo raggiungibile.</p>
+<div class="grid">
+<article class="card"><span class="pill">UN SOLO HTML</span><h3>Un’app da aprire come file</h3><p>L’esportatore serverless di Gramlot può incorporare interfaccia, runtime, worker e SQLite in un unico HTML, aperto tramite <code>file://</code>. Modello e dati possono essere caricati da un pacchetto separato.</p><p class="small">I record modificati restano nel profilo del browser, non vengono riscritti dentro l’HTML. Nel PoC il percorso del file identifica il workspace: per trasferire il lavoro a un altro dispositivo o percorso si usa export/import.</p></article>
+<article class="card"><span class="pill">APP PREPARATA ONLINE</span><h3>Un indirizzo da riaprire offline</h3><p>L’app può essere servita via HTTPS e preparata per l’uso offline, memorizzando risorse e dati prima della riunione. Un’esperienza PWA può aggiungere l’avvio dalla schermata principale.</p><p class="small">L’installazione PWA completa e il comportamento sui dispositivi scelti richiedono una verifica dedicata. Le risorse e gli allegati devono essere disponibili nel contesto in cui si lavorerà.</p></article>
+</div>
+<h3 style="margin-top:24px">Computer e tablet: cosa abbiamo verificato</h3>
+<p>Il ciclo con un singolo HTML è stato verificato su Chromium desktop, con rete disabilitata e riavvio completo del browser. Su Safari desktop 27.0.1 sono passati caricamento, modifiche, chiusura e riapertura della scheda e confronto del ritorno con Python, dopo una correzione nella lettura del file da passare al worker.</p>
+<p class="small">Su Safari restano da verificare il riavvio completo, la rete disconnessa e il percorso manuale di selezione e salvataggio dei file. Un tablet è un possibile dispositivo per questo scenario, ma iPad e tablet Android non sono ancora stati provati. Le verifiche Safari riguardano il PoC di trasferimento; la demo dell’assemblea è stata verificata in Chromium, anche con schermi piccoli simulati.</p>
+</section>
+<section class="section" id="realizzazione">
+<span class="number">06 / DALLA BASE TECNICA ALL’APPLICAZIONE</span><h2>Dal piccolo PoC all’assemblea completa</h2>
+<div class="callout"><p><strong>Prova la pagina Gramlot.</strong> Esegui <code>npm run build:assembly</code>, poi apri <a href="../output/assemblea-offline.html">assemblea-offline.html</a>. Discussione e verbale si sbloccano con il lucchetto: il focus-out aggiorna la Bag, <strong>Salva cambiamenti</strong> conserva il testo offline. La pagina guida anche l’assegnazione delle deleghe e mostra i voti ancora da registrare. Il test confronta 65 azioni con Python, riavvia Chromium senza rete durante una votazione e verifica il pacchetto esportato.</p></div>
+<p>La base disponibile copre trasferimento del modello, creazione del database locale, lettura e scrittura dei record, persistenza ed esportazione verificabile in Python. Sono stati confrontati il JSON completo del modello, il JSON per migrate, la struttura SQLite e i valori; Bag e blob hanno prove dedicate nel percorso Chromium.</p>
+<p>Il PoC comprende già un modello con 24 partecipanti, ordine del giorno modificabile e cinque documenti di fantasia e schermate Gramlot per presenze, deleghe e votazioni. Per completare l’applicazione occorrono le regole di partecipazione e voto pertinenti ai casi reali, il perfezionamento del verbale e il comando di acquisizione nel gestionale. Generazione del PDF ed eventuali firme sono funzionalità da aggiungere. Anche le regole applicative invocate durante una scrittura devono essere collegate esplicitamente: l’editor di query del PoC esegue scritture dirette tramite il compiler.</p>
+<ol class="steps">
+<li><strong>Preparare un caso campione in Python.</strong> Un’assemblea con unità, partecipanti, millesimi, ordine del giorno e pochi documenti.</li>
+<li><strong>Gestirla nel browser senza rete.</strong> Registrare una delega, un ingresso, un’uscita, due votazioni e una bozza di verbale.</li>
+<li><strong>Chiudere e riprendere.</strong> Verificare che presenze, voti, note e documenti restino disponibili sul dispositivo scelto.</li>
+<li><strong>Restituire il pacchetto a Python.</strong> Confrontare struttura, record, allegati e calcoli delle votazioni; acquisire il lavoro una sola volta e confermarne la ricezione.</li>
+</ol>
+<div class="callout"><p><strong>Il risultato atteso:</strong> l’amministratore prepara una singola assemblea nel gestionale, la svolge anche senza connessione e riporta nel sistema centrale un insieme completo e verificabile di risultati.</p></div>
+</section>
+</main>
+<footer class="wrap"><p>Scenario applicativo · Gramlot e Asqueel-JS<br>Approfondimento tecnico: <a href="serverless-offline.html">Serverless data applications</a> (in inglese).<br>Questo documento HTML è autonomo: testo e stile sono incorporati e si possono leggere senza connessione.</p></footer>
+</body>
+</html>
