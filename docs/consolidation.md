@@ -11,5 +11,15 @@ I vecchi JSON del modello v1 devono invece essere riesportati dalla ricetta.
 Safari e dispositivi fisici restano fuori dalla qualificazione automatica.
 DB Manager è fuori perimetro. I candidati precedenti non vanno pubblicati.
 
-Verifiche combinate in corso: Node, Bun, browser, HTML autonomi, assemblea,
-parità Python e installazione del tarball in un progetto vuoto.
+Verifiche del candidato combinato:
+
+- 942 test Node e 942 Bun, senza errori.
+- 29 scenari browser, 2 HTML autonomi e 8 assemblea, inclusi upgrade dei
+  workspace v1–v4 e riavvio offline.
+- Parità live: 218 casi strutturali, 5 esempi, 2 migrazioni SQLite, 352 query/CRUD,
+  26 cicli hook, 39 gerarchie/contatori, 27 cascade, 49 import e 86 azioni assemblea.
+- I JSON prodotti da Node e Bun sono riletti dal codec Python ufficiale;
+  i bundle effettivamente esportati dal browser vengono reimportati da Python.
+
+La pubblicazione richiede ancora il commit Python remoto e la CI. Le prove
+consumer del tarball finale e i checksum sono registrati nell’audit di release.

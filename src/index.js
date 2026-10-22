@@ -11,7 +11,7 @@ export {
   modelToJSON,
   modelFromJSON,
 } from "./model.js";
-/** Public declarations follow the pinned Python 0.6.1 grammar. */
+/** Public declarations follow the pinned Python grammar. */
 export class SqlBuilder extends CompositionBuilder {
   static _name = "sql";
   static portableModel = true;
