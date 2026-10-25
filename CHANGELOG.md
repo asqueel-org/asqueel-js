@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 — unreleased
+## 0.2.0 — 2026-10-25
 
 Parity with Python Asqueel 0.7.0 at commit `84408eb` (main after 0.7.0, with the recipe
 source saved in TYTX), asqueel-migration 0.3.5, genro-builders 0.30.0, genro-bag 0.28.0,
