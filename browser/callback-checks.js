@@ -1,6 +1,7 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {compilerCallbacks, compilerMethods, callbackCacheProbe} from '../examples/compiler-callbacks.js';
 import oracle from '../test/fixtures/callbacks.json' with {type: 'json'};
 
@@ -9,7 +10,7 @@ export async function callbackChecks() {
     const model = defineModel(compilerCallbacks);
     let db = await openBrowserSQLite(id);
     try {
-        if (!equal(model.toJSON(), oracle.model) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello callback diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello callback diverso da Python');
         await migrateSQLite(db, model.toMigration());
         checks.push('Modello callback e JSON migrate identici a Python; funzioni registrate nel worker');
         const events = [], query = model.queries(db, {methods: compilerMethods(events)});

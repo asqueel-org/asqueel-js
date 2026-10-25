@@ -40,16 +40,11 @@ export function readOptions(node, {allowDeferred = false} = {}) {
                     error(path, `${key} is required when enabled`);
                 }
             }
-            if (!allowDeferred && ['system_records', 'release'].includes(tag)) error(path, `${tag} is deferred in Python`);
+            if (!allowDeferred && ['sysrecords', 'release'].includes(tag)) error(path, `${tag} is deferred in Python`);
         }
         for (const key of ['master', 'linked_to', 'preference', 'field', 'parent', 'version_field',
             'relation', 'source', 'caption_field', 'masterfield']) {
             if (spec[key] != null && !nonempty(spec[key])) error(path, `${key} must be a nonempty string`);
-        }
-        for (const key of ['days', 'depth']) {
-            if (spec[key] != null && (!Number.isInteger(spec[key]) || spec[key] < (key === 'depth' ? 1 : 0))) {
-                error(path, `${key} is out of range`);
-            }
         }
         for (const key of ['columns', 'scope']) {
             if (spec[key] == null) continue;
@@ -66,7 +61,7 @@ export function readOptions(node, {allowDeferred = false} = {}) {
                 found.add(value.trim());
             }
         }
-        if (tag === 'sys_fields') {
+        if (tag === 'sysFields') {
             for (const field of contract.sysFields) {
                 const value = spec[field];
                 if (typeof value === 'boolean') continue;
@@ -78,7 +73,7 @@ export function readOptions(node, {allowDeferred = false} = {}) {
                 if (field === 'id' && own(value, 'type') && value.type !== 'uuid') error(path, 'id.type must be uuid');
             }
         }
-        if (tag === 'dynamic_fields' && spec.source != null) error(path, 'table dynamic_fields accepts templates, not source');
+        if (tag === 'df' && spec.source != null) error(path, 'table df accepts templates, not source');
         if (spec.rules?.some(rule => !nonempty(rule))) error(path, 'rules must contain nonempty references');
         if (spec.handlers) {
             for (const [version, handler] of Object.entries(spec.handlers)) {

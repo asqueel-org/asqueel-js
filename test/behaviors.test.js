@@ -1,12 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import oracle from './fixtures/behaviors.json' with {type: 'json'};
 import {behaviorsModel, runBehaviorCase} from './behaviors-runner.js';
 import {nativeSQLite} from './native-sqlite.js';
 import {migrateSQLite} from '../src/sqlite.js';
 
 test('hierarchy/counter full model and migration match independent Python', () => {
-    assert.deepEqual(behaviorsModel.toJSON(), oracle.model);
+    assertSameSource(behaviorsModel, oracle.source);
     assert.deepEqual(behaviorsModel.toMigration(), oracle.desired);
 });
 for (const entry of oracle.cases) test(`Python hierarchy/counter: ${entry.name}`, async () => {

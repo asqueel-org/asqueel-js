@@ -1,11 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import {nativeSQLite} from './native-sqlite.js';
 import {importsModel, runImportCase} from './import-runner.js';
 import oracle from './fixtures/imports.json' with {type:'json'};
 
 test('Import model and migrate match independently declared Python', () => {
-    assert.deepEqual(importsModel.toJSON(), oracle.model);
+    assertSameSource(importsModel, oracle.source);
     assert.deepEqual(importsModel.toMigration(), oracle.desired);
 });
 for (const entry of oracle.cases) test(`Import SQL and results match Python: ${entry.name}`, async () => {

@@ -1,5 +1,5 @@
 {
-  "coreCommit": "02ca1e7c8a66dc9140bc76baf3185c1283cae9f8",
+  "coreCommit": "f5185ad050adc49e8773007d078133a07ee07f36",
   "coreVersion": "0.7.0",
   "sources": [
     "application_table.py:sql_insert/adaptRecord/_assign_keys",

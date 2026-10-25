@@ -29,7 +29,7 @@ for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features
             cases.push({name: c.name, request: c.request, compiled: sql, rows: await compiled.execute(c.request),
                 ...(name === 'callbacks' ? {events: calls} : {})});
         }
-        result[name] = {model: model.toJSON(), desired: model.toMigration(), cases, ...(oracle.ddl ? {ddl: oracle.ddl} : {})};
+        result[name] = {source: model.toTytx(), desired: model.toMigration(), cases, ...(oracle.ddl ? {ddl: oracle.ddl} : {})};
         if (name === 'callbacks') result[name].cache = callbackCacheProbe(model);
         if (oracle.errors) result[name].errors = oracle.errors.map(({name, request}) => {
             let rejected = false;

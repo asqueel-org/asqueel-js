@@ -8,12 +8,12 @@ test('container and declaration identity, input ownership and restored contribut
     const model = new SqlBuilder(), db = model.root.db({name: 'test'}), pkg = db.packages().package({name: 'app'});
     const table = pkg.table({name: 'item'}), options = table.options();
     const payload = {id: {name_long: 'ID'}};
-    const fields = options.sys_fields(payload);
+    const fields = options.sysFields(payload);
     payload.id.name_long = 'external mutation';
     assert.equal(fields.getAttr('id').name_long, 'ID');
     assert.equal(db.packages(), db.packages());
     assert.equal(pkg.table({name: 'item'}), table);
-    assert.equal(options.sys_fields(), fields);
+    assert.equal(options.sysFields(), fields);
     model.contribution('outer', () => {
         table.column({name: 'name', dtype: 'T'});
         assert.throws(() => model.contribution('inner', () => { throw new Error('stop'); }), /stop/);
@@ -35,22 +35,22 @@ test('container and declaration identity, input ownership and restored contribut
 test('semantic reset and disabled-field metadata survive worker serialization', () => {
     const model = defineModel(root => {
         const opts = root.db({name: 'test'}).packages().package({name: 'app'}).table({name: 'item'}).options();
-        opts.sys_fields({ins: {name_long: 'Created'}});
+        opts.sysFields({ins: {name_long: 'Created'}});
     });
     const opts = model.node('db.packages.app.tables.item.options');
-    model.contribution('disable', () => opts.sys_fields({ins: false}));
+    model.contribution('disable', () => opts.sysFields({ins: false}));
     const restored = modelFromQuerySource(querySource(model), SqlBuilder);
     assert.deepEqual(restored.toSource(), model.toSource());
-    restored.contribution('enable', () => restored.node('db.packages.app.tables.item.options').sys_fields({ins: true}));
-    assert.deepEqual(restored.node('db.packages.app.tables.item.options.sys_fields').getAttr('ins'), {name_long: 'Created'});
-    const reset = defineModel(root => root.db({name: 'test'}).packages().package({name: 'app'}).table({name: 'item'}).options().reset({name: 'sys_fields'}));
+    restored.contribution('enable', () => restored.node('db.packages.app.tables.item.options').sysFields({ins: true}));
+    assert.deepEqual(restored.node('db.packages.app.tables.item.options.sysFields').getAttr('ins'), {name_long: 'Created'});
+    const reset = defineModel(root => root.db({name: 'test'}).packages().package({name: 'app'}).table({name: 'item'}).options().reset({name: 'sysFields'}));
     const serialized = modelFromQuerySource(querySource(reset), SqlBuilder);
     assert.deepEqual(composeModels(model, serialized).toSource(), composeModels(model, reset).toSource());
 });
 
 test('group declarations and explicit formulas survive worker serialization', () => {
     const model=defineModel(groupedItems),restored=modelFromQuerySource(querySource(model),SqlBuilder);
-    assert.deepEqual(restored.toSource(),model.toSource());assert.deepEqual(restored.toJSON(),model.toJSON());
+    assert.deepEqual(restored.toSource(),model.toSource());assert.deepEqual(restored.toMigration(),model.toMigration());
     const table=model.node('db.packages.app.tables.item'),group=table.colgroup('details');
     assert.equal(group.column('city'),model.node('db.packages.app.tables.item.columns.city'));
     assert.throws(()=>table.subtable({name:'retired'}));

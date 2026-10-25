@@ -1,10 +1,11 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {importsModel, runImportCase} from '../test/import-runner.js';
 import {equal} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import oracle from '../test/fixtures/imports.json' with {type: 'json'};
 
 export async function importChecks() {
-    if (!equal(importsModel.toJSON(), oracle.model) || !equal(importsModel.toMigration(), oracle.desired))
+    if (!equal(sourceRows(importsModel.toTytx()), sourceRows(oracle.source)) || !equal(importsModel.toMigration(), oracle.desired))
         throw new Error('Modello import diverso da Python');
     const checks = [];
     let sample;

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import oracle from './fixtures/queries.json' with {type: 'json'};
 import {defineModel, SqlBuilder} from '../src/index.js';
 import {browserQueries} from '../examples/browser-queries.js';
@@ -10,7 +11,7 @@ import {queryRuntimeChecks} from './query-runtime-checks.js';
 
 const model = defineModel(browserQueries);
 test('query model migration matches Python and source survives worker serialization', () => {
-    assert.deepEqual(model.toJSON(), oracle.model);
+    assertSameSource(model, oracle.source);
     assert.deepEqual(model.toMigration(), oracle.desired);
     assert.deepEqual(modelFromQuerySource(querySource(model), SqlBuilder).toMigration(), oracle.desired);
 });

@@ -2,6 +2,7 @@ import {parseDateExpression} from '@gramlot/gramlot';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {queryPeriods} from '../examples/query-periods.js';
 import oracle from '../test/fixtures/periods.json' with {type: 'json'};
 
@@ -10,7 +11,7 @@ export async function periodChecks() {
     const model = defineModel(queryPeriods);
     let db = await openBrowserSQLite(id);
     try {
-        if (!equal(model.toJSON(), oracle.model) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello periodi diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello periodi diverso da Python');
         await migrateSQLite(db, model.toMigration());
         checks.push('Modello periodi e JSON migrate identici a Python');
         const query = model.queries(db, {parseDateExpression});

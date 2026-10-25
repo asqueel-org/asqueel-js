@@ -10,10 +10,16 @@ import math
 from genro_bag import Bag
 from genro_builders import SourceBag
 from genro_tytx import from_tytx, to_tytx
-from asqueel import SqlBuilder, SqlDatabaseConfig, resolve_model, SqlMigrationRenderer, AsqueelDb
-from asqueel.configuration import _compose_source
+from asqueel import SqlBuilder, SqlDatabaseConfig, AsqueelDb
+from asqueel.builder import SqlSourceBag
+from asqueel.configuration import _compose_source, compose_recipe
 
 FORMAT = 'asqueel-transfer'
+
+
+def resolve_model(builder):
+    """The live DbModel of a recipe; building the database opens no connection."""
+    return AsqueelDb(builder).model
 
 
 def source_builder(payload, configuration=False):
@@ -32,7 +38,7 @@ def export_transfer(builder, records, *, tables=None, packages=None):
 
     SQLite projection keeps explicit SQL names/prefixes and maps schemas to main.
     Missing relation targets are errors, never silently removed or downloaded.
-    Connections and Python table classes are excluded and reported.
+    Connections are excluded and reported.
     """
     wanted = None if tables is None else set(tables)
     pkgs = None if packages is None else set(packages)
@@ -47,7 +53,7 @@ def export_transfer(builder, records, *, tables=None, packages=None):
     included_packages = (available_packages if pkgs is None else pkgs) if wanted is None else {t.split('.')[0] for t in selected} | (pkgs or set())
     omitted = []
     def copy_source(bag, package=None, path=''):
-        result = SourceBag(builder=None)
+        result = SqlSourceBag(builder=None)
         for n in bag:
             tag = n.node_tag
             attrs = deepcopy(dict(n.attr))
@@ -64,8 +70,6 @@ def export_transfer(builder, records, *, tables=None, packages=None):
                 if missing: raise ValueError(f'{pkg}: missing required packages {sorted(missing)}')
             if tag == 'connection':
                 omitted.append(nodepath); continue
-            if 'x_table_class' in attrs:
-                del attrs['x_table_class']; omitted.append(nodepath + '.x_table_class')
             if tag == 'db': attrs['implementation'] = 'sqlite'
             if tag == 'package' or 'sqlschema' in attrs: attrs['sqlschema'] = 'main'
             # Runtime class objects/callables/resolvers must not cross this boundary.
@@ -82,7 +86,7 @@ def export_transfer(builder, records, *, tables=None, packages=None):
     sqlnames = [t.sqlname.lower() for t in model.tables.values()]
     if len(sqlnames) != len(set(sqlnames)):
         raise ValueError('SQLite table name collision after schema projection')
-    SqlMigrationRenderer(portable).render()
+    compose_recipe(portable).render(mode='migration', foreignKeys=True)
     if set(records) - selected:
         raise ValueError(f'Data outside source selection: {sorted(set(records) - selected)}')
     data = {}
@@ -163,7 +167,7 @@ def read_transfer(bundle):
             if node.node_tag == 'package': packages.add(node.attr['name'])
             if node.node_tag == 'requires':
                 names = node.attr['packages']; required.update([names] if isinstance(names, str) else names)
-            if node.node_tag == 'connection' or 'x_table_class' in node.attr:
+            if node.node_tag == 'connection':
                 raise ValueError('Runtime declarations cannot be transferred')
             value = node.get_value(static=True)
             if isinstance(value, Bag): check_source(value)
@@ -172,7 +176,7 @@ def read_transfer(bundle):
     if required - packages: raise ValueError('Missing required package in source selection')
     builder = source_builder(bundle['source'])
     model = resolve_model(builder)
-    if model.db.attributes['implementation'] != 'sqlite': raise ValueError('Expected SQLite source')
+    if model.implementation != 'sqlite': raise ValueError('Expected SQLite source')
     names = [t.sqlname.lower() for t in model.tables.values()]
     if len(names) != len(set(names)): raise ValueError('SQLite table name collision')
     if any(t.sqlschema != 'main' for t in model.tables.values()): raise ValueError('Expected SQLite main schema')

@@ -7,7 +7,7 @@ import tempfile
 
 from python_reference import ROOT
 
-from asqueel import SqlMigrationRenderer
+from python_model import migration as render_migration
 from asqueel_migration import SqlMigrator, StructureValidator
 from asqueel_migration.adapters.sqlite_adapter import SqliteDatabase
 from asqueel_migration.readers.sqlite_reader import SqliteReader
@@ -20,7 +20,7 @@ def sqlite_oracle():
         path = str(Path(directory) / "browser.db")
         db = SqliteDatabase({"dbname": path}, application_schemas=["main"])
         for version in (1, 2):
-            desired = SqlMigrationRenderer(build(version)).render()
+            desired = render_migration(build(version))
             migration = SqlMigrator(db, structure=desired)
             migration.prepareMigrationCommands()
             sql = migration.getChanges()

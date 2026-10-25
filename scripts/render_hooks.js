@@ -9,5 +9,5 @@ for (const input of inputs) {
     try { cases.push({name: input.name, input, expected: await runHookCase(adapter, input)}); }
     finally { await adapter.close(); }
 }
-process.stdout.write(JSON.stringify({model: hooksModel.toJSON(), desired: hooksModel.toMigration(),
+process.stdout.write(JSON.stringify({source: hooksModel.toTytx(), desired: hooksModel.toMigration(),
     ids: oracle.ids.map(v => ({...v, expected: legacy22(v.milliseconds, Uint8Array.from(v.bytes))})), cases}));

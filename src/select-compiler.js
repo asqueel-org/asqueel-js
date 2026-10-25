@@ -43,10 +43,12 @@ class Context {
     }
     field(table, alias, name) {
         if (this.manyColumns.has(name) && table === this.table) return this.compileMany(this.manyColumns.get(name));
-        if (name === 'pkey') name = table.a.x_logical_pkey || table.a.pkey;
+        if (name === 'pkey') name = table.a.pkey;
+        // Python getFieldAlias reads virtual_columns first: the formulaColumn_<x>() objects are built here.
+        const dynamic = this.methods.columns(table);
         const column = table.columns.get(name);
         if (column) return `${q(alias)}.${q(columnName(column))}`;
-        const virtual = table.virtual.get(name) ?? table.composites.get(name) ?? this.methods.columns(table).get(name.toLowerCase());
+        const virtual = table.virtual.get(name) ?? table.composites.get(name) ?? dynamic.get(name.toLowerCase());
         if (!virtual) throw new Error(`Colonna sconosciuta: ${table.key}.${name}`);
         const key = `${table.key}.${name}`;
         if (this.active.has(key)) throw new Error(`Formula o alias ciclico: ${key}`);
@@ -284,9 +286,9 @@ class Context {
             if (table.relations.get(name)?.kind === 'virtual') throw new Error('Navigazione virtualRelation fuori perimetro query');
             const owner = table.columns.get(name) || table.composites.get(name);
             const relation = owner?.children.find(n => n.tag === 'relation');
-            if (!relation || relation.a.x_weak) throw new Error(`Relazione diretta non supportata: ${table.key}.${name}`);
+            if (!relation) throw new Error(`Relazione diretta non supportata: ${table.key}.${name}`);
             if (['join_on', 'cnd', 'between'].some(k => relation.a[k])) throw new Error('Condizione di relazione personalizzata non ancora supportata');
-            const targetParts = relation.a.to.split('.'), target = this.tables.get(targetParts.slice(0, 2).join('.'));
+            const targetParts = relation.a.related_column.split('.'), target = this.tables.get(targetParts.slice(0, 2).join('.'));
             if (!target) throw new Error('Target della relazione sconosciuto');
             const remoteName = targetParts[2] ?? target.a.pkey;
             const remote = names(target.composites.get(remoteName)?.a.columns ?? remoteName);
@@ -390,7 +392,7 @@ function selectPlan(context, request) {
     columns = split(columns).map(c => context.expandMany(c, table, true)).join(',');
     let ordering = expandTemplates(request.order_by ?? (!aggregate && !context.parent ? table.a.order_by : null));
     if (count) { ordering = null; columns = group || (distinct ? columns : 'count(*) AS "gnr_row_count"'); }
-    else if (addPkeyColumn && table.a.pkey && !aggregate) columns += `,$${table.a.x_logical_pkey || table.a.pkey} AS "pkey"`;
+    else if (addPkeyColumn && table.a.pkey && !aggregate) columns += `,$${table.a.pkey} AS "pkey"`;
     if (table.a.logicalDeletionField && request.exclude_logical_deleted === 'mark' && !aggregate && !count) columns += `,$${table.a.logicalDeletionField} AS "_isdeleted"`;
     // Field-valued WHERE parameters retain their original values in compiled kwargs, as in Python.
     let where = context.period.expand(expandInRange(expandTemplates(request.where)));

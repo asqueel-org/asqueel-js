@@ -546,7 +546,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": {
               "type": "uuid"
@@ -558,7 +558,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": {
               "name_long": "Identifier"
@@ -570,7 +570,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": {
               "indexed": true,
@@ -583,7 +583,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": {
               "name_long": "Code"
@@ -674,7 +674,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -688,7 +688,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "ins": false,
             "enabled": false
@@ -699,7 +699,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "ins": true,
             "enabled": true
@@ -789,7 +789,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -803,7 +803,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "ins": false
           },
@@ -813,7 +813,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "ins": {
               "name_long": "Creation"
@@ -904,7 +904,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "draft": true
@@ -917,7 +917,7 @@
           "parent": "db.packages.app.tables.item.options",
           "tag": "reset",
           "attributes": {
-            "name": "sys_fields"
+            "name": "sysFields"
           },
           "contribution": "later",
           "reject": false,
@@ -925,7 +925,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false
           },
@@ -1014,7 +1014,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "draft": true
@@ -1027,7 +1027,7 @@
           "parent": "db.packages.app.tables.item.options",
           "tag": "reset",
           "attributes": {
-            "name": "sys_fields"
+            "name": "sysFields"
           },
           "contribution": "later",
           "reject": false,
@@ -2369,7 +2369,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "draft": true,
@@ -2381,7 +2381,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "user_ins": false
           },
@@ -2470,7 +2470,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "templates": {
               "one": {
@@ -2484,7 +2484,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "templates": {
               "two": {
@@ -2498,7 +2498,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "templates": {
               "one": {
@@ -2701,7 +2701,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false,
             "records": {
@@ -2716,7 +2716,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false,
             "records": {
@@ -2731,7 +2731,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false,
             "records": {
@@ -2746,7 +2746,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false,
             "records": {
@@ -3190,7 +3190,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -3277,7 +3277,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "ins": {
               "name_long": "Created"
@@ -3380,7 +3380,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -3447,7 +3447,7 @@
           "parent": "db.packages.app.tables.item.options",
           "tag": "reset",
           "attributes": {
-            "name": "sys_fields"
+            "name": "sysFields"
           },
           "contribution": "main",
           "reject": false,
@@ -3546,7 +3546,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -3613,7 +3613,7 @@
           "parent": "db.packages.app.tables.item.options",
           "tag": "reset",
           "attributes": {
-            "name": "sys_fields"
+            "name": "sysFields"
           },
           "contribution": "main",
           "reject": false,
@@ -3621,7 +3621,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false
           },
@@ -3722,7 +3722,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -3789,7 +3789,7 @@
           "parent": "db.packages.app.tables.item.options",
           "tag": "reset",
           "attributes": {
-            "name": "sys_fields"
+            "name": "sysFields"
           },
           "contribution": "main",
           "reject": false,
@@ -7296,24 +7296,26 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {},
           "contribution": "main",
           "reject": false,
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           },
           "contribution": "main",
           "reject": false,
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {},
           "contribution": "main",
@@ -7321,7 +7323,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -7332,7 +7334,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -7343,7 +7345,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "colgroup",
           "attributes": {
             "name": "details",
@@ -7354,7 +7356,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item.colgroup_details",
+          "parent": "db.packages.main.tables.item.colgroup_details",
           "tag": "column",
           "attributes": {
             "name": "name"
@@ -7364,7 +7366,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "subtable",
           "attributes": {
             "name": "active",
@@ -7506,7 +7508,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -7667,7 +7669,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -7814,7 +7816,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -7994,7 +7996,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8152,7 +8154,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8301,7 +8303,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8484,7 +8486,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8675,7 +8677,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8822,7 +8824,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -8992,7 +8994,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9171,7 +9173,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9332,7 +9334,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9501,7 +9503,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9661,7 +9663,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9819,7 +9821,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -9978,7 +9980,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10124,7 +10126,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10273,7 +10275,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10420,7 +10422,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10568,7 +10570,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10716,7 +10718,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -10863,7 +10865,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11010,7 +11012,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11168,7 +11170,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11316,7 +11318,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11464,7 +11466,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11808,7 +11810,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11830,7 +11832,7 @@
           "parent": "db.packages.app.tables.item.columns.other_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "name": "other"
           },
           "contribution": "main",
@@ -11977,7 +11979,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -11997,10 +11999,11 @@
         },
         {
           "parent": "db.packages.app.tables.item.columns.weak_id",
-          "tag": "weak_relation",
+          "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
-            "relation_name": "weak_items"
+            "related_column": "app.customer.id",
+            "relation_name": "weak_items",
+            "foreign_key": false
           },
           "contribution": "main",
           "reject": false,
@@ -12157,7 +12160,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -12190,7 +12193,7 @@
           "parent": "db.packages.app.tables.item.composites.customer_key",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id"
+            "related_column": "app.customer.id"
           },
           "contribution": "main",
           "reject": false,
@@ -12336,7 +12339,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -12539,7 +12542,7 @@
           "parent": "db.packages.app.tables.item.columns.customer_id",
           "tag": "relation",
           "attributes": {
-            "to": "app.customer.id",
+            "related_column": "app.customer.id",
             "relation_name": "items"
           },
           "contribution": "main",
@@ -12592,24 +12595,26 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {},
           "contribution": "main",
           "reject": false,
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           },
           "contribution": "main",
           "reject": false,
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {},
           "contribution": "main",
@@ -12617,7 +12622,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -12628,7 +12633,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -12639,7 +12644,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "virtualRelation",
           "attributes": {
             "name": "self",
@@ -12651,7 +12656,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "other",
@@ -12662,7 +12667,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.other",
+          "parent": "db.packages.main.tables.other",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -12673,7 +12678,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "other_id",
@@ -12684,10 +12689,10 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.item.columns.other_id",
+          "parent": "db.packages.main.tables.item.columns.other_id",
           "tag": "relation",
           "attributes": {
-            "to": "main.other.id",
+            "related_column": "main.other.id",
             "foreign_key": true,
             "relation_name": "items"
           },
@@ -12696,7 +12701,7 @@
           "knownPythonMutation": false
         },
         {
-          "parent": "db.schemas.main.tables.other",
+          "parent": "db.packages.main.tables.other",
           "tag": "virtualRelation",
           "attributes": {
             "name": "selected_items",
@@ -12765,7 +12770,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -12827,7 +12832,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "enabled": false
           }
@@ -12891,7 +12896,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "draft": true,
             "syscode": true
@@ -12956,7 +12961,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "draft": true,
             "syscode": true,
@@ -13022,7 +13027,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -13090,7 +13095,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "ins": {
@@ -13159,7 +13164,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "full_update",
+          "tag": "fullUpd",
           "attributes": {
             "field": "changed"
           }
@@ -13223,7 +13228,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "full_update",
+          "tag": "fullUpd",
           "attributes": {
             "field": "changed",
             "enabled": false
@@ -13548,7 +13553,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "templates": {
               "card": "a"
@@ -13614,7 +13619,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "templates": {
               "card": "a"
@@ -13681,7 +13686,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position",
             "scope": "group"
@@ -13746,7 +13751,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position",
             "scope": "group",
@@ -14990,7 +14995,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false
           }
@@ -15054,7 +15059,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "system_records",
+          "tag": "sysrecords",
           "attributes": {
             "enabled": false
           }
@@ -15618,7 +15623,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -15638,24 +15643,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "sqlname": "actual",
-            "name": "storage"
+            "name": "storage",
+            "sqlschema": "actual",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.storage",
+          "parent": "db.packages.storage",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.storage.tables",
+          "parent": "db.packages.storage.tables",
           "tag": "table",
           "attributes": {
             "sqlname": "custom_table",
@@ -15664,12 +15670,12 @@
           }
         },
         {
-          "parent": "db.schemas.storage.tables.item",
+          "parent": "db.packages.storage.tables.item",
           "tag": "columns",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.storage.tables.item.columns",
+          "parent": "db.packages.storage.tables.item.columns",
           "tag": "column",
           "attributes": {
             "dtype": "L",
@@ -15678,13 +15684,13 @@
           }
         },
         {
-          "parent": "db.schemas.storage.tables.item",
+          "parent": "db.packages.storage.tables.item",
           "tag": "options",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.storage.tables.item.options",
-          "tag": "full_update",
+          "parent": "db.packages.storage.tables.item.options",
+          "tag": "fullUpd",
           "attributes": {}
         }
       ]
@@ -15764,9 +15770,8 @@
           "parent": "db.packages.app.tables.middle.columns.base_id",
           "tag": "relation",
           "attributes": {
-            "to": "base.id",
-            "foreign_key": true,
-            "x_canonical": true
+            "related_column": "base.id",
+            "foreign_key": true
           }
         },
         {
@@ -15793,9 +15798,8 @@
           "tag": "relation",
           "attributes": {
             "onDelete_sql": "setnull",
-            "to": "middle.base_id",
-            "foreign_key": true,
-            "x_canonical": true
+            "related_column": "middle.base_id",
+            "foreign_key": true
           }
         }
       ]
@@ -15874,9 +15878,7 @@
           "tag": "relation",
           "attributes": {
             "foreign_key": false,
-            "x_weak": true,
-            "to": "target.code",
-            "x_canonical": true
+            "related_column": "target.code"
           }
         }
       ]
@@ -15925,7 +15927,7 @@
         },
         {
           "parent": "db.packages.app.tables.document.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -16012,7 +16014,7 @@
         },
         {
           "parent": "db.packages.app.tables.document.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -16095,7 +16097,7 @@
         },
         {
           "parent": "db.packages.app.tables.branch.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -16116,7 +16118,7 @@
         },
         {
           "parent": "db.packages.app.tables.branch.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {}
         }
       ]
@@ -16216,9 +16218,8 @@
           "parent": "db.packages.app.tables.detail.columns.master_id",
           "tag": "relation",
           "attributes": {
-            "to": "master.id",
-            "foreign_key": true,
-            "x_canonical": true
+            "related_column": "master.id",
+            "foreign_key": true
           }
         },
         {
@@ -16228,7 +16229,7 @@
         },
         {
           "parent": "db.packages.app.tables.detail.options",
-          "tag": "relative_index",
+          "tag": "relidx",
           "attributes": {
             "field": "sequence",
             "relation": "@master_id"
@@ -16251,36 +16252,38 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "app"
+            "name": "app",
+            "sqlschema": "app",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.app",
+          "parent": "db.packages.app",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.app.tables",
+          "parent": "db.packages.app.tables",
           "tag": "table",
           "attributes": {
             "name": "item"
           }
         },
         {
-          "parent": "db.schemas.app.tables.item",
+          "parent": "db.packages.app.tables.item",
           "tag": "options",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.app.tables.item.options",
-          "tag": "sys_fields",
+          "parent": "db.packages.app.tables.item.options",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -16428,7 +16431,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.columns.details",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "source": "item.fields"
           }
@@ -16440,7 +16443,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {
             "id": false,
             "draft": true
@@ -16566,9 +16569,8 @@
           "parent": "db.packages.app.tables.owner.composites.pair",
           "tag": "relation",
           "attributes": {
-            "to": "target.pair",
-            "foreign_key": true,
-            "x_canonical": true
+            "related_column": "target.pair",
+            "foreign_key": true
           }
         }
       ]
@@ -18002,7 +18004,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.columns.name",
-          "tag": "dynamic_fields",
+          "tag": "df",
           "attributes": {
             "source": "schema.fields"
           }
@@ -18086,7 +18088,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id"
+            "related_column": "target.id"
           }
         }
       ]
@@ -18168,7 +18170,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "foreign_key": false
           }
         }
@@ -18251,12 +18253,12 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "relation_name": "items",
             "one_name": "Parent",
             "many_name": "Children",
             "one_one": "*",
-            "case_insensitive": true,
+            "insensitive": true,
             "eager_one": true,
             "resolver_kwargs": {
               "cache": 1
@@ -18342,7 +18344,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "cnd": "$id=:var_id",
             "join_on": {
               "id": "id"
@@ -18428,7 +18430,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "onDelete": "setnull:message",
             "onDelete_sql": "sn",
             "onUpdate": "cascade",
@@ -18514,7 +18516,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "onDelete_sql": "bad"
           }
         }
@@ -18597,7 +18599,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id",
+            "related_column": "target.id",
             "indexed": false
           }
         }
@@ -18680,7 +18682,7 @@
           "parent": "db.packages.app.tables.item.columns.target_id",
           "tag": "relation",
           "attributes": {
-            "to": "target.id"
+            "related_column": "target.id"
           }
         },
         {
@@ -18767,7 +18769,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -18835,7 +18837,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -18906,7 +18908,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -18982,7 +18984,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -19053,7 +19055,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -19065,7 +19067,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {}
         },
         {
@@ -19958,23 +19960,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -19982,7 +19986,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -19990,7 +19994,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "value",
@@ -20017,23 +20021,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20041,7 +20047,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20049,7 +20055,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "value",
@@ -20074,23 +20080,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20098,7 +20106,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20106,7 +20114,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "value",
@@ -20133,23 +20141,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20157,7 +20167,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20165,7 +20175,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "target",
@@ -20173,7 +20183,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20181,7 +20191,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "code",
@@ -20189,7 +20199,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "target_code",
@@ -20197,10 +20207,10 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item.columns.target_code",
+          "parent": "db.packages.main.tables.item.columns.target_code",
           "tag": "relation",
           "attributes": {
-            "to": "main.target.code",
+            "related_column": "main.target.code",
             "foreign_key": true
           }
         }
@@ -20221,23 +20231,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20245,7 +20257,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20253,7 +20265,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "formulaColumn",
           "attributes": {
             "name": "virtual",
@@ -20261,7 +20273,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "aliasColumn",
           "attributes": {
             "name": "copy",
@@ -20566,23 +20578,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20590,7 +20604,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20598,7 +20612,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "target",
@@ -20606,7 +20620,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20614,7 +20628,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "code",
@@ -20622,7 +20636,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "target_code",
@@ -20630,10 +20644,10 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item.columns.target_code",
+          "parent": "db.packages.main.tables.item.columns.target_code",
           "tag": "relation",
           "attributes": {
-            "to": "main.target.code",
+            "related_column": "main.target.code",
             "foreign_key": false
           }
         }
@@ -20654,23 +20668,25 @@
         },
         {
           "parent": "db",
-          "tag": "schemas",
+          "tag": "packages",
           "attributes": {}
         },
         {
-          "parent": "db.schemas",
-          "tag": "schema",
+          "parent": "db.packages",
+          "tag": "package",
           "attributes": {
-            "name": "main"
+            "name": "main",
+            "sqlschema": "main",
+            "sqlprefix": false
           }
         },
         {
-          "parent": "db.schemas.main",
+          "parent": "db.packages.main",
           "tag": "tables",
           "attributes": {}
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "item",
@@ -20678,7 +20694,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20686,7 +20702,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables",
+          "parent": "db.packages.main.tables",
           "tag": "table",
           "attributes": {
             "name": "target",
@@ -20694,7 +20710,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "id",
@@ -20702,7 +20718,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.target",
+          "parent": "db.packages.main.tables.target",
           "tag": "column",
           "attributes": {
             "name": "code",
@@ -20710,7 +20726,7 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item",
+          "parent": "db.packages.main.tables.item",
           "tag": "column",
           "attributes": {
             "name": "target_code",
@@ -20718,12 +20734,11 @@
           }
         },
         {
-          "parent": "db.schemas.main.tables.item.columns.target_code",
+          "parent": "db.packages.main.tables.item.columns.target_code",
           "tag": "relation",
           "attributes": {
-            "to": "main.target.code",
+            "related_column": "main.target.code",
             "foreign_key": false,
-            "x_weak": true,
             "deferred": true
           }
         }
@@ -20787,7 +20802,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -20799,7 +20814,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -20873,7 +20888,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -20886,7 +20901,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -20960,7 +20975,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -20972,7 +20987,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position",
             "scope": "ancestor_id"
@@ -21048,7 +21063,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21061,7 +21076,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21091,7 +21106,7 @@
         },
         {
           "parent": "db.packages.app.tables.master.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -21155,7 +21170,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21168,7 +21183,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21198,7 +21213,7 @@
         },
         {
           "parent": "db.packages.app.tables.master.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -21262,7 +21277,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21275,7 +21290,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21367,7 +21382,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21380,7 +21395,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21472,7 +21487,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21485,7 +21500,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21578,7 +21593,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21591,7 +21606,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21682,7 +21697,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21695,7 +21710,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21770,7 +21785,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21783,7 +21798,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21876,7 +21891,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -21889,7 +21904,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -21989,7 +22004,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -22002,7 +22017,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {
             "field": "position"
           }
@@ -22039,7 +22054,7 @@
         },
         {
           "parent": "db.packages.other.tables.master.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         }
       ]
@@ -22110,7 +22125,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "sys_fields",
+          "tag": "sysFields",
           "attributes": {}
         },
         {
@@ -22122,7 +22137,7 @@
         },
         {
           "parent": "db.packages.app.tables.item.options",
-          "tag": "auto_counter",
+          "tag": "counter",
           "attributes": {}
         },
         {

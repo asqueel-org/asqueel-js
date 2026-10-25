@@ -21,6 +21,6 @@ export function queryFeatures(root) {
     note.column({name: 'id', dtype: 'I'});
     note.column({name: 'doc', dtype: 'I'});
     note.column({name: 'pos', dtype: 'I'});
-    note.compositeColumn({name: 'line_key', columns: 'doc,pos'}).relation({to: 'line.doc_pos'});
+    note.compositeColumn({name: 'line_key', columns: 'doc,pos'}).relation({related_column: 'line.doc_pos'});
     note.aliasColumn({name: 'body', relation_path: '@line_key.body'});
 }

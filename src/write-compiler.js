@@ -23,12 +23,15 @@ function required(data, name) {
     if (!own(data, name)) throw new Error(`Componente della chiave mancante: ${name}`);
     return data[name];
 }
-export function prepareRecord(table, values) {
+export function prepareRecord(table, values, methods = null) {
+    // Python virtual_columns: the declared ones plus the formulaColumn_<x>() objects.
+    const dynamic = methods ? methods.columns(table) : new Map();
     const data = Object.create(null);
     for (const [name, value] of Object.entries(record(values))) {
         const column = table.columns.get(name);
         if (column && own(column.a, 'sql_generatedExpression')) throw new Error(`Colonna generata non assegnabile: ${table.key}.${name}`);
-        if (name.startsWith('@') || name === 'pkey' || table.virtual.has(name) || table.composites.has(name)) continue;
+        if (name.startsWith('@') || name === 'pkey' || table.virtual.has(name) || dynamic.has(name.toLowerCase())
+            || table.composites.has(name)) continue;
         data[name] = value;
     }
     for (const [name, column] of table.columns) if (own(column.a, 'sql_value') && !own(data, name)) data[name] = null;
@@ -85,9 +88,9 @@ function returning(table, data, insert) {
         || insert && data[name] == null && (own(a, 'sql_default') || ['serial', 'serial4'].includes(a.dtype)));
     return selected.length ? ' RETURNING ' + selected.map(([name, column]) => `${q(columnName(column))} AS ${q(name)}`).join(',') : '';
 }
-export function compileWrite(table, operation, values, {pkey, old_record, environment = {}, ignore_partition = false, returningRows = true} = {}) {
+export function compileWrite(table, operation, values, {pkey, old_record, environment = {}, ignore_partition = false, returningRows = true, methods = null} = {}) {
     const policy = partition(table, environment, ignore_partition);
-    const data = operation === 'delete' ? Object.create(null) : prepareRecord(table, values);
+    const data = operation === 'delete' ? Object.create(null) : prepareRecord(table, values, methods);
     let sql;
     if (operation === 'insert') {
         guardPartition(table, data, policy, true);

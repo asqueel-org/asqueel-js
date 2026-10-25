@@ -404,7 +404,7 @@
       }
     ],
     "fails": true,
-    "error": "option record_hash"
+    "error": "option fullUpd"
   },
   {
     "name": "whole_transaction_rolls_back",

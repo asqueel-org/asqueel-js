@@ -49,7 +49,7 @@ export class PlaygroundPage extends Page {
         const title = header.div();
         title.p('ASQUEEL JS / GRAMLOT', {class: 'eyebrow'});
         title.h1({models: 'Il modello, per intero.', sqlite: 'Dal modello al database.', queries: 'Dati locali, query verificabili.', transfer: 'Il lavoro continua offline.'}[name]);
-        title.p('Modelli JavaScript · riferimento Python 0.6.1 · SQLite persistito su IndexedDB');
+        title.p('Modelli JavaScript · riferimento Python 0.7.0 · f5185ad · SQLite persistito su IndexedDB');
         if (name !== 'transfer') {
             const toolbar = shell.div({class: 'toolbar'});
             toolbar.html_label('Esempio', {for: 'example'});

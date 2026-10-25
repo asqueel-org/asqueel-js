@@ -7,4 +7,4 @@ for (const input of inputs) {
     try {cases.push({name:input.name, input, expected: await runImportCase(adapter, input)});}
     finally {await adapter.close();}
 }
-process.stdout.write(JSON.stringify({model:importsModel.toJSON(), desired:importsModel.toMigration(), cases}));
+process.stdout.write(JSON.stringify({source: importsModel.toTytx(), desired:importsModel.toMigration(), cases}));

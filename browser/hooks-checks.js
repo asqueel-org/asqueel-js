@@ -1,11 +1,12 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {hooksModel, runHookCase} from '../test/hooks-runner.js';
 import {equal} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {legacy22} from '../src/write-runtime.js';
 import oracle from '../test/fixtures/hooks.json' with {type: 'json'};
 
 export async function hooksChecks() {
-    if (!equal(hooksModel.toJSON(), oracle.model) || !equal(hooksModel.toMigration(), oracle.desired))
+    if (!equal(sourceRows(hooksModel.toTytx()), sourceRows(oracle.source)) || !equal(hooksModel.toMigration(), oracle.desired))
         throw new Error('Modello sys_fields/hook diverso da Python');
     for (const example of oracle.ids) if (legacy22(example.milliseconds, Uint8Array.from(example.bytes)) !== example.expected)
         throw new Error('Algoritmo ID diverso da Python');

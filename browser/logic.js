@@ -1,3 +1,4 @@
+import {sourceRows} from '../src/source-bag.js';
 import {transferPanel} from './transfer-panel.js';
 import {defineModel} from '../src/index.js';
 import {examples, modelExamples, diff} from './recipes.js';
@@ -93,12 +94,13 @@ export class Logic {
         try {
             const key = this.view.get('example');
             const model = defineModel(new Function('root', this.view.get('source')));
-            const structure = model.toMigration(), full = model.toJSON(), expectedModel = modelExamples[key]?.model;
+            const structure = model.toMigration(), full = sourceRows(model.toTytx());
+            const expectedSource = modelExamples[key]?.source ? sourceRows(modelExamples[key].source) : null;
             this.view.set('modelJSON', JSON.stringify(full, null, 2));
-            const modelDelta = expectedModel ? diff(full, expectedModel) : [];
-            this.view.set('modelStatus', expectedModel
-                ? modelDelta.length ? `${modelDelta.length} differenze nel modello completo` : 'Modello completo identico a Python 0.6.1'
-                : 'Modello completo JS · confronto migrate disponibile');
+            const modelDelta = expectedSource ? diff(full, expectedSource) : [];
+            this.view.set('modelStatus', expectedSource
+                ? modelDelta.length ? `${modelDelta.length} differenze nel source TYTX` : 'Source TYTX identico a Python'
+                : 'Source TYTX JS · confronto migrate disponibile');
             this.view.set('json', JSON.stringify(structure, null, 2));
             this.showOutput();
             const schemas = Object.values(structure.root.schemas), tables = schemas.flatMap(s => Object.values(s.tables));

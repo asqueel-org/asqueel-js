@@ -40,8 +40,8 @@ export function subqueries(root) {
     vat.column({name: 'id', dtype: 'L'}); vat.column({name: 'rate', dtype: 'R'});
     const invoice = pkg.table({name: 'invoice', pkey: 'id', order_by: '$id', draftField: 'draft', logicalDeletionField: 'deleted', partition_region: 'region'});
     invoice.column({name: 'id', dtype: 'L'});
-    invoice.column({name: 'customer_id', dtype: 'L'}).relation({to: 'customer.id', relation_name: 'invoices'});
-    invoice.column({name: 'vat_id', dtype: 'L'}).relation({to: 'vat.id'});
+    invoice.column({name: 'customer_id', dtype: 'L'}).relation({related_column: 'customer.id', relation_name: 'invoices'});
+    invoice.column({name: 'vat_id', dtype: 'L'}).relation({related_column: 'vat.id'});
     invoice.column({name: 'amount', dtype: 'R', sqlname: 'stored_amount'});
     invoice.column({name: 'qty', dtype: 'L'}); invoice.column({name: 'code', dtype: 'T'});
     invoice.column({name: 'draft', dtype: 'B'}); invoice.column({name: 'deleted', dtype: 'T'}); invoice.column({name: 'region', dtype: 'T'});
@@ -51,5 +51,5 @@ export function subqueries(root) {
     pair.column({name: 'code', dtype: 'T'}); pair.column({name: 'seq', dtype: 'L'}); pair.compositeColumn({name: 'key', columns: 'code,seq'});
     const member = pkg.table({name: 'member', pkey: 'id'});
     member.column({name: 'id', dtype: 'L'}); member.column({name: 'code', dtype: 'T'}); member.column({name: 'seq', dtype: 'L'}); member.column({name: 'amount', dtype: 'R'});
-    member.compositeColumn({name: 'pair_key', columns: 'code,seq'}).relation({to: 'pair.key', relation_name: 'members'});
+    member.compositeColumn({name: 'pair_key', columns: 'code,seq'}).relation({related_column: 'pair.key', relation_name: 'members'});
 }

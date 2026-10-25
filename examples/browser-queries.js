@@ -2,7 +2,7 @@
 export function browserQueries(root) {
     const packages = root.db({name: 'browser', implementation: 'sqlite'}).packages();
     const customer = packages.package({name: 'crm'}).tables().table({name: 'customer'});
-    customer.options().sys_fields({syscode: true});
+    customer.options().sysFields({syscode: true});
     const columns = customer.columns();
     columns.column({name: 'name', dtype: 'T', notnull: true});
     columns.column({name: 'email', dtype: 'T', indexed: true});
@@ -10,10 +10,9 @@ export function browserQueries(root) {
     sales.options().requires({packages: 'crm'});
     const invoice = sales.tables().table({name: 'invoice'});
     const options = invoice.options();
-    options.sys_fields({draft: true});
-    options.audit({mode: 'lazy'});
+    options.sysFields({draft: true});
     const invoiceColumns = invoice.columns();
-    invoiceColumns.column({name: 'customer_id'}).relation({to: 'crm.customer.id', onDelete_sql: 'restrict'});
+    invoiceColumns.column({name: 'customer_id'}).relation({related_column: 'crm.customer.id', onDelete_sql: 'restrict'});
     invoiceColumns.column({name: 'amount', dtype: 'N', size: '12,2', sql_default: '0'});
 
     // These SQL-level examples use explicit fields; application hooks have a separate demo.
@@ -26,7 +25,7 @@ export function browserQueries(root) {
     const memo = tables.table({name: 'memo', pkey: 'id'});
     const memoColumns = memo.columns();
     memoColumns.column({name: 'id', dtype: 'I'});
-    memoColumns.column({name: 'person_id'}).relation({to: 'person.id'});
+    memoColumns.column({name: 'person_id'}).relation({related_column: 'person.id'});
     memoColumns.column({name: 'body', dtype: 'T'});
     memoColumns.column({name: 'amount', dtype: 'N', size: '12,2'});
 }

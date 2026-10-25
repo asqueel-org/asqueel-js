@@ -21,8 +21,8 @@ export function compilerCallbacks(root) {
     const line = pkg.table({name: 'line', pkey: 'id'});
     line.column({name: 'id', dtype: 'L'});
     line.column({name: 'amount', dtype: 'L'});
-    line.column({name: 'owner_id', dtype: 'L'}).relation({to: 'app.owner.id', relation_name: 'lines'});
-    line.column({name: 'other_id', dtype: 'L'}).relation({to: 'app.owner.id', relation_name: 'others'});
+    line.column({name: 'owner_id', dtype: 'L'}).relation({related_column: 'app.owner.id', relation_name: 'lines'});
+    line.column({name: 'other_id', dtype: 'L'}).relation({related_column: 'app.owner.id', relation_name: 'others'});
 }
 export function compilerMethods(events = []) {
     const methods = {};

@@ -15,7 +15,7 @@ const record = value => {
     }
     return value;
 };
-const columnName = c => c.a.sqlname || c.a.x_sql_name || c.a.name;
+const columnName = c => c.a.sqlname || c.a.name;
 const tableSQL = t => `${q(t.sqlschema)}.${q(t.sqlname)}`;
 
 // Identify quoted SQL and comments. Callers decide whether to preserve or adapt

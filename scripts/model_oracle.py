@@ -1,18 +1,15 @@
-"""Full hierarchical snapshots using the official pinned Python codec."""
+"""Model corpus oracle: composed source in TYTX, migration JSON and acceptance outcomes."""
 import json
 import sys
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from python_reference import ROOT
-from asqueel import SqlBuilder, SqlDatabaseConfig, resolve_model, SqlMigrationRenderer
-from asqueel.configuration import _owned_handler
+from asqueel import AsqueelDb, SqlBuilder, SqlDatabaseConfig
+from asqueel.configuration import compose_recipe
 from asqueel_migration.exceptions import SqlValidationError
 
-
-def document(model):
-    from asqueel import model_to_json
-    return json.loads(model_to_json(model))
+REJECTIONS = (ValueError, TypeError, AttributeError, KeyError, SqlValidationError)
 
 
 def apply(builder, steps):
@@ -23,7 +20,7 @@ def apply(builder, steps):
                 parent=builder.source[s['parent']] if s['parent'] else builder.source
                 getattr(parent,s['tag'])(**deepcopy(s['attributes']))
             outcomes.append(True)
-        except (ValueError,TypeError,AttributeError,KeyError):
+        except REJECTIONS:
             outcomes.append(False)
     return outcomes
 
@@ -38,19 +35,24 @@ def evaluate(case, diagnostics=None):
     try:
         if case['mode']=='clone':
             b=deepcopy(layers[0]);outcomes.append(apply(b,case['after']))
+            recipe=compose_recipe(b)
         elif case['mode'] in ('layers','recompose'):
-            b=_owned_handler(layers[-1],layers[:-1]).builder
-            if case['mode']=='recompose':b=_owned_handler(b,[layers[0]]).builder
-        else:b=layers[0]
+            recipe=compose_recipe(layers[-1],layers[:-1])
+            if case['mode']=='recompose':recipe=compose_recipe(recipe,[layers[0]])
+        else:recipe=compose_recipe(layers[0])
         result['compositionAccepted']=True
-    except (ValueError,TypeError,AttributeError,KeyError,SqlValidationError) as e:
+    except REJECTIONS as e:
         result['compositionAccepted']=False
         if diagnostics is not None:diagnostics['composition']=str(e)
         return result
-    for key,render in [('model',lambda:document(resolve_model(b))),('migration',lambda:SqlMigrationRenderer(b).render())]:
+    result['source']=recipe.source.to_tytx()
+    for key,render in [('model',lambda:AsqueelDb(recipe) and True),
+                       ('migration',lambda:recipe.render(mode='migration',foreignKeys=True))]:
         try:
-            result[key]=render()
-        except (ValueError,TypeError,AttributeError,KeyError,SqlValidationError) as e:
+            value=render()
+            if key=='migration':result[key]=value
+            else:result['modelAccepted']=True
+        except REJECTIONS as e:
             result[key+'Accepted']=False
             if diagnostics is not None:diagnostics[key]=str(e)
     return result
@@ -67,9 +69,9 @@ def main():
         expected,diag=output['expected'],output['diagnostics']
         results.append(dict(name=case['name'],expected=expected))
         if diag:diagnostics[case['name']]=diag
-    (ROOT/'test/fixtures/resolved-model.json').write_text(json.dumps(results,indent=2,ensure_ascii=False)+'\n')
+    (ROOT/'test/fixtures/model-cases.json').write_text(json.dumps(results,indent=2,ensure_ascii=False)+'\n')
     (ROOT/'test/fixtures/model-rejections.json').write_text(json.dumps(diagnostics,indent=2,ensure_ascii=False)+'\n')
-    print(f'{len(results)} cases: {sum("model" in r["expected"] for r in results)} full models, {sum("migration" in r["expected"] for r in results)} migration documents')
+    print(f'{len(results)} cases: {sum("source" in r["expected"] for r in results)} composed sources, {sum("migration" in r["expected"] for r in results)} migration documents')
 if __name__=='__main__':
     if '--case' in sys.argv:
         diag={};expected=evaluate(json.load(sys.stdin),diag)

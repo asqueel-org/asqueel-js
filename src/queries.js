@@ -82,7 +82,7 @@ export class SqliteQueries {
         for (const c of table.columns.values()) {
             if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');
             if (write && (c.children.some(n => n.tag !== 'relation') ||
-                ['default', 'default_from', 'x_generation', 'read_only', 'unmodifiable',
+                ['default', 'default_from', 'readOnly', 'unmodifiable',
                     'onInserting','onUpdating','onDeleting','onInserted','onUpdated','onDeleted','trigger_table']
                     .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
         }
@@ -103,9 +103,9 @@ export class SqliteQueries {
             : ['operation', 'table', 'values', 'pkey', 'old_record', 'ignore_partition', 'environment'];
         for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Opzione query fuori perimetro: ${name}`);
         const table = this.resolveTable(request.table, !read);
-        if (!read) return compileWrite(table, request.operation, request.values, request);
         const methods = new CompilerMethods(this.tables, this.runtime.methods ?? {},
             structuredClone(request.environment), this.compilerEnvironments.get(environment));
+        if (!read) return compileWrite(table, request.operation, request.values, {...request, methods});
         return compileSelect(this.tables, table, request, methods, this.runtime.parseDateExpression);
     }
     async execute(request) {

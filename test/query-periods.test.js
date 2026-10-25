@@ -1,6 +1,7 @@
 import {parseDateExpression} from '@gramlot/gramlot';
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import {defineModel} from '../src/index.js';
 import {queryPeriods} from '../examples/query-periods.js';
 import {migrateSQLite} from '../src/sqlite.js';
@@ -8,15 +9,15 @@ import {nativeSQLite} from './native-sqlite.js';
 import oracle from './fixtures/periods.json' with {type: 'json'};
 const model = defineModel(queryPeriods);
 test('PERIOD model/migrate match independent Python', () => {
-    assert.deepEqual(model.toJSON(), oracle.model);
+    assertSameSource(model, oracle.source);
     assert.deepEqual(model.toMigration(), oracle.desired);
 });
 for (const c of oracle.cases) test(`Period SQL/parameters exactly match Python: ${c.name}`, () => {
-    const before = structuredClone(c.request), source = model.toJSON();
+    const before = structuredClone(c.request), source = model.toTytx();
     assert.deepEqual(model.queries(null, {parseDateExpression}).compile(c.request), c.compiled);
     assert.deepEqual(model.queries(null, {parseDateExpression}).compile(c.request), c.compiled);
     assert.deepEqual(c.request, before);
-    assert.deepEqual(model.toJSON(), source);
+    assert.equal(model.toTytx(), source);
 });
 for (const c of oracle.errors) test(`Period rejected like Python: ${c.name}`, () => {
     assert.throws(() => model.queries(null, {parseDateExpression}).compile(c.request));

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import {defineModel} from '../src/index.js';
 import {compilerCallbacks, compilerMethods, callbackCacheProbe} from '../examples/compiler-callbacks.js';
 import {migrateSQLite} from '../src/sqlite.js';
@@ -7,15 +8,15 @@ import {nativeSQLite} from './native-sqlite.js';
 import oracle from './fixtures/callbacks.json' with {type: 'json'};
 const model = defineModel(compilerCallbacks);
 test('compiler callback model and migrate JSON match independent Python', () => {
-    assert.deepEqual(model.toJSON(), oracle.model);
+    assertSameSource(model, oracle.source);
     assert.deepEqual(model.toMigration(), oracle.desired);
 });
 for (const c of oracle.cases) test(`Compiler callback SQL/parameters/calls match Python: ${c.name}`, () => {
-    const before = structuredClone(c.request), source = model.toJSON(), events = [];
+    const before = structuredClone(c.request), source = model.toTytx(), events = [];
     assert.deepEqual(model.queries(null, {methods: compilerMethods(events)}).compile(c.request), c.compiled);
     assert.deepEqual(events, c.events);
     assert.deepEqual(c.request, before);
-    assert.deepEqual(model.toJSON(), source);
+    assert.equal(model.toTytx(), source);
 });
 for (const c of oracle.errors) test(`Compiler callback rejected like Python: ${c.name}`, () => {
     assert.throws(() => model.queries(null, {methods: compilerMethods()}).compile(c.request));

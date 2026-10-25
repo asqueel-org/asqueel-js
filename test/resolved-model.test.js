@@ -1,9 +1,15 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import inputs from "./model-inputs.json" with { type: "json" };
-import fixtures from "./fixtures/resolved-model.json" with { type: "json" };
+import fixtures from "./fixtures/model-cases.json" with { type: "json" };
 import { evaluateModel, applySteps } from "./model-cases.js";
-import { SqlBuilder, DbModel, defineModel } from "../src/index.js";
+import { sourceRows } from "./source-parity.js";
+import { SqlBuilder, defineModel } from "../src/index.js";
+
+// The composed source travels as TYTX; its rows are compared without attribute order.
+const comparable = (result) =>
+  result.source === undefined ? result : { ...result, source: sourceRows(result.source) };
+
 for (const field of ["__ins_ts", "__mod_ts", "__del_ts"])
   for (const indexed of [undefined, false, true])
     for (const extraFirst of [false, true])
@@ -11,7 +17,7 @@ for (const field of ["__ins_ts", "__mod_ts", "__del_ts"])
         let t;
         const b = defineModel((root) => {
           t = root.db("demo").packages().package("app").table("item");
-          t.options().sys_fields();
+          t.options().sysFields();
           if (extraFirst) t.column("name");
           t.column(field, indexed === undefined ? {} : { indexed });
         });
@@ -28,39 +34,36 @@ for (const field of ["__ins_ts", "__mod_ts", "__del_ts"])
         check();
       });
 for (const [i, c] of inputs.entries())
-  test(`Python 0.6.1 complete model + migrate: ${c.name}`, () => {
+  test(`Python composed source + migrate: ${c.name}`, () => {
     const diagnostics = {},
       actual = evaluateModel(c, diagnostics);
-    assert.deepEqual(actual, fixtures[i].expected, JSON.stringify(diagnostics));
-    if (actual.model) {
-      const restored = DbModel.fromJSON(JSON.stringify(actual.model));
-      assert.deepEqual(restored.toJSON(), actual.model);
+    assert.deepEqual(comparable(actual), comparable(fixtures[i].expected), JSON.stringify(diagnostics));
+    // A source written by Python loads in JavaScript as the JavaScript source does.
+    const expected = fixtures[i].expected;
+    if (expected.migration && expected.modelAccepted) {
+      const fromPython = SqlBuilder.fromTytx(expected.source);
+      assert.deepEqual(sourceRows(fromPython.toTytx()), sourceRows(SqlBuilder.fromTytx(actual.source).toTytx()));
+      assert.deepEqual(fromPython.toMigration(), expected.migration);
     }
   });
-test("0.6.1 linked hierarchy preserves navigation and generated hooks after JSON restore", () => {
+test("linked hierarchy preserves navigation and generated hooks", () => {
   const c = inputs.find((c) => c.name === "061/linked_cross_package"),
     b = new SqlBuilder();
   assert.ok(applySteps(b, c.layers[0]).every(Boolean));
-  const resolved = b.resolve();
-  for (const m of [resolved, DbModel.fromJSON(resolved.toJSON())]) {
-    const tree = m.table("app.item"),
-      master = m.table("other.master");
-    assert.equal(tree.column("@master_id.id"), master.column("id"));
-    assert.equal(master.column("@root_item_id.id"), tree.column("id"));
-    assert.equal(tree.attributes.hierarchical_linked_to, "other.master");
-    assert.equal(tree.column("position").dtype, "L");
-    assert.equal(
-      master.column("root_item_id").attributes.onInserting,
-      "insertLinkedHierarchicalRoot",
-    );
-    assert.deepEqual(m.toMigration(), b.toMigration());
-  }
-  assert.throws(
-    () => DbModel.fromJSON({ ...resolved.toJSON(), reference: "0.6.0" }),
-    /Unsupported model JSON/,
+  const m = b.resolve();
+  const tree = m.table("app.item"),
+    master = m.table("other.master");
+  assert.equal(tree.column("@master_id.id"), master.column("id"));
+  assert.equal(master.column("@root_item_id.id"), tree.column("id"));
+  assert.equal(tree.attributes.hierarchical_linked_to, "other.master");
+  assert.equal(tree.column("position").dtype, "L");
+  assert.equal(
+    master.column("root_item_id").attributes.onInserting,
+    "insertLinkedHierarchicalRoot",
   );
+  assert.deepEqual(m.toMigration(), b.toMigration());
 });
-test("resolved objects preserve identity, navigation, aliases and owned JSON", () => {
+test("resolved objects preserve identity, navigation and aliases", () => {
   const c = inputs.find((c) => c.name === "060/alias_relation_inheritance"),
     b = new SqlBuilder();
   assert.ok(applySteps(b, c.layers[0]).every(Boolean));
@@ -79,47 +82,28 @@ test("resolved objects preserve identity, navigation, aliases and owned JSON", (
   assert.equal(t.column("target_copy").dtype, "I");
   assert.ok(t.relations.getNode("@target_copy").attributes.joiner);
   assert.equal(t.relations.getNode("@target_copy.id").attributes.dtype, "I");
-  const json = m.toJSON();
-  json.namespaces.children[0].attributes.name = "modified";
-  assert.equal(m.package("app").attributes.name, "app");
-  const restored = DbModel.fromJSON(m.toJSON());
-  assert.equal(restored.column("app.item.remote_value").dtype, "I");
-  assert.deepEqual(restored.toMigration(), b.toMigration());
   assert.deepEqual(b.toSource(), before);
 });
-test("resolution is repeatable and expanded options survive JSON round-trip", () => {
+test("resolution is repeatable and leaves the source unchanged", () => {
   const b = defineModel((root) => {
     const t = root.db("offline").packages().package("app").table("item");
-    t.options().sys_fields();
+    t.options().sysFields();
     t.column({ name: "name", dtype: "T" });
   });
   const before = b.toSource(),
-    m = b.resolve(),
-    doc = m.toJSON();
+    m = b.resolve();
   assert.equal(m.table("app.item").virtual_columns.keys().length, 5);
   assert.equal(m.table("app.item").logicalDeletionField, "__del_ts");
-  assert.deepEqual(b.toJSON(), doc);
-  assert.deepEqual(DbModel.fromJSON(doc).toMigration(), b.toMigration());
+  assert.deepEqual(b.resolve().toMigration(), m.toMigration());
   assert.deepEqual(b.toSource(), before);
 });
-test("unsupported JSON version and executable class declarations are refused", () => {
-  assert.throws(
-    () => DbModel.fromJSON({ version: 99 }),
-    /Unsupported model JSON/,
-  );
-  assert.throws(
-    () =>
-      defineModel((r) =>
-        r
-          .db("x")
-          .packages()
-          .package("app")
-          .table({ name: "t", x_table_class: null }),
-      ).resolve(),
-    /x_table_class/,
-  );
+test("attributes outside the grammar are refused", () => {
+  for (const attributes of [{ name: "t", x_table_class: null }, { name: "t", x_expanded_legacy: true }])
+    assert.throws(
+      () => defineModel((r) => r.db("x").packages().package("app").table(attributes)),
+      /unknown attribute/,
+    );
 });
-
 test("inactive partition compiles, invalid active policy and unported hooks fail explicitly", () => {
   const policy = defineModel((r) =>
     r

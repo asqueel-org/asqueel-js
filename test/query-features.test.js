@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import {defineModel} from '../src/index.js';
 import {queryFeatures} from '../examples/query-features.js';
 import oracle from './fixtures/query-features.json' with {type: 'json'};
@@ -7,7 +8,7 @@ import {nativeSQLite} from './native-sqlite.js';
 
 const model = defineModel(queryFeatures);
 test('query feature model migration matches independent Python recipe', () => {
-    assert.deepEqual(model.toJSON(), oracle.model);
+    assertSameSource(model, oracle.source);
     assert.deepEqual(model.toMigration(), oracle.desired);
 });
 for (const entry of oracle.cases) test(`Feature SQL + params exactly match Python: ${entry.name}`, () => {

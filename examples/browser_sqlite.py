@@ -6,7 +6,7 @@ def browser_model(version=1):
     model = SqlBuilder()
     packages = model.source.db("browser", implementation="sqlite").packages()
     customer = packages.package("crm").tables().table("customer")
-    customer.options().sys_fields(syscode=True)
+    customer.options().sysFields(syscode=True)
     columns = customer.columns()
     columns.column("name", dtype="T", notnull=True)
     if version == 2:
@@ -15,8 +15,7 @@ def browser_model(version=1):
     sales.options().requires("crm")
     invoice = sales.tables().table("invoice")
     options = invoice.options()
-    options.sys_fields(draft=True)
-    options.audit("lazy")
+    options.sysFields(draft=True)
     cols = invoice.columns()
     cols.column("customer_id").relation("crm.customer.id", onDelete_sql="restrict")
     cols.column("amount", dtype="N", size="12,2", sql_default="0")

@@ -224,16 +224,6 @@
                     "table_name": "sales_invoice",
                     "column_name": "__is_draft"
                   },
-                  "__version": {
-                    "entity": "column",
-                    "entity_name": "__version",
-                    "attributes": {
-                      "dtype": "L"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice",
-                    "column_name": "__version"
-                  },
                   "customer_id": {
                     "entity": "column",
                     "entity_name": "customer_id",
@@ -282,6 +272,18 @@
                 },
                 "constraints": {},
                 "indexes": {
+                  "idx_f3729b7d": {
+                    "entity": "index",
+                    "entity_name": "idx_f3729b7d",
+                    "attributes": {
+                      "columns": {
+                        "customer_id": null
+                      },
+                      "index_name": "idx_f3729b7d"
+                    },
+                    "schema_name": "main",
+                    "table_name": "sales_invoice"
+                  },
                   "idx_9ca9b146": {
                     "entity": "index",
                     "entity_name": "idx_9ca9b146",
@@ -326,18 +328,6 @@
                         "__is_draft": null
                       },
                       "index_name": "idx_28f8b110"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice"
-                  },
-                  "idx_f3729b7d": {
-                    "entity": "index",
-                    "entity_name": "idx_f3729b7d",
-                    "attributes": {
-                      "columns": {
-                        "customer_id": null
-                      },
-                      "index_name": "idx_f3729b7d"
                     },
                     "schema_name": "main",
                     "table_name": "sales_invoice"
@@ -578,16 +568,6 @@
                     "table_name": "sales_invoice",
                     "column_name": "__is_draft"
                   },
-                  "__version": {
-                    "entity": "column",
-                    "entity_name": "__version",
-                    "attributes": {
-                      "dtype": "L"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice",
-                    "column_name": "__version"
-                  },
                   "customer_id": {
                     "entity": "column",
                     "entity_name": "customer_id",
@@ -636,18 +616,6 @@
                 },
                 "constraints": {},
                 "indexes": {
-                  "idx_f3729b7d": {
-                    "entity": "index",
-                    "entity_name": "idx_f3729b7d",
-                    "attributes": {
-                      "columns": {
-                        "customer_id": null
-                      },
-                      "index_name": "idx_f3729b7d"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice"
-                  },
                   "idx_28f8b110": {
                     "entity": "index",
                     "entity_name": "idx_28f8b110",
@@ -695,6 +663,18 @@
                     },
                     "schema_name": "main",
                     "table_name": "sales_invoice"
+                  },
+                  "idx_f3729b7d": {
+                    "entity": "index",
+                    "entity_name": "idx_f3729b7d",
+                    "attributes": {
+                      "columns": {
+                        "customer_id": null
+                      },
+                      "index_name": "idx_f3729b7d"
+                    },
+                    "schema_name": "main",
+                    "table_name": "sales_invoice"
                   }
                 },
                 "schema_name": "main",
@@ -708,7 +688,7 @@
         "event_triggers": {}
       }
     },
-    "sql": "SELECT 1;\nCREATE TABLE \"main\".\"crm_customer\"(\n \"id\" character(22) NOT NULL,\n \"__ins_ts\" timestamp with time zone,\n \"__del_ts\" timestamp with time zone,\n \"__mod_ts\" timestamp with time zone,\n \"__ins_user\" text,\n \"__mod_user\" text,\n \"__syscode\" character varying(20),\n \"name\" text NOT NULL,\n PRIMARY KEY (\"id\")\n);\nALTER TABLE \"main\".\"crm_customer\"\nADD CONSTRAINT \"cst_b7fde9ef\" UNIQUE (\"__syscode\");\nCREATE INDEX \"main\".\"idx_4234876c\" ON \"crm_customer\" (\"__ins_ts\");\nCREATE INDEX \"main\".\"idx_f08d12e4\" ON \"crm_customer\" (\"__del_ts\");\nCREATE INDEX \"main\".\"idx_c75ec01e\" ON \"crm_customer\" (\"__mod_ts\");\nCREATE TABLE \"main\".\"sales_invoice\"(\n \"id\" character(22) NOT NULL,\n \"__ins_ts\" timestamp with time zone,\n \"__del_ts\" timestamp with time zone,\n \"__mod_ts\" timestamp with time zone,\n \"__ins_user\" text,\n \"__mod_user\" text,\n \"__is_draft\" boolean,\n \"__version\" bigint,\n \"customer_id\" character(22),\n \"amount\" numeric(12,2) DEFAULT 0,\n PRIMARY KEY (\"id\"),\n CONSTRAINT \"fk_6bee3e6f\" FOREIGN KEY (\"customer_id\") REFERENCES \"crm_customer\" (\"id\") ON DELETE RESTRICT ON UPDATE CASCADE\n);\nCREATE INDEX \"main\".\"idx_9ca9b146\" ON \"sales_invoice\" (\"__ins_ts\");\nCREATE INDEX \"main\".\"idx_ed7fd180\" ON \"sales_invoice\" (\"__del_ts\");\nCREATE INDEX \"main\".\"idx_e3931be6\" ON \"sales_invoice\" (\"__mod_ts\");\nCREATE INDEX \"main\".\"idx_28f8b110\" ON \"sales_invoice\" (\"__is_draft\");\nCREATE INDEX \"main\".\"idx_f3729b7d\" ON \"sales_invoice\" (\"customer_id\");",
+    "sql": "SELECT 1;\nCREATE TABLE \"main\".\"crm_customer\"(\n \"id\" character(22) NOT NULL,\n \"__ins_ts\" timestamp with time zone,\n \"__del_ts\" timestamp with time zone,\n \"__mod_ts\" timestamp with time zone,\n \"__ins_user\" text,\n \"__mod_user\" text,\n \"__syscode\" character varying(20),\n \"name\" text NOT NULL,\n PRIMARY KEY (\"id\")\n);\nALTER TABLE \"main\".\"crm_customer\"\nADD CONSTRAINT \"cst_b7fde9ef\" UNIQUE (\"__syscode\");\nCREATE INDEX \"main\".\"idx_4234876c\" ON \"crm_customer\" (\"__ins_ts\");\nCREATE INDEX \"main\".\"idx_f08d12e4\" ON \"crm_customer\" (\"__del_ts\");\nCREATE INDEX \"main\".\"idx_c75ec01e\" ON \"crm_customer\" (\"__mod_ts\");\nCREATE TABLE \"main\".\"sales_invoice\"(\n \"id\" character(22) NOT NULL,\n \"__ins_ts\" timestamp with time zone,\n \"__del_ts\" timestamp with time zone,\n \"__mod_ts\" timestamp with time zone,\n \"__ins_user\" text,\n \"__mod_user\" text,\n \"__is_draft\" boolean,\n \"customer_id\" character(22),\n \"amount\" numeric(12,2) DEFAULT 0,\n PRIMARY KEY (\"id\"),\n CONSTRAINT \"fk_6bee3e6f\" FOREIGN KEY (\"customer_id\") REFERENCES \"crm_customer\" (\"id\") ON DELETE RESTRICT ON UPDATE CASCADE\n);\nCREATE INDEX \"main\".\"idx_f3729b7d\" ON \"sales_invoice\" (\"customer_id\");\nCREATE INDEX \"main\".\"idx_9ca9b146\" ON \"sales_invoice\" (\"__ins_ts\");\nCREATE INDEX \"main\".\"idx_ed7fd180\" ON \"sales_invoice\" (\"__del_ts\");\nCREATE INDEX \"main\".\"idx_e3931be6\" ON \"sales_invoice\" (\"__mod_ts\");\nCREATE INDEX \"main\".\"idx_28f8b110\" ON \"sales_invoice\" (\"__is_draft\");",
     "warnings": []
   },
   "v2": {
@@ -958,16 +938,6 @@
                     "table_name": "sales_invoice",
                     "column_name": "__is_draft"
                   },
-                  "__version": {
-                    "entity": "column",
-                    "entity_name": "__version",
-                    "attributes": {
-                      "dtype": "L"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice",
-                    "column_name": "__version"
-                  },
                   "customer_id": {
                     "entity": "column",
                     "entity_name": "customer_id",
@@ -1016,6 +986,18 @@
                 },
                 "constraints": {},
                 "indexes": {
+                  "idx_f3729b7d": {
+                    "entity": "index",
+                    "entity_name": "idx_f3729b7d",
+                    "attributes": {
+                      "columns": {
+                        "customer_id": null
+                      },
+                      "index_name": "idx_f3729b7d"
+                    },
+                    "schema_name": "main",
+                    "table_name": "sales_invoice"
+                  },
                   "idx_9ca9b146": {
                     "entity": "index",
                     "entity_name": "idx_9ca9b146",
@@ -1060,18 +1042,6 @@
                         "__is_draft": null
                       },
                       "index_name": "idx_28f8b110"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice"
-                  },
-                  "idx_f3729b7d": {
-                    "entity": "index",
-                    "entity_name": "idx_f3729b7d",
-                    "attributes": {
-                      "columns": {
-                        "customer_id": null
-                      },
-                      "index_name": "idx_f3729b7d"
                     },
                     "schema_name": "main",
                     "table_name": "sales_invoice"
@@ -1334,16 +1304,6 @@
                     "table_name": "sales_invoice",
                     "column_name": "__is_draft"
                   },
-                  "__version": {
-                    "entity": "column",
-                    "entity_name": "__version",
-                    "attributes": {
-                      "dtype": "L"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice",
-                    "column_name": "__version"
-                  },
                   "customer_id": {
                     "entity": "column",
                     "entity_name": "customer_id",
@@ -1392,18 +1352,6 @@
                 },
                 "constraints": {},
                 "indexes": {
-                  "idx_f3729b7d": {
-                    "entity": "index",
-                    "entity_name": "idx_f3729b7d",
-                    "attributes": {
-                      "columns": {
-                        "customer_id": null
-                      },
-                      "index_name": "idx_f3729b7d"
-                    },
-                    "schema_name": "main",
-                    "table_name": "sales_invoice"
-                  },
                   "idx_28f8b110": {
                     "entity": "index",
                     "entity_name": "idx_28f8b110",
@@ -1448,6 +1396,18 @@
                         "__ins_ts": null
                       },
                       "index_name": "idx_9ca9b146"
+                    },
+                    "schema_name": "main",
+                    "table_name": "sales_invoice"
+                  },
+                  "idx_f3729b7d": {
+                    "entity": "index",
+                    "entity_name": "idx_f3729b7d",
+                    "attributes": {
+                      "columns": {
+                        "customer_id": null
+                      },
+                      "index_name": "idx_f3729b7d"
                     },
                     "schema_name": "main",
                     "table_name": "sales_invoice"

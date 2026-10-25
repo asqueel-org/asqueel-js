@@ -9,8 +9,8 @@ export function readFormulas(root) {
     item.column({name: 'id', dtype: 'L'});
     item.column({name: 'price', dtype: 'R', sqlname: 'unit_price'});
     item.column({name: 'qty', dtype: 'L'});
-    item.column({name: 'currency_id', dtype: 'T'}).relation({to: 'currency.id'});
-    item.column({name: 'other_currency_id', dtype: 'T'}).relation({to: 'currency.id'});
+    item.column({name: 'currency_id', dtype: 'T'}).relation({related_column: 'currency.id'});
+    item.column({name: 'other_currency_id', dtype: 'T'}).relation({related_column: 'currency.id'});
     item.formulaColumn({name: 'adjusted', dtype: 'R', sql_formula: '$price * :rate', var_rate: 1.2});
     item.formulaColumn({name: 'discounted', dtype: 'R', sql_formula: '$adjusted - :rate', var_rate: 3});
     item.formulaColumn({name: 'total', dtype: 'R', sql_formula: '#THIS.adjusted * #THIS.qty'});

@@ -9,9 +9,9 @@ from pathlib import Path
 from unittest.mock import patch
 
 from python_reference import ROOT
-from asqueel import AsqueelDb, SqlBuilder, SqlDatabaseConfig, SqlTable, SqlMigrationRenderer, resolve_model
+from asqueel import AsqueelDb, SqlBuilder, SqlDatabaseConfig, SqlTable
 from application_hooks import declare, handlers
-from model_oracle import document
+from python_model import bind_table_classes, migration, source_tytx
 from genro_toolbox.uid import get_uuid
 
 
@@ -55,8 +55,9 @@ def run_case(case, declaration=declare, callbacks_factory=handlers, tables=('not
         config = SqlDatabaseConfig()
         root = config.source.db(dbname, implementation='sqlite')
         root.connection('main', database=path)
-        declaration(root.packages().package('app', sqlschema='main', sqlprefix=False), classes)
+        declaration(root.packages().package('app', sqlschema='main', sqlprefix=False))
         db = AsqueelDb(config)
+        bind_table_classes(db, classes)
         try:
             db.migrate()
             db.commit()
@@ -126,7 +127,7 @@ def oracle():
     for milliseconds, raw in [(1767323045000, list(range(9))), (1767323045123, [255] * 9)]:
         with patch('genro_toolbox.uid.time.time', lambda: milliseconds / 1000), patch('genro_toolbox.uid.os.urandom', lambda n: bytes(raw)):
             ids.append(dict(milliseconds=milliseconds, bytes=raw, expected=get_uuid()))
-    return dict(model=document(resolve_model(b)), desired=SqlMigrationRenderer(b).render(), ids=ids,
+    return dict(source=source_tytx(b), desired=migration(b), ids=ids,
                 cases=[dict(name=c['name'], input=c, expected=run_case(c)) for c in inputs])
 
 

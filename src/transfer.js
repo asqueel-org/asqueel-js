@@ -21,7 +21,7 @@ export function readTransfer(bundle) {
         for (const node of bag.getNodes()) {
             if (node.nodeTag === 'package') packages.add(node.attr.name);
             if (node.nodeTag === 'requires') required.push(...(Array.isArray(node.attr.packages) ? node.attr.packages : [node.attr.packages]));
-            assert(node.nodeTag !== 'connection' && !Object.hasOwn(node.attr, 'x_table_class'), 'Runtime declarations cannot be transferred');
+            assert(node.nodeTag !== 'connection', 'Runtime declarations cannot be transferred');
             if (node.value?.getNodes) walk(node.value);
             else assert(node.value == null, 'Scalar source nodes are unsupported');
         }

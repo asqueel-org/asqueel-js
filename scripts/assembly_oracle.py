@@ -3,14 +3,13 @@ import json, sqlite3, tempfile, sys, re
 from datetime import datetime
 from pathlib import Path
 from python_reference import ROOT
-from asqueel import SqlDatabaseConfig, QueryCompiler, resolve_model
+from asqueel import SqlDatabaseConfig, QueryCompiler
 from asqueel.adapters.sqlite import SqlDbAdapter
 from asqueel.write_compiler import WriteCompiler
-from asqueel.environment import SqlEnvironment
 from transfer_oracle import snapshot
 from assembly_demo import people as demo_people, documents as demo_documents
 sys.path.insert(0, str(ROOT/'python'))
-from asqueel_transfer import export_transfer, load_transfer
+from asqueel_transfer import export_transfer, load_transfer, resolve_model
 
 
 def source():
@@ -72,7 +71,7 @@ class Assembly:
         options={k:v for k,v in request.items() if k not in ('operation','table')}
         adapter=SqlDbAdapter(None)
         if request['operation']=='select':
-            compiled=QueryCompiler(self.model,adapter,environment=SqlEnvironment({})).select(request['table'],**options)
+            compiled=QueryCompiler(self.model,adapter,environment={}).select(request['table'],**options)
         else:
             values=options.pop('values')
             compiled=getattr(WriteCompiler(adapter),request['operation'])(self.model.table(request['table']),values,{},**options)

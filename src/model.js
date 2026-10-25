@@ -1,4 +1,4 @@
-// Hierarchical model, mechanically following Asqueel 0.7.0 object_tree*.py.
+// Hierarchical model, mechanically following Asqueel object_tree*.py and model_source.py.
 import { SqliteQueries } from "./queries.js";
 import grammar from "./generated/grammar.json" with { type: "json" };
 import contract from "./generated/contract.json" with { type: "json" };
@@ -10,7 +10,8 @@ import {
   makeNode,
   expandModelOptions,
 } from "./model-options.js";
-import { PhysicalBuilder } from "./internal/physical-renderer.js";
+import { renderMigration, SQL_ACTIONS as sqlActions } from "./migration.js";
+import { connectionSettings } from "./connection.js";
 const copy = structuredClone,
   own = (o, k) => Object.hasOwn(o, k);
 const fail = (m) => {
@@ -26,20 +27,6 @@ const relations = (t) =>
     c.children.filter((n) => n.tag === "relation").map((n) => [c, n]),
   );
 const idxName = (t, cs) => `${t}_${names(cs).join("_")}_key`;
-const sqlActions = {
-  c: "CASCADE",
-  cascade: "CASCADE",
-  r: "RESTRICT",
-  restrict: "RESTRICT",
-  n: null,
-  "no action": null,
-  sn: "SET NULL",
-  setnull: "SET NULL",
-  "set null": "SET NULL",
-  sd: "SET DEFAULT",
-  setdefault: "SET DEFAULT",
-  "set default": "SET DEFAULT",
-};
 const attrsAllowed = (tag, k) =>
   grammar.elements[tag]?._meta?.attribute_families?.some(
     (p) =>
@@ -52,8 +39,7 @@ function snapshot(n, schemas) {
   const spec = schemas[n.tag];
   if (!spec) fail(`Unsupported model element ${n.tag}`);
   const declared = new Set(spec.attributes.parameters.map((p) => p.name));
-  if (n.tag !== "validation")
-    for (const k of Object.keys(a))
+  for (const k of Object.keys(a))
       if (
         !declared.has(k) &&
         !attrsAllowed(n.tag, k) &&
@@ -61,8 +47,7 @@ function snapshot(n, schemas) {
       )
         fail(`${n.label}: unknown attribute ${k}`);
   const d = [];
-  if (n.tag !== "validation")
-    for (const [k, v] of spec.attributes.parameters
+  for (const [k, v] of spec.attributes.parameters
       .filter((p) => p.has_default)
       .map((p) => [p.name, copy(p.default)]))
       if (
@@ -83,7 +68,7 @@ function snapshot(n, schemas) {
     defaults: d,
   };
 }
-function prepare(builder) {
+function prepare(builder, { checkConnection = false } = {}) {
   const errors = builder.validateSource();
   if (errors.length) fail(JSON.stringify(errors));
   const roots = builder.toSource();
@@ -100,6 +85,8 @@ function prepare(builder) {
 
   if (roots.length !== 1 || roots[0].tag !== "db")
     fail("Exactly one db root is required");
+  // A database build reads its connection settings, as Python AsqueelDb does.
+  if (checkConnection) connectionSettings(roots[0]);
   const root = snapshot(roots[0], builder.schema);
   const connection = root.children.find(
     (n) =>
@@ -116,6 +103,12 @@ function prepare(builder) {
     children: n.children.map(optionView),
   });
   function check(n) {
+    // SqlModelValidator: an indexed={...} key that legacy fill_json_column_index does not read.
+    const indexed = n.tag === "column" ? n.attributes.indexed : null;
+    if (indexed && typeof indexed === "object")
+      for (const k of Object.keys(indexed))
+        if (!["unique", "method", "where", "tablespace", "sorting"].includes(k) && !k.startsWith("with_"))
+          fail(`${n.name}: unknown indexed option(s) ${k}`);
     if (
       n.tag === "virtualRelation" &&
       n.attributes.table &&
@@ -126,10 +119,7 @@ function prepare(builder) {
     n.children.forEach(check);
   }
   check(root);
-  if (child(root, "schemas") && child(root, "packages"))
-    fail("packages and schemas cannot be combined");
-  const ns =
-    child(root, "packages") || child(root, "schemas") || makeNode("packages");
+  const ns = child(root, "packages") || makeNode("packages");
   const tables = new Map();
   for (const pkg of ns.children) {
     if (pkg.attributes.path)
@@ -137,7 +127,6 @@ function prepare(builder) {
         "package.path requires the Python filesystem loader; supply explicit JS contributions",
       );
     for (const t of list(pkg, "tables")) {
-      t.packaged = pkg.tag === "package";
       t.package = pkg;
       tables.set(`${pkg.name}.${t.name}`, t);
     }
@@ -166,18 +155,18 @@ function prepare(builder) {
   expandModelOptions(tables);
   types();
   const target = (t, a) => {
-    let parts = a.to?.split(".");
+    let parts = a.related_column?.split(".");
     if (!parts || ![2, 3].includes(parts.length))
-      fail(`Invalid relation target ${a.to}`);
+      fail(`Invalid relation target ${a.related_column}`);
     if (
       parts.length === 2 &&
       !ns.children.some((n) => n.name === parts[0]) &&
       tables.has(`${t.package.name}.${parts[0]}`)
     )
       parts.unshift(t.package.name);
-    a.to = parts.join(".");
+    a.related_column = parts.join(".");
     const remote = tables.get(parts.slice(0, 2).join("."));
-    if (!remote) fail(`unknown relation target ${a.to}`);
+    if (!remote) fail(`unknown relation target ${a.related_column}`);
     const key = parts[2] || remote.attributes.pkey;
     const composite = list(remote, "composites").find((n) => n.name === key);
     const cs = composite ? names(composite.attributes.columns) : names(key);
@@ -185,24 +174,19 @@ function prepare(builder) {
       !cs.length ||
       cs.some((n) => !list(remote, "columns").some((c) => c.name === n))
     )
-      fail(`invalid physical target ${a.to}`);
+      fail(`invalid physical target ${a.related_column}`);
     return { remote, cs };
   };
   for (const [key, t] of tables) {
     const pk = t.attributes.pkey,
       composite = list(t, "composites").find((c) => c.name === pk);
-    if (t.packaged && pk?.includes(",") && !composite)
+    if (pk?.includes(",") && !composite)
       fail(`${key}: pkey must name a column or compositeColumn`);
-    if (composite) {
-      t.attributes.x_logical_pkey = pk;
-      t.attributes.pkey = composite.attributes.columns;
-    }
     for (const [c, n] of relations(t)) {
       const a = n.attributes;
-      if (a.name) a.x_name = a.name;
       target(t, a);
+      // DbModelSrc.relation moves the FK display group to the one-side relation.
       if (
-        a.x_canonical &&
         a.one_group == null &&
         c.attributes.group &&
         c.attributes.group !== "_"
@@ -248,14 +232,15 @@ function prepare(builder) {
   for (const t of tables.values())
     for (const [c, n] of relations(t)) {
       const a = n.attributes;
+      // A relation without foreign key indexes its physical ends, as legacy.
       if (
-        !a.x_weak ||
+        a.foreign_key ||
         a.indexed === false ||
         !["column", "compositeColumn"].includes(c.tag)
       )
         continue;
       const { remote, cs } = target(t, a),
-        key = a.to.split(".")[2];
+        key = a.related_column.split(".")[2];
       const other = family(remote).find((n) => n.name === (key || cs[0]));
       for (const [owner, col] of [
         [t, c],
@@ -307,7 +292,8 @@ function prepare(builder) {
         if (!physical.has(n)) fail(`${key}: unknown physical column ${n}`);
       return JSON.stringify(ns);
     };
-    check(t.attributes.pkey, false);
+    const pkey = list(t, "composites").find((c) => c.name === t.attributes.pkey);
+    check(pkey ? pkey.attributes.columns : t.attributes.pkey, false);
     const unique = new Set(),
       indexes = new Set();
     for (const c of list(t, "composites")) {
@@ -363,16 +349,10 @@ function prepare(builder) {
         )
           fail(`invalid ${k}_sql`);
       }
+      // deferred stays: GenroPy derives it from onDelete='setnull' also without FK.
       if (
         !a.foreign_key &&
-        !a.x_weak &&
-        [
-          "onDelete_sql",
-          "onUpdate_sql",
-          "deferred",
-          "deferrable",
-          "initially_deferred",
-        ].some((k) => a[k])
+        ["onDelete_sql", "onUpdate_sql", "deferrable", "initially_deferred"].some((k) => a[k])
       )
         fail("physical relation options require foreign_key");
       if (a.initially_deferred && !a.deferrable && !a.deferred)
@@ -399,7 +379,7 @@ export class ModelNode {
     this.generated = fragment.generated || false;
     this.physicalColumn = fragment.physicalColumn ?? (fragment.tag === "column");
     this.children = new Map();
-    if (["package", "schema"].includes(this.tag))
+    if (this.tag === "package")
       Object.defineProperty(this, "table", {
         value: (name) => {
           const t = this.tables?.get(name);
@@ -414,10 +394,6 @@ export class ModelNode {
       this.children.set(key, c);
     }
     if (this.tag === "table") {
-      if (own(this.attributes, "x_table_class"))
-        fail(
-          "x_table_class requires a Python SqlTable subclass and is not portable JSON",
-        );
       for (const key of ["columns", "virtual_columns", "indexes"])
         if (!this.get(key))
           this.children.set(
@@ -468,7 +444,7 @@ export class ModelNode {
         "pyColumn",
         "compositeColumn",
       ].includes(this.tag) &&
-      this.values().some((c) => ["relation", "weak_relation"].includes(c.tag))
+      this.values().some((c) => c.tag === "relation")
     )
       this.attributes.virtual = true;
   }
@@ -502,7 +478,7 @@ export class ModelNode {
     return this.db;
   }
   get pkg() {
-    return ["package", "schema"].includes(this.tag)
+    return this.tag === "package"
       ? this
       : this.parent?.pkg || null;
   }
@@ -549,17 +525,13 @@ export class ModelNode {
       return this.attributes.sqlschema || this.pkg.sqlschema;
     return (
       this.attributes.sqlschema ||
-      (this.tag === "schema"
-        ? this.attributes.sqlname || this.name
-        : this.model.implementation.split(":")[0] === "sqlite"
-          ? "main"
-          : "public")
+      (this.model.implementation.split(":")[0] === "sqlite" ? "main" : "public")
     );
   }
   get sqlname() {
     if (this.attributes.sqlname) return this.attributes.sqlname;
     if (this.tag === "table") {
-      let p = this.pkg.attributes.sqlprefix ?? this.pkg.tag === "package";
+      let p = this.pkg.attributes.sqlprefix ?? true;
       p = p === true ? this.pkg.name : p || "";
       return p ? `${p}_${this.name}` : this.name;
     }
@@ -568,7 +540,7 @@ export class ModelNode {
     return this.name;
   }
   get pkey() {
-    return this.attributes.x_logical_pkey || this.attributes.pkey || null;
+    return this.attributes.pkey || null;
   }
   get pkeys() {
     const c = this.composites?.get(this.pkey || "");
@@ -599,14 +571,11 @@ export class ModelNode {
     return this.attributes.print_width ?? null;
   }
   get validations() {
-    return copy({
-      ...Object.fromEntries(
-        Object.entries(this.attributes)
-          .filter(([k]) => k.startsWith("validate_"))
-          .map(([k, v]) => [k.slice(9), v]),
-      ),
-      ...this.get("validation")?.attributes,
-    });
+    return Object.fromEntries(
+      Object.entries(copy(this.attributes))
+        .filter(([k]) => k.startsWith("validate_"))
+        .map(([k, v]) => [k.slice(9), v]),
+    );
   }
   addIndex(columns, a = {}) {
     const n = idxName(this.name, columns);
@@ -675,17 +644,6 @@ export class ModelNode {
                 : Reflect.get(o, k),
     });
   }
-  toJSON() {
-    return {
-      name: this.name,
-      tag: this.tag,
-      attributes: portableModelValue(this.attributes),
-      children: this.values().map((c) => c.toJSON()),
-      signatureDefaults: [...this.signatureDefaults],
-      physicalColumn: this.physicalColumn,
-      generated: this.generated,
-    };
-  }
 }
 export class RelationTree {
   constructor(model, table) {
@@ -746,48 +704,13 @@ export class RelationTree {
     return [...this.entries().keys()];
   }
 }
-function portableModelValue(value) {
-  if (value === null || ["string", "boolean"].includes(typeof value)) return value;
-  if (typeof value === "number" && Number.isFinite(value)) return value;
-  if (Array.isArray(value)) return value.map(portableModelValue);
-  if (value && typeof value === "object" && [Object.prototype, null].includes(Object.getPrototypeOf(value)))
-    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, portableModelValue(v)]));
-  fail("Model export requires symbolic JSON data");
-}
-function sameModelData(a, b) {
-  if (a === b) return true;
-  if (!a || !b || typeof a !== "object" || typeof b !== "object" || Array.isArray(a) !== Array.isArray(b)) return false;
-  const keys = Object.keys(a);
-  return keys.length === Object.keys(b).length && keys.every(k => own(b, k) && sameModelData(a[k], b[k]));
-}
-function modelDatabaseJSON(database) {
-  const data = database.toJSON();
-  delete data.attributes.conninfo;
-  delete data.attributes.connect_kwargs;
-  data.signatureDefaults = data.signatureDefaults.filter(k => !["conninfo", "connect_kwargs"].includes(k));
-  return data;
-}
-function validateModelNode(n) {
-  if (!n || typeof n !== "object" ||
-      Object.keys(n).sort().join() !== "attributes,children,generated,name,physicalColumn,signatureDefaults,tag" ||
-      typeof n.name !== "string" || typeof n.tag !== "string" ||
-      !n.attributes || Array.isArray(n.attributes) || typeof n.attributes !== "object" ||
-      !Array.isArray(n.children) || !Array.isArray(n.signatureDefaults) ||
-      n.signatureDefaults.some(v => typeof v !== "string") ||
-      typeof n.generated !== "boolean" || typeof n.physicalColumn !== "boolean")
-    fail("Invalid hierarchical model node");
-  if (["x_table_class", "conninfo", "connect_kwargs"].some(k => own(n.attributes, k)))
-    fail("Runtime classes and connection configuration are not model data");
-  n.children.forEach(validateModelNode);
-}
-
 export class DbModel {
-  constructor(fragment) {
+  constructor(fragment, builder = null) {
+    this.builder = builder;
     this.implementation = fragment.attributes.implementation || "sqlite";
     this.relations = new Map();
     const ns =
-      fragment.children.find((c) => ["packages", "schemas"].includes(c.tag)) ||
-      makeNode("packages");
+      fragment.children.find((c) => c.tag === "packages") || makeNode("packages");
     this.db = new ModelNode(
       { ...fragment, children: fragment.children.filter((c) => c !== ns) },
       this,
@@ -834,14 +757,14 @@ export class DbModel {
         virtual: true,
         one_name: a.one_name || column.name_long,
       });
-    const parts = a.to.split(".");
+    const parts = a.related_column.split(".");
     if (parts.length === 2 && !this.obj.get(parts[0]))
       parts.unshift(table.pkg.name);
     const remote = this.table(parts.slice(0, 2).join("."));
-    if (!remote) fail(`unknown relation target ${a.to}`);
+    if (!remote) fail(`unknown relation target ${a.related_column}`);
     if (parts.length === 2) parts.push(remote.pkey);
     const rc = remote.column(parts[2]);
-    if (!rc) fail(`unknown target column ${a.to}`);
+    if (!rc) fail(`unknown target column ${a.related_column}`);
     const local =
         virtual && column.tag !== "compositeColumn"
           ? [column.name]
@@ -873,7 +796,7 @@ export class DbModel {
       onDuplicate: a.onDuplicate ?? null,
       deferred: a.deferred ?? null,
       private_relation: !a.relation_name && a.one_one !== "*",
-      case_insensitive: a.case_insensitive ?? false,
+      case_insensitive: a.insensitive ?? false,
       one_group: a.one_group ?? null,
       many_group: a.many_group ?? null,
     };
@@ -933,7 +856,7 @@ export class DbModel {
       ]) {
         const ds = c
           .values()
-          .filter((n) => ["relation", "weak_relation"].includes(n.tag));
+          .filter((n) => n.tag === "relation");
         if (ds.length > 1) fail("Multiple relations");
         for (const d of ds) {
           const a = copy(d.attributes);
@@ -991,7 +914,7 @@ export class DbModel {
         c.attributes.dtype = dst.dtype;
       if (!forward.has(key) && rel) {
         this.register(c.ownerTable, c, {
-          to: rel.one_relation,
+          related_column: rel.one_relation,
           foreign_key: false,
         });
         c.attributes.virtual = true;
@@ -1006,337 +929,20 @@ export class DbModel {
     };
     for (const c of aliases.values()) inherit(c);
   }
-  relationEntries() {
-    const packages = new Map();
-    for (const entry of this.relations) {
-      const [p, t] = entry[0].split(".");
-      if (!packages.has(p)) packages.set(p, new Map());
-      const tables = packages.get(p);
-      if (!tables.has(t)) tables.set(t, []);
-      tables.get(t).push(entry);
-    }
-    return [...packages.values()].flatMap((ts) => [...ts.values()].flat());
-  }
-  toJSON() {
-    return {
-      format: "asqueel-model",
-      version: 2,
-      database: modelDatabaseJSON(this.db),
-      namespaces: this.obj.toJSON(),
-      relations: this.relationEntries().map(([path, attributes]) => ({
-        path,
-        attributes: copy(attributes),
-      })),
-    };
-  }
-  static fromJSON(document) {
-    const d = typeof document === "string" ? JSON.parse(document) : copy(document);
-    if (!d || d.format !== "asqueel-model" || d.version !== 2 ||
-        Object.keys(d).sort().join() !== "database,format,namespaces,relations,version")
-      fail("Unsupported model JSON contract");
-    validateModelNode(d.database);
-    validateModelNode(d.namespaces);
-    if (d.database.tag !== "db" || !["schemas", "packages"].includes(d.namespaces.tag))
-      fail("Expected a database and its namespaces");
-    const model = new DbModel({...d.database, children: [...d.database.children, d.namespaces]});
-    if (!sameModelData(model.toJSON().relations, d.relations))
-      fail("Relation registry does not match the model declarations");
-    return model;
-  }
   queries(adapter = null, runtime = {}) {
     return new SqliteQueries(this, adapter, null, runtime);
   }
-  toMigration() {
-    return projectModel(this).toMigration();
+  /** The migration JSON of the recipe this model was built from. */
+  toMigration(options = {}) {
+    return migrationForBuilder(this.builder, options);
   }
 }
 export function resolveModel(builder) {
-  return builder instanceof DbModel ? builder : new DbModel(prepare(builder));
+  return builder instanceof DbModel
+    ? builder
+    : new DbModel(prepare(builder, { checkConnection: true }), builder);
 }
-export function modelToJSON(model) {
-  return model.toJSON();
-}
-export const modelFromJSON = DbModel.fromJSON;
-function projectModel(model) {
-  const b = new PhysicalBuilder(),
-    db = b.root.db({ name: model.name }),
-    schemas = db.schemas(),
-    sns = new Map(),
-    owners = new Map();
-  const schema = (n) => {
-    if (!sns.has(n)) sns.set(n, schemas.schema({ name: n }).tables());
-    return sns.get(n);
-  };
-  for (const p of model.namespaces.values()) schema(p.sqlschema);
-  const map = (t, raw) =>
-    names(raw)
-      .flatMap((n) => model.physicalColumns(t, n))
-      .map((n) => t.columns.get(n).sqlname);
-  const physicalTables = new Set();
-  for (const t of model.tables.values()) {
-    if (!sns.has(t.sqlschema) && t.pkg.tag === "package")
-      fail("table sqlschema is not derived from a package");
-    const path = t.sqlschema + "." + t.sqlname;
-    if (physicalTables.has(path)) fail("duplicate physical table");
-    physicalTables.add(path);
-    const node = schema(t.sqlschema).table({
-        name: t.sqlname,
-        ...(t.pkey ? { pkey: map(t, t.pkey).join(",") } : {}),
-        ...(t.attributes.comment ? { comment: t.attributes.comment } : {}),
-      }),
-      cols = node.columns(),
-      seen = new Set();
-    for (const c of t.columns.values()) {
-      if (seen.has(c.sqlname)) fail("duplicate physical columns");
-      seen.add(c.sqlname);
-      const a = c.attributes;
-      if (
-        a.identity_kind ||
-        a.generated ||
-        a.default_collation === false ||
-        a.owned_sequence ||
-        a.sequence_default
-      )
-        fail("unsupported physical column metadata");
-      let dtype = c.dtype;
-      const attrs = present(
-        Object.fromEntries(
-          ["size", "notnull", "unique", "indexed", "comment"].map((k) => [
-            k,
-            a[k],
-          ]),
-        ),
-      );
-      const dialect = model.implementation.startsWith("postgres")
-        ? "pg"
-        : model.implementation.split(":")[0];
-      for (const [key, out] of Object.entries({
-        default: "sqldefault",
-        extra: "extra_sql",
-        generatedExpression: "generated_expression",
-      })) {
-        const value = own(a, `sql_${dialect}_${key}`)
-          ? a[`sql_${dialect}_${key}`]
-          : a[`sql_${key}`];
-        if (value != null) attrs[out] = value;
-      }
-      // Rich indexed specifications are projected by the hierarchy's index objects.
-      if (typeof attrs.indexed === "object") {
-        if (
-          attrs.indexed.where ||
-          (attrs.indexed.method && attrs.indexed.method !== "btree")
-        )
-          fail("partial/non-btree index does not cover required full index");
-        if (attrs.indexed.unique) attrs.unique = true;
-        delete attrs.indexed;
-      }
-      if (t.pkg.tag === "package") {
-        dtype = { X: "T", Z: "T", P: "T" }[dtype] || dtype;
-        if (attrs.size) {
-          if (attrs.size.includes(":")) {
-            attrs.size = "0:" + attrs.size.split(":")[1];
-            dtype = "A";
-          } else if (!attrs.size.includes(",")) {
-            if (["A", "T"].includes(dtype)) dtype = "C";
-            else if (dtype === "N") attrs.size += ",0";
-          }
-        } else if (["A", "C"].includes(dtype)) dtype = "T";
-      }
-      owners.set(c.fullname, cols.column({ name: c.sqlname, dtype, ...attrs }));
-    }
-    if (t.composites) {
-      const cs = node.composites();
-      for (const c of t.composites.values())
-        owners.set(
-          c.fullname,
-          cs.compositeColumn({
-            name: c.name,
-            columns: map(t, c.attributes.columns).join(","),
-            unique: c.attributes.unique || false,
-          }),
-        );
-    }
-    const remapped = t.columns.values().some((c) => c.sqlname !== c.name);
-    if (t.get("constraints")) {
-      const cs = node.constraints();
-      for (const c of t.get("constraints").values()) {
-        const a = c.attributes;
-        if (a.check_clause && remapped) fail("CHECK with remapped columns");
-        cs.constraint({
-          name: c.name,
-          ...present({
-            constraint_type: a.constraint_type,
-            columns: a.columns ? map(t, a.columns).join(",") : null,
-            check_clause: a.check_clause,
-          }),
-        });
-      }
-    }
-    const pk = map(t, t.pkey);
-    for (const i of t.indexes.values()) {
-      const a = i.attributes,
-        ns = names(a.columns);
-      if (
-        i.generated &&
-        (JSON.stringify(ns.map((n) => t.columns.get(n).sqlname)) ===
-          JSON.stringify(pk) ||
-          (ns.length === 1 && t.columns.get(ns[0]).attributes.unique))
-      )
-        continue;
-      if (a.where && remapped) fail("partial index with remapped columns");
-      const anonymous = i.name === idxName(t.name, ns),
-        mapped = map(t, a.columns);
-      node.indexes().index({
-        name: anonymous ? `auto_${i.name}` : i.name,
-        x_auto_name: anonymous,
-        columns:
-          typeof a.columns === "object"
-            ? Object.fromEntries(ns.map((n, j) => [mapped[j], a.columns[n]]))
-            : mapped.join(","),
-        ...present(
-          Object.fromEntries(contract.indexOptions.map((k) => [k, a[k]])),
-        ),
-      });
-    }
-  }
-  for (const a of model.relations.values())
-    if (a.mode === "O" && a.foreignkey) {
-      const parts = a.many_relation.split("."),
-        rparts = a.one_relation.split("."),
-        t = model.table(a.many_relation),
-        remote = model.table(a.one_relation),
-        c = t.column(parts[2]),
-        target =
-          remote.composites?.get(rparts[2]) || remote.columns.get(rparts[2]);
-      const owner = owners.get(a.many_relation);
-      if (!owner || !target) fail("physical FK on virtual column");
-      const attrs = c.values().find((n) => n.tag === "relation").attributes,
-        projected = {
-          on_update: "CASCADE",
-          ...present(
-            Object.fromEntries(
-              [
-                "deferrable",
-                "initially_deferred",
-                "deferred",
-                "indexed",
-                "constraint_name",
-              ].map((k) => [k, attrs[k]]),
-            ),
-          ),
-        };
-      for (const [k, out] of [
-        ["onDelete_sql", "on_delete"],
-        ["onUpdate_sql", "on_update"],
-      ])
-        if (attrs[k] != null)
-          projected[out] = sqlActions[attrs[k].toLowerCase()];
-      owner.relation({
-        to: `${remote.sqlschema}.${remote.sqlname}.${target.tag === "compositeColumn" ? target.name : target.sqlname}`,
-        foreign_key: true,
-        ...projected,
-      });
-    }
-  const ex = model.db.get("extensions");
-  if (ex) {
-    const es = db.extensions();
-    for (const e of ex.values()) es.extension({ name: e.name });
-  }
-  return b;
-}
-/** Python's renderer retains a direct physical-schema path when no options/packages exist. */
-export function migrationForBuilder(builder) {
-  const source = builder.toSource();
-  const application = (ns) =>
-    ns.some(
-      (n) => ["packages", "options"].includes(n.tag) || application(n.children),
-    );
-  if (application(source)) return resolveModel(builder).toMigration();
-  const errors = builder.validateSource();
-  if (errors.length) fail(JSON.stringify(errors));
-  if (source.length !== 1 || source[0].tag !== "db")
-    fail("exactly one db root is required");
-  prepare(builder); // Domain-check the source independently of object-tree navigation.
-  const physical = new PhysicalBuilder();
-  const walk = (nodes, parent) => {
-    for (const n of nodes) {
-      if (["colgroup", "virtualRelation"].includes(n.tag)) continue;
-      const spec = grammar.elements[n.tag];
-      if (!spec) fail(`Unsupported model element ${n.tag}`);
-      const declared = new Set(spec.attributes.parameters.map((p) => p.name));
-      for (const k of Object.keys(n.attributes))
-        if (k !== "_meta" && !declared.has(k) && !attrsAllowed(n.tag, k))
-          fail(`${n.tag}: unknown attribute ${k}`);
-      if (
-        !physical.schema[n.tag] ||
-        ["validation", "encryption", "dynamic_fields"].includes(n.tag)
-      )
-        continue;
-      const a = copy(n.attributes);
-      delete a._meta;
-      for (const [key, out] of [
-        ["sql_default", "sqldefault"],
-        ["sql_extra", "extra_sql"],
-        ["sql_generatedExpression", "generated_expression"],
-      ]) {
-        const engine = source[0].attributes.implementation || "sqlite";
-        const dialect = engine.startsWith("postgres")
-          ? "pg"
-          : engine.split(":")[0];
-        const value = own(a, `sql_${dialect}_${key.slice(4)}`)
-          ? a[`sql_${dialect}_${key.slice(4)}`]
-          : a[key];
-        if (value != null) a[out] = value;
-        delete a[key];
-      }
-      if (n.tag === "relation") {
-        if (
-          [
-            "formulaColumn",
-            "aliasColumn",
-            "pyColumn",
-            "subQueryColumn",
-            "bagItemColumn",
-          ].includes(parent.nodeTag) &&
-          !a.foreign_key
-        )
-          continue;
-        for (const [k, out] of [
-          ["onDelete_sql", "on_delete"],
-          ["onUpdate_sql", "on_update"],
-        ]) {
-          if (a[k] != null) {
-            if (!own(sqlActions, a[k].toLowerCase())) fail(`invalid ${k}`);
-            a[out] = sqlActions[a[k].toLowerCase()];
-          }
-        }
-        if (a.foreign_key && !own(a, "on_update")) a.on_update = "CASCADE";
-      }
-      if (
-        n.tag === "index" &&
-        a.name ===
-          idxName(
-            parent?.label === "indexes"
-              ? parent.parentBag?.parentNode?.label
-              : "",
-            a.columns,
-          )
-      )
-        a.x_auto_name = true;
-      // Physical fields are selected by the migrator; presentation stays in resolve().
-      const supported = new Set(
-        physical.schema[n.tag].attributes.parameters.map((p) => p.name),
-      );
-      const attrs = Object.fromEntries(
-        Object.entries(a).filter(
-          ([k]) => supported.has(k) || ["x_auto_name", "x_weak"].includes(k),
-        ),
-      );
-      for (const k of ["sqlname", "sqlschema", "pkey_columns"]) delete attrs[k];
-      const next = parent[n.tag](attrs);
-      walk(n.children, next);
-    }
-  };
-  walk(source, physical.root);
-  return physical.toMigration();
+/** The structure-1.0 JSON handed to the migrator, rendered from the prepared source as Python does. */
+export function migrationForBuilder(builder, options = {}) {
+  return renderMigration(prepare(builder), options);
 }

@@ -2,7 +2,7 @@
 export function applicationHooks(root) {
     const pkg = root.db({name: 'hooks', implementation: 'sqlite'}).packages().package({name: 'app', sqlschema: 'main', sqlprefix: false});
     const note = pkg.table({name: 'note'});
-    note.options().sys_fields({syscode: true, draft: true});
+    note.options().sysFields({syscode: true, draft: true});
     note.column({name: 'title', dtype: 'T', notnull: true, onInserting: 'titleBefore', onUpdating: 'titleBefore',
         onDeleting: 'titleBefore', onInserted: 'titleAfter', onUpdated: 'titleAfter', onDeleted: 'titleAfter'});
     note.column({name: 'status', dtype: 'T', default: 'new', unmodifiable: true});
@@ -14,11 +14,11 @@ export function applicationHooks(root) {
     plain.column({name: 'id', dtype: 'I'});
     plain.column({name: 'title', dtype: 'T', onInserting: 'crossTitle', trigger_table: 'app.audit'});
     const simple = pkg.table({name: 'simple'});
-    simple.options().sys_fields();
+    simple.options().sysFields();
     simple.column({name: 'title', dtype: 'T'});
     const unsupported = pkg.table({name: 'unsupported'});
-    unsupported.options().sys_fields();
-    unsupported.options().record_hash();
+    unsupported.options().sysFields();
+    unsupported.options().fullUpd();
     unsupported.column({name: 'title', dtype: 'T'});
 }
 
