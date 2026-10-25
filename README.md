@@ -34,13 +34,15 @@ tra le pagine e conservata al reload. JavaScript, worker e WASM
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.7.0**:
+Il [modello](docs/model.md) è allineato ad **Asqueel Python 0.7.0 al commit
+f5185ad** (main dopo la 0.7.0, con il salvataggio della ricetta in TYTX):
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
-`recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
-i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
-sono confrontati indipendentemente con Python, anche nel playground. Il formato
-JSON versione 2 è condiviso con il codec ufficiale Python; `model.queries(adapter)`
-usa direttamente il modello caricato, anche per transazioni e hook.
+`recipe.resolve()` restituisce il modello gerarchico; `model.queries(adapter)` lo usa
+direttamente, anche per transazioni e hook. `recipe.toTytx()` salva il source della
+ricetta come `recipe.source.to_tytx()` di Python; `SqlBuilder.fromTytx(text)` lo
+ricarica attraverso la grammatica. Un file scritto da Python si carica in JS e
+viceversa. Il confronto con Python riguarda il source composto in TYTX e il JSON
+migrate, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
@@ -62,9 +64,9 @@ Le callback sincrone `sql_formula_*`, `subquery_*`, `env_*` e `formulaColumn_*`
 sono registrate in `queries(adapter, {methods})`: **33 casi** confrontano
 anche l'ordine delle chiamate, con 23 errori attesi e cache per ambiente.
 [Esempi e contratto](docs/parity.md#callback-dinamiche-del-compilatore).
-`sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
+`sysFields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
 aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel browser.
-Gerarchie, `auto_counter` e `relative_index` aggiungono **39 scenari**: percorsi,
+Gerarchie, `counter` e `relidx` aggiungono **39 scenari**: percorsi,
 spostamenti e cancellazione di sottoalberi, radici collegate, contatori per gruppo,
 rollback e riapertura IndexedDB. [Esempi e limiti](docs/playground.md#gerarchie-e-contatori-automatici).
 Le cascade applicative `onUpdate` su relazioni fisiche sono eseguite con hook e
@@ -121,8 +123,8 @@ npx playwright install chromium
 npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
-La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 352 casi query
+La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il source
+composto, migrazioni, transazioni, rollback, vincoli, persistenza e i 352 casi query
 confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 

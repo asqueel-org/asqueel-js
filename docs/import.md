@@ -103,7 +103,7 @@ asset per riaprire l'intera app senza rete rimane un lavoro separato.
 
 ## Verifiche
 
-49 scenari confrontano dichiarazioni indipendenti Python/JS: modello completo,
+49 scenari confrontano dichiarazioni indipendenti Python/JS: source TYTX,
 JSON migrate, SQL e parametri degli INSERT, risultati, default, chiavi, assenza di
 trigger e rollback. Il corpus include oltre 1.000 record per ciascun formato e
 un errore dopo il primo blocco. Il browser riesegue gli stessi scenari e riapre

@@ -37,12 +37,12 @@ Le relazioni verso tabelle escluse causano errore: includerne la struttura e,
 per le foreign key, i record necessari. Non scarichiamo automaticamente dati
 aggiuntivi e non rimuoviamo relazioni.
 
-La sorgente è una **vera SourceBag serializzata in TYTX**, con tag, etichette,
+La sorgente è il **source della ricetta serializzato in TYTX** (`SqlSourceBag`), con tag, etichette,
 attributi e metadati; non è il modello risolto e non è un elenco di chiamate.
 Una copia separata converte implementation in `sqlite` e gli schemi dei package
 in `main`, mantenendo nomi SQL e prefissi. Le collisioni tra nomi sono errori.
-Il builder originale non viene modificato. Connessioni e `x_table_class` vengono
-esclusi e segnalati in `omitted`; le funzioni Python non vengono trasferite.
+Il builder originale non viene modificato. Le connessioni vengono
+escluse e segnalate in `omitted`; le funzioni Python non vengono trasferite.
 Gli attributi della dichiarazione devono essere valori JSON portabili; resolver
 e oggetti runtime non vengono trasportati. Gli hook necessari al lavoro offline devono essere forniti dall’applicazione JS.
 Restano applicabili i limiti delle dichiarazioni SQL supportate dal porting.
@@ -142,7 +142,7 @@ npm run test:browser
   --browser output/browser-transfer-returns.json
 ```
 
-La verifica confronta modello completo, JSON migrate, catalogo fisico e valori;
+La verifica confronta source TYTX, JSON migrate, catalogo fisico e valori;
 il ricevitore controlla anche i tipi TYTX decodificati. `scripts/verify_python.py`
 include lo stesso giro con Node e Bun e verifica che le fixture corrispondano
 al Python di riferimento non modificato.

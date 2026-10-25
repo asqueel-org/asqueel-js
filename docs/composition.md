@@ -1,4 +1,4 @@
-> Aggiornamento 0.7.0: il confronto attivo usa l'intero `DbModel` e migrate.
+> Aggiornamento f5185ad: il confronto attivo usa il source composto in TYTX e migrate.
 > `subtable` e le opzioni `partition`/`tenant` sono state ritirate dal riferimento;
 > le vecchie sezioni che le descrivono non costituiscono più API attiva.
 > Vedi [modello attuale](model.md) e [parità](parity.md).
@@ -78,13 +78,13 @@ provenienza degli attributi usata per rilevare i conflitti.
 
 ## Opzioni, reset e colonne virtuali
 
-I dizionari dei campi di `sys_fields` si uniscono per chiave. Anche `parameters`,
+I dizionari dei campi di `sysFields` si uniscono per chiave. Anche `parameters`,
 `templates`, `records` e `handlers` si uniscono a un solo livello: un record o
 un oggetto annidato viene sostituito come valore, non fuso ricorsivamente.
 Le liste, come `requires.packages`, vengono sostituite.
 
 Disabilitare un campo di sistema conserva la configurazione precedente, che
-torna disponibile alla riattivazione. `options.reset({name: 'sys_fields'})`
+torna disponibile alla riattivazione. `options.reset({name: 'sysFields'})`
 invece elimina la configurazione accumulata. Per opzioni con identità, per
 esempio `numbering`, reset rimuove tutte le istanze di quel tipo. Il reset non
 crea un nodo runtime: è metadato dell'operazione di composizione e sopravvive
@@ -95,19 +95,14 @@ comuni, eliminando la definizione specifica del vecchio tipo. Non consente di
 trasformare una colonna fisica in virtuale. Questo riguarda il model: l'esecuzione
 delle colonne virtuali nelle query rimane fuori dalla copertura attuale.
 
-## Verifica con la 0.7.0
+## Verifica con Python 0.7.0 · f5185ad
 
 Il corpus di [parità](parity.md) esegue le stesse chiamate in Python e in JS e
-confronta l'accettazione dei contributi, il modello gerarchico completo e migrate.
-I vecchi confronti parziali di `ResolvedModel` sono stati sostituiti.
-
-Rimane una differenza documentata sullo stato intermedio di un errore: Python
-può inserire il primo nodo `validation` prima di rilevare un conflitto con
-`validate_len`; JS controlla prima dell'inserimento. Dopo il successivo override
-valido il modello finale coincide. I test non dichiarano equivalenti quegli
-stati intermedi falliti e non modificano Python per nasconderli.
+confronta l'accettazione dei contributi, il source composto in TYTX e migrate.
+Come Python, ogni modalità compone la ricetta e ne valida la forma; una chiamata
+di elemento alloca il ramo del suo nodo anche quando viene rifiutata.
 
 Node, Bun e il worker Chromium eseguono gli stessi casi. Il browser verifica
 anche migrazioni reali, vincoli e persistenza dopo riapertura su database
 IndexedDB temporanei. Gli esempi gruppi/formule e virtualRelation sono modificabili
-nel playground e mostrano separatamente il JSON completo e il JSON migrate.
+nel playground e mostrano separatamente il source TYTX e il JSON migrate.

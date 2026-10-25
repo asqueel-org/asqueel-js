@@ -56,7 +56,7 @@ npm run test:assembly
 
 Il riferimento usa il Python 0.6.1 fissato dal progetto. Le regole sono implementate
 separatamente in Python e JavaScript; modello e richieste dichiarative di lettura
-viaggiano dal riferimento. Si confrontano modello completo, migrate, catalogo SQLite,
+viaggiano dal riferimento. Si confrontano source TYTX, migrate, catalogo SQLite,
 SQL, parametri, record, conteggi ed errori per 86 azioni. La sequenza contiene
 votazioni approvate e respinte, revoche, ingressi/uscite, discussioni, blocchi di verbale e una votazione lasciata aperta.
 Un test di aggiornamento conserva i dati del vecchio modello e verifica il recupero dopo DDL già eseguito. Altri test simulano errori di storage durante l’apertura del voto e durante il salvataggio multiplo dell’ordine del giorno, verificando il rollback integrale. Il browser verifica anche lucchetto, focus-out, drag-and-drop, riordino da tastiera, bozze obsolete e riapertura offline.

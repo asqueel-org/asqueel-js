@@ -1,46 +1,50 @@
-# Confronto con Python 0.7.0
+# Confronto con Python 0.7.0 · f5185ad
 
-`test/fixtures/provenance.json` fissa core **0.7.0 / 02ca1e7**, migration **0.3.1**
-e genro-builders **0.30.0**. La CI fa checkout di quei commit, senza seguire `main`.
-Il verificatore rifiuta un checkout Python di un'altra versione.
+`test/fixtures/provenance.json` fissa core **0.7.0 / f5185ad**, asqueel-migration
+**0.3.5**, genro-builders **0.30.0**, genro-bag **0.28.0** e genro-tytx **0.16.4**.
+La CI fa checkout del commit core, senza seguire `main`; le altre dipendenze sono le
+release PyPI esatte di `scripts/requirements-parity.txt`. Il verificatore rifiuta un
+checkout Python di un altro commit e una dipendenza di un'altra versione.
 
-Il riferimento è la revisione verificata della release Python 0.7.0 in preparazione.
-I 218 casi includono 14 regressioni aggiunte per gerarchie collegate, contatori e
-parent personalizzati, tipi delle chiavi del master, riferimenti tra package,
-rifiuti e la correzione dei default `sys_fields` descritto in [model.md](model.md).
+Il commit f5185ad è main dopo la 0.7.0, con il salvataggio della ricetta in TYTX.
+I 218 casi includono regressioni per gerarchie collegate, contatori e parent
+personalizzati, tipi delle chiavi del master, riferimenti tra package e rifiuti.
 
 ```sh
 python3.12 -m venv .venv
 .venv/bin/python -m pip install -r scripts/requirements-parity.txt
-ASQUEEL_PYTHON_ROOT=/percorso/asqueel-0.7.0 \
-ASQUEEL_MIGRATION_ROOT=/percorso/asqueel-migration \
+ASQUEEL_PYTHON_ROOT=/percorso/asqueel \
 PYTHON=.venv/bin/python npm run verify:python
 ```
 
-Servono Node e Bun. Senza variabili, gli script cercano i checkout in `.reference/`;
-non usano più implicitamente il repository Python di sviluppo accanto al progetto.
-`npm run export:python` rigenera grammatica, costanti, modelli completi ed esempi;
-`npm run export:model` rigenera solo il corpus dei modelli. Le fixture non si correggono
-a mano. Modificare un riferimento richiede revisionare anche il codice che ne applica
-la semantica e aggiornare esplicitamente la provenienza.
+Servono Node e Bun. Senza variabile, gli script cercano il checkout in
+`.reference/asqueel-current`. `npm run export:python` rigenera grammatica, costanti,
+source ed esempi; `npm run export:model` rigenera solo il corpus dei modelli. Le fixture
+non si correggono a mano. Modificare un riferimento richiede revisionare anche il codice
+che ne applica la semantica e aggiornare esplicitamente la provenienza.
 
 ## Cosa viene confrontato
 
-`test/model-inputs.json` contiene chiamate dichiarative e contributi, non risultati
-risolti. Python e JavaScript li eseguono indipendentemente. Il confronto include
-accettazione/rifiuto delle chiamate e della composizione, **tutti** i nodi e attributi
-del modello gerarchico, registro delle relazioni completo e JSON migrate.
-I casi precedenti di contributi, gruppi, subtables e virtualRelation sono conservati
-come scenari aggiornati o verifiche dei rifiuti della 0.7.0; si aggiungono casi specifici
-del nuovo contratto. Il corpus comprende configurazione, opzioni, alias e relazioni,
-indici, metadati semantici, policy, default SQL, rimappature e casi invalidi.
+`test/model-inputs.json` contiene chiamate dichiarative e contributi, non risultati.
+Python e JavaScript li eseguono indipendentemente. Per ogni caso il confronto riguarda:
 
-Ogni caso Python gira in un processo separato per isolare i metadati del framework.
-`model_oracle.py` usa direttamente `model_to_json` della release Python. Non esiste
-un secondo codec di confronto. Ogni modello esportato da Node e Bun viene anche
-ricaricato con `model_from_json` Python e confrontato integralmente. Gli indici e le formule
-sintetizzati sono confrontati come tutti gli altri nodi. Il test di round-trip importa
-lo stesso JSON in JS e verifica che non perda informazioni.
+- accettazione o rifiuto di ogni chiamata e della composizione;
+- il **source composto in TYTX**: righe, tag, etichette e attributi, senza l'ordine
+  degli attributi (`test/source-parity.js`);
+- accettazione o rifiuto della costruzione del modello;
+- il **JSON migrate** passato ad asqueel-migration.
+
+Le espansioni non sono confrontate a parte: ogni lato espande per conto suo, e il
+JSON migrate mostra il risultato fisico. Formule, alias e relazioni sono verificati
+dal source e dagli oracoli di query e scrittura.
+
+Ogni caso Python gira in un processo separato. `model_oracle.py` compone la ricetta
+con `compose_recipe` e scrive `recipe.source.to_tytx()` e
+`recipe.render(mode='migration', foreignKeys=True)`. Il round-trip TYTX è verificato
+nei due sensi: Python carica ogni source scritto da Node e Bun (`AsqueelDb('<file>.tytx')`)
+e JS carica ogni source scritto da Python (`SqlBuilder.fromTytx`). In entrambi i casi
+il source ricaricato coincide con quello ricaricato dall'altra parte e il JSON migrate
+non cambia.
 
 Cinque esempi hanno dichiarazioni scritte separatamente in Python e JS. Sono verificati
 anche due stadi di migrazione su SQLite reale, con lettura del catalogo e diff residuo
@@ -48,12 +52,15 @@ vuoto. Node, Bun e Chromium eseguono gli stessi confronti; il browser usa fixtur
 non un processo Python. L'editor confronta gli esempi originali: modificarli non
 rigenera automaticamente il riferimento.
 
+Le classi tabella Python degli oracoli (hook, gerarchie, import) sono installate sulle
+tabelle vive con lo stesso schema del package layout: `Table` combinata con `SqlTable`.
+
 ## Query e CRUD: stesso riferimento
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
-0.7.0, fissata anche in `test/fixtures/query-provenance.json`.
+f5185ad, fissata anche in `test/fixtures/query-provenance.json`.
 I 34 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
-di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il JSON completo dei
+di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il source TYTX dei
 sette modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sette ricette hanno
 controparti scritte indipendentemente in Python e JS. Il verificatore dal vivo
 e la CI eseguono anche questi confronti; il browser usa gli oracoli salvati.
@@ -66,7 +73,7 @@ migratore JS additivo ancora le rifiuta. Questo non attesta parità della loro
 migrazione. Transazioni e helper record hanno inoltre contratti eseguiti su tutti
 e tre gli adapter; non sono un porting completo del runtime applicativo Python.
 
-Rigenerazione degli oracoli query: `PYTHON=.reference/venv-current/bin/python`,
+Rigenerazione degli oracoli query: `PYTHON=.venv/bin/python`,
 quindi `$PYTHON scripts/query_oracle.py`. Le fixture non vanno modificate a mano.
 
 ### Letture calcolate
@@ -93,11 +100,11 @@ un contratto di conversione e sono rifiutati. La serializzazione SQL delle colon
 composte riproduce Python, senza introdurre un diverso codec JSON.
 
 
-## Ciclo applicativo sys_fields e hook
+## Ciclo applicativo sysFields e hook
 
 `scripts/hooks_oracle.py` esegue le vere API `AsqueelDb`/`SqlTable` del riferimento,
 con classi Python indipendenti dal registro di callback JS. 26 scenari confrontano
-modello completo/migrate, record mutati (anche in caso di errore), eventi ordinati,
+source TYTX/migrate, record mutati (anche in caso di errore), eventi ordinati,
 parent delle scritture annidate, SQL/parametri DML e righe SQLite dopo commit/rollback.
 Il programma controlla anche che ogni errore previsto si sia realmente verificato.
 La CI e `verify:python` rieseguono Python e confrontano Node e Bun; Chromium esegue
@@ -116,7 +123,7 @@ Gli oracoli si rigenerano con `$PYTHON scripts/hooks_oracle.py`.
 `examples/hierarchies.py` e `examples/hierarchies.js` dichiarano indipendentemente
 lo stesso modello. `scripts/behaviors_oracle.py` esegue 39 scenari sul Python
 fissato; `test/behaviors-inputs.json` contiene solo le operazioni, senza algoritmi
-condivisi fra Python e JS. Si confrontano JSON completo, JSON migrate, record
+condivisi fra Python e JS. Si confrontano source TYTX, JSON migrate, record
 mutati, eventi, SQL/parametri DML (incluse le riserve SQLite) e tutte le righe
 persistite dopo commit/rollback. `verify:python` rigenera il riferimento in memoria
 e lo confronta con fixture, Node e Bun; Chromium esegue gli stessi scenari e
@@ -138,7 +145,7 @@ concorrenza fra più schede browser, crash, audit o codec completi. Le azioni su
 
 `examples/update_cascades.py` e `examples/update-cascades.js` dichiarano lo stesso
 modello con API indipendenti. `scripts/cascades_oracle.py` esegue 27 scenari sul
-Python fissato: JSON completo/migrate, record e vecchi snapshot, ordine degli hook
+Python fissato: source TYTX/migrate, record e vecchi snapshot, ordine degli hook
 con parent del trigger, SQL/parametri DML, dati dopo commit/rollback. Node e Bun
 confrontano sia le fixture sia il Python dal vivo; Chromium esegue le stesse
 operazioni e riapre IndexedDB dopo ogni caso.
@@ -159,7 +166,7 @@ non può passare per una cascade applicativa con hook.
 
 `examples/subqueries.js` e `examples/subqueries.py` definiscono indipendentemente
 il corpus `test/subquery-inputs.json`: 48 casi, inclusa la preparazione dei dati,
-confrontano modello completo, migrate JSON, SQL esatto, parametri e risultati SQLite.
+confrontano source TYTX, migrate JSON, SQL esatto, parametri e risultati SQLite.
 `test/subquery-errors.json` verifica inoltre 17 rifiuti di compilazione: si confronta
 il rifiuto, non il testo localizzato dell'eccezione. Il riferimento resta il commit
 0.7.0 fissato nella provenienza, incluso il nuovo formato JSON unificato.
@@ -293,7 +300,7 @@ Python: campi, riferimenti a relazioni, parametri e identificatori semplici,
 non espressioni arbitrarie come `$amount + 1` dentro la macro.
 
 Il confronto usa `examples/query_macros.py` e `examples/query-macros.js`, scritti
-indipendentemente: 46 casi eseguono SQL su SQLite e confrontano modello completo,
+indipendentemente: 46 casi eseguono SQL su SQLite e confrontano source TYTX,
 JSON migrate, SQL esatto, parametri e risultati. Coprono NULL, quoting, Unicode,
 parametri, formule composte, relazioni, aggregazioni, sottoquery, filtri e conteggi.
 Altri due casi nel corpus callback verificano entrambe le macro generate da metodi.
@@ -372,10 +379,10 @@ IndexedDB. I limiti e il contratto delle transazioni sono in [Importazione](impo
 
 ## Trasferimento della sorgente e degli snapshot
 
-`scripts/transfer_oracle.py` esporta una SourceBag Python TYTX, con modello
-completo, selezioni per package/tabelle, modello senza dati, colgroups,
-virtualRelation e sys_fields (compresi package vuoti richiesti). Le otto prove
-confrontano modello completo, migrate JSON, catalogo SQLite e valori fisici.
+`scripts/transfer_oracle.py` esporta il source Python in TYTX (`SqlSourceBag`), con
+modello completo, selezioni per package/tabelle, modello senza dati, colgroups,
+virtualRelation e sysFields (compresi package vuoti richiesti). Le otto prove
+confrontano source TYTX, migrate JSON, catalogo SQLite e valori fisici.
 I casi con dati modificano un documento e inseriscono una riga offline;
 verificano anche NULL con default SQL, booleani, decimali, Unicode, nomi SQL
 personalizzati, testo con suffissi TYTX e date con offset/microsecondi.
@@ -400,10 +407,10 @@ sono rifiutati da Python e JS con rollback dei record precedenti, anche su WASM.
 Il database di staging conserva le Bag in TYTX: il confronto riguarda il valore
 tipizzato, non la formattazione XML del writer applicativo Python.
 
-## Contratto unificato nel consolidamento 0.2.0
+## Provenienza attiva
 
-La provenienza attiva è Python **0.7.0**, commit `02ca1e7`, registrata nei tre file
-`*-provenance.json`. Il documento modello usa il formato ufficiale `asqueel-model`
-versione 2. I vecchi JSON v1 richiedono una nuova esportazione dalla ricetta.
-I bundle SourceBag/TYTX seguono il loro contratto di trasferimento e vengono
-verificati separatamente nei test di ritorno Python e negli upgrade dei workspace.
+La provenienza attiva è Python **0.7.0**, commit `f5185ad`, registrata nei tre file
+`*-provenance.json`. Il JSON del modello risolto non esiste più: il confronto usa il
+source composto in TYTX e il JSON migrate. I bundle di trasferimento contengono lo
+stesso source TYTX e sono verificati nei test di ritorno Python e negli upgrade dei
+workspace.

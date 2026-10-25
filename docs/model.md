@@ -1,15 +1,15 @@
-# Modello risolto · Python 0.7.0
+# Modello · Python 0.7.0 · f5185ad
 
-Il contratto del modello portabile è il `DbModel` gerarchico di Asqueel **0.7.0**, commit
-`02ca1e7c8a66dc9140bc76baf3185c1283cae9f8` (release in preparazione). La versione del codice di riferimento è fissata;
-la grammatica JSON da sola non implementa espansioni, relazioni o migrazioni.
+Il riferimento è Asqueel Python **0.7.0** al commit
+`f5185ad050adc49e8773007d078133a07ee07f36`, fissato in `test/fixtures/provenance.json`.
+Il commit è main dopo la 0.7.0, con il salvataggio della ricetta in TYTX.
 
 ```js
-import {defineModel, DbModel} from '@asqueel/asqueel-js';
+import {defineModel, SqlBuilder} from '@asqueel/asqueel-js';
 
 const recipe = defineModel(root => {
     const item = root.db('offline').packages().package('app').table('item');
-    item.options().sys_fields();
+    item.options().sysFields();
     item.column({name: 'description', dtype: 'T'});
 });
 const model = recipe.resolve();
@@ -17,106 +17,82 @@ const table = model.table('app.item');
 console.log(table.columns.keys());
 console.log(table.virtual_columns.keys());
 console.log(table.logicalDeletionField); // __del_ts
-const json = model.toJSON();
-const restored = DbModel.fromJSON(JSON.stringify(json));
-const migration = restored.toMigration();
+const saved = recipe.toTytx();               // come recipe.source.to_tytx() in Python
+const loaded = SqlBuilder.fromTytx(saved);   // come AsqueelDb('<file>.tytx') in Python
+const migration = loaded.toMigration();
 ```
 
-`recipe.toJSON()` equivale a `recipe.resolve().toJSON()`. `resolveModel(recipe)`,
-`modelToJSON(model)` e `modelFromJSON(document)` sono le funzioni equivalenti.
-Ogni risoluzione possiede i propri dati: non modifica il sorgente né le altre risoluzioni.
-I binding statici della Data Bag vengono risolti tramite Builders JS prima della
-preparazione; la copia della ricetta isola anche la Data Bag. Il JSON completo
-contiene già i valori risolti e non richiede la Data Bag originale.
+`resolveModel(recipe)` equivale a `recipe.resolve()`. Ogni risoluzione possiede i
+propri dati: non modifica il source né le altre risoluzioni. I binding statici della
+Data Bag sono risolti tramite Builders JS prima della preparazione.
+
+## Source in TYTX
+
+- `recipe.toTytx()` scrive il source della ricetta. La classe del source è
+  `SqlSourceBag`, registrata come sottotipo TYTX con lo stesso nome di Python.
+- `SqlBuilder.fromTytx(text)` decodifica il source e ne riesegue il nodo `db`,
+  elemento per elemento, in un nuovo `SqlDatabaseConfig`. La grammatica valida
+  ogni chiamata: un attributo fuori grammatica solleva un errore.
+- Un file scritto da Python si carica in JS e un file scritto da JS si carica in
+  Python. Il verificatore controlla che i due caricamenti producano lo stesso source
+  e lo stesso JSON migrate.
+- Il JSON del modello risolto non esiste più: `toJSON()` e `DbModel.fromJSON()` sono
+  stati rimossi, come `model_to_json` in Python.
 
 ## Oggetti e identità
 
 `model.db` conserva la dichiarazione del database, `model.namespaces` / `model.obj`
-la radice di package o schemi. `model.tables` è una `Map` degli stessi oggetti accessibili
+la radice dei package. `model.tables` è una `Map` degli stessi oggetti accessibili
 con `model.table('package.table')`. I contenitori espongono `get`, `keys`, `values`,
-`items` e `at('percorso')`; `at('.percorso')` parte dalla radice del contenitore.
-Le colonne espongono `table`, `pkg`, `fullname`, `dtype`, `sqlname`, nomi descrittivi,
-`print_width` e `validations`. Le tabelle espongono PK, nomi SQL e campi delle policy.
+`items` e `at('percorso')`. Le colonne espongono `table`, `pkg`, `fullname`, `dtype`,
+`sqlname`, nomi descrittivi, `print_width` e `validations` (gli attributi `validate_*`).
 
-`table.column('@relation.field')` segue le relazioni. Gli alias mantengono il riferimento
+`table.column('@relation.field')` segue le relazioni. Gli alias mantengono
 `originalColumn` e sovrappongono gli attributi espliciti a quelli della destinazione.
-I cicli degli alias sono rifiutati quando si risolve il percorso, come nella 0.7.0.
-`model.relations` contiene gli attributi delle relazioni dirette e inverse, con chiavi
+`model.relations` contiene le relazioni dirette e inverse, con chiavi
 `package.table.@name`. `table.relations.getNode(path)` espone una navigazione pigra.
 
-## JSON completo
+## Grammatica
 
-Il formato è `asqueel-model`, versione `2`, condiviso con il codec ufficiale Python. Contiene:
-
-- albero del database e albero dei namespace, in ordine;
-- **tutti** gli attributi e figli di ogni nodo, incluse opzioni, validazioni,
-  cifratura dichiarata, formule, alias, gruppi, compositi e indici generati;
-- tutte le relazioni registrate da Python, nei due versi;
-- origine degli indici generati e default degli alias necessari al ripristino.
-
-Non serializza puntatori ai genitori, istanze operative `SqlTable`, callback o cache:
-le identità e i collegamenti vengono ricostruiti attraverso lo stesso costruttore.
-Connessioni e relativi default sono esclusi. Il registro delle relazioni viene
-verificato rispetto alle dichiarazioni. Il formato precedente è rifiutato: occorre
-riesportare dalla ricetta con la versione nuova.
-
-`restored.queries(adapter, runtime)` compila ed esegue direttamente il modello
-caricato. Ricette e JSON confluiscono nello stesso `DbModel`; transazioni, hook e
-importazioni conservano quella stessa istanza. Le viste interne del compilatore
-leggono gli attributi del modello, senza ricostruire una copia semantica.
+- Un modello parte solo da `packages().package(...)`. Uno schema fisico si dichiara
+  con `package({name: 'x', sqlschema: 'p', sqlprefix: false})`.
+- Opzioni di tabella: `sysFields`, `counter`, `relidx`, `df`, `fullUpd`, `sysrecords`,
+  `hierarchical`, `broadcast`, `numbering`, `retention`, `archive`, `enabled_when`,
+  `release`. Colonna: `readOnly`.
+- `relation({related_column, ...})`; `insensitive` sostituisce `case_insensitive`.
+  Una relazione senza foreign key indicizza le colonne dei due lati.
+- Una pkey composta nomina la sua `compositeColumn`.
+- La grammatica controlla `retention.days >= 0`, `hierarchical.depth >= 1`,
+  `driver.connect_timeout`, `driver.timeout` e `driver.cached_statements >= 0` e
+  `package.sqlprefix` (non vuoto, senza `_` finale). `column` dichiara i sei parametri
+  `sql_pg_*` e `sql_sqlite_*`; `validate_*` è l'unica famiglia di attributi aperta.
+- Nessun attributo `x_*` nel source e nel modello.
 
 ## Espansioni e confini
 
-Sono incluse le espansioni strutturali di `sys_fields` (anche le cinque virtuali standard),
-`full_update`, `record_hash`, `audit`, `dynamic_fields`, `auto_counter`, `protection`,
-`hierarchical`, `attachments` e `relative_index`, con metadati, formule e nomi dei trigger.
-La 0.7.0 include `hierarchical.linked_to`: genera la chiave verso il master, il
-collegamento inverso alla radice e i nomi dei relativi hook. Sono ammessi anche
-nomi personalizzati per il campo contatore gerarchico. Le altre opzioni conservano
-le dichiarazioni. `system_records` e `release` attive e `hierarchical.depth`
-restano rifiutate dalla 0.7.0.
+Sono incluse le espansioni strutturali di `sysFields` (con le cinque colonne virtuali
+standard), `fullUpd`, `df`, `counter`, `hierarchical` (anche `linked_to`) e `relidx`,
+con formule e nomi dei trigger. `sysrecords` e `release` attive e
+`hierarchical.depth` restano rifiutate, come in Python.
 
-`SqlDatabaseConfig` aggiunge le dichiarazioni di connessione e le opzioni del driver.
-Risolverlo non apre connessioni: i dati amministrativi non diventano tabelle o relazioni.
-Gli adapter JS restano un livello distinto.
+`SqlDatabaseConfig` aggiunge connessioni e opzioni del driver. La risoluzione del
+modello controlla le impostazioni della connessione principale come `AsqueelDb`
+Python, senza aprire connessioni. Gli adapter JS restano un livello distinto.
 
-Il perimetro è il modello dichiarativo serializzabile. Classi Python `x_table_class`,
-importazione di package Python da filesystem, mixin e callback eseguibili non sono
-trasferibili tramite JSON: richiedono equivalenti JS, non fanno parte di questo codec.
-La risoluzione delle dichiarazioni di default, validazione, cifratura e trigger
-**non esegue** comportamenti sulle righe. Il runtime applicativo separato ora esegue
-`sys_fields`, default, protezioni e hook JS: vedi [API e limiti](playground.md#sys_fields-e-hook-applicativi).
+Il JSON migrate è prodotto dal source preparato, come `SqlMigrationRenderer` Python:
+le stesse opzioni e regole dei package agiscono sul modello e sulla migrazione.
 
-## Differenze rispetto al precedente PoC
-
-- `inverse` → `relation_name`; azioni applicative `onDelete` / `onUpdate`,
-  azioni SQL `onDelete_sql` / `onUpdate_sql`.
-- `sqldefault` → `sql_default`, `extra_sql` → `sql_extra`,
-  `generated_expression` → `sql_generatedExpression` nelle dichiarazioni.
-  Il JSON migrate mantiene le chiavi del proprio formato `structure-1.0`.
-- `subtable`, le opzioni `partition` e `tenant`, e attributi extra non dichiarati
-  sono rimossi. Le partizioni si dichiarano con `partition_<campo>` sulla tabella.
-  L'esempio gruppi usa una formula esplicita al posto di `subtable`.
-- `virtualRelation` resta un nodo di dichiarazione: nella 0.7.0 il registro gerarchico
-  non ne costruisce gli archi. Non anticipiamo la futura compilazione delle query.
+Il caricamento di package Python da filesystem (`package({path})`) e le classi
+`Table` dei package layout non sono disponibili in JS: gli hook si registrano nel
+runtime JS. Il runtime applicativo esegue `sysFields`, default, protezioni e hook:
+vedi [API e limiti](playground.md#sysfields-e-hook-applicativi).
 
 ## Particolarità del riferimento
 
-Il riferimento include la correzione Python della [issue #44](https://github.com/asqueel-org/asqueel/issues/44).
-I default omessi appartengono a ogni singola dichiarazione: `indexed=False` su un
-campo di sistema resta esplicito anche dopo l'aggiunta di una colonna estranea.
-Il caso `061/sysfield_explicit_indexed_false` conserva questa regressione nel corpus
-differenziale, confrontando modello completo e migrazione. Un valore omesso continua
-a ricevere il default di `sys_fields`. La release PyPI 0.7.0 contiene ancora il difetto;
-il confronto usa il commit corretto fissato in `provenance.json`, con Builders 0.29.0.
-
-Il JSON mantiene la versione di formato `1`, ma dichiara il riferimento `0.7.0`.
-Il ripristino richiede questo riferimento: i vecchi snapshot `0.6.0` vanno rigenerati
-dalla ricetta, per applicare le nuove espansioni in modo esplicito.
-
-Il renderer Python ha inoltre due percorsi: i package/opzioni passano dal modello
-risolto; uno schema fisico semplice viene proiettato direttamente. `recipe.toMigration()`
-segue la stessa scelta. `model.toMigration()` proietta sempre il modello risolto,
-come `to_physical_builder(model)` in Python. Alcune dichiarazioni fisiche storiche
-(ad esempio PK multiple senza un composito nominato) possono migrare direttamente
-ma non essere navigabili dal `DbModel` Python: i due esiti sono verificati separatamente.
+- Due package con lo stesso nome fisico di tabella (`sqlprefix: false`) producono una
+  sola tabella nel JSON migrate: vince la seconda dichiarazione, come in Python.
+- `virtualRelation` resta un nodo di dichiarazione: il registro gerarchico non ne
+  costruisce gli archi.
+- Le colonne `formulaColumn_<x>()` sono costruite alla prima lettura delle colonne
+  virtuali di una tabella, anche durante la compilazione di una scrittura, con una
+  cache per ambiente.

@@ -1,5 +1,34 @@
 # Changelog
 
+## Non rilasciato — parità con Python asqueel f5185ad
+
+- Riferimento Python: asqueel 0.7.0 al commit f5185ad (main dopo la 0.7.0 con il
+  salvataggio della ricetta in TYTX), asqueel-migration 0.3.5, genro-builders 0.30.0,
+  genro-bag 0.28.0, genro-tytx 0.16.4. Il riferimento precedente, 02ca1e7, era un
+  commit intermedio della 0.7.0.
+- Grammatica rigenerata da Python. Opzioni con i nomi legacy: `sysFields`, `counter`,
+  `relidx`, `df`, `fullUpd`, `sysrecords`; colonna `readOnly`.
+  `relation(related_column, ..., insensitive=)` sostituisce `to` e `case_insensitive`.
+- Escono dalla grammatica `schemas`/`schema`, `weak_relation`, `validation`,
+  `encryption` e le opzioni `record_hash`, `audit`, `protection`, `attachments`.
+  Un modello parte solo da `packages().package(...)`; una pkey composta nomina la
+  sua `compositeColumn`.
+- Nessun attributo `x_*` nel source e nel modello. Una relazione senza foreign key
+  indicizza le sue colonne; i campi gerarchici e le colonne copiate dal padre
+  derivano dall'opzione `hierarchical`.
+- La grammatica controlla `retention.days >= 0`, `hierarchical.depth >= 1`, i timeout
+  del driver `>= 0` e `package.sqlprefix`; `column` dichiara i sei parametri
+  `sql_pg_*`/`sql_sqlite_*`.
+- Il JSON migrate è prodotto dal source preparato, come `SqlMigrationRenderer`
+  Python. La costruzione del modello controlla le impostazioni di connessione
+  come `AsqueelDb`. Le colonne `formulaColumn_<x>()` sono costruite alla prima
+  lettura delle colonne virtuali, anche nelle scritture.
+- `SqlSourceBag` è registrato come sottotipo TYTX con il nome Python;
+  `recipe.toTytx()` e `SqlBuilder.fromTytx()` salvano e ricaricano la ricetta.
+- Rimossi `toJSON()`, `DbModel.fromJSON()`, `modelToJSON` e `modelFromJSON`: il
+  JSON del modello non esiste più in Python. I confronti usano il source composto
+  in TYTX e il JSON migrate.
+
 ## 0.2.0 — Candidato di consolidamento
 
 - Riuniti i porting già presenti su main, l'export HTML e la demo assemblea offline:
