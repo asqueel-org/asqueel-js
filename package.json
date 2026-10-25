@@ -2,7 +2,7 @@
   "name": "@asqueel/asqueel-js",
   "version": "0.2.0",
   "type": "module",
-  "description": "Model-driven SQLite for offline browser applications, Node.js and Bun",
+  "description": "Run Asqueel data models on SQLite in the browser, Node.js and Bun, offline, with Python parity",
   "exports": {
     ".": "./src/index.js",
     "./sqlite": "./src/sqlite.js",
@@ -60,7 +60,7 @@
     "type": "git",
     "url": "git+https://github.com/asqueel-org/asqueel-js.git"
   },
-  "homepage": "https://github.com/asqueel-org/asqueel-js",
+  "homepage": "https://asqueel-js.readthedocs.io/en/latest/",
   "bugs": {
     "url": "https://github.com/asqueel-org/asqueel-js/issues"
   },
@@ -77,5 +77,18 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "keywords": [
+    "asqueel",
+    "sqlite",
+    "offline",
+    "browser",
+    "indexeddb",
+    "wasm",
+    "orm",
+    "data-model",
+    "query-builder",
+    "migrations"
+  ],
+  "author": "Softwell S.r.l."
 }
