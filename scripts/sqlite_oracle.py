@@ -35,11 +35,11 @@ def sqlite_oracle():
             if version == 1:
                 with sqlite3.connect(path) as conn:
                     conn.execute("PRAGMA foreign_keys=ON")
-                    conn.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ("demo-customer", "Cliente di prova"))
+                    conn.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ("demo-customer", "Sample customer"))
                     conn.execute('INSERT INTO sales_invoice (id,customer_id,amount) VALUES (?,?,?)',
                                  ("demo-invoice", "demo-customer", 42.5))
         with sqlite3.connect(path) as conn:
-            assert conn.execute("SELECT name FROM crm_customer").fetchone()[0] == "Cliente di prova"
+            assert conn.execute("SELECT name FROM crm_customer").fetchone()[0] == "Sample customer"
             assert conn.execute("SELECT amount FROM sales_invoice").fetchone()[0] == 42.5
     return result
 

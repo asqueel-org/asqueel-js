@@ -9,7 +9,7 @@ export class PlaygroundIndex extends IndexPage {
     static compact = false;
     static get navigation() {
         const navigation = new Bag();
-        for (const [key, title] of [['models', 'Modello'], ['sqlite', 'Migrazioni SQLite'], ['queries', 'Query'], ['transfer', 'Trasferimento offline']])
+        for (const [key, title] of [['models', 'Models'], ['sqlite', 'SQLite migrations'], ['queries', 'Queries'], ['transfer', 'Offline transfer']])
             navigation.setItem(key, null, {title, url: `?page=${key}&embedded=1`});
         return navigation;
     }
@@ -24,11 +24,11 @@ export class PlaygroundIndex extends IndexPage {
     left(pane) {
         super.left(pane);
         pane.setAttr({width: '220px', minSize: 160, maxSize: 360,
-            drawer: '^navigationDrawer', drawer_label: 'Navigazione', padding: '14px 8px'});
+            drawer: '^navigationDrawer', drawer_label: 'Navigation', padding: '14px 8px'});
     }
     bottom(pane) {
         pane.setAttr({height: '30px', padding: '6px 16px', class: 'index-footer'});
-        pane.span('SQLite su IndexedDB · le pagine aperte mantengono il proprio stato');
+        pane.span('SQLite in IndexedDB · open pages keep their own state');
     }
     behavior(shell) {
         shell.dataController({func: 'indexMount', _onStart: true,

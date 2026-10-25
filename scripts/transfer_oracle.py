@@ -112,10 +112,10 @@ def evaluate(bundle, edit=False):
         if edit:
             with sqlite3.connect(path) as con:
                 if 'work.document' in resolve_model(builder).tables:
-                    con.execute('UPDATE work_document SET doc_title=? WHERE id=?', ('Modificato offline', 'd1'))
+                    con.execute('UPDATE work_document SET doc_title=? WHERE id=?', ('Changed offline', 'd1'))
                     con.execute('INSERT INTO work_line (id, document_id, description, quantity) VALUES (?,?,?,?)', ('l2','d1','Nuova riga offline',3))
                 if 'files.asset' in resolve_model(builder).tables:
-                    edited=Bag();edited.set_item('edited','Scritto nel browser',_attributes={'active':True},node_tag='field')
+                    edited=Bag();edited.set_item('edited','Written in the browser',_attributes={'active':True},node_tag='field')
                     con.execute('UPDATE files_asset SET payload=?, binary=? WHERE id=?',(bag_wire(edited),bytes([255,0,128,1]),'edited'))
         return snapshot(builder, path)
 
@@ -203,7 +203,7 @@ def verify_returns(returns):
             assert rows['rich']['payload']['nested.binary']==bytes(range(256))
             assert isinstance(rows['empty']['payload'],Bag) and len(rows['empty']['payload'])==0
             assert rows['empty']['binary']==b'' and rows['null']['binary'] is None
-            assert rows['edited']['payload']['edited']=='Scritto nel browser'
+            assert rows['edited']['payload']['edited']=='Written in the browser'
             assert rows['edited']['binary']==bytes([255,0,128,1])
         # Verify TYTX semantic types independently of SQLite storage coercion.
         if 'work.document' in item['bundle']['data']:

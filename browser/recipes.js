@@ -30,7 +30,7 @@ export function diff(a, b, path = '$') {
         return [...new Set([...Object.keys(a), ...Object.keys(b)])].sort()
             .flatMap(key => diff(a[key], b[key], `${path}.${key}`));
     }
-    const value = v => v === undefined ? '(assente)' : JSON.stringify(v);
+    const value = v => v === undefined ? '(absent)' : JSON.stringify(v);
     return [`${path}\n  JavaScript: ${value(a)}\n  Python:     ${value(b)}`];
 }
 

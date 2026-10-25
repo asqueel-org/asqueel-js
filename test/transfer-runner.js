@@ -59,12 +59,12 @@ export async function runTransfer(adapter, entry) {
     const before = await transferSnapshot(adapter, builder);
     if (!equal(before, entry.before)) throw new Error(`${entry.name}: Python input model/structure/values differ: ${firstDifference(before, entry.before)}`);
     if (builder.resolve().tables.has('work.document')) {
-        await builder.queries(adapter).table('work.document').update({id:'d1', title:'Modificato offline'});
+        await builder.queries(adapter).table('work.document').update({id:'d1', title:'Changed offline'});
         await builder.queries(adapter).table('work.line').insert({id:'l2', document_id:'d1', description:'Nuova riga offline', quantity:3});
     }
     if (builder.resolve().tables.has('files.asset')) {
         const edited = new Bag();
-        edited.setItem('edited','Scritto nel browser',{active:true},'>',false,false,null,false,false,null,'field');
+        edited.setItem('edited','Written in the browser',{active:true},'>',false,false,null,false,false,null,'field');
         // Keep the snapshot work separate from the broader write-compiler port.
         const bytes = new Uint8Array([99,255,0,128,1,99]).subarray(1,5);
         await adapter.execute('UPDATE files_asset SET payload=:bag, binary=:blob WHERE id=:id', {':bag':edited.toTytx(), ':blob':bytes, ':id':'edited'});

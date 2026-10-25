@@ -70,7 +70,7 @@ try:
     js('const dt=new DataTransfer();dt.items.add(new File(['+json.dumps(bundle)+'],"python-snapshot.json",{type:"application/json"}));const input=document.querySelector("#transfer-file");input.files=dt.files;input.dispatchEvent(new Event("change",{bubbles:true}));return input.files[0].size;')
     click('#transfer-load');status('Snapshot caricato');compare(entry['before']);print('Initial full model, migration, SQLite catalog and values match Python',flush=True)
     requests=[
-      {'operation':'update','table':'work.document','values':{'id':'d1','title':'Modificato offline'}},
+      {'operation':'update','table':'work.document','values':{'id':'d1','title':'Changed offline'}},
       {'operation':'insert','table':'work.line','values':{'id':'l2','document_id':'d1','description':'Nuova riga offline','quantity':3}},
       {'operation':'insert','table':'work.line','values':{'id':'temporary','document_id':'d1','quantity':1}},
       {'operation':'delete','table':'work.line','values':{'id':'temporary'}},

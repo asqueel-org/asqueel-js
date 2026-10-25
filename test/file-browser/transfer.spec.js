@@ -12,14 +12,14 @@ const compare = (actual,expected) => {
 async function load(page, bundle) {
     await page.locator('#transfer-file').setInputFiles({name:'python.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(bundle))});
     await page.locator('#transfer-load').click();
-    await expect(page.locator('#transfer-status')).toContainText('Snapshot caricato');
+    await expect(page.locator('#transfer-status')).toContainText('Snapshot loaded');
 }
 async function execute(page, request) {
     // Edit the real bound control, not a test-only command channel.
     await page.locator('#transfer-request').fill(JSON.stringify(request));
     await page.locator('#transfer-request').press('Tab');
     await page.locator('#transfer-edit').click();
-    await expect(page.locator('#transfer-status')).toContainText(request.operation.toUpperCase()+' completato');
+    await expect(page.locator('#transfer-status')).toContainText(request.operation.toUpperCase()+' completed');
 }
 async function download(page) {
     const pending=page.waitForEvent('download');
@@ -53,18 +53,18 @@ test('single Gramlot HTML: offline first launch, CRUD, browser restart and Pytho
             .toEqual({online:false,protocol:'file:'});
         await load(page,entry.bundle);
         compare(await snapshot(page),entry.before);
-        await execute(page,{operation:'update',table:'work.document',values:{id:'d1',title:'Modificato offline'}});
+        await execute(page,{operation:'update',table:'work.document',values:{id:'d1',title:'Changed offline'}});
         await execute(page,{operation:'insert',table:'work.line',values:{id:'l2',document_id:'d1',description:'Nuova riga offline',quantity:3}});
         await execute(page,{operation:'insert',table:'work.line',values:{id:'temporary',document_id:'d1',quantity:1}});
         await execute(page,{operation:'delete',table:'work.line',values:{id:'temporary'}});
         await execute(page,{operation:'select',table:'work.document',columns:'$id,$title',order_by:'$id'});
         const result=await snapshot(page);
         compare(result,entry.after);
-        expect(result.records.find(r=>r.id==='d1').title).toBe('Modificato offline');
+        expect(result.records.find(r=>r.id==='d1').title).toBe('Changed offline');
         await context.close();
         context=await launch();page=context.pages()[0];
         await page.goto(url);
-        await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
+        await expect(page.locator('#transfer-status')).toContainText('Workspace restored');
         compare(await snapshot(page),entry.after);
         const bundle=await download(page);
         await writeFile('output/file-transfer-returns.json',JSON.stringify([{name:entry.name,bundle}]));
@@ -74,9 +74,9 @@ test('single Gramlot HTML: offline first launch, CRUD, browser restart and Pytho
         // Different HTML paths do not accidentally share the active workspace.
         const other=join(directory,'altro.html');await copyFile(file,other);
         await page.goto(pathToFileURL(other).href);
-        await expect(page.locator('#transfer-status')).toContainText('Carica uno snapshot');
+        await expect(page.locator('#transfer-status')).toContainText('Load a Python snapshot');
         await page.goto(url);
-        await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
+        await expect(page.locator('#transfer-status')).toContainText('Workspace restored');
         compare(await snapshot(page),entry.after);
     } finally {await context.close();await rm(directory,{recursive:true,force:true});}
 });
@@ -91,7 +91,7 @@ test('single HTML preserves Bag/blob values after file reload without networking
         await load(page,entry.bundle);
         compare(await snapshot(page),entry.before);
         await page.reload();
-        await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
+        await expect(page.locator('#transfer-status')).toContainText('Workspace restored');
         compare(await snapshot(page),entry.before);
         const returned=await download(page);
         const rows=text=>text.trim().split('\n').map(line=>JSON.parse(line.slice(0,-4))).sort((a,b)=>a.id.localeCompare(b.id));

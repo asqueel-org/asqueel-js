@@ -6,7 +6,7 @@ import oracle from '../test/fixtures/cascades.json' with {type: 'json'};
 
 export async function cascadesChecks() {
     if (!equal(sourceRows(cascadesModel.toTytx()), sourceRows(oracle.source)) || !equal(cascadesModel.toMigration(), oracle.desired))
-        throw new Error('Modello cascade onUpdate diverso da Python');
+        throw new Error('onUpdate cascade model differs from Python');
     const checks = [];
     let sample;
     for (const entry of oracle.cases) {
@@ -14,22 +14,22 @@ export async function cascadesChecks() {
         let db = await openBrowserSQLite(id);
         try {
             const actual = await runCascadeCase(db, entry.input);
-            if (!equal(actual, entry.expected)) throw new Error(`Cascade onUpdate diversi da Python: ${entry.name}`);
+            if (!equal(actual, entry.expected)) throw new Error(`onUpdate cascades differ from Python: ${entry.name}`);
             if (entry.name === 'cascade_chain_and_hooks') sample = actual;
             await db.close();
             db = await openBrowserSQLite(id);
             for (const [table, rows] of Object.entries(entry.expected.rows)) {
                 if (!equal(await db.query(`SELECT * FROM "${table}" ORDER BY id`), rows))
-                    throw new Error(`Riapertura dopo ${entry.name}: dati diversi da Python`);
+                    throw new Error(`Reopen after ${entry.name}: data differs from Python`);
             }
-            checks.push(`${entry.name}: record, eventi, SQL, rollback e riapertura identici a Python`);
+            checks.push(`${entry.name}: records, events, SQL, rollback and reopen identical to Python`);
         } finally {
             await db.close();
             await new Promise((resolve, reject) => {
                 const request = indexedDB.deleteDatabase(id);
                 request.onsuccess = resolve;
                 request.onerror = () => reject(request.error);
-                request.onblocked = () => reject(new Error('Pulizia database cascade bloccata'));
+                request.onblocked = () => reject(new Error('Cascade database cleanup blocked'));
             });
         }
     }

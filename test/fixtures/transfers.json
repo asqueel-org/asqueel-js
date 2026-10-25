@@ -2176,7 +2176,7 @@
         "work.document": [
           {
             "id": "d1",
-            "doc_title": "Modificato offline",
+            "doc_title": "Changed offline",
             "active": 1,
             "day": "2026-10-21",
             "moment": "2026-10-21T10:11:12.123456+02:00",
@@ -3911,7 +3911,7 @@
         "work.document": [
           {
             "id": "d1",
-            "doc_title": "Modificato offline",
+            "doc_title": "Changed offline",
             "active": 1,
             "day": "2026-10-21",
             "moment": "2026-10-21T10:11:12.123456+02:00",
@@ -5859,7 +5859,7 @@
         "work.document": [
           {
             "id": "d1",
-            "doc_title": "Modificato offline",
+            "doc_title": "Changed offline",
             "active": 1,
             "day": "2026-10-21",
             "moment": "2026-10-21T10:11:12.123456+02:00",
@@ -9838,7 +9838,7 @@
                     [],
                     "edited",
                     "field",
-                    "Scritto nel browser",
+                    "Written in the browser",
                     {
                       "active": true
                     }

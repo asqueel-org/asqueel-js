@@ -18,40 +18,40 @@ export async function queryChecks() {
     let db = await openBrowserSQLite(id);
     const model = defineModel(browserQueries);
     try {
-        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello query diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Query model differs from Python');
         await migrateSQLite(db, model.toMigration());
-        checks.push('Modello query identico a Python, quattro tabelle migrate');
+        checks.push('Query model identical to Python, four tables migrated');
         let compiler = model.queries(db);
         for (const c of oracle.cases) {
-            if (!equal(compiler.compile(c.request), c.compiled)) throw new Error(`SQL/parametri diversi: ${c.name}`);
+            if (!equal(compiler.compile(c.request), c.compiled)) throw new Error(`SQL/parameters differ: ${c.name}`);
             const rows = await compiler.execute(c.request);
-            if (!equal(rows, c.rows)) throw new Error(`Risultati diversi: ${c.name}`);
+            if (!equal(rows, c.rows)) throw new Error(`Results differ: ${c.name}`);
         }
-        checks.push(`${oracle.cases.length} query: SQL e parametri esattamente identici a Python`);
-        checks.push(`${oracle.cases.length} esecuzioni SQLite: risultati identici a Python`);
+        checks.push(`${oracle.cases.length} queries: SQL and parameters exactly identical to Python`);
+        checks.push(`${oracle.cases.length} SQLite executions: results identical to Python`);
         const people = compiler.table('notes.person');
         let duplicate = false;
         try { await people.insert({id: 101, name: 'duplicato'}); } catch { duplicate = true; }
-        if (!duplicate) throw new Error('INSERT duplicato non rifiutato');
+        if (!duplicate) throw new Error('Duplicate INSERT not rejected');
         const before = await people.query({columns: '*', order_by: '$id'}).fetch();
-        if (!equal(before, oracle.cases.find(c => c.name === 'people').rows)) throw new Error('Rollback INSERT fallito');
-        checks.push('INSERT duplicato rifiutato; rollback senza alterare i record');
+        if (!equal(before, oracle.cases.find(c => c.name === 'people').rows)) throw new Error('INSERT rollback failed');
+        checks.push('Duplicate INSERT rejected; rollback without changing the records');
         await queryRuntimeChecks(compiler);
-        checks.push('CRUD, record/count/exists, transazioni atomiche e rollback verificati su WASM');
+        checks.push('CRUD, record/count/exists, atomic transactions and rollback verified on WASM');
         const featureModel = defineModel(queryFeatures);
-        if (!equal(sourceRows(featureModel.toTytx()), sourceRows(featureOracle.source)) || !equal(featureModel.toMigration(), featureOracle.desired)) throw new Error('Modello feature diverso da Python');
+        if (!equal(sourceRows(featureModel.toTytx()), sourceRows(featureOracle.source)) || !equal(featureModel.toMigration(), featureOracle.desired)) throw new Error('Feature model differs from Python');
         for (const sql of featureOracle.ddl) await db.execute(sql);
         for (const c of featureOracle.cases) {
-            if (!equal(featureModel.queries().compile(c.request), c.compiled)) throw new Error(`SQL/parametri feature diversi: ${c.name}`);
-            if (!equal(await featureModel.queries(db).execute(c.request), c.rows)) throw new Error(`Risultati feature diversi: ${c.name}`);
+            if (!equal(featureModel.queries().compile(c.request), c.compiled)) throw new Error(`Feature SQL/parameters differ: ${c.name}`);
+            if (!equal(await featureModel.queries(db).execute(c.request), c.rows)) throw new Error(`Feature results differ: ${c.name}`);
         }
-        checks.push(`${featureOracle.cases.length} casi aggiuntivi Python: formule, default, colonne generate, partizioni e chiavi composte`);
+        checks.push(`${featureOracle.cases.length} additional Python cases: formulas, defaults, generated columns, partitions and composite keys`);
         await db.close();
         db = await openBrowserSQLite(id);
         compiler = model.queries(db);
         const related = oracle.cases.find(c => c.name === 'related_notes');
-        if (!equal(await compiler.execute(related.request), related.rows)) throw new Error('Rilettura dopo riapertura fallita');
-        checks.push('Riapertura IndexedDB: SELECT con relazione restituisce gli stessi dati');
+        if (!equal(await compiler.execute(related.request), related.rows)) throw new Error('Reread after reopen failed');
+        checks.push('IndexedDB reopen: SELECT with a relation returns the same data');
         checks.push(...await readChecks());
         checks.push(...await subqueryChecks());
         checks.push(...await callbackChecks());
@@ -64,7 +64,7 @@ export async function queryChecks() {
             const request = indexedDB.deleteDatabase(id);
             request.onsuccess = resolve;
             request.onerror = () => reject(request.error);
-            request.onblocked = () => reject(new Error('Pulizia database query bloccata'));
+            request.onblocked = () => reject(new Error('Query database cleanup blocked'));
         });
     }
 }

@@ -20,7 +20,7 @@ test('Python source and TYTX execute offline and return an actual browser snapsh
     await writeFile('output/browser-transfer-returns.json',JSON.stringify(result.returns));
     expect(result.sample).toEqual(oracle.find(e=>e.name==='tables').after);
     await page.locator('#transfer-test').click();
-    await expect(page.locator('#transfer-status')).toContainText(`${oracle.length} trasferimenti identici`,{timeout:90000});
+    await expect(page.locator('#transfer-status')).toContainText(`${oracle.length} transfers identical`,{timeout:90000});
     await page.screenshot({path:'output/gramlot-transfers.png',fullPage:true});
 });
 
@@ -30,7 +30,7 @@ test('Gramlot loads a Python snapshot and downloads its TYTX return', async ({pa
     await expect(page.locator('#transfer-load')).toBeEnabled();
     await page.locator('#transfer-file').setInputFiles({name:'snapshot.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(oracle[1].bundle))});
     await page.locator('#transfer-load').click();
-    await expect(page.locator('#transfer-status')).toContainText('Snapshot caricato in IndexedDB');
+    await expect(page.locator('#transfer-status')).toContainText('Snapshot loaded into IndexedDB');
     const pending=page.waitForEvent('download');await page.locator('#transfer-export').click();
     const download=await pending;
     const bundle=JSON.parse(await readFile(await download.path(),'utf8'));
@@ -42,10 +42,10 @@ test('Gramlot loads a Python snapshot and downloads its TYTX return', async ({pa
 
 test('Gramlot navigation opens the offline transfer page', async ({page}) => {
     await page.goto('/?page=transfer');
-    const frame=page.frameLocator('iframe[title="Trasferimento offline"]');
+    const frame=page.frameLocator('iframe[title="Offline transfer"]');
     await expect(frame.locator('#transfer-test')).toBeVisible();
     await expect(frame.locator('#example')).toHaveCount(0);
-    await expect(page.getByRole('treeitem',{name:'Trasferimento offline',exact:true})).toBeVisible();
+    await expect(page.getByRole('treeitem',{name:'Offline transfer',exact:true})).toBeVisible();
 });
 
 test('Gramlot uploads Bag/blob snapshots and exports lossless TYTX values', async ({page, context}) => {
@@ -58,11 +58,11 @@ test('Gramlot uploads Bag/blob snapshots and exports lossless TYTX values', asyn
     expect(JSON.parse(await readFile(await example.path(),'utf8'))).toEqual(entry.bundle);
     await page.locator('#transfer-file').setInputFiles({name:'bag-blob.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(entry.bundle))});
     await page.locator('#transfer-load').click();
-    await expect(page.locator('#transfer-status')).toContainText('files.asset: 4 record');
-    await expect(page.locator('#offline-status')).toContainText('App pronta');
+    await expect(page.locator('#transfer-status')).toContainText('files.asset: 4 records');
+    await expect(page.locator('#offline-status')).toContainText('App ready');
     await context.setOffline(true);
     await page.reload();
-    await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
+    await expect(page.locator('#transfer-status')).toContainText('Workspace restored');
     const pending=page.waitForEvent('download');await page.locator('#transfer-export').click();
     const returned=JSON.parse(await readFile(await (await pending).path(),'utf8'));
     const rows=returned.data['files.asset'].trim().split('\n').map(line=>JSON.parse(line.slice(0,-4)));
@@ -83,10 +83,10 @@ test('real offline cycle: load, CRUD, close/reopen app, export back to Python', 
     const entry=oracle.find(e=>e.name==='tables');
     await page.goto('/?page=transfer&embedded=1');
     await page.waitForFunction(() => window.gramlot?.data.getItem('ready') === true);
-    await expect(page.locator('#offline-status')).toContainText('App pronta');
+    await expect(page.locator('#offline-status')).toContainText('App ready');
     await page.locator('#transfer-file').setInputFiles({name:'snapshot.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(entry.bundle))});
     await page.locator('#transfer-load').click();
-    await expect(page.locator('#transfer-status')).toContainText('Snapshot caricato');
+    await expect(page.locator('#transfer-status')).toContainText('Snapshot loaded');
     const snapshot = target => target.evaluate(() => JSON.parse(window.gramlot.data.getItem('transferSample')));
     const compare = (actual, expected) => {
         for (const key of ['source','migration','structure','rows']) expect(actual[key]).toEqual(expected[key]);
@@ -97,16 +97,16 @@ test('real offline cycle: load, CRUD, close/reopen app, export back to Python', 
     const execute = async request => {
         await page.evaluate(request => window.gramlot.data.setItem('transferRequest',JSON.stringify(request)), request);
         await page.locator('#transfer-edit').click();
-        await expect(page.locator('#transfer-status')).toContainText(request.operation.toUpperCase()+' completato');
+        await expect(page.locator('#transfer-status')).toContainText(request.operation.toUpperCase()+' completed');
     };
-    await execute({operation:'update',table:'work.document',values:{id:'d1',title:'Modificato offline'}});
+    await execute({operation:'update',table:'work.document',values:{id:'d1',title:'Changed offline'}});
     await execute({operation:'insert',table:'work.line',values:{id:'l2',document_id:'d1',description:'Nuova riga offline',quantity:3}});
     await execute({operation:'insert',table:'work.line',values:{id:'temporary',document_id:'d1',description:'Da cancellare',quantity:1}});
     await execute({operation:'delete',table:'work.line',values:{id:'temporary'}});
     await execute({operation:'select',table:'work.document',columns:'$id,$title',order_by:'$id'});
     const edited = await snapshot(page);
     compare(edited,entry.after);
-    expect(edited.records.find(r=>r.id==='d1').title).toBe('Modificato offline');
+    expect(edited.records.find(r=>r.id==='d1').title).toBe('Changed offline');
     await page.close();
     await context.close();
     // A new Chromium process, same profile; networking is disabled before navigation.
@@ -115,8 +115,8 @@ test('real offline cycle: load, CRUD, close/reopen app, export back to Python', 
     expect(await reopened.evaluate(() => navigator.onLine)).toBe(false);
     // Open the real gallery shell too: both navigation and embedded Gramlot workers must boot offline.
     await reopened.goto('/?page=transfer');
-    const frame=reopened.frameLocator('iframe[title="Trasferimento offline"]');
-    await expect(frame.locator('#transfer-status')).toContainText('Workspace ripristinato');
+    const frame=reopened.frameLocator('iframe[title="Offline transfer"]');
+    await expect(frame.locator('#transfer-status')).toContainText('Workspace restored');
     const app=reopened.frames().find(f=>f.url().includes('embedded=1'));
     expect(await app.evaluate(() => navigator.onLine)).toBe(false);
     compare(await snapshot(app),entry.after);
@@ -142,15 +142,15 @@ test('failed replacement preserves the previous offline workspace', async ({page
         await page.waitForFunction(() => !window.gramlot.data.getItem('busy'));
     };
     await load(entry.bundle);
-    await expect(page.locator('#transfer-status')).toContainText('Snapshot caricato');
+    await expect(page.locator('#transfer-status')).toContainText('Snapshot loaded');
     const saved=await page.evaluate(() => JSON.parse(window.gramlot.data.getItem('transferSample')));
     const invalid=structuredClone(entry.bundle);
     // The first row is written before the duplicate primary key fails.
     invalid.data['work.line'] += invalid.data['work.line'];
     await load(invalid);
-    await expect(page.locator('#transfer-status')).not.toContainText('Snapshot caricato');
+    await expect(page.locator('#transfer-status')).not.toContainText('Snapshot loaded');
     await page.reload();
-    await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
+    await expect(page.locator('#transfer-status')).toContainText('Workspace restored');
     const resumed=await page.evaluate(() => JSON.parse(window.gramlot.data.getItem('transferSample')));
     expect(resumed.databaseName).toBe(saved.databaseName);
     for (const key of ['source','migration','structure','rows']) expect(resumed[key]).toEqual(entry.before[key]);

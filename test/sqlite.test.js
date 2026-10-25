@@ -32,11 +32,11 @@ test('SQLite models and live catalog equal independent Python migrations', async
             assert.deepEqual(result.current, oracle[version].actual);
             assert.deepEqual((await migrateSQLite(db, desired)).executed, []);
             if (version === 'v1') {
-                await db.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ['demo-customer', 'Cliente di prova']);
+                await db.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ['demo-customer', 'Sample customer']);
                 await db.execute('INSERT INTO sales_invoice (id,customer_id,amount) VALUES (?,?,?)', ['demo-invoice', 'demo-customer', 42.5]);
             }
         }
-        assert.equal((await db.query('SELECT name FROM crm_customer'))[0].name, 'Cliente di prova');
+        assert.equal((await db.query('SELECT name FROM crm_customer'))[0].name, 'Sample customer');
         assert.equal((await db.query('SELECT amount FROM sales_invoice'))[0].amount, 42.5);
         await assert.rejects(db.execute("INSERT INTO sales_invoice (id,customer_id) VALUES ('bad','missing')"), /FOREIGN KEY/);
     } finally { db.close(); }

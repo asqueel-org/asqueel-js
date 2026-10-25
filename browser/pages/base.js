@@ -15,10 +15,10 @@ export function detail(parent, title, path, id, open = false) {
 export function databaseControls(parent, {seed = false, checks = false} = {}) {
     const buttons = parent.div({class: 'db-actions'});
     for (const [command, label] of [
-        ['plan', 'Calcola piano SQL'], ['apply', 'Applica migrazione'],
-        ...(seed ? [['seed', 'Inserisci dati di prova']] : []),
-        ['reopen', 'Riapri database'],
-        ...(checks ? [['checks', 'Verifica SQLite'], ['composition-checks', 'Verifica composizione con Python']] : []),
+        ['plan', 'Compute SQL plan'], ['apply', 'Apply migration'],
+        ...(seed ? [['seed', 'Insert sample data']] : []),
+        ['reopen', 'Reopen database'],
+        ...(checks ? [['checks', 'Check SQLite'], ['composition-checks', 'Check composition with Python']] : []),
     ]) action(buttons, label, 'database', {'data-db': command}, {command});
     parent.p('^dbStatus', {id: 'db-status', role: 'status', class: '^dbClass'});
     parent.p('^dbRows', {id: 'db-rows'});
@@ -31,16 +31,16 @@ export class PlaygroundPage extends Page {
         const name = this.constructor.section;
         for (const [path, value] of Object.entries({
             section: name, busy: true, ready: false, example: 'queries', source: '',
-            output: 'javascript', json: '', result: '', status: 'Caricamento del modello…', statusClass: '',
+            output: 'javascript', json: '', result: '', status: 'Loading the model…', statusClass: '',
             modelJSON: '', modelStatus: '', differences: '', noDifferences: true, noJSON: true,
-            dbStatus: 'Avvio SQLite…', dbClass: '', dbRows: '', dbSchema: '', dbChecks: '',
-            sqlPlan: 'Calcola il piano per leggere le istruzioni prima di applicarle.',
-            queryExample: 'insert_person', queryInput: '', queryStatus: 'Compila per confrontare SQL e parametri.',
-            queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query non ancora eseguita.', queryChecks: '',
-            offlineStatus: 'Preparazione della cache offline…', connectionStatus: '',
-            transferRequest: JSON.stringify({operation:'update',table:'work.document',values:{id:'d1',title:'Modificato offline'}},null,2),
-            transferStatus: '',  transferChecks: '', transferSample: '', transferBinarySample: '', transferFileName: 'Nessun file selezionato',
-            importTable: 'notes.person', importFileName: 'Nessun file selezionato', importStatus: '', importChecks: '', importSample: '',
+            dbStatus: 'Starting SQLite…', dbClass: '', dbRows: '', dbSchema: '', dbChecks: '',
+            sqlPlan: 'Compute the plan to read the statements before applying them.',
+            queryExample: 'insert_person', queryInput: '', queryStatus: 'Compile to compare SQL and parameters.',
+            queryClass: '', querySQL: '', queryParams: '', queryPython: '', queryRows: 'Query not run yet.', queryChecks: '',
+            offlineStatus: 'Preparing the offline cache…', connectionStatus: '',
+            transferRequest: JSON.stringify({operation:'update',table:'work.document',values:{id:'d1',title:'Changed offline'}},null,2),
+            transferStatus: '',  transferChecks: '', transferSample: '', transferBinarySample: '', transferFileName: 'No file selected',
+            importTable: 'notes.person', importFileName: 'No file selected', importStatus: '', importChecks: '', importSample: '',
             hookChecks: '', hookSample: '', behaviorChecks: '', behaviorSample: '', cascadeChecks: '', cascadeSample: '',
         })) root.dataSetter({destination_path: path, value});
         const frame = root.div({class: 'playground', 'data-gramlot-page': name});
@@ -48,25 +48,25 @@ export class PlaygroundPage extends Page {
         const header = shell.header();
         const title = header.div();
         title.p('ASQUEEL JS / GRAMLOT', {class: 'eyebrow'});
-        title.h1({models: 'Il modello, per intero.', sqlite: 'Dal modello al database.', queries: 'Dati locali, query verificabili.', transfer: 'Il lavoro continua offline.'}[name]);
-        title.p('Modelli JavaScript · riferimento Python 0.7.0 · 84408eb · SQLite persistito su IndexedDB');
+        title.h1({models: 'The whole model.', sqlite: 'From the model to the database.', queries: 'Local data, verifiable queries.', transfer: 'Work continues offline.'}[name]);
+        title.p('JavaScript models · Python reference 0.7.0 · 84408eb · SQLite persisted in IndexedDB');
         if (name !== 'transfer') {
             const toolbar = shell.div({class: 'toolbar'});
-            toolbar.html_label('Esempio', {for: 'example'});
+            toolbar.html_label('Example', {for: 'example'});
             const select = toolbar.select({id: 'example', value: '^example', disabled: '^busy', connect_onchange: 'playground.selectExample'});
             for (const [value, label] of Object.entries(exampleLabels)) select.option(label, {value});
-            action(toolbar, 'Ripristina esempio', 'restore', {id: 'restore'});
-            action(toolbar, 'Genera JSON', 'render', {id: 'render'});
-            toolbar.span('La bozza del modello è condivisa tra queste pagine.');
+            action(toolbar, 'Restore example', 'restore', {id: 'restore'});
+            action(toolbar, 'Generate JSON', 'render', {id: 'render'});
+            toolbar.span('The model draft is shared by these pages.');
             shell.p('^status', {id: 'status', role: 'status', class: '^statusClass'});
             const diff = shell.details({id: 'comparison', hidden: '^noDifferences'});
-            diff.summary('Differenze JavaScript / Python');
+            diff.summary('JavaScript / Python differences');
             diff.pre('^differences', {id: 'differences'});
         }
         this.content(shell);
         const footer = shell.footer();
-        footer.span('Pagine Gramlot · Source nel worker · Data e Logic nel browser · ');
-        footer.a('Contratto e limiti', {href: 'https://github.com/asqueel-org/asqueel-js/blob/main/docs/model.md', target: '_blank', rel: 'noreferrer'});
+        footer.span('Gramlot pages · Source in the worker · Data and Logic in the browser · ');
+        footer.a('Manual', {href: 'https://asqueel-js.readthedocs.io/en/latest/', target: '_blank', rel: 'noreferrer'});
         root.dataController({func: 'playground.start', _onStart: true});
     }
 }

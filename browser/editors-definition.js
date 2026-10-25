@@ -7,7 +7,7 @@ export function editorCollection(implementation = Base => Base) {
         parameters: {
             value: {dtype: 'T', nullable: true, binding: 'twoWay'},
             language: {dtype: 'T', default: 'javascript', binding: 'read'},
-            label: {dtype: 'T', default: 'Codice', binding: 'read'},
+            label: {dtype: 'T', default: 'Code', binding: 'read'},
         },
         implementation,
     })]});
