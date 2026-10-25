@@ -1,6 +1,6 @@
 # Pubblicare Asqueel JS
 
-Package npm pubblico: `@asqueel/asqueel-js`. Candidato corrente: `0.2.0` (Python 0.7.0 · f5185ad).
+Package npm pubblico: `@asqueel/asqueel-js`. Candidato corrente: `0.2.0` (Python 0.7.0 · 84408eb).
 Il pacchetto è sperimentale; non dichiara parità completa con Python.
 La provenienza del confronto del modello rimane fissata in
 `test/fixtures/provenance.json`, indipendentemente dalla versione npm.
@@ -71,9 +71,8 @@ bundle. Vedere
 
 ## Consolidamento 0.2.0
 
-Il commit Python `f5185ad` deve essere accessibile su GitHub per la CI di parità.
-Oggi appartiene alla PR Python del salvataggio in TYTX: dopo il merge la provenienza
-passa al commit di merge. Questa release include tutti i porting già su main,
+Il commit Python `84408eb` (main, merge della PR #55) deve essere accessibile su
+GitHub per la CI di parità. Questa release include tutti i porting già su main,
 export HTML, demo assemblea e la parità con Python dopo la 0.7.0.
 I candidati 0.2.0 precedenti sono superati e non vanno pubblicati.
 

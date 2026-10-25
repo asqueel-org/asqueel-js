@@ -26,7 +26,7 @@ Le tre pagine vengono aperte in iframe dalla shell:
 - **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
   catalogo, riapertura e verifiche SQLite.
 - **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
-  con le fixture Python 0.7.0 · f5185ad.
+  con le fixture Python 0.7.0 · 84408eb.
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
@@ -371,7 +371,7 @@ le opzioni, `model.js` costruisce la gerarchia e `migration.js` produce il JSON 
 dal source preparato. Nessun hook
 applicativo viene eseguito dalla risoluzione.
 
-## Source composto · Python 0.7.0 · f5185ad
+## Source composto · Python 0.7.0 · 84408eb
 
 Il pannello «Source TYTX composto» mostra le righe TYTX del source. Gli esempi
 application, shop, groups, virtual-relations e queries hanno un riferimento Python;

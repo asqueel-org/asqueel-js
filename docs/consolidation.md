@@ -2,7 +2,7 @@
 
 Il candidato riunisce i porting già presenti su main, l’HTML autonomo e il lavoro
 locale sulla demo assemblea con l’unificazione del modello. Riferimento Python
-0.7.0: commit `f5185ad050adc49e8773007d078133a07ee07f36` (main dopo la 0.7.0, con il
+0.7.0: commit `84408ebfdb3b3c302f771ca6c9e82e31e9fd44df` (main dopo la 0.7.0, con il
 salvataggio della ricetta in TYTX). Include la correzione dei binding SQL (#35), il
 source in TYTX condiviso con Python e l’esecuzione sulla stessa istanza `DbModel`.
 

@@ -1,12 +1,12 @@
-# Confronto con Python 0.7.0 · f5185ad
+# Confronto con Python 0.7.0 · 84408eb
 
-`test/fixtures/provenance.json` fissa core **0.7.0 / f5185ad**, asqueel-migration
+`test/fixtures/provenance.json` fissa core **0.7.0 / 84408eb**, asqueel-migration
 **0.3.5**, genro-builders **0.30.0**, genro-bag **0.28.0** e genro-tytx **0.16.4**.
 La CI fa checkout del commit core, senza seguire `main`; le altre dipendenze sono le
 release PyPI esatte di `scripts/requirements-parity.txt`. Il verificatore rifiuta un
 checkout Python di un altro commit e una dipendenza di un'altra versione.
 
-Il commit f5185ad è main dopo la 0.7.0, con il salvataggio della ricetta in TYTX.
+Il commit 84408eb è main dopo la 0.7.0, con il salvataggio della ricetta in TYTX (PR #55).
 I 218 casi includono regressioni per gerarchie collegate, contatori e parent
 personalizzati, tipi delle chiavi del master, riferimenti tra package e rifiuti.
 
@@ -58,7 +58,7 @@ tabelle vive con lo stesso schema del package layout: `Table` combinata con `Sql
 ## Query e CRUD: stesso riferimento
 
 `scripts/query_oracle.py` usa `QueryCompiler` e `WriteCompiler` della revisione
-f5185ad, fissata anche in `test/fixtures/query-provenance.json`.
+84408eb, fissata anche in `test/fixtures/query-provenance.json`.
 I 34 casi base, i 28 casi aggiuntivi, i 32 casi di letture calcolate, i 48 casi
 di sottoquery/aggregazioni, i 33 casi callback, i 46 casi macro e i 131 casi PERIOD confrontano il source TYTX dei
 sette modelli, il JSON migrate, SQL **esatto**, parametri e risultati SQLite. Le sette ricette hanno
@@ -406,7 +406,7 @@ tipizzato, non la formattazione XML del writer applicativo Python.
 
 ## Provenienza attiva
 
-La provenienza attiva è Python **0.7.0**, commit `f5185ad`, registrata nei tre file
+La provenienza attiva è Python **0.7.0**, commit `84408eb`, registrata nei tre file
 `*-provenance.json`. Il JSON del modello risolto non esiste più: il confronto usa il
 source composto in TYTX e il JSON migrate. I bundle di trasferimento contengono lo
 stesso source TYTX e sono verificati nei test di ritorno Python e negli upgrade dei

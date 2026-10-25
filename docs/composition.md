@@ -1,4 +1,4 @@
-> Aggiornamento f5185ad: il confronto attivo usa il source composto in TYTX e migrate.
+> Aggiornamento 84408eb: il confronto attivo usa il source composto in TYTX e migrate.
 > `subtable` e le opzioni `partition`/`tenant` sono state ritirate dal riferimento;
 > le vecchie sezioni che le descrivono non costituiscono più API attiva.
 > Vedi [modello attuale](model.md) e [parità](parity.md).
@@ -95,7 +95,7 @@ comuni, eliminando la definizione specifica del vecchio tipo. Non consente di
 trasformare una colonna fisica in virtuale. Questo riguarda il model: l'esecuzione
 delle colonne virtuali nelle query rimane fuori dalla copertura attuale.
 
-## Verifica con Python 0.7.0 · f5185ad
+## Verifica con Python 0.7.0 · 84408eb
 
 Il corpus di [parità](parity.md) esegue le stesse chiamate in Python e in JS e
 confronta l'accettazione dei contributi, il source composto in TYTX e migrate.

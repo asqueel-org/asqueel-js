@@ -1,5 +1,5 @@
 {
-  "coreCommit": "f5185ad050adc49e8773007d078133a07ee07f36",
+  "coreCommit": "84408ebfdb3b3c302f771ca6c9e82e31e9fd44df",
   "coreVersion": "0.7.0",
   "buildersVersion": "0.30.0",
   "status": "352 deterministic QueryCompiler/WriteCompiler cases: composed source in TYTX, migrate JSON, SQL, parameters and real SQLite results; 33 callback cases also compare method calls, 23 errors and environment caching. 46 TEMPLATE/IN_RANGE cases and 18 rejected macro usages. 131 PERIOD cases and 27 rejected usages using the @genrojs/toolbox date parser. Not complete application-runtime parity.",

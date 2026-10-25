@@ -1,7 +1,7 @@
-# Modello · Python 0.7.0 · f5185ad
+# Modello · Python 0.7.0 · 84408eb
 
 Il riferimento è Asqueel Python **0.7.0** al commit
-`f5185ad050adc49e8773007d078133a07ee07f36`, fissato in `test/fixtures/provenance.json`.
+`84408ebfdb3b3c302f771ca6c9e82e31e9fd44df`, fissato in `test/fixtures/provenance.json`.
 Il commit è main dopo la 0.7.0, con il salvataggio della ricetta in TYTX.
 
 ```js

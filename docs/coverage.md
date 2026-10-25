@@ -2,7 +2,7 @@
 
 | Area | Disponibile | Passo successivo |
 | --- | --- | --- |
-| Modello portabile 0.7.0 · f5185ad | Grammatica JSON, contributi, package/configurazione, opzioni, gerarchia, relazioni, alias, source in TYTX e confronto source/migrate | Equivalenti JS per classi/callback e caricamento di package Python |
+| Modello portabile 0.7.0 · 84408eb | Grammatica JSON, contributi, package/configurazione, opzioni, gerarchia, relazioni, alias, source in TYTX e confronto source/migrate | Equivalenti JS per classi/callback e caricamento di package Python |
 | Composizione | Contributi ordinati, ripetizioni, override, reset, copie, modelli indipendenti e colgroups | Estensioni applicative oltre il contratto JSON |
 | Schema SQLite | Creazione tabelle, PK/UNIQUE/FK, aggiunta di colonne nullable e indici non univoci | Ricostruzioni, alter/drop, CHECK e altri oggetti |
 | Scritture | INSERT/UPDATE/DELETE per chiave anche composta, default/sql_value/RETURNING automatico, transazioni e rollback | Bulk/selection writes e codec completi |
@@ -13,7 +13,7 @@
 | Browser | SQLite WASM in worker, IndexedDB, riapertura, coda e Web Locks nel playground | API worker pubblica e prove crash/quota/concorrenza |
 | Offline | Dati locali persistiti | Cache degli asset e riapertura dell'app senza rete |
 | Node/Bun | Adapter e stessa suite di contratti | API applicativa stabile e codec delle righe |
-| Parità | source TYTX/migrate f5185ad, cataloghi SQLite, 352 casi query e 26 cicli sysFields/hook e 39 gerarchie/contatori e 27 onUpdate reali | Restanti capacità del compilatore e ciclo applicativo |
+| Parità | source TYTX/migrate 84408eb, cataloghi SQLite, 352 casi query e 26 cicli sysFields/hook e 39 gerarchie/contatori e 27 onUpdate reali | Restanti capacità del compilatore e ciclo applicativo |
 
 Il [modello dichiarativo](model.md) è distinto dall'esecuzione delle sue opzioni:
 `sysFields` genera colonne e metadati e viene eseguito da `table.insert/update/delete`:

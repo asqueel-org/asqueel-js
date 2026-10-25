@@ -35,7 +35,7 @@ sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
 Il [modello](docs/model.md) è allineato ad **Asqueel Python 0.7.0 al commit
-f5185ad** (main dopo la 0.7.0, con il salvataggio della ricetta in TYTX):
+84408eb** (main dopo la 0.7.0, con il salvataggio della ricetta in TYTX, PR #55):
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
 `recipe.resolve()` restituisce il modello gerarchico; `model.queries(adapter)` lo usa
 direttamente, anche per transazioni e hook. `recipe.toTytx()` salva il source della

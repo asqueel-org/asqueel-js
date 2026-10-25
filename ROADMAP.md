@@ -15,9 +15,9 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
       Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
 
-## 1. Modello dichiarativo portabile · riferimento Python 0.7.0 · f5185ad
+## 1. Modello dichiarativo portabile · riferimento Python 0.7.0 · 84408eb
 
-- [x] Riallineare grammatica, esempi e verificatore al commit Python f5185ad.
+- [x] Riallineare grammatica, esempi e verificatore al commit Python 84408eb.
 - [x] Nomi legacy delle opzioni, `relation(related_column)`, solo package, nessun `x_*`.
 - [x] Source della ricetta in TYTX (`SqlSourceBag`), caricabile da Python e da JS.
 - [x] Contributi ordinati, conflitti, copie, reset e composizione indipendente.

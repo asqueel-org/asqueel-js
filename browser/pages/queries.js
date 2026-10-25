@@ -49,6 +49,6 @@ export class QueryPage extends PlaygroundPage {
         detail(body, 'Spostamento verificato: sottoalbero, posizioni e SQL', 'behaviorSample', 'behaviors-sample');
         detail(body, 'Verifiche cascade applicative onUpdate', 'cascadeChecks', 'cascades-checks', true);
         detail(body, 'Cascade verificata: figli, hook e SQL', 'cascadeSample', 'cascades-sample');
-        body.p('SQL, parametri e risultati sono confrontati con Python 0.7.0 · f5185ad. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano database separati. Le verifiche eseguono hook reali, gerarchie e contatori, anche con errori, rollback e riapertura di IndexedDB.', {class: 'db-note'});
+        body.p('SQL, parametri e risultati sono confrontati con Python 0.7.0 · 84408eb. Gli esempi numerati vanno eseguiti in ordine; gli INSERT ripetuti segnalano un duplicato. Le verifiche usano database separati. Le verifiche eseguono hook reali, gerarchie e contatori, anche con errori, rollback e riapertura di IndexedDB.', {class: 'db-note'});
     }
 }

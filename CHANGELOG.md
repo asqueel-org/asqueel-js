@@ -1,9 +1,9 @@
 # Changelog
 
-## Non rilasciato — parità con Python asqueel f5185ad
+## Non rilasciato — parità con Python asqueel 84408eb
 
-- Riferimento Python: asqueel 0.7.0 al commit f5185ad (main dopo la 0.7.0 con il
-  salvataggio della ricetta in TYTX), asqueel-migration 0.3.5, genro-builders 0.30.0,
+- Riferimento Python: asqueel 0.7.0 al commit 84408eb (main dopo la 0.7.0 con il
+  salvataggio della ricetta in TYTX, PR #55), asqueel-migration 0.3.5, genro-builders 0.30.0,
   genro-bag 0.28.0, genro-tytx 0.16.4. Il riferimento precedente, 02ca1e7, era un
   commit intermedio della 0.7.0.
 - Grammatica rigenerata da Python. Opzioni con i nomi legacy: `sysFields`, `counter`,
