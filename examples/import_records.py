@@ -14,9 +14,12 @@ class Upper(ImportTable):
         record['name'] = record['name'].upper()
         return record
 
-def declare(pkg, runtime=False):
+CLASSES = {'app.item': ImportTable, 'app.automatic': ImportTable, 'app.upper': Upper}
+
+
+def declare(pkg):
     for name, dtype in [('item', 'L'), ('automatic', 'I'), ('upper', 'L')]:
-        table = pkg.table(name, pkey='id', **({'x_table_class': Upper if name == 'upper' else ImportTable} if runtime else {}))
+        table = pkg.table(name, pkey='id')
         table.column('id', dtype=dtype, **({'sql_default': 'NULL'} if name == 'automatic' else {}))
         table.column('name', dtype='T', onInserting='unexpected')
         table.column('price', dtype='N', size='10,2')

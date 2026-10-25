@@ -1,15 +1,15 @@
-"""Export the pinned 0.6.1 grammar, contract, full models and migration JSON."""
-import importlib.metadata
+"""Export the pinned grammar, contract, example sources (TYTX) and migration JSON."""
 import json
 import runpy
-from python_reference import ROOT,CORE,MIGRATION
-from asqueel import SqlBuilder,SqlDatabaseConfig,SqlMigrationRenderer,resolve_model
+from python_reference import ROOT
+from asqueel import SqlBuilder,SqlDatabaseConfig
 from asqueel.common import INDEX_OPTIONS
 from asqueel.model_elements import OPTION_LEVELS,SYS_FIELDS,SYS_FIELD_KEYS
 from asqueel.option_elements import NAMED_OPTIONS
 from asqueel.option_validation import REQUIRED
 from asqueel_migration.structures import COL_JSON_KEYS,DTYPE_CODES
-from model_oracle import document,main as export_models
+from model_oracle import main as export_models
+from python_model import source_tytx,migration
 
 def write(path,value):
     (ROOT/path).write_text(json.dumps(value,indent=2,ensure_ascii=False)+'\n')
@@ -31,9 +31,9 @@ def main():
         requiredOptions=REQUIRED,sysFields=SYS_FIELDS,sysFieldKeys=sorted(SYS_FIELD_KEYS)))
     models,sqlite=examples()
     for name,b in models.items():
-        write(f'test/fixtures/{name}.json',SqlMigrationRenderer(b).render()) if name in ('shop','application') else None
-    write('test/fixtures/model-examples.json',{name:dict(model=document(resolve_model(b)),migration=SqlMigrationRenderer(b).render()) for name,b in models.items()})
+        write(f'test/fixtures/{name}.json',migration(b)) if name in ('shop','application') else None
+    write('test/fixtures/model-examples.json',{name:dict(source=source_tytx(b),migration=migration(b)) for name,b in models.items()})
     write('test/fixtures/sqlite.json',sqlite)
     export_models()
-    print('Exported Python 0.6.1 grammar, contract, 5 complete model examples and 2 real SQLite migrations.')
+    print('Exported the Python grammar, contract, 5 example sources with their migration JSON and 2 real SQLite migrations.')
 if __name__=='__main__':main()

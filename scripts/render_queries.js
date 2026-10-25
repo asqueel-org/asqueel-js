@@ -1,4 +1,3 @@
-import {parseDateExpression} from '@gramlot/gramlot';
 import {queryPeriods} from '../examples/query-periods.js';
 import periodOracle from '../test/fixtures/periods.json' with {type: 'json'};
 import {queryMacros} from '../examples/query-macros.js';
@@ -22,14 +21,14 @@ for (const [name, recipe, oracle] of [['base', browserQueries, base], ['features
     try {
         if (oracle.ddl) { for (const sql of oracle.ddl) await db.execute(sql); }
         else await migrateSQLite(db, model.toMigration());
-        const events = [], compiled = model.queries(db, {parseDateExpression, ...(name === 'callbacks' ? {methods: compilerMethods(events)} : {})}), cases = [];
+        const events = [], compiled = model.queries(db, name === 'callbacks' ? {methods: compilerMethods(events)} : {}), cases = [];
         for (const c of oracle.cases) {
             events.length = 0;
             const sql = compiled.compile(c.request), calls = [...events];
             cases.push({name: c.name, request: c.request, compiled: sql, rows: await compiled.execute(c.request),
                 ...(name === 'callbacks' ? {events: calls} : {})});
         }
-        result[name] = {model: model.toJSON(), desired: model.toMigration(), cases, ...(oracle.ddl ? {ddl: oracle.ddl} : {})};
+        result[name] = {source: model.toTytx(), desired: model.toMigration(), cases, ...(oracle.ddl ? {ddl: oracle.ddl} : {})};
         if (name === 'callbacks') result[name].cache = callbackCacheProbe(model);
         if (oracle.errors) result[name].errors = oracle.errors.map(({name, request}) => {
             let rejected = false;

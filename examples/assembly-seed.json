@@ -1,0 +1,475 @@
+{
+  "bundle": {
+    "format": "asqueel-transfer",
+    "version": 1,
+    "source": "{\"rows\":[[[],\"db\",\"db\",\"::X\",{\"implementation\":\"sqlite\",\"name\":\"offline\"}],[[\"db\"],\"packages\",\"packages\",\"::X\",{}],[[\"db\",\"packages\"],\"assembly\",\"package\",\"::X\",{\"sqlschema\":\"main\",\"name\":\"assembly\"}],[[\"db\",\"packages\",\"assembly\"],\"tables\",\"tables\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"person\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"person\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"name\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"name\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"weight\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"weight\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"present\",\"column\",\"::NN\",{\"dtype\":\"B\",\"name\":\"present\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"called\",\"column\",\"::NN\",{\"dtype\":\"B\",\"name\":\"called\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"unit\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"unit\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"email\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"email\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\"],\"delegate_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"delegate_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"columns\",\"delegate_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"delegators\",\"related_column\":\"assembly.person.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\"],\"virtual_columns\",\"virtual_columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"virtual_columns\"],\"represented_by\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"CASE WHEN $present=1 THEN $id WHEN @delegate_id.present=1 THEN $delegate_id ELSE NULL END\",\"name\":\"represented_by\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"person\",\"virtual_columns\"],\"represented_weight\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"CASE WHEN $present=1 OR @delegate_id.present=1 THEN $weight ELSE 0 END\",\"name\":\"represented_weight\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"ballot\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"ballot\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"ballot\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"ballot\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"ballot\",\"columns\"],\"title\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"title\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"ballot\",\"columns\"],\"closed\",\"column\",\"::NN\",{\"dtype\":\"B\",\"name\":\"closed\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"vote\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"vote\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"ballot_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"ballot_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\",\"ballot_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"votes\",\"related_column\":\"assembly.ballot.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"person_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"person_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\",\"person_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"votes\",\"related_column\":\"assembly.person.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"representative_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"representative_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\",\"representative_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"represented_votes\",\"related_column\":\"assembly.person.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"weight\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"weight\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"vote\",\"columns\"],\"choice\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"choice\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"agenda\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"agenda\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"position\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"position\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"title\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"title\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"discussion\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"discussion\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"minutes\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"minutes\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"completed\",\"column\",\"::NN\",{\"dtype\":\"B\",\"name\":\"completed\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\"],\"ballot_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"ballot_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"agenda\",\"columns\",\"ballot_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"agenda_items\",\"related_column\":\"assembly.ballot.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"document\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"document\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"title\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"title\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"supplier\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"supplier\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"total_cents\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"total_cents\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"filename\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"filename\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"mime\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"mime\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"content\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"content\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\"],\"agenda_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"agenda_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"document\",\"columns\",\"agenda_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"documents\",\"related_column\":\"assembly.agenda.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\"],\"intervention\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"intervention\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"position\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"position\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"speaker\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"speaker\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"text\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"text\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"included\",\"column\",\"::NN\",{\"dtype\":\"B\",\"name\":\"included\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"recorded_at\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"recorded_at\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"agenda_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"agenda_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\",\"agenda_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"interventions\",\"related_column\":\"assembly.agenda.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\"],\"person_id\",\"column\",\"::X\",{\"dtype\":\"T\",\"name\":\"person_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"assembly\",\"tables\",\"intervention\",\"columns\",\"person_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"interventions\",\"related_column\":\"assembly.person.id\",\"foreign_key\":true}]],\"__cls\":\"SqlSourceBag\"}::X",
+    "data": {
+      "assembly.person": "{\"id\":\"p1::T\",\"name\":\"Anna Rossi::T\",\"weight\":65,\"unit\":\"A01::T\",\"email\":\"unita01@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p2::T\",\"name\":\"Luca Bianchi::T\",\"weight\":55,\"unit\":\"A02::T\",\"email\":\"unita02@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p3::T\",\"name\":\"Marta Verdi::T\",\"weight\":50,\"unit\":\"A03::T\",\"email\":\"unita03@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p4::T\",\"name\":\"Paolo Neri::T\",\"weight\":45,\"unit\":\"A04::T\",\"email\":\"unita04@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p5::T\",\"name\":\"Elena Conti::T\",\"weight\":40,\"unit\":\"A05::T\",\"email\":\"unita05@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p6::T\",\"name\":\"Marco Gallo::T\",\"weight\":35,\"unit\":\"A06::T\",\"email\":\"unita06@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p7::T\",\"name\":\"Giulia Fontana::T\",\"weight\":60,\"unit\":\"B01::T\",\"email\":\"unita07@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p8::T\",\"name\":\"Davide Riva::T\",\"weight\":50,\"unit\":\"B02::T\",\"email\":\"unita08@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p9::T\",\"name\":\"Sara Moretti::T\",\"weight\":45,\"unit\":\"B03::T\",\"email\":\"unita09@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p10::T\",\"name\":\"Andrea Costa::T\",\"weight\":40,\"unit\":\"B04::T\",\"email\":\"unita10@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p11::T\",\"name\":\"Chiara Romano::T\",\"weight\":35,\"unit\":\"B05::T\",\"email\":\"unita11@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p12::T\",\"name\":\"Matteo Greco::T\",\"weight\":30,\"unit\":\"B06::T\",\"email\":\"unita12@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p13::T\",\"name\":\"Francesca Villa::T\",\"weight\":55,\"unit\":\"C01::T\",\"email\":\"unita13@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p14::T\",\"name\":\"Alessandro Sala::T\",\"weight\":45,\"unit\":\"C02::T\",\"email\":\"unita14@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p15::T\",\"name\":\"Laura Marchetti::T\",\"weight\":40,\"unit\":\"C03::T\",\"email\":\"unita15@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p16::T\",\"name\":\"Stefano Ricci::T\",\"weight\":35,\"unit\":\"C04::T\",\"email\":\"unita16@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p17::T\",\"name\":\"Valentina Fabbri::T\",\"weight\":30,\"unit\":\"C05::T\",\"email\":\"unita17@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p18::T\",\"name\":\"Simone Colombo::T\",\"weight\":25,\"unit\":\"C06::T\",\"email\":\"unita18@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p19::T\",\"name\":\"Federica De Luca::T\",\"weight\":50,\"unit\":\"D01::T\",\"email\":\"unita19@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p20::T\",\"name\":\"Roberto Ferretti::T\",\"weight\":45,\"unit\":\"D02::T\",\"email\":\"unita20@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p21::T\",\"name\":\"Silvia Martini::T\",\"weight\":40,\"unit\":\"D03::T\",\"email\":\"unita21@residenti.example.test::T\",\"called\":false,\"present\":false,\"delegate_id\":null}::JS\n{\"id\":\"p22::T\",\"name\":\"Giorgio Galli::T\",\"weight\":35,\"unit\":\"D04::T\",\"email\":\"unita22@residenti.example.test::T\",\"called\":true,\"present\":false,\"delegate_id\":\"p21::T\"}::JS\n{\"id\":\"p23::T\",\"name\":\"Paola Lombardi::T\",\"weight\":30,\"unit\":\"D05::T\",\"email\":\"unita23@residenti.example.test::T\",\"called\":true,\"present\":false,\"delegate_id\":\"p21::T\"}::JS\n{\"id\":\"p24::T\",\"name\":\"Enrico Barbieri::T\",\"weight\":20,\"unit\":\"D06::T\",\"email\":\"unita24@residenti.example.test::T\",\"called\":true,\"present\":false,\"delegate_id\":\"p20::T\"}::JS\n",
+      "assembly.ballot": "",
+      "assembly.vote": "",
+      "assembly.agenda": "{\"id\":\"a1::T\",\"position\":1,\"title\":\"Bilancio preventivo::T\",\"discussion\":\"::T\",\"minutes\":\"::T\",\"completed\":false,\"ballot_id\":null}::JS\n{\"id\":\"a2::T\",\"position\":2,\"title\":\"Manutenzione del cortile::T\",\"discussion\":\"::T\",\"minutes\":\"::T\",\"completed\":false,\"ballot_id\":null}::JS\n{\"id\":\"a3::T\",\"position\":3,\"title\":\"Varie ed eventuali::T\",\"discussion\":\"::T\",\"minutes\":\"::T\",\"completed\":false,\"ballot_id\":null}::JS\n{\"id\":\"a4::T\",\"position\":4,\"title\":\"Rinnovo copertura fabbricato::T\",\"discussion\":\"::T\",\"minutes\":\"::T\",\"completed\":false,\"ballot_id\":null}::JS\n{\"id\":\"a5::T\",\"position\":5,\"title\":\"Illuminazione LED delle scale::T\",\"discussion\":\"::T\",\"minutes\":\"::T\",\"completed\":false,\"ballot_id\":null}::JS\n",
+      "assembly.document": "{\"id\":\"d1::T\",\"agenda_id\":\"a1::T\",\"title\":\"Bilancio preventivo 2027::T\",\"supplier\":\"Studio Tiglio · amministrazione demo::T\",\"total_cents\":2400000,\"filename\":\"d1-preventivo-demo.html::T\",\"mime\":\"text/html::T\",\"content\":\"<!doctype html><html lang=\\\"it\\\"><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>Bilancio preventivo 2027</title>\\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Bilancio preventivo 2027</h1><div>Studio Tiglio · amministrazione demo</div></header>\\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D1</p>\\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Pulizie e aree comuni</td><td>7.200,00 €</td></tr><tr><td>Energia elettrica</td><td>4.800,00 €</td></tr><tr><td>Manutenzione ordinaria</td><td>6.200,00 €</td></tr><tr><td>Assicurazione fabbricato</td><td>1.850,00 €</td></tr><tr><td>Fondo imprevisti</td><td>3.950,00 €</td></tr></tbody></table><p class=\\\"total\\\">Totale 24.000,00 €</p>\\n<div class=\\\"note\\\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>::T\"}::JS\n{\"id\":\"d2::T\",\"agenda_id\":\"a2::T\",\"title\":\"Cortile · proposta VerdeChiaro::T\",\"supplier\":\"VerdeChiaro · impresa immaginaria::T\",\"total_cents\":432000,\"filename\":\"d2-preventivo-demo.html::T\",\"mime\":\"text/html::T\",\"content\":\"<!doctype html><html lang=\\\"it\\\"><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>Cortile · proposta VerdeChiaro</title>\\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Cortile · proposta VerdeChiaro</h1><div>VerdeChiaro · impresa immaginaria</div></header>\\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D2</p>\\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Pulizia e preparazione superfici</td><td>1.500,00 €</td></tr><tr><td>Ripristino pavimentazione</td><td>1.400,00 €</td></tr><tr><td>Fioriere e messa a dimora</td><td>700,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>720,00 €</td></tr></tbody></table><p class=\\\"total\\\">Totale 4.320,00 €</p>\\n<div class=\\\"note\\\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>::T\"}::JS\n{\"id\":\"d3::T\",\"agenda_id\":\"a2::T\",\"title\":\"Cortile · proposta CorteFutura::T\",\"supplier\":\"CorteFutura · impresa immaginaria::T\",\"total_cents\":486000,\"filename\":\"d3-preventivo-demo.html::T\",\"mime\":\"text/html::T\",\"content\":\"<!doctype html><html lang=\\\"it\\\"><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>Cortile · proposta CorteFutura</title>\\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Cortile · proposta CorteFutura</h1><div>CorteFutura · impresa immaginaria</div></header>\\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D3</p>\\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Preparazione e smaltimento</td><td>1.600,00 €</td></tr><tr><td>Pavimentazione antiscivolo</td><td>1.800,00 €</td></tr><tr><td>Sistemazione aiuole</td><td>650,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>810,00 €</td></tr></tbody></table><p class=\\\"total\\\">Totale 4.860,00 €</p>\\n<div class=\\\"note\\\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>::T\"}::JS\n{\"id\":\"d4::T\",\"agenda_id\":\"a4::T\",\"title\":\"Copertura fabbricato · proposta annuale::T\",\"supplier\":\"RiparoSereno · compagnia immaginaria::T\",\"total_cents\":185000,\"filename\":\"d4-preventivo-demo.html::T\",\"mime\":\"text/html::T\",\"content\":\"<!doctype html><html lang=\\\"it\\\"><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>Copertura fabbricato · proposta annuale</title>\\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Copertura fabbricato · proposta annuale</h1><div>RiparoSereno · compagnia immaginaria</div></header>\\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D4</p>\\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Copertura annua dimostrativa</td><td>1.850,00 €</td></tr></tbody></table><p class=\\\"total\\\">Totale 1.850,00 €</p>\\n<div class=\\\"note\\\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>::T\"}::JS\n{\"id\":\"d5::T\",\"agenda_id\":\"a5::T\",\"title\":\"Illuminazione LED · proposta Lume::T\",\"supplier\":\"Lume · installatore immaginario::T\",\"total_cents\":288000,\"filename\":\"d5-preventivo-demo.html::T\",\"mime\":\"text/html::T\",\"content\":\"<!doctype html><html lang=\\\"it\\\"><meta charset=\\\"utf-8\\\"><meta name=\\\"viewport\\\" content=\\\"width=device-width,initial-scale=1\\\"><title>Illuminazione LED · proposta Lume</title>\\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Illuminazione LED · proposta Lume</h1><div>Lume · installatore immaginario</div></header>\\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D5</p>\\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>24 corpi illuminanti LED</td><td>1.440,00 €</td></tr><tr><td>Installazione e sensori</td><td>960,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>480,00 €</td></tr></tbody></table><p class=\\\"total\\\">Totale 2.880,00 €</p>\\n<div class=\\\"note\\\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>::T\"}::JS\n",
+      "assembly.intervention": ""
+    },
+    "omitted": []
+  },
+  "initial": {
+    "interventions": [],
+    "documents": [
+      {
+        "id": "d1",
+        "agenda_id": "a1",
+        "title": "Bilancio preventivo 2027",
+        "supplier": "Studio Tiglio · amministrazione demo",
+        "total_cents": 2400000,
+        "filename": "d1-preventivo-demo.html",
+        "mime": "text/html",
+        "content": "<!doctype html><html lang=\"it\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Bilancio preventivo 2027</title>\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Bilancio preventivo 2027</h1><div>Studio Tiglio · amministrazione demo</div></header>\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D1</p>\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Pulizie e aree comuni</td><td>7.200,00 €</td></tr><tr><td>Energia elettrica</td><td>4.800,00 €</td></tr><tr><td>Manutenzione ordinaria</td><td>6.200,00 €</td></tr><tr><td>Assicurazione fabbricato</td><td>1.850,00 €</td></tr><tr><td>Fondo imprevisti</td><td>3.950,00 €</td></tr></tbody></table><p class=\"total\">Totale 24.000,00 €</p>\n<div class=\"note\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>"
+      },
+      {
+        "id": "d2",
+        "agenda_id": "a2",
+        "title": "Cortile · proposta VerdeChiaro",
+        "supplier": "VerdeChiaro · impresa immaginaria",
+        "total_cents": 432000,
+        "filename": "d2-preventivo-demo.html",
+        "mime": "text/html",
+        "content": "<!doctype html><html lang=\"it\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Cortile · proposta VerdeChiaro</title>\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Cortile · proposta VerdeChiaro</h1><div>VerdeChiaro · impresa immaginaria</div></header>\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D2</p>\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Pulizia e preparazione superfici</td><td>1.500,00 €</td></tr><tr><td>Ripristino pavimentazione</td><td>1.400,00 €</td></tr><tr><td>Fioriere e messa a dimora</td><td>700,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>720,00 €</td></tr></tbody></table><p class=\"total\">Totale 4.320,00 €</p>\n<div class=\"note\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>"
+      },
+      {
+        "id": "d3",
+        "agenda_id": "a2",
+        "title": "Cortile · proposta CorteFutura",
+        "supplier": "CorteFutura · impresa immaginaria",
+        "total_cents": 486000,
+        "filename": "d3-preventivo-demo.html",
+        "mime": "text/html",
+        "content": "<!doctype html><html lang=\"it\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Cortile · proposta CorteFutura</title>\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Cortile · proposta CorteFutura</h1><div>CorteFutura · impresa immaginaria</div></header>\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D3</p>\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Preparazione e smaltimento</td><td>1.600,00 €</td></tr><tr><td>Pavimentazione antiscivolo</td><td>1.800,00 €</td></tr><tr><td>Sistemazione aiuole</td><td>650,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>810,00 €</td></tr></tbody></table><p class=\"total\">Totale 4.860,00 €</p>\n<div class=\"note\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>"
+      },
+      {
+        "id": "d4",
+        "agenda_id": "a4",
+        "title": "Copertura fabbricato · proposta annuale",
+        "supplier": "RiparoSereno · compagnia immaginaria",
+        "total_cents": 185000,
+        "filename": "d4-preventivo-demo.html",
+        "mime": "text/html",
+        "content": "<!doctype html><html lang=\"it\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Copertura fabbricato · proposta annuale</title>\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Copertura fabbricato · proposta annuale</h1><div>RiparoSereno · compagnia immaginaria</div></header>\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D4</p>\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>Copertura annua dimostrativa</td><td>1.850,00 €</td></tr></tbody></table><p class=\"total\">Totale 1.850,00 €</p>\n<div class=\"note\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>"
+      },
+      {
+        "id": "d5",
+        "agenda_id": "a5",
+        "title": "Illuminazione LED · proposta Lume",
+        "supplier": "Lume · installatore immaginario",
+        "total_cents": 288000,
+        "filename": "d5-preventivo-demo.html",
+        "mime": "text/html",
+        "content": "<!doctype html><html lang=\"it\"><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Illuminazione LED · proposta Lume</title>\n<style>body{font:15px/1.65 system-ui,sans-serif;color:#20344c;background:#fff;max-width:760px;margin:auto;padding:30px}header{border-bottom:3px solid #456bc4;padding-bottom:18px}small{letter-spacing:.08em;color:#526477}h1{font-size:25px;line-height:1.3}table{width:100%;border-collapse:collapse;margin:25px 0}td{padding:10px 4px;border-bottom:1px solid #d5dce5}td:last-child{text-align:right;white-space:nowrap}.total{font-size:21px;text-align:right;font-weight:bold}.note{background:#edf1f7;padding:15px;border-radius:6px}footer{border-top:1px solid #d5dce5;margin-top:30px;font-size:12px}@media print{body{padding:0}}</style>\n<header><small>DOCUMENTO DI FANTASIA · DEMO GRAMLOT</small><h1>Illuminazione LED · proposta Lume</h1><div>Lume · installatore immaginario</div></header>\n<p><b>Destinatario:</b> Residenza dei Tigli, complesso dimostrativo · 24 unità<br><b>Riferimento:</b> DEMO-2027-D5</p>\n<table><thead><tr><td><b>Descrizione</b></td><td><b>Importo</b></td></tr></thead><tbody><tr><td>24 corpi illuminanti LED</td><td>1.440,00 €</td></tr><tr><td>Installazione e sensori</td><td>960,00 €</td></tr><tr><td>Oneri esemplificativi</td><td>480,00 €</td></tr></tbody></table><p class=\"total\">Totale 2.880,00 €</p>\n<div class=\"note\">Materiale preparatorio per la discussione assembleare. Confrontare ambito dei lavori, tempi e importi prima di verbalizzare la proposta.</div>\n<p>Tempi indicativi: 20 giorni dalla conferma. Condizioni dimostrative: acconto 30%, saldo alla conclusione. Nessun fornitore, indirizzo o offerta rappresenta un soggetto reale.</p>\n<footer>Documento sintetico di fantasia, privo di validità commerciale. Importi esclusivamente dimostrativi. Disponibile integralmente senza rete.</footer></html>"
+      }
+    ],
+    "agenda": [
+      {
+        "id": "a1",
+        "position": 1,
+        "title": "Bilancio preventivo",
+        "discussion": "",
+        "minutes": "",
+        "completed": 0,
+        "ballot_id": null
+      },
+      {
+        "id": "a2",
+        "position": 2,
+        "title": "Manutenzione del cortile",
+        "discussion": "",
+        "minutes": "",
+        "completed": 0,
+        "ballot_id": null
+      },
+      {
+        "id": "a3",
+        "position": 3,
+        "title": "Varie ed eventuali",
+        "discussion": "",
+        "minutes": "",
+        "completed": 0,
+        "ballot_id": null
+      },
+      {
+        "id": "a4",
+        "position": 4,
+        "title": "Rinnovo copertura fabbricato",
+        "discussion": "",
+        "minutes": "",
+        "completed": 0,
+        "ballot_id": null
+      },
+      {
+        "id": "a5",
+        "position": 5,
+        "title": "Illuminazione LED delle scale",
+        "discussion": "",
+        "minutes": "",
+        "completed": 0,
+        "ballot_id": null
+      }
+    ],
+    "people": [
+      {
+        "id": "p1",
+        "name": "Anna Rossi",
+        "weight": 65,
+        "present": 0,
+        "called": 0,
+        "unit": "A01",
+        "email": "unita01@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p2",
+        "name": "Luca Bianchi",
+        "weight": 55,
+        "present": 0,
+        "called": 0,
+        "unit": "A02",
+        "email": "unita02@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p3",
+        "name": "Marta Verdi",
+        "weight": 50,
+        "present": 0,
+        "called": 0,
+        "unit": "A03",
+        "email": "unita03@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p4",
+        "name": "Paolo Neri",
+        "weight": 45,
+        "present": 0,
+        "called": 0,
+        "unit": "A04",
+        "email": "unita04@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p5",
+        "name": "Elena Conti",
+        "weight": 40,
+        "present": 0,
+        "called": 0,
+        "unit": "A05",
+        "email": "unita05@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p6",
+        "name": "Marco Gallo",
+        "weight": 35,
+        "present": 0,
+        "called": 0,
+        "unit": "A06",
+        "email": "unita06@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p7",
+        "name": "Giulia Fontana",
+        "weight": 60,
+        "present": 0,
+        "called": 0,
+        "unit": "B01",
+        "email": "unita07@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p8",
+        "name": "Davide Riva",
+        "weight": 50,
+        "present": 0,
+        "called": 0,
+        "unit": "B02",
+        "email": "unita08@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p9",
+        "name": "Sara Moretti",
+        "weight": 45,
+        "present": 0,
+        "called": 0,
+        "unit": "B03",
+        "email": "unita09@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p10",
+        "name": "Andrea Costa",
+        "weight": 40,
+        "present": 0,
+        "called": 0,
+        "unit": "B04",
+        "email": "unita10@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p11",
+        "name": "Chiara Romano",
+        "weight": 35,
+        "present": 0,
+        "called": 0,
+        "unit": "B05",
+        "email": "unita11@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p12",
+        "name": "Matteo Greco",
+        "weight": 30,
+        "present": 0,
+        "called": 0,
+        "unit": "B06",
+        "email": "unita12@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p13",
+        "name": "Francesca Villa",
+        "weight": 55,
+        "present": 0,
+        "called": 0,
+        "unit": "C01",
+        "email": "unita13@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p14",
+        "name": "Alessandro Sala",
+        "weight": 45,
+        "present": 0,
+        "called": 0,
+        "unit": "C02",
+        "email": "unita14@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p15",
+        "name": "Laura Marchetti",
+        "weight": 40,
+        "present": 0,
+        "called": 0,
+        "unit": "C03",
+        "email": "unita15@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p16",
+        "name": "Stefano Ricci",
+        "weight": 35,
+        "present": 0,
+        "called": 0,
+        "unit": "C04",
+        "email": "unita16@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p17",
+        "name": "Valentina Fabbri",
+        "weight": 30,
+        "present": 0,
+        "called": 0,
+        "unit": "C05",
+        "email": "unita17@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p18",
+        "name": "Simone Colombo",
+        "weight": 25,
+        "present": 0,
+        "called": 0,
+        "unit": "C06",
+        "email": "unita18@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p19",
+        "name": "Federica De Luca",
+        "weight": 50,
+        "present": 0,
+        "called": 0,
+        "unit": "D01",
+        "email": "unita19@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p20",
+        "name": "Roberto Ferretti",
+        "weight": 45,
+        "present": 0,
+        "called": 0,
+        "unit": "D02",
+        "email": "unita20@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p21",
+        "name": "Silvia Martini",
+        "weight": 40,
+        "present": 0,
+        "called": 0,
+        "unit": "D03",
+        "email": "unita21@residenti.example.test",
+        "delegate_id": null,
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p22",
+        "name": "Giorgio Galli",
+        "weight": 35,
+        "present": 0,
+        "called": 1,
+        "unit": "D04",
+        "email": "unita22@residenti.example.test",
+        "delegate_id": "p21",
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p23",
+        "name": "Paola Lombardi",
+        "weight": 30,
+        "present": 0,
+        "called": 1,
+        "unit": "D05",
+        "email": "unita23@residenti.example.test",
+        "delegate_id": "p21",
+        "represented_by": null,
+        "represented_weight": 0
+      },
+      {
+        "id": "p24",
+        "name": "Enrico Barbieri",
+        "weight": 20,
+        "present": 0,
+        "called": 1,
+        "unit": "D06",
+        "email": "unita24@residenti.example.test",
+        "delegate_id": "p20",
+        "represented_by": null,
+        "represented_weight": 0
+      }
+    ],
+    "attendance": {
+      "present": 0,
+      "weight": 0,
+      "total": 1000,
+      "represented": 0
+    },
+    "ballots": [],
+    "votes": [],
+    "voter_groups": [],
+    "totals": []
+  },
+  "reads": {
+    "interventions": {
+      "operation": "select",
+      "table": "assembly.intervention",
+      "columns": "$id,$agenda_id,$person_id,$position,$speaker,$text,$included,$recorded_at",
+      "order_by": "$agenda_id,$position"
+    },
+    "documents": {
+      "operation": "select",
+      "table": "assembly.document",
+      "columns": "$id,$agenda_id,$title,$supplier,$total_cents,$filename,$mime,$content",
+      "order_by": "$id"
+    },
+    "agenda": {
+      "operation": "select",
+      "table": "assembly.agenda",
+      "columns": "$id,$position,$title,$discussion,$minutes,$completed,$ballot_id",
+      "order_by": "$position"
+    },
+    "people": {
+      "operation": "select",
+      "table": "assembly.person",
+      "columns": "$id,$name,$weight,$present,$called,$unit,$email,$delegate_id,$represented_by,$represented_weight",
+      "order_by": "$unit,$id"
+    },
+    "attendance": {
+      "operation": "select",
+      "table": "assembly.person",
+      "columns": "SUM($present) AS present,SUM($represented_weight) AS weight,SUM($weight) AS total, SUM(CASE WHEN $represented_weight>0 THEN 1 ELSE 0 END) AS represented"
+    },
+    "ballots": {
+      "operation": "select",
+      "table": "assembly.ballot",
+      "columns": "$id,$title,$closed",
+      "order_by": "$id"
+    },
+    "votes": {
+      "operation": "select",
+      "table": "assembly.vote",
+      "columns": "$id,$ballot_id,$person_id,$representative_id,$weight,$choice",
+      "order_by": "$id"
+    },
+    "voter_groups": {
+      "operation": "select",
+      "table": "assembly.vote",
+      "columns": "$ballot_id,$representative_id,COUNT(*) AS represented,SUM($weight) AS weight,SUM(CASE WHEN $person_id<>$representative_id THEN 1 ELSE 0 END) AS delegates,SUM(CASE WHEN $choice IS NULL THEN 1 ELSE 0 END) AS pending",
+      "group_by": "$ballot_id,$representative_id",
+      "order_by": "$ballot_id,$representative_id"
+    },
+    "totals": {
+      "operation": "select",
+      "table": "assembly.vote",
+      "columns": "$ballot_id,COUNT(*) AS represented,SUM($weight) AS weight,SUM(CASE WHEN $choice='yes' THEN $weight ELSE 0 END) AS yes,SUM(CASE WHEN $choice='no' THEN $weight ELSE 0 END) AS no,SUM(CASE WHEN $choice='abstain' THEN $weight ELSE 0 END) AS abstain,SUM(CASE WHEN $choice IS NULL THEN 1 ELSE 0 END) AS pending",
+      "group_by": "$ballot_id",
+      "order_by": "$ballot_id"
+    }
+  }
+}

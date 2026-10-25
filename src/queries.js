@@ -38,9 +38,10 @@ export function modelFromQuerySource(source, Builder) {
 
 export class SqliteQueries {
     constructor(builder, adapter = null, scope = null, runtime = {}) {
-        builder.toMigration();
-        this.builder = builder;
-        this.tables = projectApplication(builder, builder.constructor, {withModel: true}).tables;
+        const application = projectApplication(builder, builder.constructor, {withModel: true});
+        this.model = application.model;
+        this.model.toMigration();
+        this.tables = application.tables;
         this.adapter = adapter;
         this.scope = scope;
         this.runtime = runtime;
@@ -48,10 +49,10 @@ export class SqliteQueries {
         this.defaultEnvironment = {};
         if (!scope) {
             record(runtime);
-            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods', 'parseDateExpression'].includes(key))
+            for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods'].includes(key))
                 throw new Error(`Opzione runtime sconosciuta: ${key}`);
             validateCompilerMethods(this.tables, runtime.methods ?? {});
-            for (const key of ['clock', 'uuid', 'parseDateExpression']) if (runtime[key] != null && typeof runtime[key] !== 'function')
+            for (const key of ['clock', 'uuid']) if (runtime[key] != null && typeof runtime[key] !== 'function')
                 throw new TypeError(`${key} deve essere una funzione`);
             for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
                 if (!this.tables.has(table)) throw new Error(`Tabella degli hook sconosciuta: ${table}`);
@@ -81,12 +82,12 @@ export class SqliteQueries {
         for (const c of table.columns.values()) {
             if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');
             if (write && (c.children.some(n => n.tag !== 'relation') ||
-                ['default', 'default_from', 'x_generation', 'read_only', 'unmodifiable',
+                ['default', 'default_from', 'readOnly', 'unmodifiable',
                     'onInserting','onUpdating','onDeleting','onInserted','onUpdated','onDeleted','trigger_table']
                     .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
         }
         if (write && [...table.columns.values()].some(c => c.children.some(n =>
-            Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Hook di relazione non implementati');
+            ['onDelete', 'onUpdate'].some(k => n.a[k] != null) || Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Hook di relazione non implementati');
         return table;
     }
     compile(request) {
@@ -102,10 +103,10 @@ export class SqliteQueries {
             : ['operation', 'table', 'values', 'pkey', 'old_record', 'ignore_partition', 'environment'];
         for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Opzione query fuori perimetro: ${name}`);
         const table = this.resolveTable(request.table, !read);
-        if (!read) return compileWrite(table, request.operation, request.values, request);
         const methods = new CompilerMethods(this.tables, this.runtime.methods ?? {},
             structuredClone(request.environment), this.compilerEnvironments.get(environment));
-        return compileSelect(this.tables, table, request, methods, this.runtime.parseDateExpression);
+        if (!read) return compileWrite(table, request.operation, request.values, {...request, methods});
+        return compileSelect(this.tables, table, request, methods);
     }
     async execute(request) {
         const compiled = this.compile(request);
@@ -145,7 +146,7 @@ export class SqliteQueries {
         return this._inScope(async () => {
             const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
                 environment: structuredClone(options.environment ?? this.environment()), trigger: this.scope.trigger};
-            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            const db = new SqliteQueries(this.model, this.adapter, child, this.runtime);
             try {
                 const result = await writeRecord(db, db.resolveTable(name, false), operation, values, options);
                 child.active = false;
@@ -160,7 +161,7 @@ export class SqliteQueries {
         return this._inScope(async () => {
             const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
                 environment: this.environment(), trigger: this.scope.trigger};
-            const db = new SqliteQueries(this.builder, this.adapter, child, this.runtime);
+            const db = new SqliteQueries(this.model, this.adapter, child, this.runtime);
             try {
                 const result = await sqlInsert(db, db.resolveTable(name, false), source, options);
                 await child.tail;
@@ -176,7 +177,7 @@ export class SqliteQueries {
         if (this.scope || state.transaction) throw new TransactionStateError('Transazioni annidate non ancora supportate');
         return enqueue(state, async () => {
             const scope = {active: true, tail: Promise.resolve(), environment: this.environment()};
-            const tx = new SqliteQueries(this.builder, this.adapter, scope, this.runtime);
+            const tx = new SqliteQueries(this.model, this.adapter, scope, this.runtime);
             await this.adapter.execute('BEGIN IMMEDIATE');
             state.transaction = scope;
             try {

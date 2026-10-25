@@ -89,7 +89,7 @@ test('real offline cycle: load, CRUD, close/reopen app, export back to Python', 
     await expect(page.locator('#transfer-status')).toContainText('Snapshot caricato');
     const snapshot = target => target.evaluate(() => JSON.parse(window.gramlot.data.getItem('transferSample')));
     const compare = (actual, expected) => {
-        for (const key of ['model','migration','structure','rows']) expect(actual[key]).toEqual(expected[key]);
+        for (const key of ['source','migration','structure','rows']) expect(actual[key]).toEqual(expected[key]);
     };
     compare(await snapshot(page),entry.before);
     await context.setOffline(true);
@@ -153,5 +153,25 @@ test('failed replacement preserves the previous offline workspace', async ({page
     await expect(page.locator('#transfer-status')).toContainText('Workspace ripristinato');
     const resumed=await page.evaluate(() => JSON.parse(window.gramlot.data.getItem('transferSample')));
     expect(resumed.databaseName).toBe(saved.databaseName);
-    for (const key of ['model','migration','structure','rows']) expect(resumed[key]).toEqual(entry.before[key]);
+    for (const key of ['source','migration','structure','rows']) expect(resumed[key]).toEqual(entry.before[key]);
+});
+
+test('SQLite worker starts only after the offline cache controls the page',async({page})=>{
+    await page.addInitScript(()=>{
+        let ready;
+        Object.defineProperty(window,'offlineReady',{configurable:true,get:()=>ready,set:promise=>{
+            ready=promise.then(()=>new Promise(resolve=>setTimeout(()=>{window.cacheReadyObserved=true;resolve();},150)));
+        }});
+        const NativeWorker=window.Worker;
+        window.Worker=class extends NativeWorker {
+            constructor(url,options){
+                super(url,options);
+                if(new URL(url,location.href).pathname.endsWith('/sqlite-worker.js'))
+                    window.sqliteWorkerControlled=!!navigator.serviceWorker.controller&&window.cacheReadyObserved===true;
+            }
+        };
+    });
+    await page.goto('/?page=transfer&embedded=1');
+    await page.waitForFunction(()=>window.gramlot?.data.getItem('ready')===true);
+    expect(await page.evaluate(()=>window.sqliteWorkerControlled)).toBe(true);
 });

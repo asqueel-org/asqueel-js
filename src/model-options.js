@@ -1,25 +1,13 @@
-// Structural port of Asqueel 0.6.1 model_expansion.py. No hooks are executed.
+// Structural port of Asqueel model_expansion.py. No hooks are executed.
 import { defaults } from "./options.js";
 import { names } from "./structures.js";
+import { UnsupportedFeatureError } from "./query-errors.js";
 const clone = structuredClone;
-const legacy = (a) =>
-  Object.fromEntries(
-    Object.entries(a).map(([k, v]) => [
-      [
-        "onInserting",
-        "onUpdating",
-        "onUpdated",
-        "onInserted",
-        "onDeleting",
-        "onDeleted",
-      ].includes(k)
-        ? k
-        : `x_legacy_${k}`,
-      v,
-    ]),
-  );
 const fail = (message) => {
   throw new Error(message);
+};
+const unsupported = (message) => {
+  throw new UnsupportedFeatureError(message);
 };
 export const makeNode = (tag, name = tag, attributes = {}, children = []) => ({
   tag,
@@ -52,7 +40,7 @@ class Expansion {
       : null;
   }
   get group() {
-    return this.spec("sys_fields")?.group || "_";
+    return this.spec("sysFields")?.group || "_";
   }
   node(name) {
     return fields(this.table).find((n) => n.name === name);
@@ -95,8 +83,6 @@ class Expansion {
       ...structure,
       name,
     };
-    if (kind === "formulaColumn")
-      node.attributes.x_requires_compilation = "formulaColumn";
     if (!existing) collection.children.push(node);
     const emitted = this.emitted[collection.name];
     if (!emitted.includes(name)) {
@@ -125,7 +111,10 @@ class Expansion {
     if (existing.length) {
       const n = existing[0],
         old = n.attributes;
-      if (old.to !== to && `${this.key.split(".")[0]}.${old.to}` !== to)
+      if (
+        old.related_column !== to &&
+        `${this.key.split(".")[0]}.${old.related_column}` !== to
+      )
         fail("conflicting generated relation");
       for (const [k, v] of Object.entries(a))
         if (
@@ -138,15 +127,14 @@ class Expansion {
     } else
       col.children.push(
         makeNode("relation", "relation_0", {
-          to,
+          related_column: to,
           foreign_key: true,
           ...a,
-          ...(this.table.packaged ? { x_canonical: true } : {}),
         }),
       );
   }
-  sysFields() {
-    const s = this.spec("sys_fields");
+  systemColumns() {
+    const s = this.spec("sysFields");
     if (!s) return;
     const group = s.group || "_";
     if (s.group && s.group_name)
@@ -156,12 +144,7 @@ class Expansion {
         "id",
         "A",
         "Id",
-        {
-          size: "22",
-          read_only: true,
-          x_generation: { type: "uuid", algorithm: "legacy22" },
-          ...legacy({ _sendback: true }),
-        },
+        { size: "22", readOnly: true },
       ],
       ins: [
         "__ins_ts",
@@ -192,7 +175,7 @@ class Expansion {
         "__is_draft",
         "B",
         "Is Draft",
-        { indexed: true, ...legacy({ _sendback: true }) },
+        { indexed: true },
       ],
       syscode: [
         "__syscode",
@@ -213,7 +196,6 @@ class Expansion {
         {
           group,
           name_long: "!![en]" + label,
-          ...legacy({ _sysfield: true }),
           ...attrs,
           ...custom,
         },
@@ -236,7 +218,6 @@ class Expansion {
       this.formula("__record_pointer", ` '${this.key}.' || $${pk} `, {
         group,
         name_long: "!![en]Record pointer",
-        ...legacy({ _sysfield: true }),
       });
     for (const [name, expression, label] of [
       ["__protecting_reasons", true, "Protecting reasons"],
@@ -247,102 +228,44 @@ class Expansion {
       this.formula(name, expression, {
         group: this.group,
         name_long: "!![en]" + label,
-        ...legacy({ _sysfield: true }),
       });
   }
   local() {
     let s;
-    if ((s = this.spec("full_update")))
+    if ((s = this.spec("fullUpd")))
       this.add(s.field, "DHZ", {
         indexed: true,
         group: this.group,
         name_long: "!![en]Full Update TS",
-        ...legacy({ _sysfield: true }),
       });
-    if ((s = this.spec("record_hash")))
-      this.add(s.field, "T", {
-        group: this.group,
-        name_long: "!![en]Update date",
-        ...legacy({
-          _sysfield: true,
-          onInserting: "setRecordMd5",
-          onUpdating: "setRecordMd5",
-        }),
-      });
-    if ((s = this.spec("audit"))) {
-      this.tableDefault(legacy({ audit: s.mode }));
-      this.add(s.version_field, "L", {
-        group: this.group,
-        name_long: "Audit version",
-        ...legacy({
-          _sysfield: true,
-          onInserting: "setAuditVersionIns",
-          onUpdating: "setAuditVersionUpd",
-        }),
-      });
-    }
-    if ((s = this.spec("dynamic_fields"))) {
-      this.add("df_fields", "X", {
-        group: "_",
-        ...legacy({ _sendback: true }),
-      });
+    if ((s = this.spec("df"))) {
+      this.add("df_fields", "X", { group: "_" });
       this.add("df_fbcolumns", "L", { group: "_" });
-      this.add("df_custom_templates", "X", {
-        group: "_",
-        ...legacy({ templates: s.templates }),
-      });
+      this.add("df_custom_templates", "X", { group: "_" });
       this.add("df_colswidth", "T", { group: "_" });
     }
-    if ((s = this.spec("auto_counter"))) {
-      this.tableDefault(legacy({ counter: s.scope || true }));
+    if ((s = this.spec("counter"))) {
       this.add(s.field, "L", {
         group: this.group,
         name_long: "!![en]Counter",
-        ...legacy({
-          counter: true,
-          _sysfield: true,
-          ...(!this.spec("hierarchical")
-            ? { _counter_fkey: s.scope || true, onInserting: "setRowCounter" }
-            : {}),
-        }),
+        ...(!this.spec("hierarchical") ? { onInserting: "setRowCounter" } : {}),
       });
       if (!this.spec("hierarchical"))
         this.tableDefault({ order_by: "$" + s.field });
-    }
-    if ((s = this.spec("protection"))?.tag) {
-      this.add("__protection_tag", "T", {
-        group: this.group,
-        name_long: "!![en]Protection tag",
-        ...legacy({
-          _sysfield: true,
-          _sendback: true,
-          onInserting: "setProtectionTag",
-        }),
-      });
-      this.formula(
-        "__protected_by_tag",
-        " ( CASE WHEN $__protection_tag IS NULL THEN NULL\n                                                    ELSE NOT (',' || :env_userTags || ',' LIKE '%%,'|| $__protection_tag || ',%%')\n                                                    END ) ",
-        { dtype: "B", ...legacy({ _sysfield: true }) },
-      );
-    }
-    for (const c of child(this.table, "columns")?.children || []) {
-      const d = child(c, "dynamic_fields");
-      if (d && d.attributes.enabled !== false)
-        Object.assign(c.attributes, legacy({ subfields: d.attributes.source }));
     }
   }
   hierarchy() {
     const s = this.spec("hierarchical");
     if (!s) return;
     if (s.depth)
-      fail(`${this.key}: hierarchical depth is not available in Python 0.6.1`);
+      unsupported(`${this.key}: hierarchical depth is not available in this release`);
     if (
       this.table.attributes.pkey !== "id" ||
       this.node("id")?.attributes.size !== "22"
     )
       fail("hierarchical requires id size 22 as primary key");
     const p = s.parent,
-      counter = this.spec("auto_counter");
+      counter = this.spec("counter");
     this.relation(
       this.add(
         p,
@@ -350,12 +273,9 @@ class Expansion {
         {
           group: "*",
           name_long: "!![en]Parent id",
-          ...legacy({
-            _sysfield: true,
-            onInserting: "hierarchical_before",
-            onUpdating: "hierarchical_before",
-            onUpdated: "hierarchical_after",
-          }),
+          onInserting: "hierarchical_before",
+          onUpdating: "hierarchical_before",
+          onUpdated: "hierarchical_after",
         },
         { size: "22" },
       ),
@@ -388,7 +308,6 @@ class Expansion {
           {
             group: "*",
             sql_value: "substr(:hierarchical_pkey,1,22)",
-            ...legacy({ _sysfield: true }),
           },
           { size: "22" },
         ),
@@ -402,10 +321,7 @@ class Expansion {
         },
       );
     if (s.virtual_roots)
-      this.add("_virtual_node", "B", {
-        name_long: "!![en]H.Virtual node",
-        ...legacy({ copyFromParent: true }),
-      });
+      this.add("_virtual_node", "B", { name_long: "!![en]H.Virtual node" });
     const fs = [];
     for (const item of typeof s.columns === "string"
       ? names(s.columns)
@@ -422,7 +338,6 @@ class Expansion {
       this.add("_parent_h_" + n, "T", {
         group: this.group,
         name_long: "!![en]Parent Hierarchical " + n,
-        ...legacy({ _sysfield: true }),
       });
       fs.push(n);
     }
@@ -432,29 +347,21 @@ class Expansion {
       {
         group: this.group,
         name_long: "!![en]Hierarchical pkey",
-        ...legacy({ _sysfield: true }),
       },
       { unique: true },
     );
-    this.add("_parent_h_pkey", "T", {
-      group: this.group,
-      ...legacy({ _sysfield: true }),
-    });
+    this.add("_parent_h_pkey", "T", { group: this.group });
     fs.push("pkey");
-    this.tableDefault(legacy({ hierarchical: fs.join(",") }));
     if (s.caption_field) this.tableDefault({ caption_field: s.caption_field });
-    const broadcast = names(this.spec("broadcast")?.columns);
-    if (!broadcast.includes(p)) broadcast.push(p);
-    this.tableDefault(legacy({ broadcast: broadcast.join(",") }));
     if (counter) {
       if (counter.scope)
-        fail("hierarchical auto_counter cannot have a relative scope");
+        fail("hierarchical counter cannot have a relative scope");
       for (const n of ["_h_count", "_parent_h_count"])
-        this.add(n, "T", { group: this.group, ...legacy({ _sysfield: true }) });
+        this.add(n, "T", { group: this.group });
       this.formula(
         "_h_sortcol",
         fs.length === 1 ? "$_h_count" : ` COALESCE($_h_count,$${fs[0]}) `,
-        { group: this.group, ...legacy({ _sysfield: true }) },
+        { group: this.group },
       );
       this.tableDefault({ order_by: "$_h_sortcol" });
     } else this.tableDefault({ order_by: "$hierarchical_" + fs[0] });
@@ -465,20 +372,8 @@ export function expandModelOptions(tables) {
   const target = (owner, ref) =>
     owners.get(ref.includes(".") ? ref : owner.key.split(".")[0] + "." + ref) ||
     fail(`unknown related table ${ref}`);
-  for (const o of owners.values())
-    if (o.spec("attachments")) {
-      const opts = container(o.table, "options");
-      for (const tag of ["sys_fields", "auto_counter"])
-        if (!child(opts, tag))
-          opts.children.push(
-            makeNode(tag, tag, {
-              ...defaults(tag),
-              ...(tag === "auto_counter" ? { scope: "maintable_id" } : {}),
-            }),
-          );
-    }
   for (const o of owners.values()) {
-    o.sysFields();
+    o.systemColumns();
     o.local();
   }
   for (const o of owners.values()) o.hierarchy();
@@ -499,7 +394,6 @@ export function expandModelOptions(tables) {
         {
           group: "_",
           name_long: master.table.attributes.name_long ?? null,
-          ...legacy({ copyFromParent: true, fkeyToMaster: true }),
         },
         a.size ? { size: a.size } : {},
       );
@@ -514,10 +408,8 @@ export function expandModelOptions(tables) {
         "A",
         {
           name_long: `${o.table.attributes.name_long ?? "None"} root`,
-          ...legacy({
-            onInserting: "insertLinkedHierarchicalRoot",
-            onUpdating: "updateLinkedHierarchicalRoot",
-          }),
+          onInserting: "insertLinkedHierarchicalRoot",
+          onUpdating: "updateLinkedHierarchicalRoot",
         },
         { size: "22" },
       );
@@ -529,123 +421,23 @@ export function expandModelOptions(tables) {
       });
       o.tableDefault({ hierarchical_linked_to: master.key });
     }
-    const s = o.spec("attachments");
-    if (!s) continue;
-    const master = target(o, s.master),
-      pk = master.table.attributes.pkey;
-    if (!pk || !master.node(pk))
-      fail("attachment master needs a physical primary key");
-    master.tableDefault({ atc_attachmenttable: o.key });
-    const label = master.table.attributes.name_long ?? "None";
-    o.tableDefault({
-      caption_field: "description",
-      rowcaption: "$description",
-      name_long: `${label}  Attachment`,
-      name_plural: `${label} Attachments`,
-    });
-    const id = o.add(
-      "id",
-      "A",
-      { group: "_", name_long: "Id" },
-      { size: "22" },
-    );
-    if (id.attributes.name_long === "!![en]Id")
-      Object.assign(id.attributes, { name_long: "Id", group: "_" });
-    for (const [n, l] of [
-      ["filepath", "!![en]Filepath"],
-      ["filepath_hash", "MD5 hash"],
-      ["filepath_original_name", "!![en]Original name"],
-      ["external_url", "!![en]External url"],
-      ["description", "!![en]Description"],
-      ["mimetype", "!![en]Mimetype"],
-      ["text_content", "!![en]Content"],
-    ])
-      o.add(n, "T", {
-        name_long: l,
-        ...(n === "filepath"
-          ? {
-              onDeleted: "onDeletedAtc",
-              onInserted: "onInsertedAtc",
-              onInserting: "checkExternalUrl",
-            }
-          : {}),
-      });
-    o.add("info", "X", { name_long: "!![en]Additional info" });
-    o.add("is_foreign_document", "B", {
-      name_long: "!![en][Is foreign document]",
-      name_short: "!![en]Ext",
-    });
-    o.relation(
-      o.add(
-        "maintable_id",
-        "A",
-        { group: "*", name_long: master.table.attributes.name },
-        { size: "22" },
-      ),
-      master.key + "." + pk,
-      {
-        relation_name: "atc_attachments",
-        onDelete: "cascade",
-        onDelete_sql: "cascade",
-        onDuplicate: false,
-        deferred: true,
-      },
-    );
-    o.formula(
-      "adapted_url",
-      "CASE WHEN position('\\:' in $filepath)>0 THEN '/'||$filepath\n             ELSE '/_vol/' || $filepath\n            END",
-      { group: "_" },
-    );
-    o.add(
-      "fileurl",
-      "T",
-      {
-        method: "filepath_endpoint_url",
-        name_long: "Fileurl",
-        required_columns: "$external_url,$filepath",
-        static: true,
-      },
-      {},
-      "pyColumn",
-    );
-    o.add(
-      "missing_file",
-      "B",
-      { method: "pyColumn_missing_file", name_long: "Missing file" },
-      {},
-      "pyColumn",
-    );
-    o.add(
-      "full_external_url",
-      "T",
-      { method: "pyColumn_full_external_url", name_long: "Full external url" },
-      {},
-      "pyColumn",
-    );
   }
   for (const o of owners.values()) {
-    const s = o.spec("relative_index");
+    const s = o.spec("relidx");
     if (!s) continue;
     const n = s.relation.replace(/^@+/, ""),
       rs = o.node(n)?.children.filter((n) => n.tag === "relation") || [];
     if (rs.length !== 1)
-      fail("relative_index needs a column with one direct relation");
-    const parts = rs[0].attributes.to.split(".");
+      fail("relidx needs a column with one direct relation");
+    const parts = rs[0].attributes.related_column.split(".");
     if (parts.length === 2) parts.unshift(o.key.split(".")[0]);
     const master = target(o, parts.slice(0, 2).join(".")),
       xtd = target(o, master.key + "_xtd");
     o.add(s.field, "L", {
       name_long: "!![en]Rel.Idx",
       group: o.group,
-      ...legacy({
-        onInserting: "setRelidx",
-        relidx: true,
-        _relidx_fkey: n,
-        _sysfield: true,
-        format: "0000",
-      }),
+      onInserting: "setRelidx",
     });
-    o.tableDefault(legacy({ relidx: n }));
     xtd.add(o.key.replaceAll(".", "_") + "_relidx", "L", {
       name_long: `${o.table.attributes.name_long ?? "None"} relidx count`,
     });

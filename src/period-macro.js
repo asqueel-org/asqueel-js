@@ -1,11 +1,10 @@
-import {UnsupportedFeatureError} from './query-errors.js';
+import {parseDateExpression} from '@genrojs/toolbox';
 
-/** Python compiler.expand_period; natural-language decoding belongs to the supplied parser. */
+/** Python compiler.expand_period; natural-language dates are decoded by the toolbox, as genro_toolbox.dates in Python. */
 export class PeriodMacro {
-    constructor(bindings, environment, parseDateExpression) {
+    constructor(bindings, environment) {
         this.bindings = bindings;
         this.environment = environment;
-        this.parseDateExpression = parseDateExpression;
         this.parameters = new Map();
     }
     expand(text) {
@@ -22,22 +21,12 @@ export class PeriodMacro {
                 throw new Error('#PERIOD richiede workdate e locale nell’ambiente');
             const text = bindings.available[name] || '';
             if (typeof text !== 'string') throw new TypeError('#PERIOD richiede un testo o un periodo vuoto');
-            if (typeof this.parseDateExpression !== 'function') throw new UnsupportedFeatureError(
-                '#PERIOD richiede parseDateExpression nel runtime: usare il parser di @gramlot/gramlot');
-            // The compiler uses commas as range separators, before the Toolbox/Gramlot decoder.
-            const result = this.parseDateExpression(text.replaceAll(',', ';'),
+            // The compiler uses commas as range separators, before the toolbox decoder.
+            const result = parseDateExpression(text.replaceAll(',', ';'),
                 {workdate: environment.workdate, locale: environment.locale});
-            if (result != null && typeof result.then === 'function') {
-                Promise.resolve(result).catch(() => {});
-                throw new TypeError('#PERIOD richiede un parser sincrono');
-            }
-            if (!result?.ok) throw new Error(`#PERIOD: ${result?.error?.message ?? 'risultato del parser non valido'}`);
-            if (!['date', 'period'].includes(result.kind)) throw new TypeError('#PERIOD: tipo di risultato del parser non valido');
+            if (!result.ok) throw new Error(`#PERIOD: ${result.error.message}`);
             const start = result.kind === 'date' ? result.date : result.start;
             const end = result.kind === 'date' ? result.date : result.end;
-            for (const value of [start, end]) if (!(value === null && result.kind === 'period') &&
-                (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)))
-                throw new TypeError('#PERIOD: il parser deve restituire date civili ISO o estremi null');
             const lower = start === null ? null : ':' + bindings.add(name + '_from', start);
             const upper = end === null ? null : end === start ? lower : ':' + bindings.add(name + '_to', end);
             this.parameters.set(name, [lower, upper]);

@@ -47,28 +47,22 @@
     "archive": [
       "table"
     ],
-    "attachments": [
-      "table"
-    ],
-    "audit": [
-      "table"
-    ],
-    "auto_counter": [
-      "table"
-    ],
     "broadcast": [
+      "table"
+    ],
+    "counter": [
+      "table"
+    ],
+    "df": [
       "table"
     ],
     "driver": [
       "connection"
     ],
-    "dynamic_fields": [
-      "table"
-    ],
     "enabled_when": [
       "table"
     ],
-    "full_update": [
+    "fullUpd": [
       "table"
     ],
     "hierarchical": [
@@ -77,16 +71,10 @@
     "numbering": [
       "table"
     ],
-    "protection": [
-      "table"
-    ],
-    "record_hash": [
-      "table"
-    ],
-    "relative_index": [
-      "table"
-    ],
     "release": [
+      "table"
+    ],
+    "relidx": [
       "table"
     ],
     "requires": [
@@ -95,10 +83,10 @@
     "retention": [
       "table"
     ],
-    "sys_fields": [
+    "sysFields": [
       "table"
     ],
-    "system_records": [
+    "sysrecords": [
       "table"
     ],
     "type": [
@@ -107,33 +95,26 @@
   },
   "tableOptions": [
     "archive",
-    "attachments",
-    "audit",
-    "auto_counter",
     "broadcast",
-    "dynamic_fields",
+    "counter",
+    "df",
     "enabled_when",
-    "full_update",
+    "fullUpd",
     "hierarchical",
     "numbering",
-    "protection",
-    "record_hash",
-    "relative_index",
     "release",
+    "relidx",
     "retention",
-    "system_records"
+    "sysrecords"
   ],
   "namedOptions": {
     "numbering": "field"
   },
   "requiredOptions": {
-    "relative_index": [
+    "relidx": [
       "relation"
     ],
-    "audit": [
-      "mode"
-    ],
-    "system_records": [
+    "sysrecords": [
       "records"
     ],
     "release": [
@@ -145,9 +126,6 @@
     ],
     "enabled_when": [
       "preference"
-    ],
-    "attachments": [
-      "master"
     ]
   },
   "sysFields": [

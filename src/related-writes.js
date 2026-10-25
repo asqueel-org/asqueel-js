@@ -8,7 +8,7 @@ function referenceValue(record, field) {
     return record[field];
 }
 function incoming(db, table) {
-    return [...db.builder.resolve().table(table.key).relations.entries().values()]
+    return [...db.model.table(table.key).relations.entries().values()]
         .map(n => n.attributes.joiner).filter(j => j?.mode === 'M');
 }
 export function checkRelatedCapabilities(db, table, operation) {

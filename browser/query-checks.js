@@ -4,6 +4,7 @@ import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {browserQueries} from '../examples/browser-queries.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import oracle from '../test/fixtures/queries.json' with {type: 'json'};
 import featureOracle from '../test/fixtures/query-features.json' with {type: 'json'};
 import {queryFeatures} from '../examples/query-features.js';
@@ -17,7 +18,7 @@ export async function queryChecks() {
     let db = await openBrowserSQLite(id);
     const model = defineModel(browserQueries);
     try {
-        if (!equal(model.toJSON(), oracle.model) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello query diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello query diverso da Python');
         await migrateSQLite(db, model.toMigration());
         checks.push('Modello query identico a Python, quattro tabelle migrate');
         let compiler = model.queries(db);
@@ -38,7 +39,7 @@ export async function queryChecks() {
         await queryRuntimeChecks(compiler);
         checks.push('CRUD, record/count/exists, transazioni atomiche e rollback verificati su WASM');
         const featureModel = defineModel(queryFeatures);
-        if (!equal(featureModel.toJSON(), featureOracle.model) || !equal(featureModel.toMigration(), featureOracle.desired)) throw new Error('Modello feature diverso da Python');
+        if (!equal(sourceRows(featureModel.toTytx()), sourceRows(featureOracle.source)) || !equal(featureModel.toMigration(), featureOracle.desired)) throw new Error('Modello feature diverso da Python');
         for (const sql of featureOracle.ddl) await db.execute(sql);
         for (const c of featureOracle.cases) {
             if (!equal(featureModel.queries().compile(c.request), c.compiled)) throw new Error(`SQL/parametri feature diversi: ${c.name}`);

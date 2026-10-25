@@ -1,32 +1,21 @@
 {
   "sys_fields_merge_individual_keys": {
-    "model": "app.item.id: conflicts with sys_fields dtype",
-    "migration": "app.item.id: conflicts with sys_fields dtype"
+    "model": "app.item.id: conflicts with sysFields dtype",
+    "migration": "app.item.id: conflicts with sysFields dtype"
   },
   "physical_virtual_collision_rejected": {
     "composition": "_root_.db.packages.app.tables.item.name: conflicting element kinds 'column' and 'formulaColumn'"
   },
   "virtual_relation_condition_required": {
-    "model": "virtualRelation: table requires a nonempty condition",
-    "migration": "virtualRelation: table requires a nonempty condition"
+    "composition": "virtualRelation: table requires a nonempty condition"
   },
   "application/linked_hierarchy": {
     "model": "app.branch: hierarchical depth is not available in this release",
     "migration": "app.branch: hierarchical depth is not available in this release"
   },
-  "060/indexed_{'where': 'name IS NOT NULL', 'method': 'btree', 'sorting': 'DESC', 'with_fillfactor': 70}": {
-    "migration": "main.app_item: partial/non-btree index does not cover required full index on ['code']; migration engine permits one index per column set"
-  },
-  "060/indexed_{'unique': True, 'where': 'name IS NOT NULL'}": {
-    "migration": "main.app_item: partial/non-btree index does not cover required full index on ['code']; migration engine permits one index per column set"
-  },
   "060/indexed_{'invalid': True}": {
     "model": "invalid SQL model:\n  current.packages.app.tables.item.columns.code: column 'code': unknown indexed option(s) invalid",
     "migration": "invalid SQL model:\n  current.packages.app.tables.item.columns.code: column 'code': unknown indexed option(s) invalid"
-  },
-  "060/table_{'x_table_class': None}": {
-    "model": "app.item: x_table_class must be a SqlTable subclass",
-    "migration": "app.item: x_table_class must be a SqlTable subclass"
   },
   "060/relation_{'onDelete_sql': 'bad'}": {
     "model": "invalid SQL model:\n  current.packages.app.tables.item.columns.target_id.relation_0: invalid onDelete_sql 'bad'",
@@ -47,9 +36,21 @@
     "model": "invalid SQL model:\n  current.packages.app.tables.item.composites.bad: composite repeats member(s): id",
     "migration": "invalid SQL model:\n  current.packages.app.tables.item.composites.bad: composite repeats member(s): id"
   },
+  "060/configuration_1": {
+    "model": "Named connections must use the database dialect"
+  },
+  "060/configuration_2": {
+    "model": "Named connections require an explicit main connection"
+  },
+  "060/configuration_3": {
+    "model": "dsn requires a PostgreSQL connection"
+  },
+  "060/postgres_driver_rejected": {
+    "model": "Named connections must use the database dialect"
+  },
   "061/custom_counter_scope": {
-    "model": "app.item: hierarchical auto_counter cannot have a relative scope",
-    "migration": "app.item: hierarchical auto_counter cannot have a relative scope"
+    "model": "app.item: hierarchical counter cannot have a relative scope",
+    "migration": "app.item: hierarchical counter cannot have a relative scope"
   },
   "061/linked_missing_master": {
     "model": "app.item: unknown related table 'app.master'",

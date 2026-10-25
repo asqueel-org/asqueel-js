@@ -2,6 +2,7 @@ import invalidTransfers from './transfer-invalid.json' with {type:'json'};
 import {Bag} from '@genrojs/bag';
 import {importTransfer, exportTransfer} from '../src/transfer.js';
 import {readSQLite, quote, equal} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 
 function firstDifference(a, b, path = '$') {
     if (equal(a,b)) return '';
@@ -33,7 +34,7 @@ export async function transferSnapshot(adapter, builder) {
         if (value != null && col.attributes.dtype === 'X') row[col.sqlname] = {bag:canonicalWire(JSON.parse(value.slice(0,-3).replace(/::JS$/, '')))};
         if (value != null && col.attributes.dtype === 'O') row[col.sqlname] = {hex:Array.from(value,b=>b.toString(16).padStart(2,'0')).join('')};
     }
-    return {model: builder.toJSON(), migration: builder.toMigration(), structure: await readSQLite(adapter, 'offline'), rows};
+    return {source: sourceRows(builder.toTytx()), migration: builder.toMigration(), structure: await readSQLite(adapter, 'offline'), rows};
 }
 export async function runInvalidTransfers(adapter, entry) {
     const original = JSON.parse(entry.bundle.data['files.asset'].split('\n')[0].slice(0,-4));

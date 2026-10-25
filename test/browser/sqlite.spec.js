@@ -1,7 +1,8 @@
 import periodOracle from '../fixtures/periods.json' with {type: 'json'};
 import {queryPeriods} from '../../examples/query-periods.js';
 import {test, expect} from '@playwright/test';
-import compositionCases from '../fixtures/resolved-model.json' with {type:'json'};
+import compositionCases from '../fixtures/model-cases.json' with {type:'json'};
+import {sourceRows} from '../../src/source-bag.js';
 import examples from '../fixtures/model-examples.json' with {type:'json'};
 import cascadesOracle from '../fixtures/cascades.json' with {type: 'json'};
 import behaviorsOracle from '../fixtures/behaviors.json' with {type: 'json'};
@@ -68,10 +69,10 @@ test('group/formula example renders the exact Python migration JSON', async ({pa
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
 });
 
-test('browser exposes and compares the complete hierarchical model',async({page})=>{
+test('browser exposes and compares the composed source in TYTX',async({page})=>{
     await leaf(page);await page.locator('#example').selectOption('application');
-    await expect(page.locator('#model-status')).toHaveText('Modello completo identico a Python 0.6.1');
-    expect(JSON.parse(await page.locator('#resolved-model').textContent())).toEqual(examples.application.model);
+    await expect(page.locator('#model-status')).toHaveText('Source TYTX identico a Python');
+    expect(JSON.parse(await page.locator('#composed-source').textContent())).toEqual(sourceRows(examples.application.source));
     await page.screenshot({path: 'output/gramlot-model.png'});
 });
 
@@ -116,7 +117,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await page.locator('#render').click();
     await expect(page.locator('#status')).toHaveClass('error');
     await expect(page.locator('#download').getByRole('button')).toBeDisabled();
-    await expect(page.locator('#resolved-model')).toBeEmpty();
+    await expect(page.locator('#composed-source')).toBeEmpty();
     await page.locator('#restore').click();
     await expect(page.locator('#status')).toContainText('JSON identico');
     expect(errors).toEqual([]);
@@ -148,7 +149,7 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     await expect(page.locator('#query-status')).toContainText('1 righe lette');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('350 query confrontate con Python', {timeout: 30000});
+    await expect(page.locator('#query-status')).toContainText('352 query confrontate con Python', {timeout: 30000});
     await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
     await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
     await expect(page.locator('#query-checks')).toContainText('48 sottoquery/aggregazioni');

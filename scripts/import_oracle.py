@@ -6,9 +6,9 @@ from copy import deepcopy
 from datetime import date, time, datetime
 from decimal import Decimal
 from python_reference import ROOT
-from asqueel import AsqueelDb, SqlBuilder, SqlDatabaseConfig, SqlMigrationRenderer, resolve_model
-from import_records import declare, ImportTable
-from model_oracle import document
+from asqueel import AsqueelDb, SqlBuilder, SqlDatabaseConfig
+from import_records import declare, ImportTable, CLASSES
+from python_model import bind_table_classes, migration, source_tytx
 
 def normalize(value):
     if isinstance(value, (date,time,datetime)):return value.isoformat()
@@ -30,8 +30,8 @@ def run(case):
     with tempfile.TemporaryDirectory(prefix='asqueel-import-') as folder:
         path=str(Path(folder)/'test.db'); config=SqlDatabaseConfig()
         root=config.source.db('imports',implementation='sqlite');root.connection('main',database=path)
-        declare(root.packages().package('app',sqlschema='main',sqlprefix=False),True)
-        db=AsqueelDb(config)
+        declare(root.packages().package('app',sqlschema='main',sqlprefix=False))
+        db=AsqueelDb(config);bind_table_classes(db,CLASSES)
         try:
             db.migrate();db.commit();table=db.table('app.'+case.get('table','item'))
             if case.get('setup'):table.sql_insert(deepcopy(case['setup']));db.commit()
@@ -65,6 +65,6 @@ def run(case):
 def oracle():
     b=SqlBuilder();declare(b.source.db('imports',implementation='sqlite').packages().package('app',sqlschema='main',sqlprefix=False))
     inputs=json.loads((ROOT/'test/import-inputs.json').read_text())
-    return dict(model=document(resolve_model(b)),desired=SqlMigrationRenderer(b).render(),cases=[dict(name=c['name'],input=c,expected=run(c)) for c in inputs])
+    return dict(source=source_tytx(b),desired=migration(b),cases=[dict(name=c['name'],input=c,expected=run(c)) for c in inputs])
 if __name__=='__main__':
     data=oracle();(ROOT/'test/fixtures/imports.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n');print(f'Python: {len(data["cases"])} import cases verified')

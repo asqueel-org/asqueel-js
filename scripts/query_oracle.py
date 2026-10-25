@@ -1,4 +1,4 @@
-"""Independent SQL/parameter/result oracle against the pinned Python 0.6.1 + #44."""
+"""Independent SQL/parameter/result oracle against the pinned Python reference."""
 import json
 from datetime import date
 from pathlib import Path
@@ -9,8 +9,7 @@ from types import MethodType
 
 from python_reference import ROOT
 
-from asqueel import SqlMigrationRenderer, QueryCompiler, SqlDatabase, SqlDatabaseConfig
-from asqueel.model import resolve_model
+from asqueel import AsqueelDb, QueryCompiler, SqlDatabaseConfig
 from asqueel.adapters.sqlite import SqlDbAdapter
 from asqueel.write_compiler import WriteCompiler
 from asqueel_migration import SqlMigrator
@@ -24,9 +23,7 @@ from query_periods import period_model
 from genro_toolbox.dates.period_parser import PeriodLocaleError
 from compiler_callbacks import callback_model, callback_methods
 from asqueel import UnsupportedFeatureError
-from asqueel.environment import SqlEnvironment
-from asqueel.configuration import _owned_handler
-from model_oracle import document
+from python_model import migration as render_migration, source_tytx
 
 
 def requests(filename):
@@ -48,21 +45,21 @@ def sql_parameters(compiled):
 
 def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=None):
     builder = builder if builder is not None else query_model()
-    desired = SqlMigrationRenderer(builder).render()
-    model = resolve_model(builder)
-    model_document = document(model)
+    desired = render_migration(builder)
     runtime, events = None, []
     if methods:
         config = SqlDatabaseConfig()
-        config.source.db('callbacks', implementation='sqlite').connection('main', database=':memory:')
-        runtime = SqlDatabase(model=model, config=_owned_handler(config))
+        db_node = builder.source.get_node('db')
+        config.source.db(db_node.get_attr('name'), implementation='sqlite').connection('main', database=':memory:')
+        runtime = AsqueelDb(builder, parents=[config])
         for name, handlers in methods(events).items():
             table = runtime.table(name)
             for method, handler in handlers.items():
                 setattr(table, method, MethodType(handler, table))
     adapter = SqlDbAdapter(None)
     writer = WriteCompiler(adapter)
-    result = {"model": model_document, "desired": desired, "cases": []}
+    model = runtime.model if runtime else AsqueelDb(builder).model
+    result = {"source": source_tytx(builder), "desired": desired, "cases": []}
     with tempfile.TemporaryDirectory(prefix="asqueel-query-oracle-") as directory:
         path = str(Path(directory) / "query.db")
         db = SqliteDatabase({"dbname": path}, application_schemas=["main"])
@@ -84,7 +81,7 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
                 if runtime:
                     runtime.currentEnv = deepcopy(environment)
                     events.clear()
-                compiler = QueryCompiler(model, adapter, environment=runtime.environment if runtime else SqlEnvironment(environment))
+                compiler = QueryCompiler(model, adapter, _db=runtime) if runtime else QueryCompiler(model, adapter, environment=environment)
                 if request['operation'] in ('select', 'count'):
                     compiled = getattr(compiler, request['operation'])(request['table'], **kwargs)
                 else:
@@ -104,7 +101,7 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
             environment = query_environment(options.pop('environment', {}))
             if runtime:
                 runtime.currentEnv = deepcopy(environment)
-            compiler = QueryCompiler(model, adapter, environment=runtime.environment if runtime else SqlEnvironment(environment))
+            compiler = QueryCompiler(model, adapter, _db=runtime) if runtime else QueryCompiler(model, adapter, environment=environment)
             try:
                 compiler.select(request['table'], **options)
             except (ValueError, UnsupportedFeatureError, KeyError, TypeError, PeriodLocaleError):
@@ -120,7 +117,7 @@ def query_oracle(builder=None, inputs='query-inputs.json', errors=None, methods=
             else:
                 runtime.currentEnv['factor'] = factor
             events.clear()
-            compiled = QueryCompiler(model, adapter, environment=runtime.environment).select(
+            compiled = QueryCompiler(model, adapter, _db=runtime).select(
                 'app.owner', columns='$dynamicscale,$scaled,$dynamic_method')
             result['cache'].append(dict(compiled=dict(sql=compiled.sql, params=sql_parameters(compiled)), events=list(events)))
         runtime.closeConnection()

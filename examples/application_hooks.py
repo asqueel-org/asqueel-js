@@ -2,14 +2,13 @@
 from copy import deepcopy
 
 
-def declare(pkg, classes=None):
-    classes = classes or {}
-    note = pkg.table('note', **({'x_table_class': classes['app.note']} if 'app.note' in classes else {}))
-    note.options().sys_fields(syscode=True, draft=True)
+def declare(pkg):
+    note = pkg.table('note')
+    note.options().sysFields(syscode=True, draft=True)
     note.column('title', dtype='T', notnull=True, onInserting='titleBefore', onUpdating='titleBefore',
                 onDeleting='titleBefore', onInserted='titleAfter', onUpdated='titleAfter', onDeleted='titleAfter')
     note.column('status', dtype='T', default='new', unmodifiable=True)
-    audit = pkg.table('audit', pkey='id', **({'x_table_class': classes['app.audit']} if 'app.audit' in classes else {}))
+    audit = pkg.table('audit', pkey='id')
     audit.column('id', dtype='I')
     audit.column('event', dtype='T')
     audit.column('note_id', dtype='A', size='22')
@@ -17,11 +16,11 @@ def declare(pkg, classes=None):
     plain.column('id', dtype='I')
     plain.column('title', dtype='T', onInserting='crossTitle', trigger_table='app.audit')
     simple = pkg.table('simple')
-    simple.options().sys_fields()
+    simple.options().sysFields()
     simple.column('title', dtype='T')
     unsupported = pkg.table('unsupported')
-    unsupported.options().sys_fields()
-    unsupported.options().record_hash()
+    unsupported.options().sysFields()
+    unsupported.options().fullUpd()
     unsupported.column('title', dtype='T')
 
 

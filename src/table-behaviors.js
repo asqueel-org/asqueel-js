@@ -1,6 +1,7 @@
-// Python 0.6.1 hierarchical.py / table_behaviors.py, inside the write transaction.
+// Python hierarchical.py / table_behaviors.py, inside the write transaction.
 import {equal, quote} from './sqlite.js';
 import {compileWrite, keyColumns} from './write-compiler.js';
+import {names} from './structures.js';
 
 export const behavior = (table, name) => {
     const spec = table.options.get(name)?.spec;
@@ -8,7 +9,22 @@ export const behavior = (table, name) => {
 };
 const get = (record, key) => record?.[key] ?? null;
 const changed = (fields, a, b) => fields.some(k => !equal(get(a, k), get(b, k)));
-const tracked = table => table.a.x_legacy_hierarchical.split(',');
+// Legacy tblobj.attributes['hierarchical']: the declared hierarchical columns, then pkey.
+const tracked = table => {
+    const columns = behavior(table, 'hierarchical').columns;
+    const declared = typeof columns === 'string' ? names(columns) : columns || [];
+    return [...declared.map(item => typeof item === 'object' ? item.name : item).filter(n => n !== 'pkey'), 'pkey'];
+};
+// Legacy copyFromParent columns: _virtual_node and the linked master key.
+function copiedFromParent(db, table) {
+    const spec = behavior(table, 'hierarchical'), result = spec.virtual_roots ? ['_virtual_node'] : [];
+    if (spec.linked_to) {
+        const key = spec.linked_to.includes('.') ? spec.linked_to : `${table.namespace}.${spec.linked_to}`;
+        const master = db.resolveTable(key, false);
+        result.push(`${master.a.name}_${master.a.pkey}`);
+    }
+    return result;
+}
 const pyString = value => value == null ? 'None' : value === true ? 'True' : value === false ? 'False' : String(value);
 export function typedRows(table, rows) {
     for (const row of rows) for (const [name, col] of table.columns)
@@ -39,7 +55,7 @@ export function encode36(number, width = 1) {
 }
 export async function hierarchyBefore(db, table, record, old = null, allocate = true) {
     const current = {...old, ...record}, spec = behavior(table, 'hierarchical');
-    const parentField = spec.parent ?? 'parent_id', counter = behavior(table, 'auto_counter')?.field ?? '_row_count';
+    const parentField = spec.parent ?? 'parent_id', counter = behavior(table, 'counter')?.field ?? '_row_count';
     const key = String(current[table.a.pkey]).trimEnd(), parentId = get(current, parentField);
     if (key.includes('/')) throw new Error('Hierarchical primary keys cannot contain /');
     if (old && key !== String(old[table.a.pkey]).trimEnd()) throw new Error('Hierarchical primary keys are unmodifiable');
@@ -62,7 +78,7 @@ export async function hierarchyBefore(db, table, record, old = null, allocate = 
         record[name] = parent ? `${pyString(parent[name])}/${pyString(value)}` : value;
     }
     if (spec.root_id) record.root_id = record.hierarchical_pkey.split('/')[0];
-    if (parent) for (const [name, column] of table.columns) if (column.a.x_legacy_copyFromParent) record[name] = parent[name];
+    if (parent) for (const name of copiedFromParent(db, table)) record[name] = parent[name];
     if (!hasCounter) return;
     record._parent_h_count = current._parent_h_count = parent ? parent._h_count : null;
     if (old == null || changed([counter, '_parent_h_count'], current, old))
@@ -70,20 +86,20 @@ export async function hierarchyBefore(db, table, record, old = null, allocate = 
 }
 export async function hierarchyAfter(db, table, record, old) {
     if (!old) throw new Error('Updating a hierarchical record requires old_record');
-    const current = {...old, ...record}, fields = [...table.columns].filter(([name, col]) =>
-        name.startsWith('hierarchical_') || name === '_h_count' || col.a.x_legacy_copyFromParent).map(([name]) => name);
+    const copied = copiedFromParent(db, table), current = {...old, ...record}, fields = [...table.columns.keys()].filter(name =>
+        name.startsWith('hierarchical_') || name === '_h_count' || copied.includes(name));
     if (!changed(fields, current, old)) return;
     const parent = behavior(table, 'hierarchical').parent ?? 'parent_id';
     const children = await behaviorRows(db, table, {where: `$${parent}=:parent`, sqlparams: {parent: current[table.a.pkey]}});
     for (const row of children) await db.table(table.key).update({...row}, {old_record: row, ignore_partition: true});
 }
 function target(db, table, field) {
-    const to = table.columns.get(field).children.find(c => c.tag === 'relation').a.to;
+    const to = table.columns.get(field).children.find(c => c.tag === 'relation').a.related_column;
     return db.resolveTable(to.split('.').slice(0, 2).join('.'), false);
 }
 async function relativeIndex(db, table, record, field) {
     if (get(record, field) != null) return;
-    const name = behavior(table, 'relative_index').relation.replace(/^@+/, '');
+    const name = behavior(table, 'relidx').relation.replace(/^@+/, '');
     const extension = db.resolveTable(target(db, table, name).key + '_xtd', false), master = get(record, name);
     if (master == null) throw new Error('A relative index requires a master key');
     const counter = table.key.replaceAll('.', '_') + '_relidx';
@@ -123,7 +139,7 @@ export async function behaviorTrigger(db, table, trigger, record, field, old) {
     case 'hierarchical_before': await hierarchyBefore(db, table, record, old); break;
     case 'hierarchical_after': await hierarchyAfter(db, table, record, old); break;
     case 'setRowCounter':
-        if (get(record, field) == null) record[field] = await nextCounter(db, table, field, behavior(table, 'auto_counter')?.scope, record);
+        if (get(record, field) == null) record[field] = await nextCounter(db, table, field, behavior(table, 'counter')?.scope, record);
         break;
     case 'setRelidx': await relativeIndex(db, table, record, field); break;
     case 'insertLinkedHierarchicalRoot': await insertLinked(db, table, record, field); break;
@@ -136,7 +152,7 @@ export async function finishBehaviors(db, table, record, prepared, old = null) {
     const spec = behavior(table, 'hierarchical');
     if (spec && !equal(record, prepared)) {
         const moved = changed([spec.parent ?? 'parent_id'], record, prepared);
-        if (moved && old == null && behavior(table, 'auto_counter')) record[behavior(table, 'auto_counter').field ?? '_row_count'] = null;
+        if (moved && old == null && behavior(table, 'counter')) record[behavior(table, 'counter').field ?? '_row_count'] = null;
         await hierarchyBefore(db, table, record, old, moved);
     }
     for (const [name, col] of table.columns) if (col.a.onUpdating === 'updateLinkedHierarchicalRoot')
@@ -158,8 +174,8 @@ async function lockTable(db, table) {
 }
 export async function lockBehaviors(db, table) {
     const tables = new Map();
-    if (behavior(table, 'hierarchical') || behavior(table, 'auto_counter')) tables.set(table.key, table);
-    const relative = behavior(table, 'relative_index');
+    if (behavior(table, 'hierarchical') || behavior(table, 'counter')) tables.set(table.key, table);
+    const relative = behavior(table, 'relidx');
     if (relative) {
         const extension = db.resolveTable(target(db, table, relative.relation.replace(/^@+/, '')).key + '_xtd', false);
         tables.set(extension.key, extension);

@@ -7,4 +7,4 @@ for (const input of inputs) {
     try { cases.push({name: input.name, input, expected: await runCascadeCase(adapter, input)}); }
     finally { await adapter.close(); }
 }
-process.stdout.write(JSON.stringify({model: cascadesModel.toJSON(), desired: cascadesModel.toMigration(), cases}));
+process.stdout.write(JSON.stringify({source: cascadesModel.toTytx(), desired: cascadesModel.toMigration(), cases}));

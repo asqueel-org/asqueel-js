@@ -9,8 +9,9 @@ monorepo di package interdipendenti: i confini sono nei moduli e nei contratti.
 2. `composition.js` conserva le dichiarazioni e compone i contributi.
    `model-options.js` espande gli effetti strutturali delle opzioni;
    `model.js` valida e costruisce il modello gerarchico e il registro delle relazioni.
-3. `model.js` proietta il modello sul contratto fisico interno;
-   `internal/physical-renderer.js` e `structures.js` emettono `structure-1.0`.
+3. `migration.js` rende il source preparato come `structure-1.0`, come
+   `SqlMigrationRenderer` Python; `structures.js` porta le factory di asqueel-migration.
+   `source-bag.js` registra `SqlSourceBag`, il source salvato in TYTX.
    `application.js` fornisce solo una vista di compatibilità al compilatore query
    esistente, senza duplicare la preparazione del modello.
 4. `sqlite.js` legge il catalogo reale e pianifica/applica le differenze supportate.
@@ -76,5 +77,9 @@ La cache offline degli asset, i codec, i trigger applicativi e la sincronizzazio
 non sono ancora implementati. Sono responsabilità distinte, da aggiungere con
 contratti e verifiche dedicati.
 
-Il contratto fisico interno conserva il vocabolario `structure-1.0` del migratore;
-non è una seconda API pubblica del modello Python. Vedi [modello 0.6.1](model.md).
+Il JSON migrate conserva il vocabolario `structure-1.0` del migratore;
+non è una seconda API pubblica del modello Python. Vedi [modello](model.md).
+
+Il runtime riceve un unico `DbModel`, risolto dalla ricetta, anche quando la ricetta
+è caricata da un source TYTX scritto da Python. Le viste dei compilatori condividono i suoi attributi; scope di
+transazione, hook, importazioni e cascata conservano lo stesso modello.

@@ -1,10 +1,11 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {behaviorsModel, runBehaviorCase} from '../test/behaviors-runner.js';
 import {equal} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import oracle from '../test/fixtures/behaviors.json' with {type: 'json'};
 
 export async function behaviorsChecks() {
-    if (!equal(behaviorsModel.toJSON(), oracle.model) || !equal(behaviorsModel.toMigration(), oracle.desired))
+    if (!equal(sourceRows(behaviorsModel.toTytx()), sourceRows(oracle.source)) || !equal(behaviorsModel.toMigration(), oracle.desired))
         throw new Error('Modello gerarchie/contatori diverso da Python');
     const checks = [];
     let sample;

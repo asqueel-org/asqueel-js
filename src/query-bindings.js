@@ -1,5 +1,6 @@
 /** Scoped text bindings, ported from Python _sql_bindings.SqlBindings. */
 import {record} from './sql-expressions.js';
+import {substituteParameters} from './parameter-tokens.js';
 export class QueryBindings {
     constructor(values = {}, parent = null, prefix = '') {
         values = structuredClone(record(values ?? {}));
@@ -33,11 +34,12 @@ export class QueryBindings {
         return name;
     }
     substitute(sql) {
-        return sql.replace(/(:)(\w+)(\W|$)/g, (match, colon, name, suffix) => {
-            if (!this.names.has(name)) return match;
+        return substituteParameters(sql, match => {
+            const name = match.groups.parameter;
+            if (!this.names.has(name)) return match[0];
             const bound = this.names.get(name);
             this.params[bound] = this.available[name];
-            return colon + bound + suffix;
+            return ':' + bound;
         });
     }
 }

@@ -26,25 +26,30 @@ export function evaluateModel(caseData, diagnostics = {}) {
   const result = { outcomes };
   let b;
   try {
+    // As Python compose_recipe, every mode composes (and validates) the recipe.
     if (caseData.mode === "clone") {
       b = layers[0].clone();
       outcomes.push(applySteps(b, caseData.after));
+      b = composeModels(b);
     } else if (["layers", "recompose"].includes(caseData.mode)) {
       b = composeModels(...layers);
       if (caseData.mode === "recompose") b = composeModels(layers[0], b);
-    } else b = layers[0];
+    } else b = composeModels(layers[0]);
     result.compositionAccepted = true;
   } catch (e) {
     result.compositionAccepted = false;
     diagnostics.composition = e.message;
     return result;
   }
+  result.source = b.toTytx();
   for (const [key, render] of [
-    ["model", () => b.toJSON()],
+    ["model", () => b.resolve() && true],
     ["migration", () => b.toMigration()],
   ]) {
     try {
-      result[key] = render();
+      const value = render();
+      if (key === "migration") result[key] = value;
+      else result.modelAccepted = true;
     } catch (e) {
       result[key + "Accepted"] = false;
       diagnostics[key] = e.message;

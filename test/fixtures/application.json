@@ -352,6 +352,30 @@
             },
             "constraints": {},
             "indexes": {
+              "idx_cdd2d851": {
+                "entity": "index",
+                "entity_name": "idx_cdd2d851",
+                "attributes": {
+                  "columns": {
+                    "parent_id": null
+                  },
+                  "index_name": "idx_cdd2d851"
+                },
+                "schema_name": "registry",
+                "table_name": "category"
+              },
+              "idx_6a8108b0": {
+                "entity": "index",
+                "entity_name": "idx_6a8108b0",
+                "attributes": {
+                  "columns": {
+                    "root_id": null
+                  },
+                  "index_name": "idx_6a8108b0"
+                },
+                "schema_name": "registry",
+                "table_name": "category"
+              },
               "idx_af81f079": {
                 "entity": "index",
                 "entity_name": "idx_af81f079",
@@ -384,30 +408,6 @@
                     "__mod_ts": null
                   },
                   "index_name": "idx_45fd9fde"
-                },
-                "schema_name": "registry",
-                "table_name": "category"
-              },
-              "idx_cdd2d851": {
-                "entity": "index",
-                "entity_name": "idx_cdd2d851",
-                "attributes": {
-                  "columns": {
-                    "parent_id": null
-                  },
-                  "index_name": "idx_cdd2d851"
-                },
-                "schema_name": "registry",
-                "table_name": "category"
-              },
-              "idx_6a8108b0": {
-                "entity": "index",
-                "entity_name": "idx_6a8108b0",
-                "attributes": {
-                  "columns": {
-                    "root_id": null
-                  },
-                  "index_name": "idx_6a8108b0"
                 },
                 "schema_name": "registry",
                 "table_name": "category"
@@ -512,26 +512,6 @@
                 "table_name": "invoices",
                 "column_name": "__full_mod_ts"
               },
-              "__rec_md5": {
-                "entity": "column",
-                "entity_name": "__rec_md5",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "__rec_md5"
-              },
-              "__version": {
-                "entity": "column",
-                "entity_name": "__version",
-                "attributes": {
-                  "dtype": "L"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "__version"
-              },
               "df_fields": {
                 "entity": "column",
                 "entity_name": "df_fields",
@@ -571,16 +551,6 @@
                 "schema_name": "business",
                 "table_name": "invoices",
                 "column_name": "df_colswidth"
-              },
-              "__protection_tag": {
-                "entity": "column",
-                "entity_name": "__protection_tag",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "invoices",
-                "column_name": "__protection_tag"
               },
               "customer_id": {
                 "entity": "column",
@@ -639,6 +609,18 @@
             },
             "constraints": {},
             "indexes": {
+              "idx_83485ecd": {
+                "entity": "index",
+                "entity_name": "idx_83485ecd",
+                "attributes": {
+                  "columns": {
+                    "customer_id": null
+                  },
+                  "index_name": "idx_83485ecd"
+                },
+                "schema_name": "business",
+                "table_name": "invoices"
+              },
               "idx_61f965bc": {
                 "entity": "index",
                 "entity_name": "idx_61f965bc",
@@ -695,18 +677,6 @@
                     "__full_mod_ts": null
                   },
                   "index_name": "idx_df7a30a2"
-                },
-                "schema_name": "business",
-                "table_name": "invoices"
-              },
-              "idx_83485ecd": {
-                "entity": "index",
-                "entity_name": "idx_83485ecd",
-                "attributes": {
-                  "columns": {
-                    "customer_id": null
-                  },
-                  "index_name": "idx_83485ecd"
                 },
                 "schema_name": "business",
                 "table_name": "invoices"
@@ -806,265 +776,6 @@
             },
             "schema_name": "business",
             "table_name": "ord_invoice_row"
-          },
-          "docs_invoice_file": {
-            "entity": "table",
-            "entity_name": "docs_invoice_file",
-            "attributes": {
-              "pkeys": "id"
-            },
-            "columns": {
-              "id": {
-                "entity": "column",
-                "entity_name": "id",
-                "attributes": {
-                  "dtype": "C",
-                  "size": "22",
-                  "notnull": "_auto_"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "id"
-              },
-              "__ins_ts": {
-                "entity": "column",
-                "entity_name": "__ins_ts",
-                "attributes": {
-                  "dtype": "DHZ"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "__ins_ts"
-              },
-              "__del_ts": {
-                "entity": "column",
-                "entity_name": "__del_ts",
-                "attributes": {
-                  "dtype": "DHZ"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "__del_ts"
-              },
-              "__mod_ts": {
-                "entity": "column",
-                "entity_name": "__mod_ts",
-                "attributes": {
-                  "dtype": "DHZ"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "__mod_ts"
-              },
-              "__ins_user": {
-                "entity": "column",
-                "entity_name": "__ins_user",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "__ins_user"
-              },
-              "__mod_user": {
-                "entity": "column",
-                "entity_name": "__mod_user",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "__mod_user"
-              },
-              "_row_count": {
-                "entity": "column",
-                "entity_name": "_row_count",
-                "attributes": {
-                  "dtype": "L"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "_row_count"
-              },
-              "filepath": {
-                "entity": "column",
-                "entity_name": "filepath",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "filepath"
-              },
-              "filepath_hash": {
-                "entity": "column",
-                "entity_name": "filepath_hash",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "filepath_hash"
-              },
-              "filepath_original_name": {
-                "entity": "column",
-                "entity_name": "filepath_original_name",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "filepath_original_name"
-              },
-              "external_url": {
-                "entity": "column",
-                "entity_name": "external_url",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "external_url"
-              },
-              "description": {
-                "entity": "column",
-                "entity_name": "description",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "description"
-              },
-              "mimetype": {
-                "entity": "column",
-                "entity_name": "mimetype",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "mimetype"
-              },
-              "text_content": {
-                "entity": "column",
-                "entity_name": "text_content",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "text_content"
-              },
-              "info": {
-                "entity": "column",
-                "entity_name": "info",
-                "attributes": {
-                  "dtype": "T"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "info"
-              },
-              "is_foreign_document": {
-                "entity": "column",
-                "entity_name": "is_foreign_document",
-                "attributes": {
-                  "dtype": "B"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "is_foreign_document"
-              },
-              "maintable_id": {
-                "entity": "column",
-                "entity_name": "maintable_id",
-                "attributes": {
-                  "dtype": "C",
-                  "size": "22"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file",
-                "column_name": "maintable_id"
-              }
-            },
-            "relations": {
-              "fk_2b4334be": {
-                "entity": "relation",
-                "entity_name": "fk_2b4334be",
-                "attributes": {
-                  "related_schema": "business",
-                  "related_table": "invoices",
-                  "related_columns": [
-                    "id"
-                  ],
-                  "constraint_type": "FOREIGN KEY",
-                  "on_delete": "CASCADE",
-                  "on_update": "CASCADE",
-                  "deferrable": true,
-                  "initially_deferred": true,
-                  "columns": [
-                    "maintable_id"
-                  ],
-                  "constraint_name": "fk_2b4334be"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              }
-            },
-            "constraints": {},
-            "indexes": {
-              "idx_e5f21f75": {
-                "entity": "index",
-                "entity_name": "idx_e5f21f75",
-                "attributes": {
-                  "columns": {
-                    "__ins_ts": null
-                  },
-                  "index_name": "idx_e5f21f75"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              },
-              "idx_1e59c529": {
-                "entity": "index",
-                "entity_name": "idx_1e59c529",
-                "attributes": {
-                  "columns": {
-                    "__del_ts": null
-                  },
-                  "index_name": "idx_1e59c529"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              },
-              "idx_6a25f093": {
-                "entity": "index",
-                "entity_name": "idx_6a25f093",
-                "attributes": {
-                  "columns": {
-                    "__mod_ts": null
-                  },
-                  "index_name": "idx_6a25f093"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              },
-              "idx_30811151": {
-                "entity": "index",
-                "entity_name": "idx_30811151",
-                "attributes": {
-                  "columns": {
-                    "maintable_id": null
-                  },
-                  "index_name": "idx_30811151"
-                },
-                "schema_name": "business",
-                "table_name": "docs_invoice_file"
-              }
-            },
-            "schema_name": "business",
-            "table_name": "docs_invoice_file"
           }
         },
         "schema_name": "business"

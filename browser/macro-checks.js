@@ -1,6 +1,7 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {queryMacros} from '../examples/query-macros.js';
 import oracle from '../test/fixtures/macros.json' with {type: 'json'};
 
@@ -9,7 +10,7 @@ export async function macroChecks() {
     const model = defineModel(queryMacros);
     let db = await openBrowserSQLite(id);
     try {
-        if (!equal(model.toJSON(), oracle.model) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello macro diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello macro diverso da Python');
         await migrateSQLite(db, model.toMigration());
         checks.push('Modello macro e JSON migrate identici a Python');
         const query = model.queries(db);

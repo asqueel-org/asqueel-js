@@ -1,10 +1,10 @@
 {
-  "coreCommit": "8a8ffd3d64ba12f7aa6e6e74ec80b7ff600ff988",
-  "coreVersion": "0.6.1 + fix #44",
-  "buildersVersion": "0.29.0",
-  "status": "350 deterministic QueryCompiler/WriteCompiler cases: full model, migrate JSON, SQL, parameters and real SQLite results; 33 callback cases also compare method calls, 23 errors and environment caching. 46 TEMPLATE/IN_RANGE cases and 18 rejected macro usages. 131 PERIOD cases and 27 rejected usages using the injected Gramlot date parser. Not complete application-runtime parity.",
+  "coreCommit": "84408ebfdb3b3c302f771ca6c9e82e31e9fd44df",
+  "coreVersion": "0.7.0",
+  "buildersVersion": "0.30.0",
+  "status": "352 deterministic QueryCompiler/WriteCompiler cases: composed source in TYTX, migrate JSON, SQL, parameters and real SQLite results; 33 callback cases also compare method calls, 23 errors and environment caching. 46 TEMPLATE/IN_RANGE cases and 18 rejected macro usages. 131 PERIOD cases and 27 rejected usages using the @genrojs/toolbox date parser. Not complete application-runtime parity.",
   "periodParserTestedVersions": {
     "pythonToolbox": "0.18.0",
-    "javascriptGramlot": "0.3.8"
+    "javascriptToolbox": "0.19.0"
   }
 }

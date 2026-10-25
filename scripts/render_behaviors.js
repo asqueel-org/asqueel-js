@@ -7,4 +7,4 @@ for (const input of inputs) {
     try { cases.push({name: input.name, input, expected: await runBehaviorCase(adapter, input)}); }
     finally { await adapter.close(); }
 }
-process.stdout.write(JSON.stringify({model: behaviorsModel.toJSON(), desired: behaviorsModel.toMigration(), cases}));
+process.stdout.write(JSON.stringify({source: behaviorsModel.toTytx(), desired: behaviorsModel.toMigration(), cases}));

@@ -9,7 +9,7 @@ const fixture = name => JSON.parse(readFileSync(new URL(`./fixtures/${name}.json
 function minimal(edit) {
     return defineModel(root => {
         const db = root.db({name: 'test'});
-        const tables = db.schemas().schema({name: 'app'}).tables();
+        const tables = db.packages().package({name: 'app', sqlschema: 'app', sqlprefix: false}).tables();
         const table = tables.table({name: 'item', pkey: 'id'});
         const columns = table.columns();
         columns.column({name: 'id', dtype: 'L'});
@@ -57,7 +57,7 @@ test('unknown attributes and misplaced options fail explicitly', () => {
 test('dangling, duplicate and mismatched structural references fail before output', () => {
     assert.throws(() => minimal(({table}) => table.indexes().index({name: 'bad', columns: 'missing'})).toMigration(), /unknown physical column/);
     assert.throws(() => minimal(({columns}) => columns.column({name: 'fk', dtype: 'L'}).relation({
-        to: 'app.missing.id', foreign_key: true,
+        related_column: 'app.missing.id', foreign_key: true,
     })).toMigration(), /unknown relation target/);
     assert.throws(() => minimal(({table}) => table.composites().compositeColumn({
         name: 'bad', columns: 'id,id',
@@ -70,13 +70,17 @@ test('dangling, duplicate and mismatched structural references fail before outpu
     assert.throws(() => minimal(({columns, table}) => {
         columns.column({name: 'other', dtype: 'L'});
         table.composites().compositeColumn({name: 'pair', columns: 'id,other'})
-            .relation({to: 'app.item.id', foreign_key: true});
+            .relation({related_column: 'app.item.id', foreign_key: true});
     }).toMigration(), /column counts differ/);
 });
 
 test('partial indexes cannot silently suppress a required automatic full index', () => {
     assert.throws(() => minimal(({columns, table}) => {
         columns.column({name: 'code', dtype: 'T', indexed: true});
+        table.indexes().index({name: 'partial', columns: 'code', where: 'code IS NOT NULL'});
+    }).toMigration(), /conflicts with the explicit index/);
+    assert.throws(() => minimal(({columns, table}) => {
+        columns.column({name: 'code', dtype: 'T'}).relation({related_column: 'app.item.id', foreign_key: true});
         table.indexes().index({name: 'partial', columns: 'code', where: 'code IS NOT NULL'});
     }).toMigration(), /partial\/non-btree/);
 });
@@ -96,7 +100,7 @@ test('empty/multiple roots and broken CHECK constraints fail', () => {
 
 test('names colliding with Object.prototype remain ordinary JSON properties', () => {
     const model = defineModel(root => {
-        root.db({name: 'special'}).schemas().schema({name: '__proto__'}).tables()
+        root.db({name: 'special'}).packages().package({name: '__proto__', sqlschema: '__proto__', sqlprefix: false}).tables()
             .table({name: 'constructor', pkey: 'id'}).columns().column({name: 'id', dtype: 'L'});
     });
     const structure = model.toMigration();

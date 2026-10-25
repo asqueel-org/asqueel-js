@@ -71,11 +71,12 @@ test('execution failure rolls back previous DDL in the same migration', async ()
 
 test('composite keys, deferred FKs and partial descending indexes round-trip', async () => {
     const model = defineModel(root => {
-        const tables = root.db({name: 'browser'}).schemas().schema({name: 'main'}).tables();
-        const parent = tables.table({name: 'parent', pkey: 'part,code'});
+        const tables = root.db({name: 'browser'}).packages().package({name: 'main', sqlschema: 'main', sqlprefix: false}).tables();
+        const parent = tables.table({name: 'parent', pkey: 'key'});
         const pc = parent.columns();
         pc.column({name: 'part', dtype: 'I'});
         pc.column({name: 'code', dtype: 'T'});
+        parent.composites().compositeColumn({name: 'key', columns: 'part,code'});
         const child = tables.table({name: 'child', pkey: 'id'});
         const cc = child.columns();
         cc.column({name: 'id', dtype: 'I'});
@@ -83,7 +84,7 @@ test('composite keys, deferred FKs and partial descending indexes round-trip', a
         cc.column({name: 'code', dtype: 'T'});
         cc.column({name: 'note', dtype: 'T', sql_default: "'NOT DEFERRABLE'"});
         child.composites().compositeColumn({name: 'parent_key', columns: 'part,code'})
-            .relation({to: 'main.parent', foreign_key: true, deferred: true});
+            .relation({related_column: 'main.parent', foreign_key: true, deferred: true});
         child.indexes().index({name: 'note_partial', columns: {note: 'DESC'}, where: 'note IS NOT NULL'});
     });
     const db = database();

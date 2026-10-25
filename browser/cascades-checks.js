@@ -1,10 +1,11 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {cascadesModel, runCascadeCase} from '../test/cascades-runner.js';
 import {equal} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import oracle from '../test/fixtures/cascades.json' with {type: 'json'};
 
 export async function cascadesChecks() {
-    if (!equal(cascadesModel.toJSON(), oracle.model) || !equal(cascadesModel.toMigration(), oracle.desired))
+    if (!equal(sourceRows(cascadesModel.toTytx()), sourceRows(oracle.source)) || !equal(cascadesModel.toMigration(), oracle.desired))
         throw new Error('Modello cascade onUpdate diverso da Python');
     const checks = [];
     let sample;

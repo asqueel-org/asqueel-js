@@ -6,9 +6,10 @@ from decimal import Decimal
 from python_reference import ROOT
 sys.path.insert(0, str(ROOT / 'python'))
 from asqueel_transfer import export_transfer, load_transfer, read_transfer, quote, bag_wire
-from asqueel import SqlDatabaseConfig, SqlMigrationRenderer, resolve_model
+from asqueel import SqlDatabaseConfig
+from asqueel_transfer import resolve_model
 from asqueel_migration.readers.sqlite_reader import SqliteReader
-from model_oracle import document
+from python_model import migration as render_migration
 from genro_bag import Bag
 from genro_tytx import from_tytx
 
@@ -82,6 +83,12 @@ def canonical_wire(value):
 def normalized_bag(text): return canonical_wire(json.loads(text[:-3].removesuffix('::JS')))
 
 
+def source_rows(text):
+    """The TYTX rows of a recipe source; attribute order is not compared."""
+    payload = json.loads(text.removesuffix('::X'))
+    return dict(cls=payload.get('__cls'), rows=payload['rows'])
+
+
 def snapshot(builder, path):
     model = resolve_model(builder)
     with sqlite3.connect(path) as con:
@@ -94,7 +101,7 @@ def snapshot(builder, path):
                 value=row[col.sqlname]
                 if value is not None and col.attributes['dtype']=='X': row[col.sqlname]={'bag':normalized_bag(value)}
                 if value is not None and col.attributes['dtype']=='O': row[col.sqlname]={'hex':bytes(value).hex()}
-    return dict(model=document(model), migration=SqlMigrationRenderer(builder).render(),
+    return dict(source=source_rows(builder.source.to_tytx()), migration=render_migration(builder),
                 structure=SqliteReader({'dbname': str(path)}).get_json_struct('offline', ['main']), rows=rows)
 
 
@@ -130,7 +137,7 @@ def oracle():
     packages.package('empty',sqlschema='main')
     pkg=packages.package('app',sqlschema='main'); pkg.options().requires('empty')
     t=pkg.table('item')
-    t.options().sys_fields()
+    t.options().sysFields()
     t.column('title',dtype='T')
     bundle=export_transfer(sys,{})
     cases.append(dict(name='sys_fields',bundle=bundle,before=evaluate(bundle),after=evaluate(bundle)))

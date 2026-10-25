@@ -206,6 +206,37 @@
     }
   },
   {
+    "name": "literal_parameter_collection",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,'IN :ids' AS literal,':env_secret' AS env_literal",
+      "where": "$id IN :ids",
+      "sqlparams": {
+        "ids": [
+          201
+        ]
+      },
+      "environment": {
+        "secret": "must-not-bind"
+      }
+    }
+  },
+  {
+    "name": "adjacent_parameters",
+    "request": {
+      "operation": "select",
+      "table": "notes.memo",
+      "columns": "$id,'doc:xyz' || :xyz AS literal",
+      "where": "$id=:a+:b",
+      "sqlparams": {
+        "xyz": "bound",
+        "a": 200,
+        "b": 1
+      }
+    }
+  },
+  {
     "name": "total",
     "request": {
       "operation": "select",

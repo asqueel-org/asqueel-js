@@ -7,8 +7,9 @@ import {RecordNotFoundError, UnsupportedFeatureError} from './query-errors.js';
 
 const events = ['onInserting', 'onInserted', 'onUpdating', 'onUpdated', 'onDeleting', 'onDeleted'];
 const enabled = (table, name) => table.options.has(name) && table.options.get(name).spec.enabled !== false;
-const sysKey = (table, name, attrs) => enabled(table, 'sys_fields') && name === table.a.pkey
-    && attrs.x_generation?.type === 'uuid' && attrs.x_generation?.algorithm === 'legacy22';
+// checkPkey generates the sysFields key.
+const sysKey = (table, name) => name === 'id' && table.a.pkey === 'id' && enabled(table, 'sysFields')
+    && table.options.get('sysFields').spec.id !== false;
 
 export function legacy22(milliseconds = Date.now(), bytes = crypto.getRandomValues(new Uint8Array(9))) {
     const encode = (value, length) => {
@@ -37,12 +38,10 @@ function timestamp(value, utc) {
 }
 
 function capabilities(db, table, operation) {
-    for (const [name] of table.options) if (enabled(table, name) && !['sys_fields', 'hierarchical', 'auto_counter', 'relative_index'].includes(name))
+    for (const [name] of table.options) if (enabled(table, name) && !['sysFields', 'hierarchical', 'counter', 'relidx'].includes(name))
         throw new UnsupportedFeatureError(`${table.key}: option ${name} non ancora eseguita in JS`);
-    if (table.a.x_expanded_legacy) throw new UnsupportedFeatureError('Espansione legacy non supportata');
     for (const [name, col] of table.columns) {
-        if (col.children.some(n => n.tag !== 'relation') || col.a.default_from != null ||
-            col.a.x_generation != null && !sysKey(table, name, col.a))
+        if (col.children.some(n => n.tag !== 'relation') || col.a.default_from != null)
             throw new UnsupportedFeatureError(`${table.key}.${name}: comportamento non ancora eseguito`);
         for (const event of events) if (col.a[event] && typeof col.a[event] !== 'string')
             throw new UnsupportedFeatureError('I trigger di campo devono essere nomi registrati nel runtime');
@@ -54,8 +53,8 @@ function checkChanges(table, values, old = null) {
     for (const [name, col] of table.columns) {
         if (!own(values, name)) continue;
         if (old == null) {
-            if (col.a.read_only && !sysKey(table, name, col.a)) throw new Error(`${table.key}.${name} is read-only`);
-        } else if (col.a.read_only || col.a.unmodifiable || own(col.a, 'sql_generatedExpression')) {
+            if (col.a.readOnly && !sysKey(table, name)) throw new Error(`${table.key}.${name} is read-only`);
+        } else if (col.a.readOnly || col.a.unmodifiable || own(col.a, 'sql_generatedExpression')) {
             let value = values[name], previous = old[name] ?? null;
             if (col.a.dtype === 'A' && typeof value === 'string' && typeof previous === 'string') {
                 value = value.trimEnd(); previous = previous.trimEnd();
@@ -88,7 +87,7 @@ async function reread(db, table, pkey) {
 function hookContext(db, table) {
     return Object.assign(Object.create(null), db.runtime.hooks?.[table.key] ?? {}, {
         db, fullname: table.key, currentUser: db.environment().user ?? null,
-        currentTrigger: db.scope.trigger, model: db.builder.resolve().table(table.key),
+        currentTrigger: db.scope.trigger, model: db.model.table(table.key),
     });
 }
 async function hook(context, name, values, kwargs = {}, required = false) {
@@ -163,7 +162,7 @@ export async function writeRecord(db, table, operation, input, options) {
         await finishBehaviors(db, table, values, prepared);
     } else if (operation === 'update') {
         if (behavior(table, 'hierarchical') && !old) throw new Error('Updating a hierarchical record requires old_record');
-        if (policy || behavior(table, 'hierarchical') || [...table.columns.values()].some(c => c.a.read_only || c.a.unmodifiable || own(c.a, 'sql_generatedExpression'))) {
+        if (policy || behavior(table, 'hierarchical') || [...table.columns.values()].some(c => c.a.readOnly || c.a.unmodifiable || own(c.a, 'sql_generatedExpression'))) {
             const stored = await reread(db, table, old ? recordKey(table, old) : options.pkey ?? recordKey(table, values));
             if (!stored) throw new RecordNotFoundError(`${table.key}: no record to update`);
             if (old) Object.assign(old, stored); else old = stored;

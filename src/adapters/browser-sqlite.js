@@ -4,12 +4,14 @@ import * as SQLite from 'wa-sqlite';
 import {IDBBatchAtomicVFS} from 'wa-sqlite/src/examples/IDBBatchAtomicVFS.js';
 
 /** Instantiate in a Worker. The caller serializes whole operations/transactions. */
-export async function openBrowserSQLite(idbName = 'asqueel-js-playground-v1') {
+export async function openBrowserSQLite(idbName = 'asqueel-js-playground-v1', {wasmBinary} = {}) {
     if (!globalThis.indexedDB || !globalThis.navigator?.locks) {
-        throw new Error('Questo browser deve supportare IndexedDB e Web Locks (HTTPS o localhost).');
+        throw new Error('Questo browser deve supportare IndexedDB e Web Locks.');
     }
     const module = await SQLiteESMFactory({
-        locateFile: file => new URL(file, import.meta.url).href,
+        // A single-file export supplies bytes directly and performs no WASM fetch.
+        ...(wasmBinary ? {wasmBinary, locateFile:file => file}
+            : {locateFile:file => new URL(file, import.meta.url).href}),
     });
     const sqlite = SQLite.Factory(module);
     const bindBlob = module.cwrap('sqlite3_bind_blob', 'number', ['number','number','number','number','number']);

@@ -2,9 +2,9 @@
 from copy import deepcopy
 TABLES = ['parent', 'child', 'leaf', 'sibling', 'restricted', 'ignored', 'native_child', 'id_child', 'partitioned', 'self_node']
 
-def declare(pkg, classes=None):
+def declare(pkg):
     def table(name, **kwargs):
-        return pkg.table(name, pkey='id', **kwargs, **({'x_table_class': classes['app.' + name]} if classes and 'app.' + name in classes else {}))
+        return pkg.table(name, pkey='id', **kwargs)
     parent = table('parent')
     parent.column('id'); parent.column('code', unique=True); parent.column('other', unique=True); parent.column('label')
     for name in TABLES[1:]:

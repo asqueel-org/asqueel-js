@@ -68,8 +68,8 @@
                 "entity_name": "country",
                 "attributes": {
                   "dtype": "A",
-                  "size": "0:2",
-                  "notnull": "_auto_"
+                  "notnull": "_auto_",
+                  "size": "0:2"
                 },
                 "schema_name": "crm",
                 "table_name": "region",
@@ -80,8 +80,8 @@
                 "entity_name": "code",
                 "attributes": {
                   "dtype": "A",
-                  "size": "0:8",
-                  "notnull": "_auto_"
+                  "notnull": "_auto_",
+                  "size": "0:8"
                 },
                 "schema_name": "crm",
                 "table_name": "region",

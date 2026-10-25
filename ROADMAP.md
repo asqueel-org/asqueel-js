@@ -15,15 +15,16 @@ supportate funzionalità soltanto perché presenti nella grammatica.
 - [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
       Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
 
-## 1. Modello dichiarativo portabile · riferimento Python 0.6.1
+## 1. Modello dichiarativo portabile · riferimento Python 0.7.0 · 84408eb
 
-- [x] Riallineare grammatica, esempi e verificatore al commit pubblicato della 0.6.1.
+- [x] Riallineare grammatica, esempi e verificatore al commit Python 84408eb.
+- [x] Nomi legacy delle opzioni, `relation(related_column)`, solo package, nessun `x_*`.
+- [x] Source della ricetta in TYTX (`SqlSourceBag`), caricabile da Python e da JS.
 - [x] Contributi ordinati, conflitti, copie, reset e composizione indipendente.
 - [x] Modello gerarchico JS, colonne fisiche/virtuali e metadati completi delle opzioni.
 - [x] Colgroups, relazioni dirette/inverse, alias e dichiarazioni virtualRelation.
 - [x] Validazione strutturale, tipi, riferimenti, indici e nomi fisici.
-- [x] Esportazione/ripristino del JSON completo, con identità e navigazione.
-- [x] Confronti completi modello/migrate con Python, Node, Bun e browser.
+- [x] Confronti di source composto e migrate con Python, Node, Bun e browser.
 - [x] Gerarchie collegate al master e nomi personalizzati dei contatori della 0.6.1.
 - [x] Ritirare `subtable`, opzioni `partition`/`tenant` e vecchi attributi come in Python.
 
@@ -49,6 +50,8 @@ di una transazione e verificare che nessuna scrittura resti; rileggere dopo relo
 - [x] Cache versionata di HTML, JavaScript, temi, worker e WASM con service worker nel playground.
 - [x] Primo avvio online, CRUD, chiusura e riavvio di Chromium senza rete con lo stesso profilo;
   ripristino del modello/dati e ritorno dello snapshot reale a Python.
+- [x] HTML unico esportato da Gramlot, aperto da `file://` senza primo avvio online:
+  SQLite WASM incorporato, CRUD, riavvio Chromium e ritorno verificato in Python.
 - [ ] Coordinare aggiornamento degli asset e versione dello schema locale.
 - [x] Importazione CSV/JSON/TYTX tramite sql_insert, con parità Python e verifiche browser.
 - [x] Snapshot Python → browser → Python: SourceBag anche parziale e dati TYTX,
@@ -66,10 +69,10 @@ sola non soddisfa questo traguardo.
 
 - [ ] Codec con semantica dichiarata per date, timestamp, decimali e JSON/Bag.
 - [x] Default e protezioni basilari, rispettando campi mancanti e NULL.
-- [x] `sys_fields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
+- [x] `sysFields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
 - [x] Hook before/after e rollback coerente delle scritture, anche annidate.
 - [x] Gerarchie: percorsi, spostamenti, ereditarietà, radici collegate e cancellazione dei discendenti.
-- [x] `auto_counter` per gruppo e `relative_index`, con rollback e verifica IndexedDB.
+- [x] `counter` per gruppo e `relidx`, con rollback e verifica IndexedDB.
 - [x] Cascade applicative `onUpdate` su colonne fisiche, hook annidati, raise/ignore e rollback.
 - [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
 - [x] Letture calcolate: parametri locali delle formule, #THIS, #ENV da snapshot,
@@ -98,7 +101,7 @@ simulato durante la copia e migrazione idempotente dopo riapertura.
 - [x] Callback formula/env/subquery e colonne virtuali dinamiche, cache per ambiente,
       SQL/risultati/chiamate confrontati con Python anche nel browser.
 - [x] #TEMPLATE e #IN_RANGE, con SQL/parametri/risultati identici a Python anche su WASM.
-- [x] #PERIOD tramite parser Gramlot, con date civili, ambiente esplicito e parità Python/browser.
+- [x] #PERIOD tramite il parser di `@genrojs/toolbox`, con date civili, ambiente esplicito e parità Python/browser.
 - [ ] #BAG/#BAGCOLS e metadati dei risultati.
 - [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
 - [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.

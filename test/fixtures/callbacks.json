@@ -1,627 +1,5 @@
 {
-  "model": {
-    "format": "asqueel-model",
-    "version": 1,
-    "reference": "0.6.1",
-    "database": {
-      "name": "db",
-      "tag": "db",
-      "attributes": {
-        "implementation": "sqlite",
-        "name": "callbacks"
-      },
-      "children": [],
-      "signatureDefaults": [],
-      "generated": false
-    },
-    "namespaces": {
-      "name": "packages",
-      "tag": "packages",
-      "attributes": {},
-      "children": [
-        {
-          "name": "app",
-          "tag": "package",
-          "attributes": {
-            "sqlschema": "main",
-            "sqlprefix": false,
-            "name": "app"
-          },
-          "children": [
-            {
-              "name": "tables",
-              "tag": "tables",
-              "attributes": {},
-              "children": [
-                {
-                  "name": "owner",
-                  "tag": "table",
-                  "attributes": {
-                    "pkey": "id",
-                    "name": "owner",
-                    "lookup": false,
-                    "deletable": true
-                  },
-                  "children": [
-                    {
-                      "name": "columns",
-                      "tag": "columns",
-                      "attributes": {},
-                      "children": [
-                        {
-                          "name": "id",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "id",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "code",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "T",
-                            "name": "code",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "amount",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "amount",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        }
-                      ],
-                      "signatureDefaults": [],
-                      "generated": false
-                    },
-                    {
-                      "name": "virtual_columns",
-                      "tag": "virtual_columns",
-                      "attributes": {},
-                      "children": [
-                        {
-                          "name": "scaled",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "scaled",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "from_formula",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "from_formula",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "invalid",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "invalid",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "cycle",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "cycle",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "missing",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "missing",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "raises",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": true,
-                            "name": "raises",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "total",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "total",
-                            "name": "total",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "present",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "exists": "present",
-                            "name": "present",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "named",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": "#a + #b + :factor",
-                            "select_a": "total",
-                            "select_b": "total",
-                            "var_factor": 3,
-                            "name": "named",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "label",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": "#ENV(label)",
-                            "name": "label",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "foreign_label",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": "#ENV(label,app.line)",
-                            "name": "foreign_label",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "fallback_label",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "sql_formula": "#ENV(label,fallback)",
-                            "name": "fallback_label",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "nested",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": {
-                              "table": "app.line",
-                              "columns": "MAX(@owner_id.total)",
-                              "where": "$owner_id=#THIS.id"
-                            },
-                            "name": "nested",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "alias",
-                          "tag": "aliasColumn",
-                          "attributes": {
-                            "relation_path": "$scaled",
-                            "name": "alias",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [
-                            "static"
-                          ],
-                          "generated": false
-                        },
-                        {
-                          "name": "first",
-                          "tag": "subQueryColumn",
-                          "attributes": {
-                            "query": "first",
-                            "name": "first"
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_invalid",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "invalid",
-                            "name": "sub_invalid",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_missing",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "missing",
-                            "name": "sub_missing",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_cycle",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "cycle",
-                            "name": "sub_cycle",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_raises",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "raises",
-                            "name": "sub_raises",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_options",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "options",
-                            "name": "sub_options",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_multi",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "multi",
-                            "name": "sub_multi",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "sub_where",
-                          "tag": "formulaColumn",
-                          "attributes": {
-                            "select": "where",
-                            "name": "sub_where",
-                            "static": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        }
-                      ],
-                      "signatureDefaults": [],
-                      "generated": false
-                    },
-                    {
-                      "name": "indexes",
-                      "tag": "indexes",
-                      "attributes": {},
-                      "children": [],
-                      "signatureDefaults": [],
-                      "generated": true
-                    }
-                  ],
-                  "signatureDefaults": [],
-                  "generated": false
-                },
-                {
-                  "name": "line",
-                  "tag": "table",
-                  "attributes": {
-                    "pkey": "id",
-                    "name": "line",
-                    "lookup": false,
-                    "deletable": true
-                  },
-                  "children": [
-                    {
-                      "name": "columns",
-                      "tag": "columns",
-                      "attributes": {},
-                      "children": [
-                        {
-                          "name": "id",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "id",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "amount",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "amount",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "owner_id",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "owner_id",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [
-                            {
-                              "name": "relation_0",
-                              "tag": "relation",
-                              "attributes": {
-                                "relation_name": "lines",
-                                "to": "app.owner.id",
-                                "foreign_key": true,
-                                "x_canonical": true,
-                                "deferred": false,
-                                "deferrable": false,
-                                "initially_deferred": false,
-                                "indexed": true,
-                                "one_one": false,
-                                "case_insensitive": false
-                              },
-                              "children": [],
-                              "signatureDefaults": [],
-                              "generated": false
-                            }
-                          ],
-                          "signatureDefaults": [],
-                          "generated": false
-                        },
-                        {
-                          "name": "other_id",
-                          "tag": "column",
-                          "attributes": {
-                            "dtype": "L",
-                            "name": "other_id",
-                            "notnull": false,
-                            "unique": false,
-                            "indexed": false,
-                            "read_only": false,
-                            "unmodifiable": false
-                          },
-                          "children": [
-                            {
-                              "name": "relation_0",
-                              "tag": "relation",
-                              "attributes": {
-                                "relation_name": "others",
-                                "to": "app.owner.id",
-                                "foreign_key": true,
-                                "x_canonical": true,
-                                "deferred": false,
-                                "deferrable": false,
-                                "initially_deferred": false,
-                                "indexed": true,
-                                "one_one": false,
-                                "case_insensitive": false
-                              },
-                              "children": [],
-                              "signatureDefaults": [],
-                              "generated": false
-                            }
-                          ],
-                          "signatureDefaults": [],
-                          "generated": false
-                        }
-                      ],
-                      "signatureDefaults": [],
-                      "generated": false
-                    },
-                    {
-                      "name": "virtual_columns",
-                      "tag": "virtual_columns",
-                      "attributes": {},
-                      "children": [],
-                      "signatureDefaults": [],
-                      "generated": true
-                    },
-                    {
-                      "name": "indexes",
-                      "tag": "indexes",
-                      "attributes": {},
-                      "children": [
-                        {
-                          "name": "line_owner_id_key",
-                          "tag": "index",
-                          "attributes": {
-                            "columns": "owner_id"
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": true
-                        },
-                        {
-                          "name": "line_other_id_key",
-                          "tag": "index",
-                          "attributes": {
-                            "columns": "other_id"
-                          },
-                          "children": [],
-                          "signatureDefaults": [],
-                          "generated": true
-                        }
-                      ],
-                      "signatureDefaults": [],
-                      "generated": true
-                    }
-                  ],
-                  "signatureDefaults": [],
-                  "generated": false
-                }
-              ],
-              "signatureDefaults": [],
-              "generated": false
-            }
-          ],
-          "signatureDefaults": [],
-          "generated": false
-        }
-      ],
-      "signatureDefaults": [],
-      "generated": false
-    },
-    "relations": [
-      {
-        "path": "app.line.@owner_id",
-        "attributes": {
-          "many_relation": "app.line.owner_id",
-          "one_relation": "app.owner.id",
-          "onUpdate_sql": "cascade",
-          "private_relation": false,
-          "case_insensitive": false,
-          "mode": "O",
-          "foreignkey": true,
-          "relation_name": "lines",
-          "resolver_kwargs": {}
-        }
-      },
-      {
-        "path": "app.line.@other_id",
-        "attributes": {
-          "many_relation": "app.line.other_id",
-          "one_relation": "app.owner.id",
-          "onUpdate_sql": "cascade",
-          "private_relation": false,
-          "case_insensitive": false,
-          "mode": "O",
-          "foreignkey": true,
-          "relation_name": "others",
-          "resolver_kwargs": {}
-        }
-      },
-      {
-        "path": "app.owner.@lines",
-        "attributes": {
-          "many_relation": "app.line.owner_id",
-          "one_relation": "app.owner.id",
-          "onUpdate_sql": "cascade",
-          "private_relation": false,
-          "case_insensitive": false,
-          "mode": "M"
-        }
-      },
-      {
-        "path": "app.owner.@others",
-        "attributes": {
-          "many_relation": "app.line.other_id",
-          "one_relation": "app.owner.id",
-          "onUpdate_sql": "cascade",
-          "private_relation": false,
-          "case_insensitive": false,
-          "mode": "M"
-        }
-      }
-    ]
-  },
+  "source": "{\"rows\":[[[],\"db\",\"db\",\"::X\",{\"implementation\":\"sqlite\",\"name\":\"callbacks\"}],[[\"db\"],\"packages\",\"packages\",\"::X\",{}],[[\"db\",\"packages\"],\"app\",\"package\",\"::X\",{\"sqlschema\":\"main\",\"sqlprefix\":false,\"name\":\"app\"}],[[\"db\",\"packages\",\"app\"],\"tables\",\"tables\",\"::X\",{}],[[\"db\",\"packages\",\"app\",\"tables\"],\"owner\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"owner\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"columns\"],\"code\",\"column\",\"::NN\",{\"dtype\":\"T\",\"name\":\"code\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"columns\"],\"amount\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"amount\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\"],\"virtual_columns\",\"virtual_columns\",\"::X\",{}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"scaled\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"scaled\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"from_formula\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"from_formula\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"invalid\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"invalid\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"cycle\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"cycle\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"missing\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"missing\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"raises\",\"formulaColumn\",\"::NN\",{\"sql_formula\":true,\"name\":\"raises\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"total\",\"formulaColumn\",\"::NN\",{\"select\":\"total\",\"name\":\"total\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"present\",\"formulaColumn\",\"::NN\",{\"exists\":\"present\",\"name\":\"present\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"named\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"#a + #b + :factor\",\"select_a\":\"total\",\"select_b\":\"total\",\"var_factor\":3,\"name\":\"named\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"label\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"#ENV(label)\",\"name\":\"label\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"foreign_label\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"#ENV(label,app.line)\",\"name\":\"foreign_label\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"fallback_label\",\"formulaColumn\",\"::NN\",{\"sql_formula\":\"#ENV(label,fallback)\",\"name\":\"fallback_label\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"nested\",\"formulaColumn\",\"::NN\",{\"select\":{\"table\":\"app.line\",\"columns\":\"MAX(@owner_id.total)\",\"where\":\"$owner_id=#THIS.id\"},\"name\":\"nested\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"alias\",\"aliasColumn\",\"::NN\",{\"relation_path\":\"$scaled\",\"name\":\"alias\"}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"first\",\"subQueryColumn\",\"::NN\",{\"query\":\"first\",\"name\":\"first\",\"_meta\":{\"attribute_families\":[\"var_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_invalid\",\"formulaColumn\",\"::NN\",{\"select\":\"invalid\",\"name\":\"sub_invalid\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_missing\",\"formulaColumn\",\"::NN\",{\"select\":\"missing\",\"name\":\"sub_missing\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_cycle\",\"formulaColumn\",\"::NN\",{\"select\":\"cycle\",\"name\":\"sub_cycle\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_raises\",\"formulaColumn\",\"::NN\",{\"select\":\"raises\",\"name\":\"sub_raises\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_options\",\"formulaColumn\",\"::NN\",{\"select\":\"options\",\"name\":\"sub_options\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_multi\",\"formulaColumn\",\"::NN\",{\"select\":\"multi\",\"name\":\"sub_multi\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"owner\",\"virtual_columns\"],\"sub_where\",\"formulaColumn\",\"::NN\",{\"select\":\"where\",\"name\":\"sub_where\",\"_meta\":{\"attribute_families\":[\"var_\",\"select_\",\"exists_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\"],\"line\",\"table\",\"::X\",{\"pkey\":\"id\",\"name\":\"line\",\"_meta\":{\"attribute_families\":[\"partition_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\"],\"columns\",\"columns\",\"::X\",{}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\"],\"id\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\"],\"amount\",\"column\",\"::NN\",{\"dtype\":\"L\",\"name\":\"amount\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\"],\"owner_id\",\"column\",\"::X\",{\"dtype\":\"L\",\"name\":\"owner_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\",\"owner_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"lines\",\"related_column\":\"app.owner.id\",\"foreign_key\":true}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\"],\"other_id\",\"column\",\"::X\",{\"dtype\":\"L\",\"name\":\"other_id\",\"_meta\":{\"projects_column\":true,\"projects_relation\":true,\"attribute_families\":[\"validate_\"]}}],[[\"db\",\"packages\",\"app\",\"tables\",\"line\",\"columns\",\"other_id\"],\"relation_0\",\"relation\",\"::NN\",{\"relation_name\":\"others\",\"related_column\":\"app.owner.id\",\"foreign_key\":true}]],\"__cls\":\"SqlSourceBag\"}::X",
   "desired": {
     "root": {
       "entity": "db",
@@ -825,7 +203,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "seed_owner_2",
@@ -848,7 +229,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "seed_owner_3",
@@ -871,7 +255,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "seed_line_1",
@@ -896,7 +283,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
+      ]
     },
     {
       "name": "seed_line_2",
@@ -921,7 +311,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
+      ]
     },
     {
       "name": "seed_line_3",
@@ -946,7 +339,10 @@
         }
       },
       "rows": [],
-      "events": []
+      "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
+      ]
     },
     {
       "name": "formula",
@@ -978,6 +374,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.scaled"
       ]
     },
@@ -1013,6 +411,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.scaled"
       ]
     },
@@ -1050,6 +450,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.scaled"
       ]
     },
@@ -1086,7 +488,11 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.total",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
         "app.owner.present"
       ]
     },
@@ -1122,7 +528,11 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.total",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
         "app.owner.total"
       ]
     },
@@ -1158,7 +568,11 @@
         }
       ],
       "events": [
-        "app.owner.total"
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.total",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
       ]
     },
     {
@@ -1192,8 +606,12 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.from_formula",
-        "app.owner.total"
+        "app.owner.total",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
       ]
     },
     {
@@ -1224,8 +642,12 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.from_formula",
-        "app.owner.total"
+        "app.owner.total",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
       ]
     },
     {
@@ -1258,6 +680,10 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
         "app.line.total"
       ]
     },
@@ -1289,7 +715,11 @@
         }
       ],
       "events": [
-        "app.owner.first"
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
+        "app.owner.first",
+        "app.line.dynamic_a",
+        "app.line.dynamic_b"
       ]
     },
     {
@@ -1323,6 +753,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.env_label",
         "app.line.env_label"
       ]
@@ -1359,7 +791,10 @@
           "foreign_label": "O'Reilly"
         }
       ],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "environment_fallback",
@@ -1390,7 +825,10 @@
           "fallback_label": "fallback text"
         }
       ],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "environment_table_key",
@@ -1421,7 +859,10 @@
           "foreign_label": "key before callback"
         }
       ],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "environment_null",
@@ -1452,7 +893,10 @@
           "label": ""
         }
       ],
-      "events": []
+      "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b"
+      ]
     },
     {
       "name": "dynamic_columns",
@@ -1666,6 +1110,10 @@
         }
       ],
       "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.scaled"
       ]
     },
@@ -1703,6 +1151,10 @@
         }
       ],
       "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.line.total",
         "app.line.total"
       ]
@@ -1743,6 +1195,10 @@
         }
       ],
       "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.from_formula",
         "app.line.total",
         "app.line.total"
@@ -1776,6 +1232,10 @@
         }
       ],
       "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.env_label"
       ]
     },
@@ -1812,6 +1272,8 @@
         }
       ],
       "events": [
+        "app.line.dynamic_a",
+        "app.line.dynamic_b",
         "app.owner.dynamic_a",
         "app.owner.dynamic_b",
         "app.owner.dynamic_method"
@@ -1847,6 +1309,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.invalid"
       ]
     },
@@ -1880,6 +1344,8 @@
         }
       ],
       "events": [
+        "app.owner.dynamic_a",
+        "app.owner.dynamic_b",
         "app.owner.invalid"
       ]
     }

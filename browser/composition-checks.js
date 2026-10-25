@@ -1,8 +1,9 @@
 import inputs from '../test/model-inputs.json' with {type:'json'};
-import cases from '../test/fixtures/resolved-model.json' with {type:'json'};
+import cases from '../test/fixtures/model-cases.json' with {type:'json'};
 import examples from '../test/fixtures/model-examples.json' with {type:'json'};
 import {evaluateModel} from '../test/model-cases.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {SqlBuilder, defineModel} from '../src/index.js';
 import {querySource, modelFromQuerySource} from '../src/queries.js';
@@ -12,7 +13,7 @@ import {virtualRelations} from '../examples/virtual-relations.js';
 async function virtualRelationPersistenceCheck() {
     const model = modelFromQuerySource(querySource(defineModel(virtualRelations)), SqlBuilder);
     const expected = examples['virtual-relations'];
-    if (!equal(model.toJSON(), expected.model) || !equal(model.toMigration(), expected.migration)) {
+    if (!equal(sourceRows(model.toTytx()), sourceRows(expected.source)) || !equal(model.toMigration(), expected.migration)) {
         throw new Error('VirtualRelation: modello o migrate diversi da Python dopo serializzazione');
     }
     const id = `asqueel-virtual-relations-test-${crypto.randomUUID()}`;
@@ -49,7 +50,9 @@ async function groupedPersistenceCheck() {
     const original = defineModel(groupedItems);
     const model = modelFromQuerySource(querySource(original), SqlBuilder);
     const expected = examples.groups;
-    if (!equal(model.toJSON(), expected.model) || !equal(model.toMigration(), expected.migration)) {
+    // The worker replay keeps the declarations; the authored source is the one compared with Python.
+    if (!equal(sourceRows(original.toTytx()), sourceRows(expected.source)) || !equal(model.toSource(), original.toSource())
+        || !equal(model.toMigration(), expected.migration)) {
         throw new Error('Colgroups/formule: serializzazione diversa dal modello Python');
     }
     const id = `asqueel-groups-test-${crypto.randomUUID()}`;
@@ -77,8 +80,9 @@ async function groupedPersistenceCheck() {
 export async function compositionChecks() {
     const passed = [];
     for (const [i,entry] of cases.entries()) {
-        if (!equal(evaluateModel(inputs[i]), entry.expected)) throw new Error(`Composizione diversa da Python: ${entry.name}`);
-        passed.push(`Modello completo e migrate identici a Python 0.6.1: ${entry.name}`);
+        const comparable = result => result.source === undefined ? result : {...result, source: sourceRows(result.source)};
+        if (!equal(comparable(evaluateModel(inputs[i])), comparable(entry.expected))) throw new Error(`Composizione diversa da Python: ${entry.name}`);
+        passed.push(`Source TYTX composto e migrate identici a Python: ${entry.name}`);
     }
     const desired = evaluateModel(inputs.find(c => c.name === 'several_layers_preserve_order')).migration;
     const id = `asqueel-composition-test-${crypto.randomUUID()}`;

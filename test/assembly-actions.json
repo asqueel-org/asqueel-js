@@ -1,0 +1,1088 @@
+[
+  {
+    "kind": "notes",
+    "agenda": "a5",
+    "minutes": "",
+    "discussion": ""
+  },
+  {
+    "kind": "complete",
+    "agenda": "a5"
+  },
+  {
+    "kind": "notes",
+    "agenda": "a5",
+    "minutes": "",
+    "discussion": ""
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "discussion",
+    "base": "Versione non corrente",
+    "value": "Non deve sovrascrivere"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "title",
+    "base": "",
+    "value": "Campo non ammesso"
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo · bozza"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile · preventivi"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo · bozza"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile · preventivi"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "   "
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo · bozza"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile · preventivi"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Verifica accessi e videocitofono"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Verifica accessi e videocitofono"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ]
+  },
+  {
+    "kind": "agenda_move",
+    "agenda": "a1",
+    "direction": -1
+  },
+  {
+    "kind": "agenda_edit",
+    "agenda": "a5",
+    "title": "   "
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Illuminazione LED delle scale"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Sostituzione luci delle scale con LED"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ]
+  },
+  {
+    "kind": "presence",
+    "person": "p18",
+    "present": false
+  },
+  {
+    "kind": "open",
+    "id": "b1",
+    "title": "Bilancio preventivo",
+    "agenda": "a1"
+  },
+  {
+    "kind": "presence",
+    "person": "p1",
+    "present": true
+  },
+  {
+    "kind": "presence",
+    "person": "p2",
+    "present": true
+  },
+  {
+    "kind": "presence",
+    "person": "p3",
+    "present": true
+  },
+  {
+    "kind": "delegate",
+    "person": "p4",
+    "delegate": "p4"
+  },
+  {
+    "kind": "delegate",
+    "person": "p4",
+    "delegate": "p5"
+  },
+  {
+    "kind": "delegate",
+    "person": "p4",
+    "delegate": "p1"
+  },
+  {
+    "kind": "presence",
+    "person": "p4",
+    "present": true
+  },
+  {
+    "kind": "open",
+    "id": "b1",
+    "title": "Bilancio preventivo",
+    "agenda": "a1"
+  },
+  {
+    "kind": "presence",
+    "person": "p5",
+    "present": true
+  },
+  {
+    "kind": "close",
+    "ballot": "b1"
+  },
+  {
+    "kind": "complete",
+    "agenda": "a1"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p5",
+    "choice": "yes"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p1",
+    "choice": "yes"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p2",
+    "choice": "no"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p3",
+    "choice": "abstain"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p4",
+    "choice": "yes"
+  },
+  {
+    "kind": "close",
+    "ballot": "b1"
+  },
+  {
+    "kind": "complete",
+    "agenda": "a1"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "discussion",
+    "base": "",
+    "value": "Discussione del preventivo: chiariti costi e ripartizione."
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "minutes",
+    "base": "",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa."
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i1",
+    "agenda": "a1",
+    "person": "inesistente",
+    "base": "Discussione del preventivo: chiariti costi e ripartizione.",
+    "text": "Richiedo il dettaglio delle spese per il cortile.",
+    "recorded_at": "2026-10-22T18:01:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i1",
+    "agenda": "a1",
+    "person": "p1",
+    "base": "Discussione del preventivo: chiariti costi e ripartizione.",
+    "text": "",
+    "recorded_at": "2026-10-22T18:02:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i1",
+    "agenda": "a1",
+    "person": "p1",
+    "base": "Versione vecchia",
+    "text": "Richiedo il dettaglio delle spese per il cortile.",
+    "recorded_at": "2026-10-22T18:03:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i9",
+    "agenda": "a1",
+    "person": "p1",
+    "base": "Discussione del preventivo: chiariti costi e ripartizione.",
+    "text": "Richiedo il dettaglio delle spese per il cortile.",
+    "recorded_at": "2026-10-22T18:04:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i1",
+    "agenda": "a1",
+    "person": "p1",
+    "base": "Discussione del preventivo: chiariti costi e ripartizione.",
+    "text": "Richiedo il dettaglio delle spese per il cortile.",
+    "recorded_at": "2026-10-22T18:05:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i2",
+    "agenda": "a1",
+    "person": "p2",
+    "base": "Richiedo il dettaglio delle spese per il cortile.",
+    "text": "Propongo di richiedere un secondo preventivo.",
+    "recorded_at": "2026-10-22T18:06:00.000Z"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "minutes",
+    "base": "Versione vecchia",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "interventions": [
+      "i1",
+      "i2"
+    ]
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "minutes",
+    "base": "L’assemblea approva il preventivo secondo la regola dimostrativa.",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "interventions": [
+      "i1",
+      "i1"
+    ]
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a2",
+    "field": "minutes",
+    "base": "",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "interventions": [
+      "i1"
+    ]
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "minutes",
+    "base": "L’assemblea approva il preventivo secondo la regola dimostrativa.",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "interventions": [
+      "i1",
+      "i2"
+    ]
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "minutes",
+    "base": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "value": "L’assemblea approva il preventivo secondo la regola dimostrativa.\n\nIntervento 1 — Anna Rossi\nRichiedo il dettaglio delle spese per il cortile.\n\nIntervento 2 — Luca Bianchi\nPropongo di richiedere un secondo preventivo.",
+    "interventions": [
+      "i1"
+    ]
+  },
+  {
+    "kind": "complete",
+    "agenda": "a1"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a1",
+    "field": "discussion",
+    "base": "Discussione del preventivo: chiariti costi e ripartizione.",
+    "value": "Modifica dopo chiusura"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b1",
+    "person": "p1",
+    "choice": "no"
+  },
+  {
+    "kind": "presence",
+    "person": "p5",
+    "present": true
+  },
+  {
+    "kind": "presence",
+    "person": "p2",
+    "present": false
+  },
+  {
+    "kind": "delegate",
+    "person": "p2",
+    "delegate": "p3"
+  },
+  {
+    "kind": "open",
+    "id": "b2",
+    "title": "Manutenzione del cortile",
+    "agenda": "a2"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b2",
+    "person": "p1",
+    "choice": "no"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b2",
+    "person": "p2",
+    "choice": "no"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b2",
+    "person": "p3",
+    "choice": "yes"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b2",
+    "person": "p4",
+    "choice": "abstain"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b2",
+    "person": "p5",
+    "choice": "yes"
+  },
+  {
+    "kind": "close",
+    "ballot": "b2"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a2",
+    "field": "discussion",
+    "base": "",
+    "value": "Confronto tra due proposte per il cortile."
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a2",
+    "field": "minutes",
+    "base": "",
+    "value": "La proposta è respinta; si richiedono nuovi preventivi."
+  },
+  {
+    "kind": "complete",
+    "agenda": "a2"
+  },
+  {
+    "kind": "delegate",
+    "person": "p2",
+    "delegate": null
+  },
+  {
+    "kind": "presence",
+    "person": "p20",
+    "present": true
+  },
+  {
+    "kind": "presence",
+    "person": "p21",
+    "present": true
+  },
+  {
+    "kind": "delegate",
+    "person": "p19",
+    "delegate": "p20"
+  },
+  {
+    "kind": "agenda_save",
+    "base": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a5",
+        "title": "Sostituzione luci delle scale con LED"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      }
+    ],
+    "items": [
+      {
+        "id": "a1",
+        "title": "Bilancio preventivo"
+      },
+      {
+        "id": "a2",
+        "title": "Manutenzione del cortile"
+      },
+      {
+        "id": "a3",
+        "title": "Varie ed eventuali"
+      },
+      {
+        "id": "a4",
+        "title": "Rinnovo copertura fabbricato"
+      },
+      {
+        "id": "a6",
+        "title": "Aggiornamento videocitofono e accessi"
+      },
+      {
+        "id": "a5",
+        "title": "Sostituzione luci delle scale con LED"
+      }
+    ]
+  },
+  {
+    "kind": "open",
+    "id": "b3",
+    "title": "Varie ed eventuali",
+    "agenda": "a3"
+  },
+  {
+    "kind": "vote",
+    "ballot": "b3",
+    "person": "p1",
+    "choice": "yes"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a3",
+    "field": "discussion",
+    "base": "",
+    "value": "Discussione ancora aperta, riprendere dopo il riavvio."
+  },
+  {
+    "kind": "note_save",
+    "agenda": "a3",
+    "field": "minutes",
+    "base": "",
+    "value": "Bozza di verbale da completare."
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i3",
+    "agenda": "a3",
+    "person": "p3",
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "recorded_at": "2026-10-22T18:07:00.000Z"
+  },
+  {
+    "kind": "note_save",
+    "agenda": "inesistente",
+    "field": "discussion",
+    "base": "",
+    "value": ""
+  },
+  {
+    "kind": "agenda_move",
+    "agenda": "a6",
+    "direction": -1
+  },
+  {
+    "kind": "agenda_edit",
+    "agenda": "a1",
+    "title": "Titolo dopo voto"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i3",
+    "agenda": "a1",
+    "person": "p3",
+    "base": "Propongo di richiedere un secondo preventivo.",
+    "text": "Intervento dopo conclusione.",
+    "recorded_at": "2026-10-22T18:08:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i4",
+    "agenda": "a3",
+    "person": "p1",
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "Richiamo al preventivo.",
+    "recorded_at": "non è un orario"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i4",
+    "agenda": "a3",
+    "person": "p1",
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "Richiamo al preventivo.",
+    "recorded_at": "2026-02-30T18:30:00.000Z"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i4",
+    "agenda": "a3",
+    "person": "p1",
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "Richiamo al preventivo.",
+    "recorded_at": "2026-10-22T18:30:00.000Z",
+    "administrator": true
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i4",
+    "agenda": "a3",
+    "person": "p1",
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "Richiamo al preventivo.",
+    "recorded_at": "2026-10-22T18:30:00.000Z",
+    "administrator": "yes"
+  },
+  {
+    "kind": "intervention_add",
+    "id": "i4",
+    "agenda": "a3",
+    "administrator": true,
+    "base": "Discussione ancora aperta, riprendere dopo il riavvio.",
+    "text": "L’amministratore riepiloga i prossimi passi.",
+    "recorded_at": "2026-10-22T18:35:00.000Z"
+  }
+]

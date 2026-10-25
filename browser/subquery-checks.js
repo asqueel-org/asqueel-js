@@ -1,6 +1,7 @@
 import {openBrowserSQLite} from '../src/adapters/browser-sqlite.js';
 import {defineModel} from '../src/index.js';
 import {equal, migrateSQLite} from '../src/sqlite.js';
+import {sourceRows} from '../src/source-bag.js';
 import {subqueries} from '../examples/subqueries.js';
 import oracle from '../test/fixtures/subqueries.json' with {type: 'json'};
 
@@ -9,7 +10,7 @@ export async function subqueryChecks() {
     const model = defineModel(subqueries);
     let db = await openBrowserSQLite(id);
     try {
-        if (!equal(model.toJSON(), oracle.model) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello sottoquery diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello sottoquery diverso da Python');
         await migrateSQLite(db, model.toMigration());
         checks.push('Modello sottoquery, relazioni inverse/virtuali e JSON migrate identici a Python');
         const query = model.queries(db);

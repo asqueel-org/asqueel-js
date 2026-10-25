@@ -17,9 +17,9 @@ export class ModelPage extends PlaygroundPage {
         output.pre('^result', {id: 'result', 'aria-label': 'JSON della migrazione'});
         action(output.div({class: 'panel-actions'}), 'Scarica JSON', 'download', {id: 'download', disabled: '^noJSON'});
         const model = root.details({id: 'resolved', class: 'full-model'});
-        const summary = model.summary('Modello risolto completo · ');
+        const summary = model.summary('Source TYTX composto · ');
         summary.span('^modelStatus', {id: 'model-status'});
-        model.pre('^modelJSON', {id: 'resolved-model'});
+        model.pre('^modelJSON', {id: 'composed-source'});
         const checks = root.section({class: 'database'});
         checks.h2('Confronto completo con Python');
         const body = checks.div({class: 'db-content'});

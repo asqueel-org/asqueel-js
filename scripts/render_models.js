@@ -18,7 +18,7 @@ console.log(
         queries: browserQueries,
       }).map(([name, populate]) => {
         const b = defineModel(populate);
-        return [name, { model: b.toJSON(), migration: b.toMigration() }];
+        return [name, { source: b.toTytx(), migration: b.toMigration() }];
       }),
     ),
   }),

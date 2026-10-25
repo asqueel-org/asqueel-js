@@ -12,7 +12,7 @@ export function queryPeriods(root) {
     owner.formulaColumn({name: 'invalid_formula', sql_formula: '#PERIOD($day,period)'});
     const event = pkg.table({name: 'event', pkey: 'id'});
     event.column({name: 'id', dtype: 'L'});
-    event.column({name: 'owner_id', dtype: 'L'}).relation({to: 'period.owner.id', relation_name: 'events'});
+    event.column({name: 'owner_id', dtype: 'L'}).relation({related_column: 'period.owner.id', relation_name: 'events'});
     event.column({name: 'issued', dtype: 'D'});
     event.formulaColumn({name: 'date_alias', sql_formula: '$issued', dtype: 'D'});
 }

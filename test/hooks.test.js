@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {assertSameSource} from './source-parity.js';
 import oracle from './fixtures/hooks.json' with {type: 'json'};
 import {hooksModel, runHookCase} from './hooks-runner.js';
 import {nativeSQLite} from './native-sqlite.js';
@@ -8,7 +9,7 @@ import {migrateSQLite} from '../src/sqlite.js';
 import {TransactionStateError, UnsupportedFeatureError} from '../src/index.js';
 
 test('sys_fields/hook model and migration JSON match independent Python declarations', () => {
-    assert.deepEqual(hooksModel.toJSON(), oracle.model);
+    assertSameSource(hooksModel, oracle.source);
     assert.deepEqual(hooksModel.toMigration(), oracle.desired);
 });
 test('legacy22 ID algorithm matches Python toolbox bytes and timestamp', () => {

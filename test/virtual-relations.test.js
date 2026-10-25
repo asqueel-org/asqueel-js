@@ -4,9 +4,10 @@ import {SqlBuilder,defineModel} from '../src/index.js';
 import {querySource,modelFromQuerySource} from '../src/queries.js';
 import {virtualRelations} from '../examples/virtual-relations.js';
 import examples from './fixtures/model-examples.json' with {type:'json'};
+import {assertSameSource} from './source-parity.js';
 test('virtualRelation declaration and complete model match Python across serialization',()=>{
     const b=defineModel(virtualRelations),restored=modelFromQuerySource(querySource(b),SqlBuilder);
-    assert.deepEqual(restored.toSource(),b.toSource());assert.deepEqual(restored.toJSON(),examples['virtual-relations'].model);
+    assert.deepEqual(restored.toSource(),b.toSource());assertSameSource(restored,examples['virtual-relations'].source);
     assert.deepEqual(restored.toMigration(),examples['virtual-relations'].migration);
     const m=restored.resolve();assert.equal(m.relations.get('app.customer.@items').mode,'M');
     assert.equal(m.relations.has('app.item.@selected'),false); // 0.6.1 preserves this as declaration data.

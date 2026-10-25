@@ -34,23 +34,28 @@ tra le pagine e conservata al reload. JavaScript, worker e WASM
 sono serviti localmente; non serve Python. Usa un database IndexedDB dedicato
 `asqueel-js-playground-v1`. [Guida agli esempi](docs/playground.md).
 
-Il [modello risolto](docs/model.md) è allineato ad **Asqueel Python 0.6.1**:
+Il [modello](docs/model.md) è allineato ad **Asqueel Python 0.7.0 al commit
+84408eb** (main dopo la 0.7.0, con il salvataggio della ricetta in TYTX, PR #55):
 contributi, package, opzioni, gruppi, colonne fisiche e virtuali, alias e relazioni.
-`recipe.resolve()` restituisce il modello gerarchico; `toJSON()` ne esporta tutti
-i nodi e attributi, e `DbModel.fromJSON()` lo ripristina. JSON completo e JSON migrate
-sono confrontati indipendentemente con Python, anche nel playground.
+`recipe.resolve()` restituisce il modello gerarchico; `model.queries(adapter)` lo usa
+direttamente, anche per transazioni e hook. `recipe.toTytx()` salva il source della
+ricetta come `recipe.source.to_tytx()` di Python; `SqlBuilder.fromTytx(text)` lo
+ricarica attraverso la grammatica. Un file scritto da Python si carica in JS e
+viceversa. Il confronto con Python riguarda il source composto in TYTX e il JSON
+migrate, anche nel playground.
 
 Le dichiarazioni ritirate in Python 0.6.1 (`subtable`, opzioni `partition` e `tenant`)
 sono ritirate anche qui. Il compilatore SQLite copre CRUD, formule/alias semplici,
-relazioni dirette anche composte, aggregazioni e policy dichiarative: **350 casi**
-confrontano SQL, parametri e risultati con lo stesso Python 0.6.1 + fix #44.
+relazioni dirette anche composte, aggregazioni e policy dichiarative: **352 casi**
+confrontano SQL, parametri e risultati con lo stesso Python 0.7.0.
 Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
 `#THIS`, `#ENV` da snapshot e proiezione/filtro delle colonne composte.
 `#TEMPLATE` compone testi con valori NULL trattati come stringhe vuote;
 `#IN_RANGE` gestisce intervalli inclusivi con estremi facoltativi. **46 casi** dedicati
 verificano SQL e risultati, anche nel browser.
-`#PERIOD` interpreta date naturali attraverso `parseDateExpression` di Gramlot,
-fornito al runtime: **131 casi** e 27 rifiuti confrontati con Python.
+`#PERIOD` interpreta date naturali con `parseDateExpression` di `@genrojs/toolbox`,
+il port JS di `genro_toolbox.dates` usato da Python: **131 casi** e 27 rifiuti
+confrontati con Python.
 [Configurazione ed esempi](docs/parity.md#period-e-parser-delle-date-naturali).
 Sottoquery scalari, `EXISTS`, `subQueryColumn` e aggregazioni `aggr()` sulle relazioni
 inverse/virtuali producono SQL correlato: conteggi, sum/avg/min/max, concatenazioni
@@ -60,9 +65,9 @@ Le callback sincrone `sql_formula_*`, `subquery_*`, `env_*` e `formulaColumn_*`
 sono registrate in `queries(adapter, {methods})`: **33 casi** confrontano
 anche l'ordine delle chiamate, con 23 errori attesi e cache per ambiente.
 [Esempi e contratto](docs/parity.md#callback-dinamiche-del-compilatore).
-`sys_fields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
+`sysFields` e hook di campo/tabella eseguono il ciclo applicativo, con **26 casi**
 aggiuntivi che confrontano record, eventi, SQL e rollback con Python anche nel browser.
-Gerarchie, `auto_counter` e `relative_index` aggiungono **39 scenari**: percorsi,
+Gerarchie, `counter` e `relidx` aggiungono **39 scenari**: percorsi,
 spostamenti e cancellazione di sottoalberi, radici collegate, contatori per gruppo,
 rollback e riapertura IndexedDB. [Esempi e limiti](docs/playground.md#gerarchie-e-contatori-automatici).
 Le cascade applicative `onUpdate` su relazioni fisiche sono eseguite con hook e
@@ -119,8 +124,8 @@ npx playwright install chromium
 npm run test:browser           # SQLite WASM + IndexedDB reali
 ```
 
-La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il modello
-completo, migrazioni, transazioni, rollback, vincoli, persistenza e i 350 casi query
+La CI esegue Node 22/24, Bun e Chromium. I test browser verificano il source
+composto, migrazioni, transazioni, rollback, vincoli, persistenza e i 352 casi query
 confrontati con il riferimento Python fissato.
 Il confronto con Python dal vivo è descritto in [parità](docs/parity.md).
 
@@ -142,3 +147,15 @@ componenti in [architettura](docs/architecture.md). Licenza Apache-2.0.
 [Bag sorgente e snapshot TYTX](docs/transfers.md): Python → SQLite nel browser →
 Python, con selezione di package/tabelle, conservazione di struttura e valori e
 verifica reale su IndexedDB. La sincronizzazione resta al layer applicativo.
+
+
+Per provare il trasferimento offline anche senza server e senza un primo accesso online:
+`npm run build:file` produce **`output/asqueel-offline.html`**, esportato da Gramlot e
+apribile direttamente con `file://` in Chromium. Include SQLite WASM e conserva modello
+e dati nel profilo browser. Dettagli e verifiche in [Trasferimenti](docs/transfers.md).
+
+English illustrated overview: [Serverless data applications — Gramlot & Asqueel-JS](docs/serverless-offline.html), including the verified offline workflows and tablet deployment considerations.
+
+Scenario in italiano: [L’assemblea condominiale offline](docs/assemblea-condominiale-offline.html), dalla preparazione dei dati in Python al ritorno di votazioni e verbale nel gestionale.
+
+PoC eseguibile: **`npm run build:assembly`**, poi aprire `output/assemblea-offline.html`. Schede per costituzione, ordine del giorno, lavori e verbale; stack per ogni punto e drawer dei partecipanti. Appello di 24 partecipanti, deleghe, ordine del giorno modificabile, cinque allegati di fantasia, interventi con autore e orario, pulsante amministratore e inserimento nel verbale, voti e verbale con barra strumenti fissa, tema Mimi scuro e salvataggio SQLite, con confronto Python e riavvio offline verificato in Chromium. [Istruzioni e limiti](docs/assembly.md).

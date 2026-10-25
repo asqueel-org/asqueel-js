@@ -22,11 +22,11 @@ navigazione, pannello laterale ridimensionabile/richiudibile e schede persistent
 Le tre pagine vengono aperte in iframe dalla shell:
 
 - **Modello** (`?page=models`, pagina iniziale): editor, JSON migrate JavaScript/Python,
-  JSON completo del modello, download e verifiche di composizione.
+  source TYTX composto, download e verifiche di composizione.
 - **Migrazioni SQLite** (`?page=sqlite`): piano SQL, applicazione, dati di prova,
   catalogo, riapertura e verifiche SQLite.
 - **Query** (`?page=queries`): richiesta JSON, SQL e parametri, esecuzione e confronto
-  con le fixture Python 0.6.1 + fix #44.
+  con le fixture Python 0.7.0 · 84408eb.
 
 Il modello viene eseguito localmente come normale codice JavaScript. Esempio e
 bozza vengono salvati in localStorage e condivisi tra le tre pagine, anche dopo
@@ -119,7 +119,7 @@ Il PoC non ricostruisce tabelle e non è il porting completo di `SqlMigrator`.
 Il controllo browser confronta sia il modello desiderato sia il **catalogo
 SQLite effettivamente riletto** con gli oracoli Python; non salva il modello
 desiderato come sostituto dell'introspezione. Questa demo di migrazione inserisce esplicitamente gli ID. Il pulsante
-«Verifica sys_fields e hook» nella pagina Query esegue invece il ciclo applicativo
+«Verifica sysFields e hook» nella pagina Query esegue invece il ciclo applicativo
 con ID automatici e timestamp; «Verifica gerarchie e contatori» prova anche percorsi e numerazione automatica.
 
 ## Inserimenti e query dal modello
@@ -159,7 +159,7 @@ genera un LEFT JOIN. Il worker ricostruisce il modello da dati e ricompila la
 richiesta prima dell'esecuzione: il SQL mostrato viene verificato contro quello
 del worker.
 
-Il compilatore segue Python 0.6.1 + fix #44 per il sottoinsieme verificato:
+Il compilatore segue Python 0.7.0 per il sottoinsieme verificato:
 INSERT/UPDATE/DELETE per chiave primaria anche composta, RETURNING automatico dei
 default SQL, `sql_value` e colonne generate; SELECT di campi, alias, colonne composte
 e formule annidate con parametri locali (`var_*`, `var_kwargs`), `#THIS` e `#ENV`,
@@ -203,7 +203,7 @@ rifiutate esplicitamente in JS. Booleani diventano 0/1 al confine del driver.
 Restano fuori dal perimetro altre macro, navigazione diretta attraverso relazioni molti,
 codec applicativi, lock,
 scritture bulk/da selezione, azioni applicative su relazioni composte,
-e opzioni diverse da `sys_fields`, `hierarchical`, `auto_counter` e `relative_index`.
+e opzioni diverse da `sysFields`, `hierarchical`, `counter` e `relidx`.
 Gli hook sono ora eseguiti dai metodi `table.insert/update/delete`; il livello
 SQL `compile/execute` resta separato e rifiuta dichiarazioni che richiedono hook. La migrazione JS di colonne generate resta esclusa: i relativi
 test query preparano lo schema con il DDL del migratore Python.
@@ -219,19 +219,19 @@ con rilettura di tutte le nuove SELECT dopo riapertura. Gli oracoli
 Python sono salvati: modificare una richiesta nell'editor non avvia Python.
 Il confronto dal vivo, incluso in CI, si esegue con `verify:python`.
 
-## sys_fields e hook applicativi
+## sysFields e hook applicativi
 
-`table.insert/update/delete` eseguono il ciclo di Python 0.6.1 + fix #44:
+`table.insert/update/delete` eseguono il ciclo di Python 0.7.0:
 protezioni/default, assegnazione della chiave, validazione, trigger di campo,
 hook di tabella, SQL, trigger di campo e hook successivi. L'ordine di draft e
 contatori segue quello specifico di INSERT/UPDATE/DELETE. I callback dei contatori
-restano punti di estensione; `auto_counter` e `relative_index` sono ora eseguiti.
+restano punti di estensione; `counter` e `relidx` sono ora eseguiti.
 
 ```javascript
 const model = defineModel(root => {
     const table = root.db({name: 'local', implementation: 'sqlite'})
         .packages().package('app').table('note');
-    table.options().sys_fields();
+    table.options().sysFields();
     table.column({name: 'title', dtype: 'T'});
 });
 await migrateSQLite(adapter, model.toMigration());
@@ -289,7 +289,7 @@ rilegge il record completo e non fa nulla se assente; con un oggetto deve elimin
 esattamente una riga. Anche le chiavi numeriche JS sono accettate come chiavi di
 rilettura, per compatibilità con l'API JS già introdotta.
 
-«Verifica sys_fields e hook» esegue **26 scenari reali** su database IndexedDB
+«Verifica sysFields e hook» esegue **26 scenari reali** su database IndexedDB
 temporanei: confronta modello, JSON migrate, record restituiti/modificati, ordine
 degli eventi, SQL e parametri DML, righe persistite e rollback. Chiude e riapre il
 database dopo ciascuno scenario. Il pannello mostra anche un risultato realmente
@@ -320,7 +320,7 @@ const model = defineModel(root => {
     const pkg = db.packages().package({name: 'crm', sqlschema: 'public'});
     const tables = pkg.tables();
     const customer = tables.table({name: 'customer'});
-    customer.options().sys_fields({draft: true});
+    customer.options().sysFields({draft: true});
     const columns = customer.columns();
     columns.column({name: 'name', dtype: 'T', notnull: true});
 });
@@ -358,35 +358,33 @@ Il percorso applicativo aggiunge:
 - tipi personalizzati di package e normalizzazione dei tipi di storage;
 - inferenza di tipo/dimensione dalle relazioni, riferimenti fra package,
   nomi di colonne rimappati e indici per le relazioni deboli;
-- espansione fisica di `sys_fields`, `hierarchical`, `attachments`,
-  `auto_counter`, `relative_index`, `audit`, `full_update`, `record_hash`,
-  `dynamic_fields` e `protection`;
+- espansione fisica di `sysFields`, `hierarchical`, `counter`, `relidx`,
+  `fullUpd` e `df`;
 - altre opzioni dichiarative senza effetti DDL, opzioni disabilitate,
   attributi espliciti dei campi generati e controlli sui conflitti.
 
-Come Python, il modello a package deriva gli schemi da `sqlschema` e non può
-contenere contemporaneamente un contenitore `schemas` esplicito. Le opzioni
-sono utilizzabili anche sulle tabelle degli schemi espliciti. `system_records`
-e `release` abilitati restano rifiutati, come nel renderer Python corrente.
+Come Python, il modello parte solo dai package e deriva gli schemi da `sqlschema`.
+`sysrecords` e `release` abilitati restano rifiutati, come nel renderer Python corrente.
 
 La grammatica JSON fornisce firme, default e vincoli. `model-options.js` espande
-le opzioni e `model.js` costruisce la gerarchia e la proiezione fisica. Nessun hook
+le opzioni, `model.js` costruisce la gerarchia e `migration.js` produce il JSON migrate
+dal source preparato. Nessun hook
 applicativo viene eseguito dalla risoluzione.
 
-## Modello completo 0.6.1
+## Source composto · Python 0.7.0 · 84408eb
 
-Il pannello «Modello risolto completo» mostra il JSON gerarchico. Gli esempi
-application, shop, groups, virtual-relations e queries hanno un riferimento Python
-completo; il messaggio di parità del modello è distinto da quello di migrate.
+Il pannello «Source TYTX composto» mostra le righe TYTX del source. Gli esempi
+application, shop, groups, virtual-relations e queries hanno un riferimento Python;
+il messaggio di parità del source è distinto da quello di migrate.
 Il pulsante di verifica della composizione esegue nel worker l'intero corpus
-modello/migrate e prove reali su database IndexedDB temporanei.
-I 350 casi query usano lo stesso riferimento 0.6.1 + fix #44 del modello.
+source/migrate e prove reali su database IndexedDB temporanei.
+I 352 casi query usano lo stesso riferimento del modello.
 
 L'esempio gruppi usa una formula esplicita: `subtable` non esiste più nella
-0.6.1. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
+0.7.0. `virtualRelation` conserva tutti i dati della dichiarazione senza produrre
 FK fisiche. Le aggregazioni dichiarative vengono eseguite come sottoquery correlate;
 la navigazione come JOIN diretto resta esclusa. Vedi il [contratto del modello](model.md) per API,
-limiti del JSON portabile e differenze rispetto al vecchio riferimento.
+limiti e source in TYTX.
 
 Il look usa gli stessi temi `gramlot-base`, `gramlot-compact` e `gramlot-index`
 della gallery: barra da 42 px, accento giallo, token condivisi e CodeMirror integrato.
@@ -401,9 +399,9 @@ eseguono i comportamenti dentro la stessa transazione degli hook:
 const model = defineModel(root => {
     const pkg = root.db({name: 'local', implementation: 'sqlite'}).packages().package('app');
     const category = pkg.table('category');
-    category.options().sys_fields();
+    category.options().sysFields();
     category.options().hierarchical({columns: 'code', root_id: true, virtual_roots: true});
-    category.options().auto_counter();
+    category.options().counter();
     category.column('code');
 });
 await migrateSQLite(adapter, model.toMigration());
@@ -426,11 +424,11 @@ nodo elimina i discendenti; l'archiviazione logica si propaga ai discendenti che
 hanno il relativo campo. `linked_to` crea e aggiorna la radice associata al master,
 anche quando SQLite ne genera la chiave.
 
-`auto_counter({field: 'position', scope: ['group_id', 'kind']})` usa il massimo
+`counter({field: 'position', scope: ['group_id', 'kind']})` usa il massimo
 esistente più uno nel gruppo, includendo righe draft/archiviate e trattando NULL
 come gruppo distinto. Conserva i valori espliciti; cancellando il massimo, il
 numero può essere riutilizzato. Nelle gerarchie il gruppo è il genitore.
-`relative_index('master_id')` aggiorna invece il contatore in `master_xtd`:
+`relidx('master_id')` aggiorna invece il contatore in `master_xtd`:
 il numero non viene riutilizzato dopo la cancellazione del dettaglio. Il modello
 deve dichiarare il master, la tabella di estensione con chiave `id` o `main_id`
 e la relazione del dettaglio. Un rollback annulla anche l'allocazione del numero.
@@ -518,7 +516,7 @@ l'oracolo Python, insieme a 23 rifiuti attesi e al ciclo della cache per ambient
 Tutte le SELECT vengono rieseguite dopo chiusura e riapertura di IndexedDB.
 
 I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
-350 casi query e 27 gruppi di verifiche. Per registrare le proprie funzioni vedere
+352 casi query e 27 gruppi di verifiche. Per registrare le proprie funzioni vedere
 [il contratto delle callback](parity.md#callback-dinamiche-del-compilatore).
 
 
@@ -528,7 +526,7 @@ I dettagli sono visibili in **Verifiche query nel browser**. Il totale è ora di
 18 rifiuti attesi e due casi aggiuntivi di macro restituite dalle callback.
 Il worker compila ed esegue le query su SQLite WASM, confronta SQL, parametri e
 risultati con Python e ripete le SELECT dopo riapertura IndexedDB. Il totale è di
-350 casi query e 27 gruppi di verifiche, visibili in **Verifiche query nel browser**.
+352 casi query e 27 gruppi di verifiche, visibili in **Verifiche query nel browser**.
 
 Sono coperti testi e NULL, apostrofi, Unicode, estremi inclusivi e assenti, formule,
 relazioni, aggregazioni e sottoquery. [Sintassi e limiti](parity.md#macro-template-e-in_range).
@@ -538,15 +536,15 @@ relazioni, aggregazioni e sottoquery. [Sintassi e limiti](parity.md#macro-templa
 
 **Verifica query con Python** include 131 casi PERIOD: italiano/inglese,
 workdate diverse, intervalli aperti, anni bisestili, mesi/trimestri, collisioni di
-parametri, formule correlate e sottoquery. Si confrontano JSON completo/migrate,
+parametri, formule correlate e sottoquery. Si confrontano source TYTX/migrate,
 SQL esatto, parametri e righe SQLite; le SELECT si ripetono dopo riapertura
 IndexedDB. I 27 usi non validi devono essere rifiutati anche nel worker.
 
-La preview e l'esecuzione ordinaria dell'editor usano `parseDateExpression`
-esportato da Gramlot. Per una richiesta personalizzata inserire
+La preview e l'esecuzione ordinaria dell'editor decodificano #PERIOD con
+`@genrojs/toolbox`. Per una richiesta personalizzata inserire
 `environment: {locale: "it-IT", workdate: "2026-10-21"}` e, su un campo data del
 proprio modello, `where: "#PERIOD($issued,period)"` con
-`sqlparams: {period: "mese scorso"}`. Il totale è di 350 casi query e 27 gruppi
+`sqlparams: {period: "mese scorso"}`. Il totale è di 352 casi query e 27 gruppi
 di verifiche; gli esempi modificati non generano un nuovo oracolo Python.
 Vedere [il contratto del runtime](parity.md#period-e-parser-delle-date-naturali).
 

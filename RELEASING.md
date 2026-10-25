@@ -1,7 +1,7 @@
 # Pubblicare Asqueel JS
 
-Package npm pubblico: `@asqueel/asqueel-js`. Prima versione: `0.1.0`.
-La serie 0.1.x è sperimentale; non dichiara parità completa con Python.
+Package npm pubblico: `@asqueel/asqueel-js`. Candidato corrente: `0.2.0` (Python 0.7.0 · 84408eb).
+Il pacchetto è sperimentale; non dichiara parità completa con Python.
 La provenienza del confronto del modello rimane fissata in
 `test/fixtures/provenance.json`, indipendentemente dalla versione npm.
 
@@ -68,3 +68,14 @@ Il package distribuisce moduli ESM, non il playground compilato. Il consumatore
 bundla il proprio worker e copia `wa-sqlite/dist/wa-sqlite-async.wasm` accanto al
 bundle. Vedere
 `docs/architecture.md` e l'esempio browser nel repository.
+
+## Consolidamento 0.2.0
+
+Il commit Python `84408eb` (main, merge della PR #55) deve essere accessibile su
+GitHub per la CI di parità. Questa release include tutti i porting già su main,
+export HTML, demo assemblea e la parità con Python dopo la 0.7.0.
+I candidati 0.2.0 precedenti sono superati e non vanno pubblicati.
+
+Oltre alla suite ordinaria, eseguire `npm run test:file`, `npm run test:assembly`
+e `npm run verify:python`. I vecchi workspace della demo sono provati attraverso
+le fixture v1–v4 e il riavvio offline, senza sostituire i dati già inseriti.
