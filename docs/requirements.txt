@@ -1,0 +1,5 @@
+# Documentation build only; never required by the JavaScript runtime.
+sphinx>=7.0
+sphinx-rtd-theme>=2.0
+myst-parser>=2.0
+sphinxcontrib-mermaid>=1.0

@@ -5,22 +5,22 @@ import {prepareParameters} from './sql-parameters.js';
 // Mechanical port of WriteCompiler's SQLite record statements (Python 0.6.1 + #44).
 // This layer only compiles; application hooks and transaction ownership are separate.
 export function keyColumns(table) {
-    if (!table.a.pkey) throw new Error(`${table.key} non ha una chiave primaria`);
+    if (!table.a.pkey) throw new Error(`${table.key} has no primary key`);
     return names(table.composites.get(table.a.pkey)?.a.columns ?? table.a.pkey);
 }
 export function keyValues(table, pkey) {
     const keys = keyColumns(table);
     if (keys.length === 1 && !table.composites.has(table.a.pkey)) return [pkey];
-    if (typeof pkey !== 'string') throw new Error('La chiave composta deve essere una stringa JSON serializzata');
+    if (typeof pkey !== 'string') throw new Error('A composite key must be a serialized JSON string');
     const values = JSON.parse(pkey);
-    if (!Array.isArray(values) || values.length !== keys.length) throw new Error('Numero di componenti della chiave primaria non valido');
+    if (!Array.isArray(values) || values.length !== keys.length) throw new Error('Invalid number of primary key components');
     return values.map((value, i) => {
-        if (typeof value === 'string' && /::(?:D|DH|DHZ|N|H|HZ)$/.test(value)) throw new Error('Codec temporali/decimali della chiave composta non ancora supportati');
+        if (typeof value === 'string' && /::(?:D|DH|DHZ|N|H|HZ)$/.test(value)) throw new Error('Temporal or decimal codecs in a composite key are not supported');
         return table.columns.get(keys[i]).a.dtype === 'B' && typeof value === 'number' ? Boolean(value) : value;
     });
 }
 function required(data, name) {
-    if (!own(data, name)) throw new Error(`Componente della chiave mancante: ${name}`);
+    if (!own(data, name)) throw new Error(`Missing key component: ${name}`);
     return data[name];
 }
 export function prepareRecord(table, values, methods = null) {
@@ -29,7 +29,7 @@ export function prepareRecord(table, values, methods = null) {
     const data = Object.create(null);
     for (const [name, value] of Object.entries(record(values))) {
         const column = table.columns.get(name);
-        if (column && own(column.a, 'sql_generatedExpression')) throw new Error(`Colonna generata non assegnabile: ${table.key}.${name}`);
+        if (column && own(column.a, 'sql_generatedExpression')) throw new Error(`Generated column cannot be assigned: ${table.key}.${name}`);
         if (name.startsWith('@') || name === 'pkey' || table.virtual.has(name) || dynamic.has(name.toLowerCase())
             || table.composites.has(name)) continue;
         data[name] = value;
@@ -38,26 +38,26 @@ export function prepareRecord(table, values, methods = null) {
     return data;
 }
 export function partition(table, snapshot, ignore) {
-    if (typeof ignore !== 'boolean') throw new Error('ignore_partition deve essere booleano');
+    if (typeof ignore !== 'boolean') throw new Error('ignore_partition must be a boolean');
     if (ignore) return null;
     const attribute = Object.keys(table.a).find(k => k.startsWith('partition_'));
     if (!attribute) return null;
     const field = attribute.slice(10), path = table.a[attribute];
     const current = snapshot[`current_${path}`], allowed = snapshot[`allowed_${path}`];
     if (current == null && allowed == null) return null;
-    if (!table.columns.has(field)) throw new Error('La partizione di scrittura richiede una colonna fisica');
+    if (!table.columns.has(field)) throw new Error('A write partition requires a physical column');
     return {field, current, allowed};
 }
 export function guardPartition(table, data, policy, insert) {
     if (!policy) return;
     const {field, current, allowed} = policy;
     if (insert && !own(data, field) && current != null) data[field] = current;
-    if (insert && !own(data, field)) throw new Error(`La scrittura richiede la partizione ${field}`);
+    if (insert && !own(data, field)) throw new Error(`The write requires the partition ${field}`);
     if (!own(data, field)) return;
     const normalize = value => ['A', 'C'].includes(table.columns.get(field).a.dtype) && typeof value === 'string' ? value.trimEnd() : value;
     const valid = current != null ? normalize(data[field]) === normalize(current)
         : Array.isArray(allowed) && allowed.length && (data[field] == null || allowed.map(normalize).includes(normalize(data[field])));
-    if (!valid) throw new Error(`${table.key}.${field}: valore fuori dalla partizione attiva`);
+    if (!valid) throw new Error(`${table.key}.${field}: value outside the active partition`);
 }
 function predicate(table, values, params, policy) {
     let where = keyColumns(table).map((name, i) => {
@@ -105,12 +105,12 @@ export function compileWrite(table, operation, values, {pkey, old_record, enviro
             const column = table.columns.get(name);
             return `${q(columnName(column))}=` + (column.a.sql_value ? column.a.sql_value + '\n' : binding(name, data));
         });
-        if (!assignments.length) throw new Error('UPDATE richiede almeno una colonna');
+        if (!assignments.length) throw new Error('UPDATE requires at least one column');
         const keys = old_record && Object.keys(old_record).length ? keyColumns(table).map(n => required(old_record, n))
             : pkey != null ? keyValues(table, pkey) : keyColumns(table).map(n => required(data, n));
         sql = `UPDATE ${tableSQL(table)} SET ${assignments.join(',')} WHERE ${predicate(table, keys, data, policy)}` + returning(table, data, false);
     } else if (operation === 'delete') {
         sql = `DELETE FROM ${tableSQL(table)} WHERE ${predicate(table, keyColumns(table).map(n => required(record(values), n)), data, policy)}`;
-    } else throw new Error(`Scrittura sconosciuta: ${operation}`);
+    } else throw new Error(`Unknown write operation: ${operation}`);
     return prepareParameters(sql, data, environment);
 }

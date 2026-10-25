@@ -15,15 +15,15 @@ export function expandTemplates(text) {
             else if (ch === '(') depth++;
             else if (ch === ')' && --depth === 0) break;
         }
-        if (depth) throw new Error('#TEMPLATE: parentesi di chiusura mancante');
+        if (depth) throw new Error('#TEMPLATE: missing closing parenthesis');
         const [literal, ...args] = split(text.slice(start, end));
         const found = /^\s*'((?:[^']|'')*)'\s*$/s.exec(literal);
-        if (!found) throw new Error('#TEMPLATE: il primo argomento deve essere un testo quotato');
+        if (!found) throw new Error('#TEMPLATE: the first argument must be a quoted text');
         const expressions = new Map(), used = new Set(), parts = [];
         for (const argument of args) {
             const named = /^(.*\S)\s+as\s+([\p{L}\p{N}_]+)\s*$/isu.exec(argument.trim());
-            if (!named) throw new Error('#TEMPLATE: ogni espressione richiede AS nome');
-            if (expressions.has(named[2])) throw new Error(`#TEMPLATE: nome duplicato ${named[2]}`);
+            if (!named) throw new Error('#TEMPLATE: every expression requires AS name');
+            if (expressions.has(named[2])) throw new Error(`#TEMPLATE: duplicate name ${named[2]}`);
             expressions.set(named[2], named[1].trim());
         }
         const template = found[1].replaceAll("''", "'");
@@ -35,11 +35,11 @@ export function expandTemplates(text) {
             else if (expressions.has(field[1])) {
                 used.add(field[1]);
                 parts.push(`COALESCE(CAST((${expressions.get(field[1])}) AS TEXT), '')`);
-            } else throw new Error(field[1] ? `#TEMPLATE: argomento mancante ${field[1]}` : '#TEMPLATE: usare $$ per un dollaro letterale');
+            } else throw new Error(field[1] ? `#TEMPLATE: missing argument ${field[1]}` : '#TEMPLATE: use $$ for a literal dollar');
             last = field.index + field[0].length;
         }
         if (last < template.length) parts.push(literalSQL(template.slice(last)));
-        if ([...expressions.keys()].some(name => !used.has(name))) throw new Error('#TEMPLATE: argomenti non usati');
+        if ([...expressions.keys()].some(name => !used.has(name))) throw new Error('#TEMPLATE: unused arguments');
         const sql = `(${parts.join(' || ') || "''"})`;
         text = text.slice(0, match.index) + sql + text.slice(end + 1);
         // Like Python, do not recursively expand macros introduced by an argument.

@@ -10,3 +10,6 @@ playwright-report/
 *.tgz
 .DS_Store
 browser/service-worker.js
+
+# Sphinx documentation build
+docs/_build/

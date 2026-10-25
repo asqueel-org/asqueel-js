@@ -12,9 +12,9 @@ export async function adaptImportRecord(db, table, values) {
 }
 export async function sqlInsert(db, table, source, options) {
     record(options);
-    for (const key of Object.keys(options)) if (!['format', 'adapt', 'ignore_partition'].includes(key)) throw new Error(`Opzione import sconosciuta: ${key}`);
+    for (const key of Object.keys(options)) if (!['format', 'adapt', 'ignore_partition'].includes(key)) throw new Error(`Unknown import option: ${key}`);
     const file = isFileSource(source), adapt = options.adapt ?? file;
-    if (!file && options.format != null) throw new Error('format è ammesso solo per un file');
+    if (!file && options.format != null) throw new Error('format is allowed only for a file');
     const settings = {environment: db.environment(), ignore_partition: options.ignore_partition ?? false, returningRows: false};
     async function adapted(values, index) {
         try {return adapt ? await adaptImportRecord(db, table, values) : record(values);}

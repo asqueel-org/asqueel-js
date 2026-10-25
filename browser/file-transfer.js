@@ -3,32 +3,32 @@ import {workerSource} from './dist/file-transfer-assets.js';
 import {transferPanel} from './transfer-panel.js';
 
 export class Page extends BasePage {
-    static title = 'Asqueel · HTML autonomo';
+    static title = 'Asqueel · standalone HTML';
     static css = ['/themes/gramlot-compact/theme.css'];
     main(root) {
-        for (const [path,value] of Object.entries({busy:true, ready:false, transferStatus:'Avvio SQLite incorporato…',
-            transferSample:'', transferFileName:'Nessun file selezionato',
-            transferRequest:JSON.stringify({operation:'update',table:'work.document',values:{id:'d1',title:'Modificato offline'}},null,2)}))
+        for (const [path,value] of Object.entries({busy:true, ready:false, transferStatus:'Starting the embedded SQLite…',
+            transferSample:'', transferFileName:'No file selected',
+            transferRequest:JSON.stringify({operation:'update',table:'work.document',values:{id:'d1',title:'Changed offline'}},null,2)}))
             root.dataSetter({destination_path:path,value});
         const body=root.main({class:'file-transfer'});
-        body.h1('Asqueel · un solo HTML');
-        body.p('Gramlot e SQLite incorporati. Apri questo file anche senza rete; modello e dati restano nel browser. Riapri lo stesso file con lo stesso profilo.');
+        body.h1('Asqueel · one HTML file');
+        body.p('Gramlot and SQLite embedded. Open this file also without a network; model and data stay in the browser. Reopen the same file with the same profile.');
         const button=(label,func,id) => body.button(label,{id,disabled:'^busy'}).dataController({func});
-        button('Scarica esempio Python','example','transfer-example');
-        button('Scarica esempio Bag e blob','binaryExample','transfer-binary-example');
-        body.html_label('Snapshot Python (.json)',{for:'transfer-file'});
+        button('Download the Python sample','example','transfer-example');
+        button('Download the Bag and blob sample','binaryExample','transfer-binary-example');
+        body.html_label('Python snapshot (.json)',{for:'transfer-file'});
         body.input({id:'transfer-file',type:'file',accept:'.json',disabled:'^busy',connect_onchange:'window.gramlot.logic.selectFile(this, event)'});
         body.p('^transferFileName');
-        button('Carica in SQLite locale','load','transfer-load');
-        button('Rileggi workspace locale','resume','transfer-resume');
-        button('Esporta snapshot per Python','download','transfer-export');
-        body.h2('Modifica tramite il modello');
-        body.html_label('Richiesta JSON: select, insert, update o delete',{for:'transfer-request'});
+        button('Load into local SQLite','load','transfer-load');
+        button('Reread the local workspace','resume','transfer-resume');
+        button('Export the snapshot for Python','download','transfer-export');
+        body.h2('Change through the model');
+        body.html_label('JSON request: select, insert, update or delete',{for:'transfer-request'});
         body.textarea({id:'transfer-request',value:'^transferRequest',rows:12,disabled:'^busy'});
-        button('Esegui sul database locale','edit','transfer-edit');
+        button('Run on the local database','edit','transfer-edit');
         body.p('^transferStatus',{id:'transfer-status',role:'status'});
         const details=body.details({open:true});
-        details.summary('Modello, migrate, struttura SQLite, SQL e valori');
+        details.summary('Model, migration, SQLite structure, SQL and values');
         details.pre('^transferSample',{id:'transfer-sample'});
         body.dataController({func:'start',_onStart:true});
     }
@@ -52,10 +52,10 @@ export class Logic {
             pending.delete(data.id);
             data.error ? task.reject(new Error(data.error)) : task.resolve(data.result);
         };
-        worker.onerror=event=>stop(event.message || 'Worker SQLite non disponibile');
-        this.page.abort.signal.addEventListener('abort',()=>stop('Pagina chiusa'),{once:true});
+        worker.onerror=event=>stop(event.message || 'SQLite worker not available');
+        this.page.abort.signal.addEventListener('abort',()=>stop('Page closed'),{once:true});
         const database={request:(type,desired)=>new Promise((resolve,reject)=>{
-            if (!available) {reject(new Error('Worker SQLite non disponibile'));return;}
+            if (!available) {reject(new Error('SQLite worker not available'));return;}
             const id=++sequence;pending.set(id,{resolve,reject});
             // file: pages may share an origin: keep each pathname's workspace separate.
             worker.postMessage({id,type,desired,workspaceName:'asqueel-file-v1:'+location.pathname});
@@ -67,7 +67,7 @@ export class Logic {
     }
     selectFile(node,event) {
         this.file=event.target.files?.[0];
-        this.view.set('transferFileName',this.file?.name || 'Nessun file selezionato');
+        this.view.set('transferFileName',this.file?.name || 'No file selected');
     }
     example() {return this.transfers.example();}
     binaryExample() {return this.transfers.binaryExample();}

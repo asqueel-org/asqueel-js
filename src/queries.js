@@ -26,7 +26,7 @@ export function modelFromQuerySource(source, Builder) {
     const model = new Builder();
     const visit = (parent, nodes) => {
         for (const node of nodes) {
-            if (!own(model.schema, node.tag)) throw new Error('Elemento del modello sconosciuto');
+            if (!own(model.schema, node.tag)) throw new Error('Unknown model element');
             const child = parent[node.tag](node.attributes);
             visit(child, node.children);
         }
@@ -50,15 +50,15 @@ export class SqliteQueries {
         if (!scope) {
             record(runtime);
             for (const key of Object.keys(runtime)) if (!['environment', 'hooks', 'clock', 'uuid', 'methods'].includes(key))
-                throw new Error(`Opzione runtime sconosciuta: ${key}`);
+                throw new Error(`Unknown runtime option: ${key}`);
             validateCompilerMethods(this.tables, runtime.methods ?? {});
             for (const key of ['clock', 'uuid']) if (runtime[key] != null && typeof runtime[key] !== 'function')
-                throw new TypeError(`${key} deve essere una funzione`);
+                throw new TypeError(`${key} must be a function`);
             for (const [table, hooks] of Object.entries(record(runtime.hooks ?? {}))) {
-                if (!this.tables.has(table)) throw new Error(`Tabella degli hook sconosciuta: ${table}`);
+                if (!this.tables.has(table)) throw new Error(`Unknown hook table: ${table}`);
                 for (const [name, fn] of Object.entries(record(hooks))) {
                     if (!(name.startsWith('trigger_') || ['protect_update', 'protect_delete', 'protect_validate', 'protect_draft', 'newPkeyValue', 'adaptRecord'].includes(name))
-                        || typeof fn !== 'function') throw new TypeError(`Hook non valido: ${table}.${name}`);
+                        || typeof fn !== 'function') throw new TypeError(`Invalid hook: ${table}.${name}`);
                 }
             }
         }
@@ -75,19 +75,19 @@ export class SqliteQueries {
             const matches = [...this.tables.values()].filter(t => t.a.name === name);
             if (matches.length === 1) table = matches[0];
         }
-        if (!table) throw new Error(`Tabella sconosciuta o ambigua: ${name}`);
+        if (!table) throw new Error(`Unknown or ambiguous table: ${name}`);
         if (write && [...table.options.values()].some(o => o.spec.enabled !== false)) {
-            throw new Error(`${name}: hook/opzioni applicative non ancora implementati nelle scritture JS`);
+            throw new Error(`${name}: application hooks and options are not implemented for SQL-level writes`);
         }
         for (const c of table.columns.values()) {
-            if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Codec applicativi fuori perimetro query');
+            if (['X', 'Z', 'P'].includes(c.a.dtype)) throw new Error('Application codecs are not supported by queries');
             if (write && (c.children.some(n => n.tag !== 'relation') ||
                 ['default', 'default_from', 'readOnly', 'unmodifiable',
                     'onInserting','onUpdating','onDeleting','onInserted','onUpdated','onDeleted','trigger_table']
-                    .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: comportamento di scrittura non implementato`);
+                    .some(k => c.a[k] != null && c.a[k] !== false))) throw new Error(`${name}: write behavior not implemented at the SQL level`);
         }
         if (write && [...table.columns.values()].some(c => c.children.some(n =>
-            ['onDelete', 'onUpdate'].some(k => n.a[k] != null) || Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Hook di relazione non implementati');
+            ['onDelete', 'onUpdate'].some(k => n.a[k] != null) || Object.keys(n.a).some(k => k.startsWith('x_app_'))))) throw new Error('Relation hooks not implemented at the SQL level');
         return table;
     }
     compile(request) {
@@ -97,11 +97,11 @@ export class SqliteQueries {
         if (!this.compilerEnvironments.has(environment)) this.compilerEnvironments.set(environment, new Map());
         request = {...request, environment: structuredClone(environment)};
         const read = ['select', 'count'].includes(request.operation);
-        if (!read && !['insert', 'update', 'delete'].includes(request.operation)) throw new Error('Operazione query non supportata');
+        if (!read && !['insert', 'update', 'delete'].includes(request.operation)) throw new Error('Unsupported query operation');
         const allowed = read ? ['operation', 'table', 'columns', 'where', 'sqlparams', 'order_by', 'limit', 'offset',
             'distinct', 'group_by', 'having', 'bagFields', 'addPkeyColumn', 'for_update', 'exclude_draft', 'exclude_logical_deleted', 'ignore_partition', 'environment']
             : ['operation', 'table', 'values', 'pkey', 'old_record', 'ignore_partition', 'environment'];
-        for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Opzione query fuori perimetro: ${name}`);
+        for (const name of Object.keys(request)) if (!allowed.includes(name)) throw new Error(`Unsupported query option: ${name}`);
         const table = this.resolveTable(request.table, !read);
         const methods = new CompilerMethods(this.tables, this.runtime.methods ?? {},
             structuredClone(request.environment), this.compilerEnvironments.get(environment));
@@ -113,12 +113,12 @@ export class SqliteQueries {
         return this._executeCompiled(compiled, !['select', 'count'].includes(request.operation));
     }
     async _executeCompiled(compiled, write = false) {
-        if (!this.adapter) throw new Error('Adapter non collegato');
+        if (!this.adapter) throw new Error('No adapter bound');
         const state = adapterState(this.adapter);
         if (this.scope) {
             return this._inScope(() => this.adapter.query(compiled.sql, driverParameters(compiled)));
         }
-        if (state.transaction) throw new TransactionStateError('Usare il contesto tx per le operazioni durante una transazione');
+        if (state.transaction) throw new TransactionStateError('Use the tx context for operations during a transaction');
         return enqueue(state, async () => {
             if (!write) return this.adapter.query(compiled.sql, driverParameters(compiled));
             await this.adapter.execute('BEGIN IMMEDIATE');
@@ -131,7 +131,7 @@ export class SqliteQueries {
     }
     _inScope(action) {
         const root = this.scope.root ?? this.scope;
-        if (!this.scope.active || !root.active) return Promise.reject(new TransactionStateError('La transazione è terminata'));
+        if (!this.scope.active || !root.active) return Promise.reject(new TransactionStateError('The transaction has ended'));
         return enqueue(this.scope, async () => {
             if (root.error) throw root.error;
             try { return await action(); }
@@ -141,7 +141,7 @@ export class SqliteQueries {
     async _writeRecord(name, operation, values, options = {}) {
         record(options);
         for (const key of Object.keys(options)) if (!['pkey', 'old_record', 'ignore_partition', 'environment'].includes(key))
-            throw new Error(`Opzione scrittura non supportata: ${key}`);
+            throw new Error(`Unsupported write option: ${key}`);
         if (!this.scope) return this.transaction(tx => tx._writeRecord(name, operation, values, options));
         return this._inScope(async () => {
             const child = {active: true, tail: Promise.resolve(), root: this.scope.root ?? this.scope,
@@ -171,10 +171,10 @@ export class SqliteQueries {
         });
     }
     async transaction(callback) {
-        if (typeof callback !== 'function') throw new TypeError('transaction richiede una funzione');
-        if (!this.adapter) throw new Error('Adapter non collegato');
+        if (typeof callback !== 'function') throw new TypeError('transaction requires a function');
+        if (!this.adapter) throw new Error('No adapter bound');
         const state = adapterState(this.adapter);
-        if (this.scope || state.transaction) throw new TransactionStateError('Transazioni annidate non ancora supportate');
+        if (this.scope || state.transaction) throw new TransactionStateError('Nested transactions are not supported');
         return enqueue(state, async () => {
             const scope = {active: true, tail: Promise.resolve(), environment: this.environment()};
             const tx = new SqliteQueries(this.model, this.adapter, scope, this.runtime);

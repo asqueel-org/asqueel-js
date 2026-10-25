@@ -9,23 +9,23 @@ export function aggregateColumns(arguments_, path) {
     for (const argument of arguments_) {
         const [raw, outer] = projectionAlias(argument);
         const call = /^(\w+)\s*\(([\s\S]*)\)$/.exec(raw.trim());
-        if (!call) throw new Error('aggr richiede funzioni aggregate');
+        if (!call) throw new Error('aggr requires aggregate functions');
         const fn = call[1].toLowerCase(), text = call[2].trim();
         if (!['count', 'sum', 'avg', 'min', 'max', 'join', 'to_json', 'to_xml'].includes(fn))
-            throw new UnsupportedFeatureError(`Aggregazione non supportata: ${fn}`);
+            throw new UnsupportedFeatureError(`Unsupported aggregation: ${fn}`);
         if (['to_json', 'to_xml'].includes(fn)) {
             result.push({columns: text || '*', name: outer ?? resultName(path + (text ? '_' + text.replace(/^\$/, '') : '') + '_' + fn.slice(3)), mode: fn});
         } else if (fn === 'count') {
-            if (text) throw new UnsupportedFeatureError('aggr supporta solo count() senza argomenti');
+            if (text) throw new UnsupportedFeatureError('aggr supports only count() without arguments');
             result.push({columns: 'COUNT(*)', name: outer ?? resultName(path + '_count')});
         } else {
             const values = split(text);
             if (fn === 'join') {
-                if (![2, 3].includes(values.length)) throw new Error('join richiede espressione, separatore e placeholder opzionale');
+                if (![2, 3].includes(values.length)) throw new Error('join requires an expression, a separator and an optional placeholder');
                 result.push({columns: `COALESCE(NULLIF(CAST(${columnExpression(values[0])} AS text), ''), ${values[2] ?? "''"}) AS value,${values[1]} AS separator`,
                     name: outer ?? resultName(path + '_' + values[0].replace(/^\$/, '') + '_join'), mode: 'join'});
             } else {
-                if (outer && values.length !== 1) throw new Error('Usare AS su ciascun argomento aggregato');
+                if (outer && values.length !== 1) throw new Error('Use AS on every aggregate argument');
                 for (const value of values) {
                     const [expression, alias] = projectionAlias(value);
                     if (outer && alias) throw new Error('Alias aggregato duplicato');
@@ -34,7 +34,7 @@ export function aggregateColumns(arguments_, path) {
             }
         }
     }
-    if (!result.length) throw new Error('aggr richiede almeno una aggregazione');
+    if (!result.length) throw new Error('aggr requires at least one aggregation');
     return result;
 }
 
@@ -50,5 +50,5 @@ export function callArguments(expression, start) {
             }
         }
     }
-    throw new Error('Parentesi finale mancante nella aggregazione');
+    throw new Error('Missing closing parenthesis in the aggregation');
 }

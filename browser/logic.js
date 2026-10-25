@@ -38,7 +38,7 @@ export class Logic {
         if (this.page.abort.signal.aborted) return;
         this.db = sqlitePanel(this.view, () => {
             this.render();
-            if (!this.view.get('json')) throw new Error('Correggi il modello prima di migrare');
+            if (!this.view.get('json')) throw new Error('Fix the model before migrating');
             return JSON.parse(this.view.get('json'));
         }, () => this.view.get('example'));
         this.transfers = transferPanel(this.view, this.db);
@@ -51,11 +51,11 @@ export class Logic {
         this.view.set('busy', false);
         await this.db.run('inspect');
         if (this.view.get('section') === 'transfer') await this.transfers.resume();
-        const connection = () => this.view.set('connectionStatus', navigator.onLine ? 'Rete disponibile' : 'Offline · lavoro sul database locale');
+        const connection = () => this.view.set('connectionStatus', navigator.onLine ? 'Network available' : 'Offline · working on the local database');
         connection();
         for (const event of ['online','offline']) window.addEventListener(event, connection, {signal:this.page.abort.signal});
-        window.offlineReady.then(() => this.view.set('offlineStatus','App pronta per la riapertura senza rete: pagina, worker e SQLite WASM salvati.'))
-            .catch(error => this.view.set('offlineStatus', `Cache offline non disponibile: ${error.message}`));
+        window.offlineReady.then(() => this.view.set('offlineStatus','App ready to reopen without network: page, worker and SQLite WASM cached.'))
+            .catch(error => this.view.set('offlineStatus', `Offline cache not available: ${error.message}`));
         this.view.set('ready', true);
     }
     saveDraft() {
@@ -82,7 +82,7 @@ export class Logic {
     }
     editModel() {
         this.saveDraft(); this.db?.invalidate(); this.queries?.invalidate();
-        this.view.set('status', 'Modello modificato: genera il JSON per aggiornare il confronto.');
+        this.view.set('status', 'Model changed: generate the JSON to refresh the comparison.');
         this.view.set('statusClass', 'changed');
         this.view.set('noJSON', true); // Do not download a stale projection.
     }
@@ -99,20 +99,20 @@ export class Logic {
             this.view.set('modelJSON', JSON.stringify(full, null, 2));
             const modelDelta = expectedSource ? diff(full, expectedSource) : [];
             this.view.set('modelStatus', expectedSource
-                ? modelDelta.length ? `${modelDelta.length} differenze nel source TYTX` : 'Source TYTX identico a Python'
-                : 'Source TYTX JS · confronto migrate disponibile');
+                ? modelDelta.length ? `${modelDelta.length} differences in the TYTX source` : 'TYTX source identical to Python'
+                : 'JS TYTX source · migration comparison available');
             this.view.set('json', JSON.stringify(structure, null, 2));
             this.showOutput();
             const schemas = Object.values(structure.root.schemas), tables = schemas.flatMap(s => Object.values(s.tables));
             const delta = diff(structure, examples[key].expected);
-            this.view.set('status', `${schemas.length} ${schemas.length === 1 ? 'schema' : 'schemi'} · ${tables.length} tabelle · ${tables.reduce((n, t) => n + Object.keys(t.columns).length, 0)} colonne fisiche · ${!delta.length ? 'JSON identico al riferimento Python dell’esempio' : `${delta.length} differenze rispetto al riferimento Python dell’esempio originale`}`);
+            this.view.set('status', `${schemas.length} ${schemas.length === 1 ? 'schema' : 'schemas'} · ${tables.length} tables · ${tables.reduce((n, t) => n + Object.keys(t.columns).length, 0)} physical columns · ${!delta.length ? 'JSON identical to the Python reference of the example' : `${delta.length} differences from the Python reference of the original example`}`);
             this.view.set('statusClass', delta.length ? 'changed' : '');
             this.view.set('noDifferences', !delta.length);
-            this.view.set('differences', delta.slice(0, 20).join('\n\n') + (delta.length > 20 ? `\n\n… altre ${delta.length - 20} differenze` : ''));
+            this.view.set('differences', delta.slice(0, 20).join('\n\n') + (delta.length > 20 ? `\n\n… ${delta.length - 20} more differences` : ''));
             this.view.set('noJSON', false);
         } catch (error) {
             this.view.set('json', ''); this.showOutput();
-            this.view.set('modelJSON', ''); this.view.set('modelStatus', 'Modello non valido');
+            this.view.set('modelJSON', ''); this.view.set('modelStatus', 'Invalid model');
             this.view.set('status', error.message); this.view.set('statusClass', 'error');
             this.view.set('noDifferences', true); this.view.set('noJSON', true);
         }
@@ -129,18 +129,18 @@ export class Logic {
     database(node, {command}) { return this.db.run(command); }
     selectQuery() { this.queries.load(); }
     editQuery() {
-        this.view.set('queryStatus', 'Richiesta modificata: ricompila per confrontare il SQL.');
+        this.view.set('queryStatus', 'Request changed: recompile to compare the SQL.');
     }
     compileQuery() { this.queries.preview(); }
     executeQuery() { return this.queries.execute(false); }
     selectImportFile(node, event) {
         this.selectedImportFile = event.target.files?.[0] ?? null;
-        this.view.set('importFileName', this.selectedImportFile?.name ?? 'Nessun file selezionato');
+        this.view.set('importFileName', this.selectedImportFile?.name ?? 'No file selected');
     }
     importFile() { return this.queries.importFile(this.selectedImportFile); }
     selectTransferFile(node, event) {
         this.selectedTransferFile = event.target.files?.[0] ?? null;
-        this.view.set('transferFileName', this.selectedTransferFile?.name ?? 'Nessun file selezionato');
+        this.view.set('transferFileName', this.selectedTransferFile?.name ?? 'No file selected');
     }
     editTransfer() { return this.transfers.edit(); }
     resumeTransfer() { return this.transfers.resume(); }

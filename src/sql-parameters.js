@@ -11,10 +11,10 @@ export function prepareParameters(sql, values = {}, environment = {}) {
     }
     for (const [name, value] of Object.entries(params)) {
         if (Array.isArray(value)) {
-            if (!/^[A-Za-z_]\w*$/.test(name)) throw new Error('Nome del parametro collezione non valido');
+            if (!/^[A-Za-z_]\w*$/.test(name)) throw new Error('Invalid collection parameter name');
             const slots = value.map((item, i) => {
                 const key = `${name}${i}`;
-                if (Object.hasOwn(params, key)) throw new Error(`Collisione nei parametri espansi: ${key}`);
+                if (Object.hasOwn(params, key)) throw new Error(`Collision among expanded parameters: ${key}`);
                 params[key] = scalar(item);
                 return `:${key}`;
             });

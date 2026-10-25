@@ -9,7 +9,7 @@ export async function seedDemo(db) {
     await db.execute('BEGIN IMMEDIATE');
     try {
         await db.execute('INSERT INTO crm_customer (id,name) VALUES (?,?) ON CONFLICT(id) DO NOTHING',
-            ['demo-customer', 'Cliente di prova']);
+            ['demo-customer', 'Sample customer']);
         await db.execute('INSERT INTO sales_invoice (id,customer_id,amount) VALUES (?,?,?) ON CONFLICT(id) DO NOTHING',
             ['demo-invoice', 'demo-customer', 42.5]);
         await db.execute('COMMIT');
@@ -22,40 +22,40 @@ export async function browserChecks() {
     let db = await openBrowserSQLite(id);
     try {
         const v1 = defineModel(browserSqlite).toMigration(), v2 = defineModel(browserSqliteV2).toMigration();
-        check(equal(v1, oracle.v1.desired) && equal(v2, oracle.v2.desired), 'Modelli diversi da Python');
-        passed.push('Modelli v1/v2 identici a Python');
+        check(equal(v1, oracle.v1.desired) && equal(v2, oracle.v2.desired), 'Models differ from Python');
+        passed.push('v1/v2 models identical to Python');
         const first = await migrateSQLite(db, v1);
-        check(equal(first.current, oracle.v1.actual), 'Catalogo v1 diverso da Python');
-        passed.push('Creazione SQLite e catalogo v1 identici a Python');
+        check(equal(first.current, oracle.v1.actual), 'v1 catalog differs from Python');
+        passed.push('SQLite creation and v1 catalog identical to Python');
         await seedDemo(db);
         const failing = {...db, execute: async (sql, params) => {
-            if (sql.includes('CREATE INDEX')) throw new Error('errore simulato');
+            if (sql.includes('CREATE INDEX')) throw new Error('simulated error');
             await db.execute(sql, params);
         }};
         let rolledBack = false;
-        try { await migrateSQLite(failing, v2); } catch (e) { rolledBack = e.message === 'errore simulato'; }
-        check(rolledBack && equal(await readSQLite(db), oracle.v1.actual), 'Rollback DDL fallito');
-        passed.push('Errore durante DDL: rollback completo, nessuna colonna parziale');
+        try { await migrateSQLite(failing, v2); } catch (e) { rolledBack = e.message === 'simulated error'; }
+        check(rolledBack && equal(await readSQLite(db), oracle.v1.actual), 'DDL rollback failed');
+        passed.push('Error during DDL: complete rollback, no partial column');
         const migrated = await migrateSQLite(db, v2);
-        check(equal(migrated.current, oracle.v2.actual), 'Catalogo v2 diverso da Python');
-        check((await db.query('SELECT name FROM crm_customer'))[0].name === 'Cliente di prova', 'Dati persi');
-        passed.push('Migrazione v2: colonna e indice aggiunti, dati preservati');
+        check(equal(migrated.current, oracle.v2.actual), 'v2 catalog differs from Python');
+        check((await db.query('SELECT name FROM crm_customer'))[0].name === 'Sample customer', 'Data lost');
+        passed.push('v2 migration: column and index added, data kept');
         let rejected = false;
         try { await db.execute("INSERT INTO sales_invoice(id,customer_id) VALUES ('bad','missing')"); }
         catch { rejected = true; }
-        check(rejected, 'Foreign key non applicata');
-        passed.push('Vincoli foreign key applicati dal motore');
+        check(rejected, 'Foreign key not enforced');
+        passed.push('Foreign key constraints enforced by the engine');
         const blocked = structuredClone(v2);
         blocked.root.schemas.main.tables.sales_invoice.columns.amount.attributes.dtype = 'T';
         delete blocked.root.schemas.main.tables.sales_invoice.columns.amount.attributes.size;
-        check((await planSQLite(db, blocked)).blocked.length > 0, 'Modifica incompatibile non bloccata');
-        passed.push('Modifiche incompatibili rilevate prima dell’esecuzione');
+        check((await planSQLite(db, blocked)).blocked.length > 0, 'Incompatible change not blocked');
+        passed.push('Incompatible changes detected before execution');
         await db.close();
         db = await openBrowserSQLite(id);
-        check(equal(await readSQLite(db), oracle.v2.actual), 'Schema non persistito');
-        check((await db.query('SELECT amount FROM sales_invoice'))[0].amount === 42.5, 'Dati non persistiti');
-        check((await migrateSQLite(db, v2)).executed.length === 0, 'Migrazione non idempotente');
-        passed.push('Nuova connessione WASM: schema e dati persistiti su IndexedDB, diff vuoto');
+        check(equal(await readSQLite(db), oracle.v2.actual), 'Schema not persisted');
+        check((await db.query('SELECT amount FROM sales_invoice'))[0].amount === 42.5, 'Data not persisted');
+        check((await migrateSQLite(db, v2)).executed.length === 0, 'Migration not idempotent');
+        passed.push('New WASM connection: schema and data persisted in IndexedDB, empty diff');
         return passed;
     } finally {
         await db.close();
@@ -63,7 +63,7 @@ export async function browserChecks() {
             const request = indexedDB.deleteDatabase(id);
             request.onsuccess = resolve;
             request.onerror = () => reject(request.error);
-            request.onblocked = () => reject(new Error('Pulizia database di test bloccata'));
+            request.onblocked = () => reject(new Error('Test database cleanup blocked'));
         });
     }
 }

@@ -10,20 +10,20 @@ export async function readChecks() {
     const model = defineModel(readFormulas);
     let db = await openBrowserSQLite(id);
     try {
-        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Modello letture diverso da Python');
+        if (!equal(sourceRows(model.toTytx()), sourceRows(oracle.source)) || !equal(model.toMigration(), oracle.desired)) throw new Error('Read model differs from Python');
         await migrateSQLite(db, model.toMigration());
-        checks.push('Modello letture e JSON migrate identici alla ricetta Python indipendente');
+        checks.push('Read model and migration JSON identical to the independent Python recipe');
         const query = model.queries(db);
         for (const c of oracle.cases) {
-            if (!equal(query.compile(c.request), c.compiled)) throw new Error(`SQL/parametri letture diversi: ${c.name}`);
-            if (!equal(await query.execute(c.request), c.rows)) throw new Error(`Risultati letture diversi: ${c.name}`);
+            if (!equal(query.compile(c.request), c.compiled)) throw new Error(`Read SQL/parameters differ: ${c.name}`);
+            if (!equal(await query.execute(c.request), c.rows)) throw new Error(`Read results differ: ${c.name}`);
         }
-        checks.push(`${oracle.cases.length} casi lettura: SQL, parametri e risultati Python identici su WASM (var_*, #THIS, #ENV, chiavi composte)`);
+        checks.push(`${oracle.cases.length} read cases: SQL, parameters and Python results identical on WASM (var_*, #THIS, #ENV, composite keys)`);
         await db.close();
         db = await openBrowserSQLite(id);
         for (const c of oracle.cases.filter(c => c.request.operation === 'select'))
-            if (!equal(await model.queries(db).execute(c.request), c.rows)) throw new Error(`Rilettura formule diversa: ${c.name}`);
-        checks.push('Riapertura IndexedDB: tutte le letture calcolate e le chiavi composte identiche a Python');
+            if (!equal(await model.queries(db).execute(c.request), c.rows)) throw new Error(`Formula reread differs: ${c.name}`);
+        checks.push('IndexedDB reopen: every computed read and composite key identical to Python');
         return checks;
     } finally {
         await db.close();
@@ -31,7 +31,7 @@ export async function readChecks() {
             const request = indexedDB.deleteDatabase(id);
             request.onsuccess = resolve;
             request.onerror = () => reject(request.error);
-            request.onblocked = () => reject(new Error('Pulizia database letture bloccata'));
+            request.onblocked = () => reject(new Error('Read database cleanup blocked'));
         });
     }
 }

@@ -32,11 +32,11 @@ test('SQLite models and live catalog equal independent Python migrations', async
             assert.deepEqual(result.current, oracle[version].actual);
             assert.deepEqual((await migrateSQLite(db, desired)).executed, []);
             if (version === 'v1') {
-                await db.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ['demo-customer', 'Cliente di prova']);
+                await db.execute('INSERT INTO crm_customer (id,name) VALUES (?,?)', ['demo-customer', 'Sample customer']);
                 await db.execute('INSERT INTO sales_invoice (id,customer_id,amount) VALUES (?,?,?)', ['demo-invoice', 'demo-customer', 42.5]);
             }
         }
-        assert.equal((await db.query('SELECT name FROM crm_customer'))[0].name, 'Cliente di prova');
+        assert.equal((await db.query('SELECT name FROM crm_customer'))[0].name, 'Sample customer');
         assert.equal((await db.query('SELECT amount FROM sales_invoice'))[0].amount, 42.5);
         await assert.rejects(db.execute("INSERT INTO sales_invoice (id,customer_id) VALUES ('bad','missing')"), /FOREIGN KEY/);
     } finally { db.close(); }
@@ -49,9 +49,9 @@ test('unsupported and destructive changes block the entire migration', async () 
         const invalid = structuredClone(oracle.v2.desired);
         invalid.root.schemas.main.tables.sales_invoice.columns.amount.attributes.dtype = 'T';
         delete invalid.root.schemas.main.tables.sales_invoice.columns.amount.attributes.size;
-        await assert.rejects(migrateSQLite(db, invalid), /non supportata/);
+        await assert.rejects(migrateSQLite(db, invalid), /not supported/);
         assert.deepEqual(await readSQLite(db), before);
-        assert.throws(() => diffSQLite({root: {schemas: {public: {tables: {}}}}}, before), /solo schema main/);
+        assert.throws(() => diffSQLite({root: {schemas: {public: {tables: {}}}}}, before), /main schema only/);
     } finally { db.close(); }
 });
 test('execution failure rolls back previous DDL in the same migration', async () => {
@@ -108,6 +108,6 @@ test('catalog features not represented by the PoC fail explicitly', async () => 
     const db = database();
     try {
         await db.execute('CREATE TABLE special (id integer, amount numeric CHECK(amount>0))');
-        await assert.rejects(readSQLite(db), /fuori perimetro/);
+        await assert.rejects(readSQLite(db), /unsupported/);
     } finally { db.close(); }
 });

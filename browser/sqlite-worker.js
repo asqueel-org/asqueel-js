@@ -51,7 +51,7 @@ async function dispatch(type, desired) {
         if (type === 'apply') return {...await migrateSQLite(db, desired), ...await inspect()};
         if (type === 'seed') { await seedDemo(db); return inspect(); }
         if (type === 'reopen') { await db.close(); db = null; db = await openBrowserSQLite(DATABASE); return inspect(); }
-        throw new Error(`Operazione sconosciuta: ${type}`);
+        throw new Error(`Unknown operation: ${type}`);
     });
 }
 self.onmessage = ({data: {id, type, desired}}) => {

@@ -15,7 +15,7 @@ function metadata(name, value) {
             const store = tx.objectStore('workspace');
             const request = value ? store.put(value, 'active') : store.get('active');
             tx.oncomplete = () => { db.close(); resolve(request.result); };
-            tx.onabort = () => { db.close(); reject(tx.error || new Error('Salvataggio workspace fallito')); };
+            tx.onabort = () => { db.close(); reject(tx.error || new Error('Workspace save failed')); };
         };
     });
 }
@@ -43,7 +43,7 @@ export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite,
         const saved = await metadata(workspaceName);
         if (!saved) {
             if (type === 'transfer-resume') return null;
-            throw new Error('Carica prima uno snapshot Python');
+            throw new Error('Load a Python snapshot first');
         }
         let builder = readTransfer({...saved, data:{}});
         const db = await openSQLite(saved.databaseName);
@@ -56,13 +56,13 @@ export function workspaceRequest(type, desired, {openSQLite = openBrowserSQLite,
             if (type === 'transfer-export') return await exportTransfer(db, builder);
             let compiled, records, actionResult;
             if (type === 'workspace-action') {
-                if (!action) throw new Error('Azioni applicative non configurate');
+                if (!action) throw new Error('Application actions not configured');
                 actionResult = await action(db, builder, desired);
             }
             if (type === 'transfer-edit') {
                 const request = desired.request;
                 if (!['insert', 'update', 'delete', 'select'].includes(request.operation))
-                    throw new Error('Operazione ammessa: insert, update, delete, select');
+                    throw new Error('Allowed operations: insert, update, delete, select');
                 const compiler = builder.queries(db);
                 compiled = compiler.compile(request);
                 records = await compiler.execute(request);

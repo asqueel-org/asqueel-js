@@ -29,5 +29,5 @@ test('computed reads execute with exactly the Python SQLite results', async () =
 });
 test('missing environment and non-portable environment values fail explicitly', () => {
     assert.throws(() => model.queries().compile({operation: 'select', table: 'read.item', columns: '$label'}), /#ENV/);
-    assert.throws(() => model.queries().compile({operation: 'select', table: 'read.item', columns: '$env_value', environment: {value: {a: 1}}}), /non portabile/);
+    assert.throws(() => model.queries().compile({operation: 'select', table: 'read.item', columns: '$env_value', environment: {value: {a: 1}}}), /not portable/);
 });

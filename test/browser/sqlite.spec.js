@@ -13,12 +13,12 @@ test('sys_fields and hooks execute like Python, roll back and survive IndexedDB 
     page.on('pageerror', error => errors.push(error.message));
     await leaf(page, 'queries');
     await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Verifica sys_fields e hook', exact: true}).click();
-    await expect(page.locator('#query-status')).toContainText(`${hooksOracle.cases.length} cicli sys_fields e hook identici a Python`, {timeout: 90000});
+    await page.getByRole('button', {name: 'Check sysFields and hooks', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${hooksOracle.cases.length} sysFields and hook cycles identical to Python`, {timeout: 90000});
     await expect(page.locator('#hooks-checks')).toContainText('caught_hook_failure_still_rolls_back');
     const actual = JSON.parse(await page.locator('#hooks-sample').textContent());
     expect(actual).toEqual(hooksOracle.cases.find(c => c.name === 'insert_order_and_nested_audit').expected);
-    await page.getByText('Esempio verificato: record, eventi e scritture degli hook', {exact: true}).click();
+    await page.getByText('Verified example: records, events and hook writes', {exact: true}).click();
     await page.locator('#hooks-sample').scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/gramlot-hooks.png'});
     expect(errors).toEqual([]);
@@ -44,18 +44,18 @@ for (const [command, expected] of [['checks', 7], ['query-checks', 27], ['compos
 
 test('playground exposes the Python composition checks', async ({page}) => {
     await leaf(page);
-    await page.getByRole('button', {name: 'Verifica composizione con Python'}).click();
-    await expect(page.locator('#db-status')).toContainText('verifiche browser superate');
-    await expect(page.locator('#db-checks-result')).toContainText('Modello composto migrato su WASM/IndexedDB');
-    await expect(page.locator('#db-checks-result')).toContainText('Colgroups e formule: modello Python');
-    await expect(page.locator('#db-checks-result')).toContainText('VirtualRelation: modello Python');
+    await page.getByRole('button', {name: 'Check composition with Python'}).click();
+    await expect(page.locator('#db-status')).toContainText('browser checks passed');
+    await expect(page.locator('#db-checks-result')).toContainText('Composed model migrated on WASM/IndexedDB');
+    await expect(page.locator('#db-checks-result')).toContainText('Column groups and formulas: Python model');
+    await expect(page.locator('#db-checks-result')).toContainText('VirtualRelation: Python model');
 });
 
 test('virtual relation example renders the exact Python migration JSON', async ({page}) => {
     await leaf(page);
     await page.locator('#example').selectOption('virtual-relations');
-    await expect(page.locator('#status')).toContainText('JSON identico al riferimento Python');
-    await expect(page.locator('#status')).toContainText('2 tabelle');
+    await expect(page.locator('#status')).toContainText('JSON identical to the Python reference');
+    await expect(page.locator('#status')).toContainText('2 tables');
     const expected = examples['virtual-relations'].migration;
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
 });
@@ -63,15 +63,15 @@ test('virtual relation example renders the exact Python migration JSON', async (
 test('group/formula example renders the exact Python migration JSON', async ({page}) => {
     await leaf(page);
     await page.locator('#example').selectOption('groups');
-    await expect(page.locator('#status')).toContainText('JSON identico al riferimento Python');
-    await expect(page.locator('#status')).toContainText('3 colonne fisiche');
+    await expect(page.locator('#status')).toContainText('JSON identical to the Python reference');
+    await expect(page.locator('#status')).toContainText('3 physical columns');
     const expected = examples.groups.migration;
     expect(JSON.parse(await page.locator('#result').textContent())).toEqual(expected);
 });
 
 test('browser exposes and compares the composed source in TYTX',async({page})=>{
     await leaf(page);await page.locator('#example').selectOption('application');
-    await expect(page.locator('#model-status')).toHaveText('Source TYTX identico a Python');
+    await expect(page.locator('#model-status')).toHaveText('TYTX source identical to Python');
     expect(JSON.parse(await page.locator('#composed-source').textContent())).toEqual(sourceRows(examples.application.source));
     await page.screenshot({path: 'output/gramlot-model.png'});
 });
@@ -82,7 +82,7 @@ async function leaf(page, section = 'models') {
 
 async function ready(page, section) {
     await expect(page.locator('[data-gramlot-page]')).toHaveAttribute('data-gramlot-page', section);
-    await expect(page.locator('#db-status')).toContainText('SQLite aperto');
+    await expect(page.locator('#db-status')).toContainText('SQLite open');
     await expect(page.locator('#example')).toBeEnabled();
     expect(await page.evaluate(() => window.gramlot.data.getItem('section'))).toBe(section);
 }
@@ -96,7 +96,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await page.locator('#model').getByRole('textbox').fill(source);
     await expect(page.locator('#download').getByRole('button')).toBeDisabled();
     await page.locator('#render').click();
-    await expect(page.locator('#status')).toContainText('1 tabelle');
+    await expect(page.locator('#status')).toContainText('1 tables');
     const expected = JSON.parse(await page.locator('#result').textContent());
     expect(expected.root.entity_name).toBe('draft');
     const downloading = page.waitForEvent('download');
@@ -107,7 +107,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     expect(JSON.parse(await readFile(await downloaded.path(), 'utf8'))).toEqual(expected);
     await leaf(page, 'sqlite');
     await ready(page, 'sqlite');
-    await page.getByRole('button', {name: 'Calcola piano SQL'}).click();
+    await page.getByRole('button', {name: 'Compute SQL plan'}).click();
     await expect(page.locator('#sql-plan')).toContainText('app_item');
     await leaf(page, 'models');
     await ready(page, 'models');
@@ -119,7 +119,7 @@ test('Gramlot pages preserve an edited model across navigation and export its mi
     await expect(page.locator('#download').getByRole('button')).toBeDisabled();
     await expect(page.locator('#composed-source')).toBeEmpty();
     await page.locator('#restore').click();
-    await expect(page.locator('#status')).toContainText('JSON identico');
+    await expect(page.locator('#status')).toContainText('JSON identical');
     expect(errors).toEqual([]);
 });
 
@@ -128,43 +128,43 @@ test('Gramlot query actions persist real data across pages and reload', async ({
     page.on('pageerror', error => errors.push(error.message));
     await leaf(page, 'queries');
     await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Applica migrazione'}).click();
-    await expect(page.locator('#db-status')).toContainText('commit completato');
+    await page.getByRole('button', {name: 'Apply migration'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completed');
     await page.locator('#query-run').click();
-    await expect(page.locator('#query-status')).toContainText('INSERT completato e salvato');
+    await expect(page.locator('#query-status')).toContainText('INSERT completed and saved');
     await page.locator('#query-example').selectOption('people');
     await page.locator('#query-run').click();
-    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    await expect(page.locator('#query-status')).toContainText('1 rows read');
     const records = JSON.parse(await page.locator('#query-rows').textContent());
     expect(records).toHaveLength(1);
     await leaf(page, 'sqlite');
     await ready(page, 'sqlite');
-    await expect(page.locator('#db-rows')).toContainText('query_people: 1 riga');
+    await expect(page.locator('#db-rows')).toContainText('query_people: 1 row');
     await leaf(page, 'queries');
     await ready(page, 'queries');
     await page.reload();
     await ready(page, 'queries');
     await page.locator('#query-example').selectOption('people');
     await page.locator('#query-run').click();
-    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    await expect(page.locator('#query-status')).toContainText('1 rows read');
     expect(JSON.parse(await page.locator('#query-rows').textContent())).toEqual(records);
     await page.locator('#query-test').click();
-    await expect(page.locator('#query-status')).toContainText('352 query confrontate con Python', {timeout: 30000});
-    await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, chiavi composte');
-    await expect(page.locator('#query-checks')).toContainText('tutte le letture calcolate e le chiavi composte identiche a Python');
-    await expect(page.locator('#query-checks')).toContainText('48 sottoquery/aggregazioni');
-    await expect(page.locator('#query-checks')).toContainText('17 query rifiutate');
-    await expect(page.locator('#query-checks')).toContainText('sottoquery e aggregazioni ancora identiche a Python');
-    await expect(page.locator('#query-checks')).toContainText('33 casi callback');
-    await expect(page.locator('#query-checks')).toContainText('23 callback non valide');
-    await expect(page.locator('#query-checks')).toContainText('callback dinamiche ancora identiche a Python');
-    await expect(page.locator('#query-checks')).toContainText('46 casi #TEMPLATE/#IN_RANGE');
-    await expect(page.locator('#query-checks')).toContainText('18 macro non valide');
-    await expect(page.locator('#query-checks')).toContainText('#TEMPLATE e #IN_RANGE ancora identiche a Python');
-    await expect(page.locator('#query-checks')).toContainText('131 casi #PERIOD');
-    await expect(page.locator('#query-checks')).toContainText('27 periodi non validi');
-    await expect(page.locator('#query-checks')).toContainText('#PERIOD ancora identico a Python');
-    await page.getByText('Verifiche query nel browser', {exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText('352 queries compared with Python', {timeout: 30000});
+    await expect(page.locator('#query-checks')).toContainText('var_*, #THIS, #ENV, composite keys');
+    await expect(page.locator('#query-checks')).toContainText('every computed read and composite key identical to Python');
+    await expect(page.locator('#query-checks')).toContainText('48 subqueries/aggregations');
+    await expect(page.locator('#query-checks')).toContainText('17 queries rejected');
+    await expect(page.locator('#query-checks')).toContainText('subqueries and aggregations still identical to Python');
+    await expect(page.locator('#query-checks')).toContainText('33 callback cases');
+    await expect(page.locator('#query-checks')).toContainText('23 invalid callbacks');
+    await expect(page.locator('#query-checks')).toContainText('dynamic callbacks still identical to Python');
+    await expect(page.locator('#query-checks')).toContainText('46 #TEMPLATE/#IN_RANGE cases');
+    await expect(page.locator('#query-checks')).toContainText('18 invalid macros');
+    await expect(page.locator('#query-checks')).toContainText('#TEMPLATE and #IN_RANGE still identical to Python');
+    await expect(page.locator('#query-checks')).toContainText('131 #PERIOD cases');
+    await expect(page.locator('#query-checks')).toContainText('27 invalid periods');
+    await expect(page.locator('#query-checks')).toContainText('#PERIOD still identical to Python');
+    await page.getByText('Query checks in the browser', {exact: true}).click();
     await page.locator('#query-checks').scrollIntoViewIfNeeded();
     await page.locator('#query-checks').evaluate(element => { element.scrollTop = element.scrollHeight; });
     await page.screenshot({path: 'output/gramlot-period.png'});
@@ -190,12 +190,12 @@ test('CodeMirror binds edits, undo and JSON queries without external assets', as
     const editor = page.locator('#model').getByRole('textbox');
     await expect(page.locator('#model .cm-lineNumbers')).toBeVisible();
     const original = await page.evaluate(() => window.gramlot.data.getItem('source'));
-    await editor.fill('// Modello modificato\n' + original);
-    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Modello modificato\n' + original);
+    await editor.fill('// Changed model\n' + original);
+    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Changed model\n' + original);
     await editor.press('ControlOrMeta+z');
     await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe(original);
     await editor.press('ControlOrMeta+Shift+z');
-    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Modello modificato\n' + original);
+    await expect.poll(() => page.evaluate(() => window.gramlot.data.getItem('source'))).toBe('// Changed model\n' + original);
     // The same busy Data used by SQLite commands makes the real editor non-editable.
     await page.evaluate(() => window.gramlot.data.setItem('busy', true));
     await expect(editor).toHaveAttribute('contenteditable', 'false');
@@ -206,7 +206,7 @@ test('CodeMirror binds edits, undo and JSON queries without external assets', as
     const request = JSON.parse(await page.evaluate(() => window.gramlot.data.getItem('queryInput')));
     request.values.id = 99;
     await page.locator('#query-input').getByRole('textbox').fill(JSON.stringify(request, null, 2));
-    await page.getByRole('button', {name: 'Compila query', exact: true}).click();
+    await page.getByRole('button', {name: 'Compile query', exact: true}).click();
     await expect(page.locator('#query-params')).toContainText('99');
     await page.screenshot({path: 'output/gramlot-queries.png'});
     expect(errors).toEqual([]);
@@ -219,12 +219,12 @@ test('hierarchies and counters match Python on real browser SQLite and reopen In
     page.on('pageerror', error => errors.push(error.message));
     await leaf(page, 'queries');
     await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Verifica gerarchie e contatori', exact: true}).click();
-    await expect(page.locator('#query-status')).toContainText(`${behaviorsOracle.cases.length} cicli gerarchie e contatori identici a Python`, {timeout: 150000});
+    await page.getByRole('button', {name: 'Check hierarchies and counters', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${behaviorsOracle.cases.length} hierarchy and counter cycles identical to Python`, {timeout: 150000});
     await expect(page.locator('#behaviors-checks')).toContainText('relative_index_rollback');
     expect(JSON.parse(await page.locator('#behaviors-sample').textContent())).toEqual(
         behaviorsOracle.cases.find(c => c.name === 'move_subtree_last_sibling').expected);
-    await page.getByText('Spostamento verificato: sottoalbero, posizioni e SQL', {exact: true}).click();
+    await page.getByText('Verified move: subtree, positions and SQL', {exact: true}).click();
     await page.locator('#behaviors-sample').scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/gramlot-behaviors.png'});
     expect(errors).toEqual([]);
@@ -235,12 +235,12 @@ test('application onUpdate cascades match Python in browser SQLite with rollback
     page.on('pageerror', error => errors.push(error.message));
     await leaf(page, 'queries');
     await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Verifica cascade onUpdate', exact: true}).click();
-    await expect(page.locator('#query-status')).toContainText(`${cascadesOracle.cases.length} cicli cascade onUpdate identici a Python`, {timeout: 90000});
+    await page.getByRole('button', {name: 'Check onUpdate cascades', exact: true}).click();
+    await expect(page.locator('#query-status')).toContainText(`${cascadesOracle.cases.length} onUpdate cascade cycles identical to Python`, {timeout: 90000});
     await expect(page.locator('#cascades-checks')).toContainText('leaf_hook_failure_rollback');
     expect(JSON.parse(await page.locator('#cascades-sample').textContent())).toEqual(
         cascadesOracle.cases.find(c => c.name === 'cascade_chain_and_hooks').expected);
-    await page.getByText('Cascade verificata: figli, hook e SQL', {exact: true}).click();
+    await page.getByText('Verified cascade: children, hooks and SQL', {exact: true}).click();
     await page.locator('#cascades-sample').scrollIntoViewIfNeeded();
     await page.screenshot({path: 'output/gramlot-cascades.png'});
     expect(errors).toEqual([]);
@@ -254,11 +254,11 @@ test('Gramlot PERIOD query preview and ordinary worker execution use the same da
     await ready(page, 'models');
     await page.locator('#model').getByRole('textbox').fill(`(${queryPeriods.toString()})(root);`);
     await page.locator('#render').click();
-    await expect(page.locator('#status')).toContainText('2 tabelle');
+    await expect(page.locator('#status')).toContainText('2 tables');
     await leaf(page, 'queries');
     await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Applica migrazione'}).click();
-    await expect(page.locator('#db-status')).toContainText('commit completato');
+    await page.getByRole('button', {name: 'Apply migration'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completed');
     const query = periodOracle.cases.find(c => c.request.sqlparams?.period === 'oggi');
     const event = periodOracle.cases.find(c => c.request.operation === 'insert' && c.request.values.issued === '2026-10-21');
     const owner = periodOracle.cases.find(c => c.request.table === 'period.owner' && c.request.values?.id === event.request.values.owner_id);
@@ -282,16 +282,16 @@ for (const [format, content] of [
     const errors = [];
     page.on('pageerror', error => errors.push(error.message));
     await leaf(page, 'queries'); await ready(page, 'queries');
-    await page.getByRole('button', {name: 'Applica migrazione'}).click();
-    await expect(page.locator('#db-status')).toContainText('commit completato');
+    await page.getByRole('button', {name: 'Apply migration'}).click();
+    await expect(page.locator('#db-status')).toContainText('commit completed');
     await page.locator('#import-file').setInputFiles({name: `records.${format}`, mimeType: 'text/plain', buffer: Buffer.from(content)});
     await expect(page.locator('#import-file-name')).toHaveText(`records.${format}`);
     await page.locator('#import-run').click();
-    await expect(page.locator('#import-status')).toContainText('1 record importati e salvati');
+    await expect(page.locator('#import-status')).toContainText('1 records imported and saved');
     await page.reload(); await ready(page, 'queries');
     await page.locator('#query-example').selectOption('people');
     await page.locator('#query-run').click();
-    await expect(page.locator('#query-status')).toContainText('1 righe lette');
+    await expect(page.locator('#query-status')).toContainText('1 rows read');
     const rows = JSON.parse(await page.locator('#query-rows').textContent());
     expect(rows[0].id).toBe(81); expect(rows[0].name).toBe('Tea, green');
     expect(errors).toEqual([]);
@@ -300,9 +300,9 @@ for (const [format, content] of [
 test('Gramlot compares imports with Python, including rollback and IndexedDB reopening', async ({page}) => {
     await leaf(page, 'queries'); await ready(page, 'queries');
     await page.locator('#import-test').click();
-    await expect(page.locator('#import-status')).toContainText('49 import identici a Python', {timeout: 90000});
+    await expect(page.locator('#import-status')).toContainText('49 imports identical to Python', {timeout: 90000});
     await expect(page.locator('#import-checks')).toContainText('rollback_after_block');
-    await page.getByText('Verifiche import nel browser', {exact:true}).click();
+    await page.getByText('Import checks in the browser', {exact:true}).click();
     await page.locator('#import-checks').scrollIntoViewIfNeeded();
     await page.screenshot({path:'output/gramlot-imports.png'});
 });

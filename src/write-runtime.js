@@ -26,11 +26,11 @@ export function legacy22(milliseconds = Date.now(), bytes = crypto.getRandomValu
 function timestamp(value, utc) {
     if (typeof value === 'string') {
         if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d(?:\.\d{1,6})?(?:\+00:00)?$/.test(value))
-            throw new TypeError('clock: usare Date o un timestamp SQLite');
-        if (utc !== value.endsWith('+00:00')) throw new TypeError('clock: timezone non coerente con il campo');
+            throw new TypeError('clock: use a Date or an SQLite timestamp');
+        if (utc !== value.endsWith('+00:00')) throw new TypeError('clock: time zone inconsistent with the field');
         return value;
     }
-    if (!(value instanceof Date) || !Number.isFinite(value.getTime())) throw new TypeError('clock deve restituire una data valida');
+    if (!(value instanceof Date) || !Number.isFinite(value.getTime())) throw new TypeError('clock must return a valid date');
     const pad = (n, digits = 2) => String(n).padStart(digits, '0');
     const get = part => value[`get${utc ? 'UTC' : ''}${part}`]();
     const micro = get('Milliseconds') ? '.' + pad(get('Milliseconds'), 3) + '000' : '';
@@ -39,12 +39,12 @@ function timestamp(value, utc) {
 
 function capabilities(db, table, operation) {
     for (const [name] of table.options) if (enabled(table, name) && !['sysFields', 'hierarchical', 'counter', 'relidx'].includes(name))
-        throw new UnsupportedFeatureError(`${table.key}: option ${name} non ancora eseguita in JS`);
+        throw new UnsupportedFeatureError(`${table.key}: option ${name} is not executed by the write cycle`);
     for (const [name, col] of table.columns) {
         if (col.children.some(n => n.tag !== 'relation') || col.a.default_from != null)
-            throw new UnsupportedFeatureError(`${table.key}.${name}: comportamento non ancora eseguito`);
+            throw new UnsupportedFeatureError(`${table.key}.${name}: behavior not executed by the write cycle`);
         for (const event of events) if (col.a[event] && typeof col.a[event] !== 'string')
-            throw new UnsupportedFeatureError('I trigger di campo devono essere nomi registrati nel runtime');
+            throw new UnsupportedFeatureError('Field triggers must be names registered in the runtime');
     }
     checkRelatedCapabilities(db, table, operation);
 }
@@ -70,7 +70,7 @@ function checkChanges(table, values, old = null) {
 function recordKey(table, values) {
     if (own(values, table.a.pkey)) return values[table.a.pkey];
     const keys = keyColumns(table);
-    for (const key of keys) if (!own(values, key)) throw new Error(`Chiave mancante: ${key}`);
+    for (const key of keys) if (!own(values, key)) throw new Error(`Missing key: ${key}`);
     return keys.length === 1 ? values[keys[0]] : JSON.stringify(keys.map(k => values[k]));
 }
 
@@ -93,7 +93,7 @@ function hookContext(db, table) {
 async function hook(context, name, values, kwargs = {}, required = false) {
     const fn = context[name];
     if (fn == null && !required) return;
-    if (typeof fn !== 'function') throw new UnsupportedFeatureError(`${context.fullname}.${name}: hook non registrato`);
+    if (typeof fn !== 'function') throw new UnsupportedFeatureError(`${context.fullname}.${name}: hook not registered`);
     return await fn.call(context, values, kwargs);
 }
 async function fieldTriggers(db, table, event, values, kwargs = {}) {
@@ -105,7 +105,7 @@ async function fieldTriggers(db, table, event, values, kwargs = {}) {
         if (context[method]) await hook(context, method, values, {...kwargs, fldname: name, tblname: table.key}, true);
         else if (trigger === 'setTSNow') {
             const dtype = target.columns.get(name)?.a.dtype;
-            if (!dtype) throw new Error(`Campo timestamp non trovato: ${target.key}.${name}`);
+            if (!dtype) throw new Error(`Timestamp field not found: ${target.key}.${name}`);
             values[name] = timestamp((db.runtime.clock ?? (() => new Date()))({table: target.key, field: name, dtype}), dtype === 'DHZ');
         } else if (trigger === 'setCurrentUser') values[name] = db.environment().user ?? null;
         else if (!await behaviorTrigger(db, target, trigger, values, name, kwargs.old_record))

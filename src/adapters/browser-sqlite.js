@@ -6,7 +6,7 @@ import {IDBBatchAtomicVFS} from 'wa-sqlite/src/examples/IDBBatchAtomicVFS.js';
 /** Instantiate in a Worker. The caller serializes whole operations/transactions. */
 export async function openBrowserSQLite(idbName = 'asqueel-js-playground-v1', {wasmBinary} = {}) {
     if (!globalThis.indexedDB || !globalThis.navigator?.locks) {
-        throw new Error('Questo browser deve supportare IndexedDB e Web Locks.');
+        throw new Error('This browser must support IndexedDB and Web Locks.');
     }
     const module = await SQLiteESMFactory({
         // A single-file export supplies bytes directly and performs no WASM fetch.

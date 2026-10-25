@@ -1,16 +1,16 @@
 import {PlaygroundPage, databaseControls, detail} from './base.js';
 export class SQLitePage extends PlaygroundPage {
     static section = 'sqlite';
-    static title = 'Asqueel JS · Migrazioni SQLite · Gramlot';
+    static title = 'Asqueel JS · SQLite migrations · Gramlot';
     content(root) {
         const section = root.main({class: 'database single-panel'});
-        section.h2('Database nel browser');
+        section.h2('Database in the browser');
         const body = section.div({class: 'db-content'});
-        body.p('Calcola il piano, applicalo e passa alla versione 2: aggiunge email e il suo indice conservando i dati.');
+        body.p('Compute the plan, apply it and move to version 2: it adds email and its index keeping the data.');
         databaseControls(body, {seed: true, checks: true});
-        detail(body, 'Piano SQL / operazioni applicate', 'sqlPlan', 'sql-plan', true);
-        detail(body, 'Schema letto dal database', 'dbSchema', 'db-schema');
-        detail(body, 'Verifiche browser e confronto Python', 'dbChecks', 'db-checks-result');
-        body.p('Database locale di questo sito. Creazione e aggiunte compatibili; le modifiche non supportate vengono bloccate. I dati sopravvivono al reload. Cancellare i dati del sito li elimina.', {class: 'db-note'});
+        detail(body, 'SQL plan / applied operations', 'sqlPlan', 'sql-plan', true);
+        detail(body, 'Schema read from the database', 'dbSchema', 'db-schema');
+        detail(body, 'Browser checks and Python comparison', 'dbChecks', 'db-checks-result');
+        body.p('Local database of this site. Creation and compatible additions; unsupported changes are blocked. The data survives a reload. Clearing the site data deletes it.', {class: 'db-note'});
     }
 }

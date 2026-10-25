@@ -115,7 +115,7 @@ test("inactive partition compiles, invalid active policy and unported hooks fail
   );
   assert.doesNotThrow(() => policy.queries().compile({ operation: "select", table: "app.item" }));
   assert.throws(() => policy.queries().compile({ operation: "select", table: "app.item",
-    environment: {current_company: 'one'} }), /Colonna sconosciuta/);
+    environment: {current_company: 'one'} }), /Unknown column/);
   const hook = defineModel((r) =>
     r
       .db("x")
@@ -129,7 +129,7 @@ test("inactive partition compiles, invalid active policy and unported hooks fail
       hook
         .queries()
         .compile({ operation: "insert", table: "app.item", values: { id: 1 } }),
-    /scrittura non implementato/,
+    /write behavior not implemented/,
   );
   assert.throws(
     () =>

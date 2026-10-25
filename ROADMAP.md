@@ -1,120 +1,89 @@
-# Percorso verso Asqueel JS completo
+# Roadmap
 
-L'obiettivo iniziale è una piccola applicazione locale realmente utilizzabile
-senza rete. La copertura completa delle funzionalità Asqueel applicabili a
-SQLite si costruisce per incrementi verificabili. Questa roadmap non dichiara
-supportate funzionalità soltanto perché presenti nella grammatica.
+The first goal is a small local application that really works without a network.
+Coverage of the Asqueel features that apply to SQLite grows in verifiable steps.
+This roadmap never declares a feature supported only because the grammar contains it.
 
-## 0. Base autonoma
+## 0. Independent base
 
-- [x] Importare il PoC mantenendo grammatica e oracoli indipendenti Python.
-- [x] Separare gli entry point degli adapter browser, Node e Bun.
-- [x] Rendere riproducibile l'installazione con lockfile.
-- [x] Automatizzare i controlli SQLite reali in Chromium, oltre a Node/Bun.
-- [x] Documentare contratto adapter, limiti e metodo di verifica Python.
-- [x] Configurare CI per Node 22/24, Bun, Chromium e parità Python su revisioni fissate.
-      Gli esiti di ogni revisione sono consultabili nei workflow GitHub.
+- [x] Import the PoC keeping the grammar and independent Python oracles.
+- [x] Separate the browser, Node.js and Bun adapter entry points.
+- [x] Reproducible installation with a lockfile.
+- [x] Automated real SQLite checks in Chromium, besides Node.js and Bun.
+- [x] Document the adapter contract, the limits and the Python verification method.
+- [x] CI for Node.js 22/24, Bun, Chromium and Python parity on pinned revisions.
 
-## 1. Modello dichiarativo portabile · riferimento Python 0.7.0 · 84408eb
+## 1. Portable declarative model · Python 0.7.0 · `84408eb`
 
-- [x] Riallineare grammatica, esempi e verificatore al commit Python 84408eb.
-- [x] Nomi legacy delle opzioni, `relation(related_column)`, solo package, nessun `x_*`.
-- [x] Source della ricetta in TYTX (`SqlSourceBag`), caricabile da Python e da JS.
-- [x] Contributi ordinati, conflitti, copie, reset e composizione indipendente.
-- [x] Modello gerarchico JS, colonne fisiche/virtuali e metadati completi delle opzioni.
-- [x] Colgroups, relazioni dirette/inverse, alias e dichiarazioni virtualRelation.
-- [x] Validazione strutturale, tipi, riferimenti, indici e nomi fisici.
-- [x] Confronti di source composto e migrate con Python, Node, Bun e browser.
-- [x] Gerarchie collegate al master e nomi personalizzati dei contatori della 0.6.1.
-- [x] Ritirare `subtable`, opzioni `partition`/`tenant` e vecchi attributi come in Python.
+- [x] Grammar, examples and verifier aligned to Python commit `84408eb`.
+- [x] Legacy option names, `relation(related_column)`, packages only, no `x_*`.
+- [x] Recipe source in TYTX (`SqlSourceBag`), loadable from Python and JavaScript.
+- [x] Ordered contributions, conflicts, copies, resets and independent composition.
+- [x] Hierarchical model, physical and virtual columns, option metadata.
+- [x] Column groups, direct and inverse relations, aliases, virtualRelation declarations.
+- [x] Structural validation, types, references, indexes and physical names.
+- [x] Composed source and migration compared with Python on Node.js, Bun and the browser.
+- [x] Withdraw `subtable`, the `partition`/`tenant` options and old attributes, as Python.
 
-Il contratto e i limiti portabili sono in [model.md](docs/model.md). Classi Python,
-caricamento di package Python e callback richiedono equivalenti JS. L'esecuzione
-delle dichiarazioni sulle righe appartiene alla fase successiva.
+## 2. CRUD for small applications
 
-## 2. CRUD per piccole applicazioni
+- [x] UPDATE and DELETE with parameters, automatic RETURNING and selection by primary key.
+- [x] Single-record read, count and exists with defined semantics.
+- [x] Transaction API for atomic multi-write units; no implicit internal commits.
+- [ ] Identifiable errors for a missing record, a constraint and an unsupported feature.
+- [ ] A worker API usable by an application without the playground.
 
-- [x] UPDATE e DELETE con parametri, RETURNING automatico e selezione per chiave primaria.
-- [x] Lettura di un singolo record, count ed exists con semantica definita.
-- [x] API transazione per più scritture atomiche; niente commit impliciti interni
-      che impediscano un'unità di lavoro esterna.
-- [ ] Errori identificabili per record assente, vincolo e funzionalità non supportata.
-- [ ] API worker utilizzabile da un'app senza dipendere dal playground.
+## 3. Offline start and use
 
-Accettazione: creare, leggere, modificare ed eliminare record e relazioni;
-confrontare SQL, parametri e risultati con Python; provocare un errore a metà
-di una transazione e verificare che nessuna scrittura resti; rileggere dopo reload.
+- [x] Versioned cache of HTML, JavaScript, themes, worker and WASM in the playground.
+- [x] First start online, CRUD, Chromium restart without network with the same profile;
+      model and data recovery and return of the real snapshot to Python.
+- [x] A single HTML file exported by Gramlot, opened from `file://` with no first online start.
+- [ ] Coordinate asset updates with the version of the local schema.
+- [x] CSV/JSON/TYTX import through `sql_insert`, with Python parity and browser checks.
+- [x] Python → browser → Python snapshots: partial sources and TYTX data.
+- [ ] Explicit handling of quota errors during import, export and persistence.
+- [ ] Several open tabs and concurrent requests through the worker API.
+- [ ] Qualify Chromium, Firefox and WebKit; declare only verified browsers.
 
-## 3. Avvio e utilizzo offline
+## 4. Application behaviors
 
-- [x] Cache versionata di HTML, JavaScript, temi, worker e WASM con service worker nel playground.
-- [x] Primo avvio online, CRUD, chiusura e riavvio di Chromium senza rete con lo stesso profilo;
-  ripristino del modello/dati e ritorno dello snapshot reale a Python.
-- [x] HTML unico esportato da Gramlot, aperto da `file://` senza primo avvio online:
-  SQLite WASM incorporato, CRUD, riavvio Chromium e ritorno verificato in Python.
-- [ ] Coordinare aggiornamento degli asset e versione dello schema locale.
-- [x] Importazione CSV/JSON/TYTX tramite sql_insert, con parità Python e verifiche browser.
-- [x] Snapshot Python → browser → Python: SourceBag anche parziale e dati TYTX,
-  con confronto modello/migrate/catalogo/valori e ritorno reale del browser a Python.
-- [ ] Gestione esplicita degli errori di quota durante import/export e persistenza.
-- [ ] Verificare più schede aperte e richieste concorrenti attraverso l'API worker.
-- [ ] Verificare Chromium, Firefox e WebKit; dichiarare solo i browser verificati.
+- [ ] Codecs with declared semantics for dates, timestamps, decimals and JSON/Bag.
+- [x] Defaults and basic protections, respecting missing fields and NULL.
+- [x] `sysFields`: identifiers, timestamps and users, with injectable sources in tests.
+- [x] Before/after hooks and consistent rollback, also of nested writes.
+- [x] Hierarchies: paths, moves, inheritance, linked roots and deletion of descendants.
+- [x] `counter` per group and `relidx`, with rollback and IndexedDB checks.
+- [x] Application `onUpdate` cascades on physical columns, nested hooks, raise/ignore.
+- [x] Formula and alias columns, GROUP BY/HAVING/DISTINCT aggregations.
+- [x] Computed reads: local formula parameters, `#THIS`, `#ENV`, composite columns.
 
-Accettazione: test automatico con rete disabilitata dopo l'installazione;
-persistenza dopo chiusura e riapertura del browser con lo stesso profilo;
-aggiornamento di versione senza perdita dei dati. La persistenza IndexedDB da
-sola non soddisfa questo traguardo.
+## 5. SQLite schema evolution
 
-## 4. Comportamenti applicativi utili
+- [ ] Table rebuilds with data copy and verification.
+- [ ] Changes of defaults, types, constraints and indexes with clear preconditions.
+- [ ] Recoverable failed migrations, without partial changes.
+- [ ] Documented format versions and upgrade compatibility.
 
-- [ ] Codec con semantica dichiarata per date, timestamp, decimali e JSON/Bag.
-- [x] Default e protezioni basilari, rispettando campi mancanti e NULL.
-- [x] `sysFields`: identificatori, timestamp e utente, con fonti iniettabili nei test.
-- [x] Hook before/after e rollback coerente delle scritture, anche annidate.
-- [x] Gerarchie: percorsi, spostamenti, ereditarietà, radici collegate e cancellazione dei discendenti.
-- [x] `counter` per gruppo e `relidx`, con rollback e verifica IndexedDB.
-- [x] Cascade applicative `onUpdate` su colonne fisiche, hook annidati, raise/ignore e rollback.
-- [x] Colonne formula e alias semplici, aggregazioni GROUP BY/HAVING/DISTINCT.
-- [x] Letture calcolate: parametri locali delle formule, #THIS, #ENV da snapshot,
-      colonne composte e pkey composta aggiunta alla SELECT; confronto Python e browser.
+## 6. Towards full coverage
 
-Accettazione: stessa sequenza di eventi e stessi effetti del riferimento Python
-scelto; orologio, identità e generatore ID controllabili. Controllare il Python
-attuale prima di assumere ancora validi i limiti riportati dal PoC.
+- [ ] An inventory of every Python capability with its JavaScript status.
+- [x] Scalar/EXISTS subqueries, `subQueryColumn` and aggregations over inverse and virtual relations.
+- [x] Formula/env/subquery callbacks and dynamic virtual columns.
+- [x] `#TEMPLATE` and `#IN_RANGE`.
+- [x] `#PERIOD` through `@genrojs/toolbox`.
+- [ ] `#BAG`/`#BAGCOLS` and result metadata.
+- [ ] Partitions and other options; actions on composite relations.
+- [ ] A stable public API and TypeScript declarations.
+- [x] Application documentation on Read the Docs.
 
-## 5. Evoluzione dello schema SQLite
+Synchronization with a server and conflict resolution need a dedicated contract; they
+are not implied by offline work. Server database dialects are a later product decision;
+the initial target of the three runtimes is SQLite.
 
-- [ ] Pianificare ricostruzioni di tabelle SQLite con copia e verifica dei dati.
-- [ ] Supportare modifiche di default, tipi, vincoli e indici con precondizioni chiare.
-- [ ] Rendere le migrazioni fallite recuperabili, senza modifiche parziali.
-- [ ] Documentare versioni di formato e compatibilità degli aggiornamenti.
+## Rule for every step
 
-Accettazione: confronti dei cataloghi con Python, prove con dati reali, rollback
-simulato durante la copia e migrazione idempotente dopo riapertura.
-
-## 6. Estensione verso la copertura completa
-
-- [ ] Inventario di ogni capacità Python con stato JS: supportata, da portare,
-      non applicabile a SQLite o dipendente da servizi esterni.
-- [x] Sottoquery scalari/EXISTS/subQueryColumn e aggregazioni su relazioni inverse
-      e virtuali, con binding locali, JSON e concatenazioni ordinate.
-- [x] Callback formula/env/subquery e colonne virtuali dinamiche, cache per ambiente,
-      SQL/risultati/chiamate confrontati con Python anche nel browser.
-- [x] #TEMPLATE e #IN_RANGE, con SQL/parametri/risultati identici a Python anche su WASM.
-- [x] #PERIOD tramite il parser di `@genrojs/toolbox`, con date civili, ambiente esplicito e parità Python/browser.
-- [ ] #BAG/#BAGCOLS e metadati dei risultati.
-- [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
-- [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.
-- [ ] Documentazione applicativa, compatibilità e criteri della prima release.
-
-Sincronizzazione con server e risoluzione dei conflitti richiedono un contratto
-dedicato. Non sono implicite nel funzionamento offline e non bloccano il primo
-traguardo locale. I dialetti di database server restano una successiva decisione
-di prodotto; il target iniziale dei tre runtime è SQLite.
-
-## Regola per ogni incremento
-
-Modello → compilazione → esecuzione → riapertura: verificare tutto il percorso
-interessato. Confrontare con Python quanto deterministico; per ID, clock e hook
-verificare formato, ordine ed effetti con dipendenze controllate. Una capacità
-non implementata deve produrre un errore esplicito, non una degradazione silenziosa.
+Model → compilation → execution → reopen: verify the whole affected path. Compare with
+Python whatever is deterministic; for identifiers, clocks and hooks verify format,
+order and effects with controlled dependencies. A capability that is not implemented
+raises an explicit error, never a silent degradation.

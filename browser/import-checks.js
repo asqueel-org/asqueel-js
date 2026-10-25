@@ -6,7 +6,7 @@ import oracle from '../test/fixtures/imports.json' with {type: 'json'};
 
 export async function importChecks() {
     if (!equal(sourceRows(importsModel.toTytx()), sourceRows(oracle.source)) || !equal(importsModel.toMigration(), oracle.desired))
-        throw new Error('Modello import diverso da Python');
+        throw new Error('Import model differs from Python');
     const checks = [];
     let sample;
     for (const entry of oracle.cases) {
@@ -14,21 +14,21 @@ export async function importChecks() {
         let db = await openBrowserSQLite(id);
         try {
             const actual = await runImportCase(db, entry.input);
-            if (!equal(actual, entry.expected)) throw new Error(`Ciclo import diverso da Python: ${entry.name}`);
+            if (!equal(actual, entry.expected)) throw new Error(`Import cycle differs from Python: ${entry.name}`);
             if (entry.name === 'tytx_typed') sample = actual;
             await db.close();
             db = await openBrowserSQLite(id);
             const table = entry.input.table ?? 'item';
             if (!equal(await db.query(`SELECT * FROM "${table}" ORDER BY id`), entry.expected.rows))
-                throw new Error(`Riapertura dopo ${entry.name}: dati diversi da Python`);
-            checks.push(`${entry.name}: record, eventi, SQL, rollback e riapertura identici a Python`);
+                throw new Error(`Reopen after ${entry.name}: data differs from Python`);
+            checks.push(`${entry.name}: records, events, SQL, rollback and reopen identical to Python`);
         } finally {
             await db.close();
             await new Promise((resolve, reject) => {
                 const request = indexedDB.deleteDatabase(id);
                 request.onsuccess = resolve;
                 request.onerror = () => reject(request.error);
-                request.onblocked = () => reject(new Error('Pulizia database hook bloccata'));
+                request.onblocked = () => reject(new Error('Hook database cleanup blocked'));
             });
         }
     }

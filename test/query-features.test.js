@@ -24,7 +24,7 @@ test('formulas, SQL defaults, generated columns, policies and composite CRUD exe
 test('write partition, generated column and advanced formula guards fail explicitly', () => {
     const compiler = model.queries();
     assert.throws(() => compiler.compile({operation: 'insert', table: 'app.item', values: {id: 1, company: 'B'},
-        environment: {current_company: 'A'}}), /partizione/);
-    assert.throws(() => compiler.compile({operation: 'insert', table: 'app.item', values: {id: 1, computed: 5}}), /generata/);
-    assert.throws(() => compiler.compile({operation: 'update', table: 'app.line', values: {body: 'x'}, pkey: '[10]'}), /componenti/);
+        environment: {current_company: 'A'}}), /partition/);
+    assert.throws(() => compiler.compile({operation: 'insert', table: 'app.item', values: {id: 1, computed: 5}}), /Generated column/);
+    assert.throws(() => compiler.compile({operation: 'update', table: 'app.line', values: {body: 'x'}, pkey: '[10]'}), /components/);
 });
