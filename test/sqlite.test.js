@@ -49,9 +49,9 @@ test('unsupported and destructive changes block the entire migration', async () 
         const invalid = structuredClone(oracle.v2.desired);
         invalid.root.schemas.main.tables.sales_invoice.columns.amount.attributes.dtype = 'T';
         delete invalid.root.schemas.main.tables.sales_invoice.columns.amount.attributes.size;
-        await assert.rejects(migrateSQLite(db, invalid), /non supportata/);
+        await assert.rejects(migrateSQLite(db, invalid), /not supported/);
         assert.deepEqual(await readSQLite(db), before);
-        assert.throws(() => diffSQLite({root: {schemas: {public: {tables: {}}}}}, before), /solo schema main/);
+        assert.throws(() => diffSQLite({root: {schemas: {public: {tables: {}}}}}, before), /main schema only/);
     } finally { db.close(); }
 });
 test('execution failure rolls back previous DDL in the same migration', async () => {
@@ -108,6 +108,6 @@ test('catalog features not represented by the PoC fail explicitly', async () => 
     const db = database();
     try {
         await db.execute('CREATE TABLE special (id integer, amount numeric CHECK(amount>0))');
-        await assert.rejects(readSQLite(db), /fuori perimetro/);
+        await assert.rejects(readSQLite(db), /unsupported/);
     } finally { db.close(); }
 });

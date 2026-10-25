@@ -3,10 +3,10 @@ import {UnsupportedFeatureError} from './query-errors.js';
 
 export function validateCompilerMethods(tables, methods) {
     for (const [table, handlers] of Object.entries(record(methods))) {
-        if (!tables.has(table)) throw new Error(`Tabella delle callback sconosciuta: ${table}`);
+        if (!tables.has(table)) throw new Error(`Unknown callback table: ${table}`);
         for (const [name, method] of Object.entries(record(handlers)))
             if (!/^(sql_formula_|subquery_|env_|formulaColumn_).+/.test(name) || typeof method !== 'function')
-                throw new TypeError(`Callback compiler non valida: ${table}.${name}`);
+                throw new TypeError(`Invalid compiler callback: ${table}.${name}`);
     }
 }
 
@@ -22,7 +22,7 @@ export class CompilerMethods {
                 currentEnv: this.environment,
                 table: name => {
                     const target = this.tables.get(name) ?? this.tables.get(`${table.namespace}.${name}`);
-                    if (!target) throw new Error(`Tabella callback sconosciuta: ${name}`);
+                    if (!target) throw new Error(`Unknown callback table: ${name}`);
                     return this.owner(target);
                 },
             }};
@@ -35,12 +35,12 @@ export class CompilerMethods {
     call(table, name, ...args) {
         const method = this.methods[table.key]?.[name];
         if (typeof method !== 'function') throw new UnsupportedFeatureError(
-            `${table.key}: ${name.startsWith('env_') ? `#ENV(${name.slice(4)}) ` : ''}callback ${name} mancante`);
+            `${table.key}: ${name.startsWith('env_') ? `#ENV(${name.slice(4)}) ` : ''}missing callback ${name}`);
         const value = method.apply(this.owner(table), args);
         if (value != null && typeof value.then === 'function') {
             // An async handler is invalid even if it would resolve immediately.
             Promise.resolve(value).catch(() => {});
-            throw new TypeError(`${table.key}.${name}: la compilazione richiede callback sincrone`);
+            throw new TypeError(`${table.key}.${name}: compilation requires synchronous callbacks`);
         }
         return value;
     }
@@ -54,9 +54,9 @@ export class CompilerMethods {
                 const result = this.call(table, method);
                 for (const declaration of Array.isArray(result) ? result : [result]) {
                     const {name, ...attrs} = structuredClone(record(declaration));
-                    if (typeof name !== 'string' || !name) throw new TypeError(`${method}: nome della colonna mancante`);
+                    if (typeof name !== 'string' || !name) throw new TypeError(`${method}: missing column name`);
                     if (table.columns.has(name) || table.virtual.has(name) || table.composites.has(name))
-                        throw new Error(`${table.key}.${name}: ${method} ridefinisce una colonna dichiarata`);
+                        throw new Error(`${table.key}.${name}: ${method} redefines a declared column`);
                     Object.defineProperty(declarations, name, {value: attrs, enumerable: true, configurable: true});
                 }
             }

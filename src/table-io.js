@@ -3,12 +3,12 @@ import {decodeTytxRow} from './import-values.js';
 
 export function fileFormat(source, format) {
     if (format != null) {
-        if (!['csv', 'json', 'tytx'].includes(format)) throw new Error(`Formato dati sconosciuto: ${format}`);
+        if (!['csv', 'json', 'tytx'].includes(format)) throw new Error(`Unknown data format: ${format}`);
         return format;
     }
     const name = source?.name ?? source?.path;
     const suffix = typeof name === 'string' ? /\.([^.\/]+)$/.exec(name)?.[1].toLowerCase() : null;
-    if (!['csv', 'json', 'tytx'].includes(suffix)) throw new Error('Specificare format oppure un nome file .csv, .json o .tytx');
+    if (!['csv', 'json', 'tytx'].includes(suffix)) throw new Error('Specify format or a .csv, .json or .tytx file name');
     return suffix;
 }
 export function isFileSource(source) {
@@ -70,9 +70,9 @@ async function* jsonRecords(source) {
     for await (const chunk of textChunks(source)) for (const char of chunk) {
         if (!value) {
             if (' \t\r\n,'.includes(char)) continue;
-            if (!started) {if (char !== '[') throw new Error('Il JSON deve essere un array di record'); started = true; continue;}
+            if (!started) {if (char !== '[') throw new Error('The JSON must be an array of records'); started = true; continue;}
             if (char === ']') return;
-            if (char !== '{') throw new Error('Il JSON deve contenere oggetti');
+            if (char !== '{') throw new Error('The JSON must contain objects');
         }
         value += char;
         if (quoted) {

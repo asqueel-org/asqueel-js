@@ -33,7 +33,7 @@ for (const [name, columns] of [['sql_formula_scaled', '$scaled'], ['env_label', 
     test(`async compiler method is rejected: ${name}`, () => {
         const methods = compilerMethods();
         methods['app.owner'][name] = async () => { throw new Error('async failure'); };
-        assert.throws(() => model.queries(null, {methods}).compile({operation: 'select', table: 'app.owner', columns}), /sincrone/);
+        assert.throws(() => model.queries(null, {methods}).compile({operation: 'select', table: 'app.owner', columns}), /synchronous callbacks/);
     });
 test('dynamic columns cache belongs to the environment, definitions to the compilation', () => {
     const events = [], environment = {factor: 3}, query = model.queries(null, {environment, methods: compilerMethods(events)});

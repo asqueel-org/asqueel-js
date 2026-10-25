@@ -50,6 +50,6 @@ test('real clock, asynchronous nested hooks and expired hook contexts', async ()
     } finally { await adapter.close(); }
 });
 test('runtime registration rejects misspelled hooks and unknown tables', () => {
-    assert.throws(() => hooksModel.queries(null, {hooks: {'app.simple': {onInserted() {}}}}), /Hook non valido/);
-    assert.throws(() => hooksModel.queries(null, {hooks: {'app.missing': {trigger_onInserted() {}}}}), /Tabella degli hook sconosciuta/);
+    assert.throws(() => hooksModel.queries(null, {hooks: {'app.simple': {onInserted() {}}}}), /Invalid hook/);
+    assert.throws(() => hooksModel.queries(null, {hooks: {'app.missing': {trigger_onInserted() {}}}}), /Unknown hook table/);
 });

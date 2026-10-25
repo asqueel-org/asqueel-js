@@ -22,7 +22,7 @@ export function checkRelatedCapabilities(db, table, operation) {
         if (!other.columns.has(field) || !table.columns.has(j.one_relation.split('.')[2]) ||
             (operation === 'update' && action && !['ignore', 'raise', 'cascade'].includes(action)) ||
             (operation === 'delete' && !['ignore', 'raise', 'cascade', 'setnull'].includes(action)))
-            throw new UnsupportedFeatureError('Azioni applicative della relazione non ancora eseguite');
+            throw new UnsupportedFeatureError('Application actions of this relation are not executed');
     }
 }
 export async function deleteRelated(db, table, record) {

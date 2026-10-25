@@ -13,7 +13,7 @@ function environmentText(value) {
     if (Array.isArray(value)) return value.map(environmentText).join(',');
     if (value == null) return '';
     if (typeof value === 'boolean') return value ? 'True' : 'False';
-    if (typeof value === 'object') throw new Error('Valore #ENV non portabile');
+    if (typeof value === 'object') throw new Error('#ENV value is not portable');
     return String(value);
 }
 
@@ -48,9 +48,9 @@ class Context {
         const column = table.columns.get(name);
         if (column) return `${q(alias)}.${q(columnName(column))}`;
         const virtual = table.virtual.get(name) ?? table.composites.get(name) ?? dynamic.get(name.toLowerCase());
-        if (!virtual) throw new Error(`Colonna sconosciuta: ${table.key}.${name}`);
+        if (!virtual) throw new Error(`Unknown column: ${table.key}.${name}`);
         const key = `${table.key}.${name}`;
-        if (this.active.has(key)) throw new Error(`Formula o alias ciclico: ${key}`);
+        if (this.active.has(key)) throw new Error(`Cyclic formula or alias: ${key}`);
         this.active.add(key);
         try {
             if (virtual.a.relation_path) return this.expression(/^[$@]/.test(virtual.a.relation_path) ? virtual.a.relation_path : '$' + virtual.a.relation_path, table, alias);
@@ -72,7 +72,7 @@ class Context {
             const values = {...record(column.a.var_kwargs ?? {})};
             for (const [name, value] of Object.entries(column.a))
                 if (name.startsWith('var_') && name !== 'var_kwargs') values[name.slice(4)] = value;
-            for (const name of Object.keys(values)) if (!/^[A-Za-z_]\w*$/.test(name)) throw new Error('Nome parametro formula non valido');
+            for (const name of Object.keys(values)) if (!/^[A-Za-z_]\w*$/.test(name)) throw new Error('Invalid formula parameter name');
             this.formulaBindings.set(key, Object.keys(values).length ? this.bindings.child(values, 'f') : this.bindings);
         }
         return this.formulaBindings.get(key);
@@ -83,18 +83,18 @@ class Context {
             const attrs = structuredClone(column.a);
             if (column.tag === 'formulaColumn' && attrs.sql_formula === true) {
                 const sql = this.methods.call(table, 'sql_formula_' + column.label, attrs);
-                if (typeof sql !== 'string' || !sql.trim()) throw new TypeError(`${key}: la callback deve restituire SQL non vuoto`);
+                if (typeof sql !== 'string' || !sql.trim()) throw new TypeError(`${key}: the callback must return nonempty SQL`);
                 attrs.sql_formula = sql;
             }
             if (column.tag === 'formulaColumn') {
                 if ([attrs.sql_formula, attrs.select, attrs.exists].filter(v => v != null).length !== 1)
-                    throw new Error(`${key}: specificare una sola formula, select o exists`);
+                    throw new Error(`${key}: specify exactly one of formula, select or exists`);
                 const found = new Set();
                 const validateSubquery = value => {
                     if (typeof value === 'string' && value.trim()) return;
                     record(value);
                     for (const name of ['table', 'where']) if (typeof value[name] !== 'string' || !value[name].trim())
-                        throw new Error(`${key}: sottoquery senza ${name}`);
+                        throw new Error(`${key}: subquery without ${name}`);
                 };
                 for (const name of ['select', 'exists']) if (attrs[name] != null) validateSubquery(attrs[name]);
                 for (const [name, value] of Object.entries(attrs)) {
@@ -102,7 +102,7 @@ class Context {
                     const token = name.slice(name.indexOf('_') + 1);
                     const escaped = token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                     if (found.has(token) || typeof attrs.sql_formula !== 'string' || !new RegExp('#' + escaped + '\\b').test(attrs.sql_formula))
-                        throw new Error(`${key}: sottoquery duplicata o non usata: ${token}`);
+                        throw new Error(`${key}: duplicate or unused subquery: ${token}`);
                     found.add(token); validateSubquery(value);
                 }
             }
@@ -113,12 +113,12 @@ class Context {
         const isExists = attrs.exists != null;
         if (column.tag === 'subQueryColumn') {
             mode = attrs.mode;
-            if (mode != null && !['json', 'xml'].includes(mode)) throw new Error('subQueryColumn: usare aggr per questo tipo di aggregazione');
+            if (mode != null && !['json', 'xml'].includes(mode)) throw new Error('subQueryColumn: use aggr for this kind of aggregation');
             definition = structuredClone(attrs.query);
             if (attrs.aggr != null) {
-                if (mode != null) throw new Error('subQueryColumn: aggr e mode sono alternativi');
+                if (mode != null) throw new Error('subQueryColumn: aggr and mode are alternatives');
                 const aggregates = aggregateColumns(split(attrs.aggr), `${table.key}.${column.label}`);
-                if (aggregates.length !== 1) throw new Error('subQueryColumn richiede una sola aggregazione');
+                if (aggregates.length !== 1) throw new Error('subQueryColumn requires exactly one aggregation');
                 definition = {...record(definition), columns: aggregates[0].columns};
                 mode = aggregates[0].mode;
             }
@@ -126,7 +126,7 @@ class Context {
         const subqueries = new Map();
         if (definition != null) { formula = '#default'; subqueries.set('default', {definition, exists: isExists}); }
         else {
-            if (typeof formula !== 'string' || column.children.length) throw new UnsupportedFeatureError('Formula richiede SQL valido');
+            if (typeof formula !== 'string' || column.children.length) throw new UnsupportedFeatureError('A formula requires valid SQL');
             for (const prefix of ['select_', 'exists_']) for (const [key, value] of Object.entries(attrs))
                 if (key.startsWith(prefix)) subqueries.set(key.slice(prefix.length), {definition: value, exists: prefix === 'exists_'});
         }
@@ -135,7 +135,7 @@ class Context {
             if (key == null) {
                 const owner = fallback ? this.knownTable(fallback.slice(1), this.table, '#ENV') : table;
                 const sql = this.methods.call(owner, 'env_' + name);
-                if (typeof sql !== 'string') throw new TypeError('La callback env deve restituire SQL');
+                if (typeof sql !== 'string') throw new TypeError('The env callback must return SQL');
                 return sql;
             }
             return `'${environmentText(this.environment[key]).replaceAll("'", "''")}'`;
@@ -153,7 +153,7 @@ class Context {
     }
     knownTable(name, owner = this.table, context = 'sottoquery') {
         const table = this.tables.get(name) ?? this.tables.get(`${owner.namespace}.${name}`);
-        if (!table) throw new Error(`Tabella ${context} sconosciuta: ${name}`);
+        if (!table) throw new Error(`Unknown ${context} table: ${name}`);
         return table;
     }
     subquery(definition, owner, alias, bindings, exists = false, mode = null) {
@@ -161,19 +161,19 @@ class Context {
         const options = structuredClone(record(definition));
         for (const [old, name] of [['excludeDraft', 'exclude_draft'], ['excludeLogicalDeleted', 'exclude_logical_deleted'], ['ignorePartition', 'ignore_partition']]) {
             if (Object.hasOwn(options, old)) {
-                if (Object.hasOwn(options, name)) throw new Error(`Opzioni sottoquery in conflitto: ${old}, ${name}`);
+                if (Object.hasOwn(options, name)) throw new Error(`Conflicting subquery options: ${old}, ${name}`);
                 options[name] = options[old]; delete options[old];
             }
         }
         for (const [name, value] of [['subtable', '*'], ['addPkeyColumn', false], ['ignoreTableOrderBy', true]]) {
-            if (Object.hasOwn(options, name) && options[name] !== value) throw new UnsupportedFeatureError(`Opzione sottoquery non supportata: ${name}`);
+            if (Object.hasOwn(options, name) && options[name] !== value) throw new UnsupportedFeatureError(`Unsupported subquery option: ${name}`);
             delete options[name];
         }
         const allowed = ['table', 'where', 'columns', 'sqlparams', 'cast', 'order_by', 'limit', 'offset', 'distinct', 'group_by', 'having', 'bagFields', 'exclude_draft', 'exclude_logical_deleted', 'ignore_partition'];
-        for (const name of Object.keys(options)) if (!allowed.includes(name)) throw new UnsupportedFeatureError(`Opzione sottoquery non supportata: ${name}`);
-        if (exists && Object.hasOwn(options, 'cast')) throw new UnsupportedFeatureError('CAST non applicabile a EXISTS');
+        for (const name of Object.keys(options)) if (!allowed.includes(name)) throw new UnsupportedFeatureError(`Unsupported subquery option: ${name}`);
+        if (exists && Object.hasOwn(options, 'cast')) throw new UnsupportedFeatureError('CAST does not apply to EXISTS');
         const table = this.knownTable(options.table, owner);
-        if (typeof options.where !== 'string' || !options.where.trim()) throw new Error('La sottoquery richiede where');
+        if (typeof options.where !== 'string' || !options.where.trim()) throw new Error('The subquery requires where');
         const where = this.thisFields(options.where, owner, alias);
         const child = new Context(this.tables, table, null, this.environment, this, alias + '_t', bindings.child(options.sqlparams, 's'));
         const request = {exclude_draft: false, exclude_logical_deleted: false, ignore_partition: true,
@@ -188,8 +188,8 @@ class Context {
             });
             return `(SELECT json_group_array(json_object(${fields.join(', ')})) FROM (${sql}) AS ${row})`;
         }
-        if (mode != null) throw new UnsupportedFeatureError(`SQLite non supporta subQueryColumn/aggr mode=${mode}`);
-        if (!exists && split(plan.columns).length !== 1) throw new Error('La sottoquery scalare richiede esattamente una colonna');
+        if (mode != null) throw new UnsupportedFeatureError(`SQLite does not support subQueryColumn/aggr mode=${mode}`);
+        if (!exists && split(plan.columns).length !== 1) throw new Error('A scalar subquery requires exactly one column');
         return options.cast ? ` CAST( ( ${sql} ) AS ${options.cast}) ` : ` ( ${sql} ) `;
     }
     expandMany(expression, table = this.table, projection = false) {
@@ -201,22 +201,22 @@ class Context {
                 relation = owner.relations.get(parts[i]);
                 if (!relation) break;
                 const many = relation.kind === 'virtual' || (relation.joiner.mode !== 'O' && !relation.joiner.one_one);
-                if (many && i < parts.length - 1) throw new UnsupportedFeatureError('Navigazione attraverso una relazione molti non supportata');
+                if (many && i < parts.length - 1) throw new UnsupportedFeatureError('Navigation through a many relation is not supported');
                 if (i < parts.length - 1) owner = this.knownTable(relation.joiner.one_relation.split('.').slice(0, 2).join('.'));
             }
             if (!relation || (relation.kind !== 'virtual' && (relation.joiner.mode === 'O' || relation.joiner.one_one))) continue;
             let operation = match[2], parsed = callArguments(expression, match.index + match[0].length), ordering;
             if (operation === 'order_by') {
-                if (parsed.arguments.length !== 1 || !/^(['"])[\s\S]*\1$/.test(parsed.arguments[0])) throw new Error('order_by richiede una stringa quotata');
+                if (parsed.arguments.length !== 1 || !/^(['"])[\s\S]*\1$/.test(parsed.arguments[0])) throw new Error('order_by requires a quoted string');
                 const text = parsed.arguments[0], quote = text[0];
                 ordering = text.slice(1, -1).replaceAll(quote + quote, quote);
                 const next = /^\s*\.aggr\s*\(/.exec(expression.slice(parsed.end));
-                if (!next) throw new UnsupportedFeatureError('order_by deve essere seguito da aggr');
+                if (!next) throw new UnsupportedFeatureError('order_by must be followed by aggr');
                 parsed = callArguments(expression, parsed.end + next[0].length); operation = 'aggr';
             }
-            if (operation !== 'aggr') throw new UnsupportedFeatureError(`Operazione molti non supportata: ${operation}`);
-            if (!projection) throw new UnsupportedFeatureError('aggr è supportata solo nelle proiezioni');
-            if (expression.slice(0, match.index).trim() || expression.slice(parsed.end).trim()) throw new UnsupportedFeatureError('aggr richiede una proiezione autonoma');
+            if (operation !== 'aggr') throw new UnsupportedFeatureError(`Unsupported many operation: ${operation}`);
+            if (!projection) throw new UnsupportedFeatureError('aggr is supported only in projections');
+            if (expression.slice(0, match.index).trim() || expression.slice(parsed.end).trim()) throw new UnsupportedFeatureError('aggr requires a standalone projection');
             return aggregateColumns(parsed.arguments, match[1]).map(aggregate => {
                 let token = `_many_${this.manyColumns.size}`;
                 while (this.table.columns.has(token) || this.table.virtual.has(token) || this.manyColumns.has(token)) token = '_' + token;
@@ -233,9 +233,9 @@ class Context {
         const conditions = [], visited = new Set();
         while (relation.kind === 'virtual') {
             const attrs = relation.a, key = `${table.key}.${attrs.name}`;
-            if (visited.has(key)) throw new Error(`Relazione virtuale ciclica: ${key}`);
+            if (visited.has(key)) throw new Error(`Cyclic virtual relation: ${key}`);
             visited.add(key);
-            if (attrs.ask) throw new UnsupportedFeatureError('Aggregazioni virtuali con ask non supportate');
+            if (attrs.ask) throw new UnsupportedFeatureError('Virtual aggregations with ask are not supported');
             if (attrs.condition) {
                 const values = Object.fromEntries(Object.entries(attrs).filter(([name]) => name.startsWith('var_') && new RegExp(':' + name + '\\b').test(attrs.condition)));
                 const scope = Object.keys(values).length ? this.bindings.child(values, 'v') : this.bindings;
@@ -248,14 +248,14 @@ class Context {
                 conditions.push(condition);
             }
             if (attrs.table) {
-                if (!attrs.condition?.trim()) throw new Error('virtualRelation table richiede condition');
+                if (!attrs.condition?.trim()) throw new Error('virtualRelation table requires condition');
                 break;
             }
-            if (!attrs.relation) throw new UnsupportedFeatureError('Relazione virtuale senza origine');
+            if (!attrs.relation) throw new UnsupportedFeatureError('Virtual relation without origin');
             const parts = attrs.relation.replaceAll('@', '').split('.');
             if (parts.length > 1) ({table, alias} = this.related(parts.slice(0, -1).join('.'), table, alias, true));
             relation = table.relations.get(parts.at(-1));
-            if (!relation) throw new Error('Relazione virtuale di origine sconosciuta');
+            if (!relation) throw new Error('Virtual relation with unknown origin');
         }
         conditions.reverse();
         let target, where;
@@ -264,14 +264,14 @@ class Context {
             where = conditions.map(c => `(${c})`).join(' AND ');
         } else {
             const joiner = relation.joiner;
-            if (joiner.mode === 'O' || joiner.one_one) throw new UnsupportedFeatureError('aggr richiede una relazione molti');
-            if (['join_on', 'cnd', 'between'].some(key => joiner[key])) throw new UnsupportedFeatureError('aggr con condizione di join personalizzata non supportata');
+            if (joiner.mode === 'O' || joiner.one_one) throw new UnsupportedFeatureError('aggr requires a many relation');
+            if (['join_on', 'cnd', 'between'].some(key => joiner[key])) throw new UnsupportedFeatureError('aggr with a custom join condition is not supported');
             const remote = joiner.many_relation.split('.'), local = joiner.one_relation.split('.');
             target = this.knownTable(remote.slice(0, 2).join('.'));
             const owner = this.knownTable(local.slice(0, 2).join('.'));
             const left = names(target.composites.get(remote[2])?.a.columns ?? remote[2]);
             const right = names(owner.composites.get(local[2])?.a.columns ?? local[2]);
-            if (left.length !== right.length) throw new Error('Componenti relazione incompatibili');
+            if (left.length !== right.length) throw new Error('Incompatible relation components');
             where = left.map((name, i) => joiner.case_insensitive === 'Y' ? `lower($${name})=lower(#THIS.${right[i]})` : `$${name}=#THIS.${right[i]}`).join(' AND ');
             if (conditions.length) where = [where, ...conditions].map(c => `(${c})`).join(' AND ');
         }
@@ -282,17 +282,17 @@ class Context {
     related(path, table, alias, returnTarget = false) {
         const parts = path.replaceAll('@', '').split('.');
         for (const name of (returnTarget ? parts : parts.slice(0, -1))) {
-            if (table.relations.get(name)?.kind === 'virtual') throw new Error('Navigazione virtualRelation fuori perimetro query');
+            if (table.relations.get(name)?.kind === 'virtual') throw new Error('virtualRelation navigation is not supported by queries');
             const owner = table.columns.get(name) || table.composites.get(name);
             const relation = owner?.children.find(n => n.tag === 'relation');
-            if (!relation) throw new Error(`Relazione diretta non supportata: ${table.key}.${name}`);
-            if (['join_on', 'cnd', 'between'].some(k => relation.a[k])) throw new Error('Condizione di relazione personalizzata non ancora supportata');
+            if (!relation) throw new Error(`Unsupported direct relation: ${table.key}.${name}`);
+            if (['join_on', 'cnd', 'between'].some(k => relation.a[k])) throw new Error('Custom relation conditions are not supported');
             const targetParts = relation.a.related_column.split('.'), target = this.tables.get(targetParts.slice(0, 2).join('.'));
-            if (!target) throw new Error('Target della relazione sconosciuto');
+            if (!target) throw new Error('Unknown relation target');
             const remoteName = targetParts[2] ?? target.a.pkey;
             const remote = names(target.composites.get(remoteName)?.a.columns ?? remoteName);
             const local = owner.tag === 'column' ? [name] : names(owner.a.columns);
-            if (local.length !== remote.length) throw new Error('Chiavi della relazione incompatibili');
+            if (local.length !== remote.length) throw new Error('Incompatible relation keys');
             const key = `${alias}.${name}`;
             if (!this.joins.has(key)) {
                 const targetAlias = `${this.aliasPrefix}${this.joins.size + 1}`;
@@ -307,18 +307,18 @@ class Context {
     expression(text, table = this.table, alias = this.baseAlias, references = null) {
         // Python checks unresolved macros in the authored text, including literals.
         const macro = /#[A-Za-z_]\w*/.exec(text);
-        if (macro) throw new UnsupportedFeatureError(`Macro SQL non supportata: ${macro[0]}`);
+        if (macro) throw new UnsupportedFeatureError(`Unsupported SQL macro: ${macro[0]}`);
         split(text);
         references ??= this.resolveReferences([text], table, alias);
         // Python's legacy discover/substitute also resolves references inside SQL literals.
         const replaceFields = text => text.replace(new RegExp(`\\$(${IDENT})|@(${IDENT}(?:\\.@?${IDENT})+)`, 'g'),
             (_, field, path) => references.get(field ?? ('@' + path).replace(/\W/g, '_')));
         return tokens(text).map(token => {
-            if (token.kind === 'field') throw new Error('Nomi logici quotati non supportati da Python 0.6.1');
+            if (token.kind === 'field') throw new Error('Quoted logical names are not supported, as in Python');
             if (token.kind === 'protected') return replaceFields(token.text);
             if (/;|\b(?:SELECT|INSERT|UPDATE|DELETE|DROP|ATTACH|DETACH|PRAGMA|WITH)\b/i.test(token.text))
-                throw new Error('Sottoquery e statement nelle espressioni non ancora supportati');
-            if (/#/.test(token.text)) throw new Error('Macro SQL non ancora supportata');
+                throw new Error('Subqueries and statements inside expressions are not supported');
+            if (/#/.test(token.text)) throw new Error('Unsupported SQL macro');
             return replaceFields(token.text).replace(/\bILIKE\b/gi, 'LIKE');
         }).join('');
     }
@@ -336,12 +336,12 @@ class Context {
     }
     expandColumns(columns, bagFields) {
         if (Array.isArray(columns)) columns = columns.join(',');
-        if (typeof columns !== 'string' || !columns.trim()) throw new Error('SELECT richiede colonne');
+        if (typeof columns !== 'string' || !columns.trim()) throw new Error('SELECT requires columns');
         columns = columns.replaceAll('  ', ' ').replaceAll('\n', '').replaceAll(' as ', ' AS ').replaceAll(' ,', ',');
         return split(columns).flatMap(raw => {
             if (raw === '*') return [...this.table.columns].filter(([, c]) => bagFields || c.a.dtype !== 'X').map(([n]) => '$' + n)
                 .concat([...this.table.virtual].filter(([, c]) => c.a.static).map(([n]) => '$' + n));
-            if (raw.startsWith('*')) throw new Error('Wildcard avanzato non supportato');
+            if (raw.startsWith('*')) throw new Error('Advanced wildcard not supported');
             return [raw];
         }).join(',');
     }
@@ -355,13 +355,13 @@ class Context {
             const alias = explicit ? raw.slice(value.length).trim().replace(/^AS\s+/i, '') : q(/^\d/.test(name) ? '_' + name : name);
             entries.set(q(explicit ? alias : name), `${this.expression(value, this.table, this.baseAlias, references)} AS ${alias}`);
         }
-        if (!entries.size) throw new Error('SELECT richiede colonne');
+        if (!entries.size) throw new Error('SELECT requires columns');
         return [...entries.values()].join(',\n');
     }
     policies(request, where) {
         const {exclude_draft = true, exclude_logical_deleted = true, ignore_partition = false, environment = {}} = request;
         if (typeof exclude_draft !== 'boolean' || typeof ignore_partition !== 'boolean' || ![true, false, 'mark'].includes(exclude_logical_deleted))
-            throw new Error('Opzioni delle policy non valide');
+            throw new Error('Invalid policy options');
         const conditions = where ? [where] : [];
         const partition = Object.keys(this.table.a).find(k => k.startsWith('partition_'));
         if (partition && !ignore_partition) {
@@ -379,10 +379,10 @@ class Context {
 function selectPlan(context, request) {
     const {table} = context;
     const {limit, offset, distinct = false, bagFields = false, addPkeyColumn = false, for_update = false} = request;
-    for (const [name, value] of Object.entries({bagFields, addPkeyColumn, for_update})) if (typeof value !== 'boolean') throw new Error(`${name} deve essere booleano`);
-    if (for_update) throw new Error('Le letture con lock richiedono un ciclo transazionale esplicito, non ancora supportato');
-    if (distinct != null && typeof distinct !== 'boolean') throw new Error('distinct deve essere booleano');
-    for (const [name, value] of Object.entries({limit, offset})) if (value != null && (!Number.isSafeInteger(value) || value < 0)) throw new Error(`${name} deve essere un intero non negativo`);
+    for (const [name, value] of Object.entries({bagFields, addPkeyColumn, for_update})) if (typeof value !== 'boolean') throw new Error(`${name} must be a boolean`);
+    if (for_update) throw new Error('Locking reads require an explicit transactional cycle, not supported');
+    if (distinct != null && typeof distinct !== 'boolean') throw new Error('distinct must be a boolean');
+    for (const [name, value] of Object.entries({limit, offset})) if (value != null && (!Number.isSafeInteger(value) || value < 0)) throw new Error(`${name} must be a nonnegative integer`);
     const aggregate = Boolean(distinct || request.group_by), count = request.operation === 'count';
     const group = expandTemplates(request.group_by === '*' ? null : request.group_by);
     let columns = request.columns ?? '*';

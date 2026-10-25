@@ -55,7 +55,7 @@ test('Model adaptation accepts Python floating point spellings and rejects unsaf
     const table = {key:'app.numeric', columns:new Map([['value',{a:{dtype:'R'}}]])};
     for (const [text,value] of [['1.',1],['.5',0.5],['+1_000.25e-2',10.0025]])
         assert.deepEqual(adaptRecord(table,{value:text}), {value});
-    assert.throws(() => adaptRecord(table, {value:'Infinity'}), /colonna value/);
+    assert.throws(() => adaptRecord(table, {value:'Infinity'}), /column value/);
     table.columns.get('value').a.dtype = 'L';
-    assert.throws(() => adaptRecord(table, {value:'9007199254740993'}), /colonna value/);
+    assert.throws(() => adaptRecord(table, {value:'9007199254740993'}), /column value/);
 });

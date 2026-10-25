@@ -15,12 +15,12 @@ export class PeriodMacro {
         const {bindings, environment} = this;
         if (!Object.hasOwn(bindings.available, name) && name.startsWith('env_') && Object.hasOwn(environment, name.slice(4)))
             bindings.available[name] = environment[name.slice(4)];
-        if (!Object.hasOwn(bindings.available, name)) throw new Error(`#PERIOD: parametro mancante ${name}`);
+        if (!Object.hasOwn(bindings.available, name)) throw new Error(`#PERIOD: missing parameter ${name}`);
         if (!this.parameters.has(name)) {
             if (!Object.hasOwn(environment, 'workdate') || !Object.hasOwn(environment, 'locale'))
-                throw new Error('#PERIOD richiede workdate e locale nell’ambiente');
+                throw new Error('#PERIOD requires workdate and locale in the environment');
             const text = bindings.available[name] || '';
-            if (typeof text !== 'string') throw new TypeError('#PERIOD richiede un testo o un periodo vuoto');
+            if (typeof text !== 'string') throw new TypeError('#PERIOD requires a text or an empty period');
             // The compiler uses commas as range separators, before the toolbox decoder.
             const result = parseDateExpression(text.replaceAll(',', ';'),
                 {workdate: environment.workdate, locale: environment.locale});
