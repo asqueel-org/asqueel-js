@@ -1,27 +1,30 @@
-# Pubblicare Asqueel JS
+# Releasing Asqueel JS
 
-Package npm pubblico: `@asqueel/asqueel-js`. Candidato corrente: `0.2.0` (Python 0.7.0 · 84408eb).
-Il pacchetto è sperimentale; non dichiara parità completa con Python.
-La provenienza del confronto del modello rimane fissata in
-`test/fixtures/provenance.json`, indipendentemente dalla versione npm.
+Public npm package: `@asqueel/asqueel-js`. Current candidate: `0.2.0`
+(Python Asqueel 0.7.0 · `84408eb`). The package is experimental and does not claim
+complete parity with Python. The Python reference stays pinned in
+`test/fixtures/provenance.json`, independently of the npm version.
 
-## Preparazione
+## Preparation
 
-1. Aggiornare insieme `package.json`, il lockfile e le note di rilascio.
-2. Verificare `npm run check`, `npm run test:bun` e i controlli CI, inclusi browser
-   e parità Python. Se cambia solo il packaging, verificare soprattutto il tarball.
-3. Eseguire `npm pack` e controllare la lista dei file: sorgenti, grammatica,
-   documentazione e licenze; niente credenziali, database o file del playground.
-4. Installare il tarball in una directory vuota. Verificare gli import pubblici,
-   una migrazione SQLite, insert/select e una seconda migrazione su Node e Bun.
-   Verificare anche il bundle dell'entry point browser dal pacchetto installato.
+1. Update `package.json`, the lockfile and `CHANGELOG.md` together.
+2. Verify `npm run check`, `npm run test:bun` and the CI checks, including the browser
+   suite and the Python parity. Before a release also run `npm run test:file`,
+   `npm run test:assembly` and `npm run verify:python`.
+3. Build the documentation with `sphinx-build -W` (see [CONTRIBUTING.md](CONTRIBUTING.md)).
+4. Run `npm pack` and review the file list: sources, grammar, documentation and licenses;
+   no credentials, databases or playground files.
+5. Install the tarball in an empty directory. Verify the public imports, an SQLite
+   migration, insert and select and a second migration on Node.js and Bun, and the
+   bundle of the browser entry point from the installed package
+   (`node scripts/check-package.mjs <tarball>`).
 
-## Collegamento iniziale npm / GitHub (una sola volta)
+## One-time npm and GitHub link
 
-Nelle impostazioni npm di `@asqueel/asqueel-js`, sezione **Trusted Publisher**,
-aggiungere GitHub Actions con questi valori esatti:
+In the npm settings of `@asqueel/asqueel-js`, section **Trusted Publisher**, add GitHub
+Actions with these exact values:
 
-| Campo | Valore |
+| Field | Value |
 |---|---|
 | Organization or user | `asqueel-org` |
 | Repository | `asqueel-js` |
@@ -29,53 +32,38 @@ aggiungere GitHub Actions con questi valori esatti:
 | Environment name | `release` |
 | Allowed actions | **Allow npm publish** |
 
-Il solo permesso `npm stage publish` richiederebbe ancora una conferma manuale
-per ogni release. Non servono `NPM_TOKEN` o `NODE_AUTH_TOKEN`: il workflow usa
-OIDC su runner GitHub, Node 24 e npm 11.21.0. La prima pubblicazione deve avvenire
-entro due giorni dalla creazione del collegamento, altrimenti npm lo fa scadere.
-Vedere la [documentazione npm](https://docs.npmjs.com/trusted-publishers/).
+No `NPM_TOKEN` or `NODE_AUTH_TOKEN` is needed: the workflow uses OIDC on GitHub runners,
+Node.js 24 and npm 11.21.0. See the [npm documentation](https://docs.npmjs.com/trusted-publishers/).
 
-## Rilasci successivi
+## One-time Read the Docs link
 
-1. Aggiornare versione, lockfile e changelog; integrare la PR con CI verde.
-2. Creare e inviare il tag `v<versione>` sul commit integrato di `main`.
-3. Attendere il workflow **Build and publish npm package**.
+Import `asqueel-org/asqueel-js` on [Read the Docs](https://readthedocs.org/) with the
+project slug `asqueel-js`. The build reads `.readthedocs.yaml`, installs
+`docs/requirements.txt` and fails on any Sphinx warning.
+
+## Releases
+
+1. Update version, lockfile and changelog; merge the pull request with green CI.
+2. Create and push the tag `v<version>` on the merged commit of `main`.
+3. Wait for the **Build and publish npm package** workflow.
 
 ```sh
-git tag -a v0.1.1 <commit-integrato> -m "Asqueel JS 0.1.1"
-git push origin v0.1.1
+git tag -a v0.2.0 <merged-commit> -m "Asqueel JS 0.2.0"
+git push origin v0.2.0
 ```
 
-Il workflow verifica nome, versione/tag e appartenenza a `main`, crea un solo
-tarball e lo installa in isolamento. Prima dell'upload aspetta la CI completa
-Node/Bun/browser e la parità Python sullo stesso commit di `main`. Poi pubblica
-quell'archivio tramite OIDC, confronta l'integrità del file disponibile sul registry,
-prova il pacchetto scaricato e crea la GitHub Release.
+The workflow checks name, version and tag and that the commit belongs to `main`, builds
+one tarball and installs it in isolation. Before the upload it waits for the complete
+Node.js/Bun/browser CI and the Python parity on the same commit. It then publishes that
+archive through OIDC, compares the integrity of the file on the registry, tests the
+downloaded package and creates the GitHub Release.
 
-Le versioni pubblicate sono immutabili. Se l'upload riesce ma la verifica finale
-fallisce, controllare prima la versione su npm: non ripubblicare alla cieca.
-Il workflow manuale su un branch esegue soltanto build e verifiche; su un tag
-esegue anche la pubblicazione. Le PR che modificano il workflow o il packaging
-provano l'installazione del tarball senza avere permessi di pubblicazione.
-
-Le suite complete partono su PR e `main`, non sui tag né sui push dei branch di
-lavoro. I tag avviano soltanto il workflow di rilascio, che riusa l'esito della CI
-sul commit integrato senza duplicare le suite.
+Published versions are immutable. If the upload succeeds and the final check fails,
+check the version on npm first: never republish blindly. A manual run on a branch only
+builds and verifies; on a tag it also publishes.
 
 ## Browser
 
-Il package distribuisce moduli ESM, non il playground compilato. Il consumatore
-bundla il proprio worker e copia `wa-sqlite/dist/wa-sqlite-async.wasm` accanto al
-bundle. Vedere
-`docs/architecture.md` e l'esempio browser nel repository.
-
-## Consolidamento 0.2.0
-
-Il commit Python `84408eb` (main, merge della PR #55) deve essere accessibile su
-GitHub per la CI di parità. Questa release include tutti i porting già su main,
-export HTML, demo assemblea e la parità con Python dopo la 0.7.0.
-I candidati 0.2.0 precedenti sono superati e non vanno pubblicati.
-
-Oltre alla suite ordinaria, eseguire `npm run test:file`, `npm run test:assembly`
-e `npm run verify:python`. I vecchi workspace della demo sono provati attraverso
-le fixture v1–v4 e il riavvio offline, senza sostituire i dati già inseriti.
+The package ships ES modules, not the compiled playground. Consumers bundle their own
+worker and serve `wa-sqlite/dist/wa-sqlite-async.wasm` next to the bundle, or pass the
+bytes as `wasmBinary`. See the [browser guide](docs/guide/browser.md).

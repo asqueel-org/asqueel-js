@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="How to run a condominium meeting without a connection with Gramlot and Asqueel JS: data prepared in Python, local work and return of the results.">
+<title>The offline condominium meeting · Gramlot and Asqueel JS</title>
+<style>
+:root{--ink:#183344;--muted:#536978;--teal:#0c7066;--light:#e9f4f0;--line:#d7e2e5;--paper:#fff;--bg:#f3f5f4}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}a{color:var(--teal);text-underline-offset:3px}a:focus-visible{outline:3px solid #ca8821;outline-offset:4px}.wrap{max-width:1120px;margin:auto;padding:0 32px}.mast{background:var(--ink);color:white;padding:58px 0 46px;border-top:6px solid #6ac7ae}.eyebrow{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:#a5ddce}h1{font-size:clamp(34px,5vw,57px);line-height:1.1;letter-spacing:-.035em;max-width:840px;margin:18px 0}h2{font-size:29px;line-height:1.2;letter-spacing:-.02em;margin:0 0 20px}h3{font-size:19px;line-height:1.4;margin:0 0 9px}p{margin:0 0 16px}.lead{max-width:810px;font-size:20px;color:#d8e6e8}.meta{font-size:13px;color:#b9d0d7;margin-top:26px}.meta code{color:var(--ink)}.nav{background:white;border-bottom:1px solid var(--line)}.nav .wrap{display:flex;gap:24px;flex-wrap:wrap;padding-top:16px;padding-bottom:16px}.nav a{font-size:14px;font-weight:650;text-decoration:none}main{padding-top:32px!important;padding-bottom:40px!important}.section{background:var(--paper);padding:34px;margin-bottom:22px;border:1px solid var(--line);border-radius:12px;scroll-margin-top:20px}.number{font:700 12px/1.4 system-ui;letter-spacing:.12em;color:var(--teal);display:block;margin-bottom:10px}.callout{border-left:4px solid var(--teal);background:var(--light);padding:18px 22px;margin:22px 0}.callout p:last-child{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.card{border:1px solid var(--line);border-radius:8px;padding:23px}.pill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.03em;color:var(--teal);background:var(--light);padding:3px 9px;border-radius:4px;margin-bottom:12px}.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:12px;align-items:center;margin:26px 0}.flow article{background:#f4f7f8;border:1px solid var(--line);padding:20px;border-radius:8px;min-height:164px}.flow h3{font-size:17px}.flow p{font-size:14px;margin:0;color:var(--muted)}.arrow{color:var(--teal);font-size:24px}.caption{font-size:14px;color:var(--muted)}.steps{padding-left:24px}.steps li{padding-left:5px;margin:13px 0}.steps strong{color:var(--teal)}ul{padding-left:22px}li{margin:7px 0}.table-wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px;text-align:left}th,td{vertical-align:top;border-bottom:1px solid var(--line);padding:14px 12px}th{background:#eff4f5;font-size:13px}th:first-child,td:first-child{padding-left:16px}code{font: .88em/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere}p code,li code,td code{background:#edf1f3;padding:2px 4px;border-radius:3px}pre{background:#132d3a;color:#e5f3ef;padding:20px;border-radius:8px;overflow:auto;font-size:13px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.small{font-size:14px;color:var(--muted)}.evidence{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.evidence span{border:1px solid var(--line);padding:8px 12px;border-radius:6px;font-size:14px}.evidence strong{color:var(--teal)}footer{padding:10px 0 40px;font-size:13px;color:var(--muted)}.section>:last-child{margin-bottom:0}
+@media(max-width:740px){.wrap{padding-left:18px;padding-right:18px}.mast{padding-top:35px;padding-bottom:30px}.lead{font-size:18px}.section{padding:24px 20px}.grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.flow article{min-height:0}.arrow{text-align:center;transform:rotate(90deg)}.nav .wrap{gap:12px 20px}h2{font-size:25px}th,td{min-width:140px}}
+@media print{body{background:white;font-size:11pt}.wrap{max-width:none;padding:0}.mast{color:var(--ink);background:white;border-top:3px solid var(--teal);padding:20px 0}.eyebrow,.lead,.meta{color:var(--muted)}h1{font-size:32pt}.nav{display:none}.section{padding:22px 0;border:0;border-top:1px solid var(--line);border-radius:0}.grid,.flow{break-inside:avoid}h2,h3{break-after:avoid}pre,.callout,tr{break-inside:avoid}pre{background:#eff4f5;color:var(--ink)}a{color:var(--ink)}footer{padding:0}main{padding-top:0!important}.table-wrap{overflow:visible}th,td{min-width:0}}
+</style>
+</head>
+<body>
+<header class="mast"><div class="wrap">
+<div class="eyebrow">Gramlot + Asqueel JS · Application scenario</div>
+<h1>The condominium meeting, also without a connection</h1>
+<p class="lead">Prepare the data in the office, handle attendance and votes on site, bring the minutes and the results back into the management system.</p>
+<p class="meta">21 October 2026 · Application proposal based on the verified Python → browser → Python transfer</p>
+</div></header>
+<nav class="nav" aria-label="Document sections"><div class="wrap">
+<a href="#scenario">The scenario</a><a href="#cycle">Before, during, after</a><a href="#model">Data and model</a><a href="#calculations">Votes and calculations</a><a href="#serverless">The serverless app</a><a href="#delivery">What to build</a>
+</div></nav>
+<main class="wrap">
+<section class="section" id="scenario">
+<span class="number">01 / THE SCENARIO</span><h2>One meeting, a bounded set of data</h2>
+<p>The property manager's system runs on Python, uses Gramlot for the interface and keeps its data in the central database. The meeting takes place in a room where the connection is missing or unreliable. Whoever takes the minutes must still read the documents, register who is present, collect the votes and write the resolutions.</p>
+<p>Before the meeting a package is prepared for that meeting only: the people involved, the units, the thousandths tables, the agenda, the budget data and selected documents. It is a fairly small set, with a precise initial version and a well-defined working period.</p>
+<div class="callout"><p><strong>The unit of work is the meeting.</strong> The system hands its records to one operator for the session. The operator works locally and returns a consistent result at the end of the meeting. Assigning the work and acquiring the result are handled by the application.</p></div>
+<p class="small">A Gramlot demo is available, with tabs for the phases of the meeting, a participants drawer, discussion, vote and a minutes block for every agenda item. Five fictional documents are included; the rules for real decisions are still to be added.</p>
+</section>
+<section class="section" id="cycle">
+<span class="number">02 / THE OPERATING CYCLE</span><h2>Prepare, hold, return</h2>
+<div class="flow" role="group" aria-label="The Python system prepares the data; the browser runs the meeting; Python acquires the results">
+<article><h3>Before · in the office</h3><p>Select the meeting<br>Model source<br>Needed data and documents</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>During · on site</h3><p>Gramlot interface<br>Asqueel JS queries<br>Local SQLite and saving</p></article><div class="arrow" aria-hidden="true">→</div>
+<article><h3>After · in the system</h3><p>Export the results<br>Verify in Python<br>Acquire and confirm</p></article>
+</div>
+<ol class="steps">
+<li><strong>Prepare the package.</strong> The server exports the model source, also limited to the useful tables, and the records in TYTX. It includes the model dependencies and the related data. The documents needed in the room are downloaded before leaving.</li>
+<li><strong>Open and check the app.</strong> The browser rebuilds the model, creates the SQLite database and imports the data. The operator checks meeting, date, participants and the availability of the attachments.</li>
+<li><strong>Run the meeting.</strong> Attendance and proxies, entries and exits, votes, notes and resolutions are recorded. The app updates its views and saves the records in the local database.</li>
+<li><strong>Resume the work.</strong> Reopening the same workspace recovers the data already changed. The initial package prepares the work; resuming reads the existing database.</li>
+<li><strong>Return and acquire.</strong> The app exports data and attachments. The Python system verifies them, links them to the meeting and applies its own acquisition rules. A confirmation states that the work was received.</li>
+</ol>
+<p>The return can travel as a file or, when the connection is back, through an application command. An identifier of the package and of the return lets the system recognize a repeated submission.</p>
+</section>
+<section class="section" id="model">
+<span class="number">03 / DATA AND MODEL</span><h2>Bring into the room what is needed</h2>
+<p>The model can be written in Python. Its declaration travels as the <strong>recipe source in TYTX</strong>; Asqueel JS uses it to rebuild the supported tables and relations in the local database. The central database can keep its own engine: the transferred package uses the SQLite-compatible projection.</p>
+<div class="table-wrap"><table><caption class="small" style="text-align:left;padding-bottom:10px">A possible organization of the data</caption><thead><tr><th scope="col">Group</th><th scope="col">Content</th><th scope="col">Use during the meeting</th></tr></thead><tbody>
+<tr><th scope="row">Meeting and agenda</th><td>Identifiers, date, items to discuss and document references.</td><td>Guide the meeting and link every vote to its item.</td></tr>
+<tr><th scope="row">People, units and thousandths</th><td>Parties involved, units, ownership and relevant tables.</td><td>Read the data and determine the weights according to the application rules.</td></tr>
+<tr><th scope="row">Attendance and proxies</th><td>Participation, representation, entries and exits.</td><td>Rebuild who takes part in each vote.</td></tr>
+<tr><th scope="row">Votes and resolutions</th><td>Proposal, people entitled, weights used, votes and computed outcome.</td><td>Record the decisions and keep their basis of calculation.</td></tr>
+<tr><th scope="row">Minutes and attachments</th><td>Text, structured notes, documents and produced files.</td><td>Write the minutes and return the final documentation.</td></tr>
+</tbody></table></div>
+<div class="grid" style="margin-top:24px">
+<article class="card"><h3>Bags for structured content</h3><p>A Bag can hold sections of the minutes, notes and extra attributes. TYTX keeps the structure and the supported types between Python and JavaScript.</p></article>
+<article class="card"><h3>Blobs for documents</h3><p>PDFs, images and other files can travel as binary data. To read them offline their bytes must be brought along: a link to a document on the server still needs the network.</p></article>
+</div>
+<p class="small" style="margin-top:18px">Selecting the data stays with the application: choosing some tables does not decide which records and attachments are needed. For large documents consider the size of the package and the capacity of the device.</p>
+</section>
+<section class="section" id="calculations">
+<span class="number">04 / VOTES AND CALCULATIONS</span><h2>Share the formulas, keep the context</h2>
+<p>Thousandths totals, attendance summaries and vote aggregations can be expressed with the declarative formulas and the queries the compiler supports. The same declaration is then interpreted in Python and in JavaScript, and SQL and results are compared on the application cases.</p>
+<p><strong>Python functions are not translated automatically.</strong> The rules for proxies, participation, quorum and outcomes must be defined and validated in the application layer. When they need procedural code, that code must also exist in JavaScript or be expressed through the supported shared declarations.</p>
+<div class="callout"><p><strong>Every vote keeps its own snapshot.</strong> It records the participants and the represented parties, the weights actually used and the version of the rule applied. A later entry updates the current situation without changing the basis of a closed vote.</p></div>
+<h3>A purely arithmetic example</h3>
+<p>A vote records 420 thousandths in favour, 180 against and 60 abstaining: the represented total is 660. If a person then enters with another 20 thousandths, the current situation becomes 680; the summary of the earlier vote keeps its 660.</p>
+<p class="small">These numbers illustrate state preservation and counting. Quorum and outcome need the rules of the specific decision, including any per-person counts. The model must distinguish people, units and shares.</p>
+</section>
+<section class="section" id="serverless">
+<span class="number">05 / THE SERVERLESS APP</span><h2>The work happens in the browser</h2>
+<p>Gramlot provides the interface. Asqueel JS rebuilds the model and compiles the queries. SQLite, running as WebAssembly, reads and writes the data; IndexedDB keeps the database in the browser. No reachable application server is needed during the local session.</p>
+<div class="grid">
+<article class="card"><span class="pill">ONE HTML FILE</span><h3>An app opened as a file</h3><p>The Gramlot serverless exporter can embed interface, runtime, worker and SQLite in one HTML file opened through <code>file://</code>. Model and data can be loaded from a separate package.</p><p class="small">Changed records stay in the browser profile; they are not written back into the HTML. In the PoC the file path identifies the workspace: export and import move the work to another device or path.</p></article>
+<article class="card"><span class="pill">APP PREPARED ONLINE</span><h3>An address reopened offline</h3><p>The app can be served over HTTPS and prepared for offline use, caching resources and data before the meeting. A PWA can add a start from the home screen.</p><p class="small">A complete PWA installation and the behavior on the chosen devices need dedicated verification. Resources and attachments must be available where the work will happen.</p></article>
+</div>
+<h3 style="margin-top:24px">Computers and tablets: what was verified</h3>
+<p>The single-HTML cycle was verified on desktop Chromium, with the network disabled and a full browser restart. On desktop Safari 27.0.1 loading, changes, closing and reopening the tab and the comparison of the return with Python passed, after a fix to how the file is passed to the worker.</p>
+<p class="small">On Safari a full restart, a disconnected network and the manual file selection and saving remain to be verified. A tablet is a possible device for this scenario, but iPad and Android tablets have not been tried yet. The Safari checks concern the transfer PoC; the meeting demo was verified in Chromium, also on simulated small screens.</p>
+</section>
+<section class="section" id="delivery">
+<span class="number">06 / FROM THE TECHNICAL BASE TO THE APPLICATION</span><h2>From the small PoC to the complete meeting</h2>
+<div class="callout"><p><strong>Try the Gramlot page.</strong> Run <code>npm run build:assembly</code>, then open <code>output/assemblea-offline.html</code>. The minutes unlock with the padlock: leaving the field updates the Bag and saving keeps the text offline. The page also guides the assignment of proxies and shows the votes still to record. The test compares 86 actions with Python, restarts Chromium without network during a vote and verifies the exported package.</p></div>
+<p>The available base covers the transfer of the model, the creation of the local database, reading and writing records, persistence and an export verifiable in Python. The composed source in TYTX, the migration JSON, the SQLite structure and the values were compared; Bags and blobs have dedicated tests on Chromium.</p>
+<p>The PoC already includes a model with 24 participants, an editable agenda, five fictional documents and Gramlot screens for attendance, proxies and votes. Completing the application needs the participation and voting rules of the real cases, refined minutes and the acquisition command in the management system. PDF generation and signatures are features to add. The application rules invoked during a write must also be connected explicitly: the query editor of the PoC writes directly through the compiler.</p>
+<ol class="steps">
+<li><strong>Prepare a sample case in Python.</strong> A meeting with units, participants, thousandths, an agenda and a few documents.</li>
+<li><strong>Run it in the browser without network.</strong> Record a proxy, an entry, an exit, two votes and a draft of the minutes.</li>
+<li><strong>Close and resume.</strong> Check that attendance, votes, notes and documents stay available on the chosen device.</li>
+<li><strong>Return the package to Python.</strong> Compare structure, records, attachments and vote calculations; acquire the work once and confirm its receipt.</li>
+</ol>
+<div class="callout"><p><strong>The expected result:</strong> the manager prepares one meeting in the system, holds it also without a connection and brings a complete, verifiable set of results back into the central system.</p></div>
+</section>
+</main>
+<footer class="wrap"><p>Application scenario · Gramlot and Asqueel JS<br>Technical background: <a href="serverless-offline.html">Serverless data applications</a>.<br>This HTML document is self-contained: text and style are embedded and can be read without a connection.</p></footer>
+</body>
+</html>
