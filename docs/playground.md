@@ -540,8 +540,8 @@ parametri, formule correlate e sottoquery. Si confrontano source TYTX/migrate,
 SQL esatto, parametri e righe SQLite; le SELECT si ripetono dopo riapertura
 IndexedDB. I 27 usi non validi devono essere rifiutati anche nel worker.
 
-La preview e l'esecuzione ordinaria dell'editor usano `parseDateExpression`
-esportato da Gramlot. Per una richiesta personalizzata inserire
+La preview e l'esecuzione ordinaria dell'editor decodificano #PERIOD con
+`@genrojs/toolbox`. Per una richiesta personalizzata inserire
 `environment: {locale: "it-IT", workdate: "2026-10-21"}` e, su un campo data del
 proprio modello, `where: "#PERIOD($issued,period)"` con
 `sqlparams: {period: "mese scorso"}`. Il totale è di 352 casi query e 27 gruppi

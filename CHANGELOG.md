@@ -25,6 +25,10 @@
   lettura delle colonne virtuali, anche nelle scritture.
 - `SqlSourceBag` è registrato come sottotipo TYTX con il nome Python;
   `recipe.toTytx()` e `SqlBuilder.fromTytx()` salvano e ricaricano la ricetta.
+- `#PERIOD` decodifica le date naturali con `parseDateExpression` di
+  `@genrojs/toolbox` (>=0.19.0), come Python con `genro_toolbox.dates`. L'opzione
+  runtime `parseDateExpression` è rimossa: `queries(adapter, {parseDateExpression})`
+  solleva un errore.
 - Rimossi `toJSON()`, `DbModel.fromJSON()`, `modelToJSON` e `modelFromJSON`: il
   JSON del modello non esiste più in Python. I confronti usano il source composto
   in TYTX e il JSON migrate.

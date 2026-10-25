@@ -26,7 +26,7 @@
     "check": "npm test && npm run build",
     "prepack": "npm run check",
     "export:model": "${PYTHON:-python3} scripts/model_oracle.py",
-    "update:tools": "npm update --no-save @genrojs/builders @genrojs/bag @genrojs/tytx @gramlot/gramlot @gramlot/gramlot-serverless",
+    "update:tools": "npm update --no-save @genrojs/builders @genrojs/bag @genrojs/tytx @genrojs/toolbox @gramlot/gramlot @gramlot/gramlot-serverless",
     "build:file": "node scripts/build_file.js",
     "test:file": "npm run build:file && playwright test --config=playwright.file.config.js",
     "build:assembly": "node scripts/build_file.js --assembly",
@@ -36,6 +36,7 @@
   "dependencies": {
     "@genrojs/bag": ">=0.11.0",
     "@genrojs/builders": ">=0.7.0",
+    "@genrojs/toolbox": ">=0.19.0",
     "@genrojs/tytx": ">=0.16.3",
     "@noble/hashes": "2.4.0",
     "wa-sqlite": "1.0.0"

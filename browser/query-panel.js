@@ -1,5 +1,4 @@
 import periodOracle from '../test/fixtures/periods.json' with {type: 'json'};
-import {parseDateExpression} from '@gramlot/gramlot';
 import macroOracle from '../test/fixtures/macros.json' with {type: 'json'};
 import oracle from '../test/fixtures/queries.json' with {type: 'json'};
 import {querySource} from '../src/queries.js';
@@ -12,7 +11,7 @@ import {equal} from '../src/sqlite.js';
 export function queryPanel(view, database, getModel) {
     function compile() {
         const model = getModel(), request = JSON.parse(view.get('queryInput'));
-        const compiled = model.queries(null, {parseDateExpression}).compile(request);
+        const compiled = model.queries().compile(request);
         const expected = oracle.cases.find(c => c.name === view.get('queryExample')).compiled;
         view.set('querySQL', compiled.sql);
         view.set('queryParams', JSON.stringify(compiled.params, null, 2));

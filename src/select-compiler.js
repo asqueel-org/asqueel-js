@@ -19,12 +19,11 @@ function environmentText(value) {
 
 /** SQLite SELECT clauses ported from the hierarchical Python 0.6.1 compiler. */
 class Context {
-    constructor(tables, table, parameters, environment, parent = null, aliasPrefix = 't', bindings = null, methods = null, parseDateExpression = null) {
+    constructor(tables, table, parameters, environment, parent = null, aliasPrefix = 't', bindings = null, methods = null) {
         this.tables = tables; this.table = table; this.environment = environment;
         this.bindings = bindings ?? new QueryBindings(record(parameters ?? {}));
         this.params = this.bindings.params;
-        this.parseDateExpression = parent?.parseDateExpression ?? parseDateExpression;
-        this.period = new PeriodMacro(this.bindings, environment, this.parseDateExpression);
+        this.period = new PeriodMacro(this.bindings, environment);
         this.parent = parent; this.aliasPrefix = aliasPrefix; this.baseAlias = aliasPrefix + '0';
         this.joins = new Map(); this.active = parent?.active ?? new Set();
         this.formulaBindings = new Map(); this.manyColumns = new Map();
@@ -419,8 +418,8 @@ function selectPlan(context, request) {
     return {sql, projected, columns};
 }
 
-export function compileSelect(tables, table, request, methods = null, parseDateExpression = null) {
-    const context = new Context(tables, table, request.sqlparams, request.environment ?? {}, null, 't', null, methods, parseDateExpression);
+export function compileSelect(tables, table, request, methods = null) {
+    const context = new Context(tables, table, request.sqlparams, request.environment ?? {}, null, 't', null, methods);
     const plan = selectPlan(context, request);
     return prepareParameters(context.restore(plan.sql), context.params, request.environment);
 }

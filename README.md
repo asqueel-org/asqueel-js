@@ -53,8 +53,9 @@ Le letture includono formule annidate con parametri locali `var_*`/`var_kwargs`,
 `#TEMPLATE` compone testi con valori NULL trattati come stringhe vuote;
 `#IN_RANGE` gestisce intervalli inclusivi con estremi facoltativi. **46 casi** dedicati
 verificano SQL e risultati, anche nel browser.
-`#PERIOD` interpreta date naturali attraverso `parseDateExpression` di Gramlot,
-fornito al runtime: **131 casi** e 27 rifiuti confrontati con Python.
+`#PERIOD` interpreta date naturali con `parseDateExpression` di `@genrojs/toolbox`,
+il port JS di `genro_toolbox.dates` usato da Python: **131 casi** e 27 rifiuti
+confrontati con Python.
 [Configurazione ed esempi](docs/parity.md#period-e-parser-delle-date-naturali).
 Sottoquery scalari, `EXISTS`, `subQueryColumn` e aggregazioni `aggr()` sulle relazioni
 inverse/virtuali producono SQL correlato: conteggi, sum/avg/min/max, concatenazioni

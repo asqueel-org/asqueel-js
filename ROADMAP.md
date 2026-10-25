@@ -101,7 +101,7 @@ simulato durante la copia e migrazione idempotente dopo riapertura.
 - [x] Callback formula/env/subquery e colonne virtuali dinamiche, cache per ambiente,
       SQL/risultati/chiamate confrontati con Python anche nel browser.
 - [x] #TEMPLATE e #IN_RANGE, con SQL/parametri/risultati identici a Python anche su WASM.
-- [x] #PERIOD tramite parser Gramlot, con date civili, ambiente esplicito e parità Python/browser.
+- [x] #PERIOD tramite il parser di `@genrojs/toolbox`, con date civili, ambiente esplicito e parità Python/browser.
 - [ ] #BAG/#BAGCOLS e metadati dei risultati.
 - [ ] Partizioni, audit e altre opzioni; azioni applicative su relazioni composte.
 - [ ] API pubblica stabilizzata, dichiarazioni TypeScript e pacchetto distribuibile.

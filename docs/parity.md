@@ -317,15 +317,13 @@ formule contenenti template sono invece supportate. `#BAG/#BAGCOLS` restano incr
 ## PERIOD e parser delle date naturali
 
 Il compiler espande `#PERIOD(campo,parametro)` nel WHERE, anche nelle SELECT
-correlate delle formule. La lettura del testo usa il parser pubblico di Gramlot,
-registrato una volta nel runtime. Il core Asqueel non importa Gramlot e non
-mantiene un secondo parser. Lo stesso collegamento funziona in Node, Bun e worker:
+correlate delle formule. La lettura del testo usa `parseDateExpression` di
+`@genrojs/toolbox`, il port JS di `genro_toolbox.dates` che Python usa per #PERIOD.
+Come in Python non c'è un parser da registrare nel runtime; lo stesso codice
+funziona in Node, Bun e worker:
 
 ```js
-import {parseDateExpression} from '@gramlot/gramlot';
-
 const queries = model.queries(adapter, {
-    parseDateExpression,
     environment: {locale: 'it-IT', workdate: '2026-10-21'},
 });
 const rows = await queries.table('period.event').query({
@@ -339,7 +337,7 @@ const rows = await queries.table('period.event').query({
 
 Entrambi i valori `locale` e `workdate` sono obbligatori, come nel riferimento
 Python. In JS workdate è una data civile ISO `YYYY-MM-DD`, senza conversioni di
-fuso orario. Il risultato del parser sincrono è `{ok:true,kind:'date',date}` oppure
+fuso orario. Il parser restituisce `{ok:true,kind:'date',date}` oppure
 `{ok:true,kind:'period',start,end}`; gli estremi aperti sono `null`.
 I parametri Python di tipo `date` sono normalizzati a ISO per confrontarli con
 le stringhe JS e passarli a SQLite. Il testo originale resta tra i parametri
@@ -354,14 +352,13 @@ Le macro ripetute condividono i parametri nello stesso SELECT; sottoquery e form
 rispettano i namespace e le collisioni del compiler Python. Ogni compilazione
 rilegge l'ambiente; `env_period` può prelevare il testo dall'ambiente.
 
-Il riferimento controllato usa Toolbox 0.18.0 e il parser Gramlot 0.3.8 già
-installato. Due ricette indipendenti producono modello e JSON migrate identici;
+Il riferimento controllato usa genro-toolbox 0.18.0 in Python e `@genrojs/toolbox`
+0.19.0 in JS. Due ricette indipendenti producono modello e JSON migrate identici;
 131 casi confrontano SQL, parametri e righe, 27 verificano i rifiuti. Gli stessi
-casi sono eseguiti nel worker e riletti dopo riapertura IndexedDB. Il playground
-collega il parser anche alla preview e alle query personalizzate dell'editor.
+casi sono eseguiti nel worker e riletti dopo riapertura IndexedDB, anche nella
+preview e nelle query personalizzate dell'editor.
 
-Senza il servizio `parseDateExpression`, una query PERIOD fallisce esplicitamente;
-le altre query continuano a funzionare. PERIOD non è una macro generica utilizzabile
+PERIOD non è una macro generica utilizzabile
 in colonne, ORDER BY o `sql_formula`: segue i contesti ammessi da Python. Una formula
 può però dichiarare una SELECT con PERIOD nel suo WHERE. Restano da portare le
 macro Bag e i metadati dei risultati.
