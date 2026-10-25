@@ -6,7 +6,7 @@ modules and contracts, not separate packages.
 ## Data path
 
 ```{mermaid}
-flowchart LR
+flowchart TD
     G[grammar.json] --> B[SqlBuilder]
     B --> C[composition.js<br/>contributions]
     C --> P[model.js prepare<br/>model-options.js expansion]
