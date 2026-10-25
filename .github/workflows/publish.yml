@@ -118,7 +118,7 @@ jobs:
         with:
           name: npm-package
       - name: Publish the verified archive with OIDC
-        run: npm publish dist/*.tgz --access public --ignore-scripts
+        run: npm publish ./dist/*.tgz --access public --ignore-scripts
       - name: Verify registry integrity and installed package
         run: |
           node scripts/verify-published.mjs pack.json
