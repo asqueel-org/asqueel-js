@@ -60,6 +60,9 @@ export function guardPartition(table, data, policy, insert) {
     if (!valid) throw new Error(`${table.key}.${field}: value outside the active partition`);
 }
 function predicate(table, values, params, policy) {
+    // Python _key_where (#24): a record key named like a key parameter would be overwritten.
+    const shared = keyColumns(table).map((_, i) => `__pkey__${i}`).filter(name => own(params, name));
+    if (shared.length) throw new Error(`${table.key}: record keys named as key parameters: ${shared.join(', ')}`);
     let where = keyColumns(table).map((name, i) => {
         params[`__pkey__${i}`] = values[i];
         return `${q(columnName(table.columns.get(name)))}=:__pkey__${i}`;

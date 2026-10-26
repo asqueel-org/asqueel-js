@@ -31,7 +31,7 @@ def run(case):
         path=str(Path(folder)/'test.db'); config=SqlDatabaseConfig()
         root=config.source.db('imports',implementation='sqlite');root.connection('main',database=path)
         declare(root.packages().package('app',sqlschema='main',sqlprefix=False))
-        db=AsqueelDb(config);bind_table_classes(db,CLASSES)
+        db=AsqueelDb(config).session();bind_table_classes(db,CLASSES)
         try:
             db.migrate();db.commit();table=db.table('app.'+case.get('table','item'))
             if case.get('setup'):table.sql_insert(deepcopy(case['setup']));db.commit()
@@ -60,7 +60,7 @@ def run(case):
                 con.row_factory=sqlite3.Row
                 rows=[dict(r) for r in con.execute(f'SELECT * FROM "{case.get("table","item")}" ORDER BY id')]
             return dict(failed=failed,result=normalize(result),statements=statements,events=events,rows=rows)
-        finally:db.closeConnection()
+        finally:db.close()
 
 def oracle():
     b=SqlBuilder();declare(b.source.db('imports',implementation='sqlite').packages().package('app',sqlschema='main',sqlprefix=False))

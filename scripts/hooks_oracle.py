@@ -56,7 +56,7 @@ def run_case(case, declaration=declare, callbacks_factory=handlers, tables=('not
         root = config.source.db(dbname, implementation='sqlite')
         root.connection('main', database=path)
         declaration(root.packages().package('app', sqlschema='main', sqlprefix=False))
-        db = AsqueelDb(config)
+        db = AsqueelDb(config).session()
         bind_table_classes(db, classes)
         try:
             db.migrate()
@@ -117,7 +117,7 @@ def run_case(case, declaration=declare, callbacks_factory=handlers, tables=('not
                             for name in tables}
                 return dict(failed=failed, results=normalize(results), events=normalize(events), statements=statements, rows=rows)
         finally:
-            db.closeConnection()
+            db.close()
 
 
 def oracle():

@@ -28,3 +28,10 @@ test('write partition, generated column and advanced formula guards fail explici
     assert.throws(() => compiler.compile({operation: 'insert', table: 'app.item', values: {id: 1, computed: 5}}), /Generated column/);
     assert.throws(() => compiler.compile({operation: 'update', table: 'app.line', values: {body: 'x'}, pkey: '[10]'}), /components/);
 });
+test('a record key named like a key parameter fails on update; delete binds the key columns only', () => {
+    const compiler = model.queries();
+    assert.throws(() => compiler.compile({operation: 'update', table: 'app.item', values: {id: 1, __pkey__0: 'x'}, pkey: 1}),
+        /app\.item: record keys named as key parameters: __pkey__0/);
+    assert.deepEqual(compiler.compile({operation: 'delete', table: 'app.item', values: {id: 1, __pkey__0: 'x'}}),
+        {sql: 'DELETE FROM "main"."app_item" WHERE "id"=:__pkey__0', params: {__pkey__0: 1}});
+});

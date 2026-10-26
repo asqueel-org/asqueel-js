@@ -49,6 +49,6 @@ export class QueryPage extends PlaygroundPage {
         detail(body, 'Verified move: subtree, positions and SQL', 'behaviorSample', 'behaviors-sample');
         detail(body, 'Application onUpdate cascade checks', 'cascadeChecks', 'cascades-checks', true);
         detail(body, 'Verified cascade: children, hooks and SQL', 'cascadeSample', 'cascades-sample');
-        body.p('SQL, parameters and results are compared with Python 0.7.0 · 84408eb. Run the numbered examples in order; a repeated INSERT reports a duplicate. The checks use separate databases and run real hooks, hierarchies and counters, also with errors, rollback and IndexedDB reopen.', {class: 'db-note'});
+        body.p('SQL, parameters and results are compared with Python 0.9.0 · baf4582. Run the numbered examples in order; a repeated INSERT reports a duplicate. The checks use separate databases and run real hooks, hierarchies and counters, also with errors, rollback and IndexedDB reopen.', {class: 'db-note'});
     }
 }
