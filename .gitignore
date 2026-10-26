@@ -13,3 +13,6 @@ browser/service-worker.js
 
 # Sphinx documentation build
 docs/_build/
+
+# Private working documents
+temp/

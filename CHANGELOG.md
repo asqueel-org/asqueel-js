@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- An update whose record has a key named like a key parameter (`__pkey__0`) raises
+  instead of overwriting the key binding, as Python Asqueel 0.9.0 does (asqueel#24).
+  A delete binds its key from the key columns only.
+
 ## 0.2.0 — 2026-10-25
 
 Parity with Python Asqueel 0.7.0 at commit `84408eb` (main after 0.7.0, with the recipe
