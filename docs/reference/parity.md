@@ -5,7 +5,7 @@ The test suite compares Asqueel JS with a pinned Python reference.
 
 | Package | Reference |
 |---|---|
-| asqueel | 0.7.0, commit `84408eb` (main after 0.7.0, with the recipe source saved in TYTX) |
+| asqueel | 0.9.0, commit `baf4582` (release tag `v0.9.0`) |
 | asqueel-migration | 0.3.5 |
 | genro-builders | 0.30.0 |
 | genro-bag | 0.28.0 |

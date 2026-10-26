@@ -213,9 +213,9 @@ def load_transfer(bundle, path):
             raise ValueError('Python receiver requires an empty SQLite destination')
     config = source_builder(bundle['source'], configuration=True)
     config.source['db'].connection('main', database=str(path))
-    db = AsqueelDb(config)
+    db = AsqueelDb(config).session()
     try: db.migrate(); db.commit()
-    finally: db.closeConnection()
+    finally: db.close()
     model = resolve_model(builder)
     with sqlite3.connect(path) as con:
         con.execute('PRAGMA foreign_keys=ON')
